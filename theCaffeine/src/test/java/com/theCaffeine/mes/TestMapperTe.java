@@ -1,16 +1,17 @@
-package com.example.demo.test;
+package com.theCaffeine.mes;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.example.demo.test.mapper.TestMapper;
+import com.theCaffeine.mes.common.main.mapper.MainMapper;
+import com.theCaffeine.mes.common.main.model.TestVO;
 
 
 @SpringBootTest
 public class TestMapperTe {
 	
-	@Autowired TestMapper testMapper;
+	@Autowired MainMapper testMapper;
 	
 	@Test
 	public void 보드단건조회() {

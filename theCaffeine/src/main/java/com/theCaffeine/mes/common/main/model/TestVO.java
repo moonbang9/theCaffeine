@@ -1,4 +1,4 @@
-package com.example.demo.test;
+package com.theCaffeine.mes.common.main.model;
 
 import lombok.Data;
 
