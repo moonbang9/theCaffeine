@@ -8,7 +8,7 @@ public class TestController {
 
     @RequestMapping("/")
     public String main(){
-        return "layout/dashboard";
+        return "layout/index";
     }
 	
 }
