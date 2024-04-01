@@ -649,7 +649,7 @@ a:hover {
 }
 
 .bg-menu-theme {
-  background-color: black !important;
+  background-color: #fff !important;
   color: #697a8d;
 }
 .bg-menu-theme .menu-link,

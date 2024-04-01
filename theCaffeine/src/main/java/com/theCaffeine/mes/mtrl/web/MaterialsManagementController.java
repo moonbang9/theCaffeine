@@ -10,7 +10,7 @@ public class MaterialsManagementController {
 	// 자재관리 페이지이동
 	@GetMapping("/material/management")
 	public ModelAndView list() { 
-		ModelAndView mv = new ModelAndView("material/management");
+		ModelAndView mv = new ModelAndView("mtrl/management");
 		return mv;
 	}
 	
