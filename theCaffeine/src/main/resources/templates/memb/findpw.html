@@ -27,7 +27,7 @@
       content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
     />
 
-    <title>Register Basic - Pages | Sneat - Bootstrap 5 HTML Admin Template - Pro</title>
+    <title>Change PW</title>
 
     <meta name="description" content="" />
 
@@ -69,8 +69,8 @@
 
     <div class="container-xxl">
       <div class="authentication-wrapper authentication-basic container-p-y">
-        <div class="authentication-inner">
-          <!-- Register Card -->
+        <div class="authentication-inner py-4">
+          <!-- Forgot Password -->
           <div class="card">
             <div class="card-body">
               <!-- Logo -->
@@ -78,85 +78,49 @@
                 <a href="index.html" class="app-brand-link gap-2">
                   <span class="app-brand-logo demo">
                   </span>
-                  <img src="../assets/img/favicon/1.png" width="150px" >
+                  <img src="../assets/img/favicon/1.png" width="150px" style="border-radius: 100px" >
                 </a>
               </div>
               <!-- /Logo -->
-              <form id="formAuthentication" class="mb-3" action="index.html" method="POST">
+              <h4 class="mb-2">비밀번호 찾기 </h4>
+             
+              <form id="pwAuthentication" class="mb-3" action="" method="POST">
                 <div class="mb-3">
-                  <label for="username" class="form-label">아이디*</label>
                   <input
                     type="text"
                     class="form-control"
-                    id="username"
-                    name="username"
+                    id="id"
+                    name="id"
                     placeholder="아이디"
                     autofocus
                   />
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="name"
+                    name="name"
+                    placeholder="이름"
+                    autofocus
+                  />
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="email"
+                    name="email"
+                    placeholder="이메일"
+                    autofocus
+                  />
                 </div>
-                <div class="mb-3 form-password-toggle">
-                  <label class="form-label" for="password">비밀번호*</label>
-                  <div class="input-group input-group-merge">
-                    <input
-                      type="password"
-                      id="password"
-                      class="form-control"
-                      name="password"
-                      placeholder="비밀번호"
-                      aria-describedby="password"
-                    />
-                    <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
-                  
-                  <div class="input-group input-group-merge">
-                <input
-                      type="password"
-                      id="password"
-                      class="form-control"
-                      name="password"
-                      placeholder="비밀번호 확인"
-                      aria-describedby="password"
-                    />
-                    <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
-                    </div>
-                  </div>
-                  </div>
-                  <br>
-                  <p><small>▷기업정보</small></p>
-                <div class="mb-2">
-                  <label for="email" class="form-label">사업자 등록번호</label>
-                  <input type="text" class="form-control-short" id="email" name="email" placeholder="-없이 숫자만 입력" style="display: inline-block;" />
-                  <button type="button" style="display: inline-block; border-radius: 5px;">인증</button>
-                  <label for="email" class="form-label">사업자 등록번호</label>
-                  <input type="text" class="form-control" id="email" name="email" placeholder="기업명 입력"  />
-                  </div>
-                  <div class="mb-2">
-                    <br>
-                  <p><small>▷담당자 정보</small></p>
-                  <label for="name" class="form-label">이름*</label>
-                  <input type="text" class="form-control" id="name" name="name" placeholder="이름 입력"  />
-                  <label for="email" class="form-label">이메일*</label>
-                  <input type="text" class="form-control" id="email" name="email" placeholder="이메일 주소 입력"  />
-                  <label for="level" class="form-label">직급</label>
-                  <input type="text" class="form-control" id="level" name="level" placeholder="직급 입력"  />
-                  <label for="department" class="form-label">부서</label>
-                  <input type="text" class="form-control" id="depart" name="depart" placeholder="부서 입력"  />
-                  <label for="tel" class="form-label">전화번호</label>
-                  <input type="tel" class="form-control" id="tel" name="tel" placeholder="-없이 숫자만 입력"  />
-
-                </div>
-                <button class="btn btn-primary d-grid w-100">회원가입</button>
+                <button class="btn btn-primary d-grid w-100">비밀번호 찾기</button>
               </form>
-
-        
             </div>
           </div>
-          <!-- Register Card -->
+          <!-- /Forgot Password -->
         </div>
       </div>
     </div>
 
     <!-- / Content -->
-
 
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->

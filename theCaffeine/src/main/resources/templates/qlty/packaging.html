@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/index}">
+<head>
+<meta charset="UTF-8">
+<title>standard.html</title>
+</head>
+
+<body>
+	<div layout:fragment="content">
+		<h1>검사 기준 관리</h1>
+	<div id="QualityStandard">
+
+	<div id="example-table">
+	</div>
+	</div>
+
+
+	<script>
+	var table = new Tabulator("#QualityStandard", {
+	    height:"311px",
+	    layout:"fitColumns",
+	    resizableColumnFit:true,
+	    columns:[
+	        {title:"카테고리", field:"name", width:200, resizable:true},
+	        {title:"품질검사명", field:"progress", resizable:true},
+	        {title:"통과기준", field:"gender", resizable:true}, 
+	        {title:"입력가능값", field:"rating", resizable:true}
+	    ],
+	});
+	</script>
+	</div>
+</body>
+</html>

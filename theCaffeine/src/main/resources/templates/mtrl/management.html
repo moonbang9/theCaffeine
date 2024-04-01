@@ -7,13 +7,151 @@
 </head>
 <body>
 <div layout:fragment="content">
+	<button id="saveBtn3" type="button">클릭</button>
 	<h1>자재관리페이지</h1>
+	<div class="demo-inline-spacing">
+		<button id="saveBtn2"
+	        type="button"
+	        class="btn btn-primary"
+	        data-bs-toggle="modal"
+	        data-bs-target="#largeModal"
+	      >
+	        자재 등록
+	    </button>
+	</div>
+	
+	<div class="modal fade" id="largeModal" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel3">자재 등록</h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+              <div class="card mb-4">
+              <div class="card-body">
+              	<div class="mb-3 row">
+                  <label for="mtrl-clicd" class="col-md-2 col-form-label">거래처</label>
+                  <div class="col-md-10">
+                   <select id="mtrl-clicd" class="form-select">
+                     <option value="MCLI001">코빈즈 커피 (에티오피아)</option>
+                     <option value="MCLI002">블레스빈 (콜롬비아)</option>
+                   </select>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label for="mtrl-cd" class="col-md-2 col-form-label">자재 코드</label>
+                  <div class="col-md-10">
+                    <input class="form-control" type="text" value="" id="mtrl-cd">
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label for="mtrl-div" class="col-md-2 col-form-label">분류</label>
+                  <div class="col-md-10">
+                   <select id="mtrl-div" class="form-select">
+                     <option value="원자재">원자재</option>
+                     <option value="부자재">부자재</option>
+                   </select>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label for="mtrl-name" class="col-md-2 col-form-label">자재명</label>
+                  <div class="col-md-10">
+                    <input class="form-control" type="text" value="" id="mtrl-name">
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label for="mtrl-cost" class="col-md-2 col-form-label">단가</label>
+                  <div class="col-md-10">
+                    <input class="form-control" type="number" value="" id="mtrl-cost" placeholder="원">
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label for="mtrl-unit" class="col-md-2 col-form-label">단위</label>
+                  <div class="col-md-10">
+                    <input class="form-control" type="text" value="" id="mtrl-unit">
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label for="mtrl-expdt" class="col-md-2 col-form-label">유통기한 (개월)</label>
+                  <div class="col-md-10">
+                    <input class="form-control" type="number" value="" id="mtrl-expdt" placeholder="개월">
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label for="mtrl-leadtm" class="col-md-2 col-form-label">리드타임 (일)</label>
+                  <div class="col-md-10">
+                    <input class="form-control" type="number" value="" id="mtrl-leadtm" placeholder="일">
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label for="mtrl-safestkrate" class="col-md-2 col-form-label">안전재고 비율 (%)</label>
+                  <div class="col-md-10">
+                    <input class="form-control" type="number" value="" id="mtrl-safestkrate" placeholder="%">
+                  </div>
+                </div>
+              </div>
+            </div>
+           </div>
+           <div class="modal-footer">
+             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+               닫기
+             </button>
+             <button type="button" class="btn btn-primary" id="saveBtn1">등록</button>
+           </div>
+         </div>
+       </div>
+     </div>
 	<div id="example-table">
 	
 	</div>
 
 </div>
 <script>
+	saveBtn3.addEventListener("click", e=> {
+		console.log("클릭되다");
+	})
+	saveBtn2.addEventListener("click", e=> {
+		console.log("클릭되다");
+	})
+	saveBtn1.addEventListener("click", e=> {
+		console.log("클릭되다");
+		saveReq();
+	})
+	// 등록 요청
+	function saveReq() {
+		const cliCd= mtrl-clicd.value;
+		const mtCd = mtrl-cd.value;
+		const mtDiv = mtrl-div.value;
+		const mtName = mtrl-name.value;
+		const cost = mtrl-cost.value;
+		const unit = mtrl-unit.value;
+		const expDt = mtrl-expdt.value;
+		const leadtm = mtrl-leadtm.value;
+		const safeStkRate = mtrl-safestkrate.value;
+		let param = {cliCd, mtCd, mtDiv, mtName, cost, unit, expDt, leadtm, safeStkRate};
+		console.log(param);
+		/* fetch("/ajax/board",{
+			method : "post",
+			headers: {
+			      "Content-Type": "application/json",
+			    },
+			body : JSON.stringify(param)
+		})
+		.then(res => res.json())
+		.then(res => saveRes(res)) */
+	}
+	
+	// 등록 응답
+	/*function saveRes(res) {
+		location.href= "/board/list"
+	}*/
+	
 	/* var table = new Tabulator("#example-table", {
 	    height:"311px",
 	    columns:[
