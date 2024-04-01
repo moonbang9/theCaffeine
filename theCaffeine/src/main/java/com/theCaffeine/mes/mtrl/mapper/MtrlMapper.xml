@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.theCaffeine.mes.mtrl.mapper.MtrlMapper">
+	<insert id="insertMtrl" parameterType="MtrlVO">
+		INSERT INTO mt
+					(mt_cd
+					,mt_div
+					,mt_name
+					,cost
+					,unit
+					,exp_dt
+					,leadtm
+					,safe_stk_rate
+					,cli_cd)
+		    VALUES  (
+		    		#{mtCd}
+		    		,#{mtDiv}
+		    		,#{mtName}
+		    		,#{cost}
+		    		,#{unit}
+		    		,#{expDt}
+		    		,#{leadtm}
+		    		,#{safeStkRate}
+		    		,#{cliCd}
+		    		)
+	</insert>
+
+
+
+</mapper>
