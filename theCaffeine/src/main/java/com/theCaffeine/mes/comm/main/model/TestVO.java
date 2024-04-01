@@ -1,4 +1,4 @@
-package com.theCaffeine.mes.common.main.model;
+package com.theCaffeine.mes.comm.main.model;
 
 import lombok.Data;
 

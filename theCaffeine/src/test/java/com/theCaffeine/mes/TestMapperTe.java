@@ -4,8 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.theCaffeine.mes.common.main.mapper.MainMapper;
-import com.theCaffeine.mes.common.main.model.TestVO;
+import com.theCaffeine.mes.comm.main.mapper.MainMapper;
+import com.theCaffeine.mes.comm.main.model.TestVO;
 
 
 @SpringBootTest
