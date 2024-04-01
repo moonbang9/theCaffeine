@@ -27,7 +27,7 @@
       content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
     />
 
-    <title>Login</title>
+    <title>Change ID</title>
 
     <meta name="description" content="" />
 
@@ -69,8 +69,8 @@
 
     <div class="container-xxl">
       <div class="authentication-wrapper authentication-basic container-p-y">
-        <div class="authentication-inner">
-          <!-- Register -->
+        <div class="authentication-inner py-4">
+          <!-- Forgot Password -->
           <div class="card">
             <div class="card-body">
               <!-- Logo -->
@@ -78,64 +78,34 @@
                 <a href="index.html" class="app-brand-link gap-2">
                   <span class="app-brand-logo demo">
                   </span>
-                  <img src="../assets/img/favicon/1.png" width="150px" >
+                  <img src="../assets/img/favicon/1.png" width="150px" style="border-radius: 100px">
                 </a>
               </div>
               <!-- /Logo -->
-              <form id="formAuthentication" class="mb-3" action="index.html" method="POST">
+              <h4 class="mb-2">회원님의 아이디를 확인해 주세요 </h4>
+             
                 <div class="mb-3">
-                  <label for="email" class="form-label">아이디</label>
                   <input
                     type="text"
                     class="form-control"
-                    id="id"
-                    name="userId"
-                    placeholder="아이디 입력"
+                    id="name"
+                    name="name"
+                    placeholder="아이디 출력"
                     autofocus
                   />
                 </div>
-                <div class="mb-3 form-password-toggle">
-                  <div class="d-flex justify-content-between">
-                    <label class="form-label" for="password">비밀번호</label>
-                   
-                  </div>
-                  <div class="input-group input-group-merge">
-                    <input
-                      type="password"
-                      id="password"
-                      class="form-control"
-                      name="password"
-                      placeholder="비밀번호 입력"
-                      aria-describedby="password"
-                    />
-                    <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
-                  </div>
-                  <div style="text-align: right;">
-                  <a href="auth-forgot-id-basic.html">
-                    <small>아이디 찾기</small> |
-                    </a>
-                    <a href="auth-forgot-password-basic.html">
-                    <small>비밀번호 찾기</small>
-                  </a>
-                </div>
-                </div>
-                <div class="mb-3">
-                  <button class="btn btn-primary d-grid w-100" type="submit">로그인</button>
-                </div>
-              </form>
-
-              <p class="text-center">
-                <span>아직 회원이 아니신가요?</span>
-                <a href="auth-register-basic.html">
-                  <span>회원가입</span>
+              <div class="text-center">
+                <a href="login.html" class="d-flex align-items-center justify-content-center">
+                  <button class="btn btn-primary d-grid w-100">로그인하기</button>
                 </a>
-              </p>
+              </div>
             </div>
           </div>
-          <!-- /Register -->
+          <!-- /Forgot Password -->
         </div>
       </div>
     </div>
+
     <!-- / Content -->
 
     <!-- Core JS -->
