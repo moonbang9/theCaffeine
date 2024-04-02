@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/index}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<div layout:fragment="content">
+	
+	<h1>주간생산 계획등록</h1>
+		<div class="demo-inline-spacing" style="margin-bottom: 20px;">
+	    <div class="d-flex justify-content-evenly" style="height: 370px;">
+	    <div>
+	    <div style="float: right; width: 250px;">
+	    <button class="btn btn-primary" type="button" id="saveBtn" style="float: right; margin-top: 8px;">검색</button>
+	    <form action="" class="row gy-2 gx-3 align-items-center">
+	    	<div style="margin-top: 0; padding-right: 0;">
+	    		<label class="col-sm-4 col-form-label">제품코드</label>
+	    		<input type="text" style="width: 95px; height: 30px;">
+	   		</div>
+	   		<div style="margin-top: 0; padding-right: 0;">
+	   			<label class="col-sm-4 col-form-label">납기일</label>
+	    		<input type="date" style="width: 95px;">
+	    	</div>
+	    </form>
+	    </div> 
+	    <h5 style="margin-bottom: 45px;">상세주문 조회</h5>
+			<div id="example-table1"></div>
+		</div>
+		<div>
+	    <h5 style="margin-bottom: 45px;">전 주 생산실패목록</h5>
+		<div id="example-table2"></div>
+		</div>
+		<div>
+	    <h5 style="margin-bottom: 45px;">완재품 재고 조회</h5>
+		<div id="example-table3"></div>
+		</div>
+	</div>
+	</div>
+	<div>
+	    <div>
+	    <h5>생산주간 계획등록</h5>
+		<div id="example-table4"></div>
+		</div>
+	</div>
+	<script>
+	saveBtn.addEventListener("click", e=> {
+		location.href='/production/planRegist'
+	})
+	
+	var table1 = new Tabulator("#example-table1", {
+    height:"311px",
+    layout:"fitDataTable",
+    pagination:"local",
+    paginationSize:5,
+    movableColumns:true,
+    paginationCounter:"rows",
+    rowHeader:{resizable: false, frozen: true, hozAlign:"center", formatter: "rownum", cssClass:"range-header-col"},
+    columnDefaults:{
+      headerSort:false,
+      resizable:"header",
+    },
+    columns:[
+        {title:"제품코드", field:"name", hozAlign:"center", width:100},
+        {title:"수량(Bag * 4kg)kg", field:"progress", hozAlign:"center", width:150},
+        {title:"납기 일", field:"gender", hozAlign:"center", width:100},
+    ],
+});
+	var table2 = new Tabulator("#example-table2", {
+    height:"311px",
+    layout:"fitDataTable",
+    columns:[
+        {title:"상품명", field:"name", hozAlign:"center"},
+        {title:"전 주 실패량(kg)", field:"progress", hozAlign:"center"},
+    ],
+});
+	var table3 = new Tabulator("#example-table3", {
+    height:"311px",
+    layout:"fitDataTable",
+    columns:[
+        {title:"제품명", field:"name", hozAlign:"center"},
+        {title:"단위", field:"progress", hozAlign:"center"},
+        {title:"현재 재고 수량", field:"gender", hozAlign:"center"},
+        {title:"안전 재고 수량", field:"gender2", hozAlign:"center"},
+        {title:"재고 수량차", field:"gender3", hozAlign:"center"},
+    ],
+});
+	var table4 = new Tabulator("#example-table4", {
+	    height:"311px",
+	    columns:[
+	        {title:"상품명", field:"progress", hozAlign:"center"},
+	        {title:"수량(kg)", field:"gender", hozAlign:"center"},
+	        {title:"납기일", field:"name", hozAlign:"center"},
+	    ],
+	});
+	</script>
+	</div>
+</body>
+</html>
