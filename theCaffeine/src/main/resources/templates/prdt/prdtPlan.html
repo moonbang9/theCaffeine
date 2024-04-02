@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/index}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div layout:fragment="content">
+
+		<h1>주간생산 계획관리</h1>
+		<div class="demo-inline-spacing">
+			
+			<div class="row align-items-md-stretch" style="height: 370px;">
+				<div class="col-md-6">
+					<div style="margin-bottom: 10px; width: 430px;">
+						<span style="font-size: 24px;">생산주간 계획조회 <button id="saveBtn1" type="button" class="btn btn-primary"
+							style="width: 100px; float: right;">등록</button></span>
+					</div>
+					<div id="example-table1"></div>
+				</div>
+				
+				<div class="col-md-6">
+					<div style="margin-bottom: 10px; width: 430px;">
+					<span style="font-size: 24px;">발주/주간필요 자재량 조회</span>
+					</div>
+					<div id="example-table2"></div>
+				</div>
+				
+				<div class="col-md-6">
+					<div style="margin-bottom: 10px; width: 430px;">
+						<span style="font-size: 24px;">생산주간 계획조회<span style="font-size: 18px;">(24-04 둘째주)</span></span>
+					</div>
+					<div id="example-table3"></div>
+				</div>
+			</div>
+		</div>
+		<script>
+	saveBtn1.addEventListener("click", e=> {
+		location.href='/production/planRegist'
+	})
+	
+	var table = new Tabulator("#example-table1", {
+    height:"311px",
+    layout:"fitDataTable",
+    columns:[
+        {title:"계획코드", field:"name", hozAlign:"center"},
+        {title:"계획기간", field:"progress", hozAlign:"center"},
+        {title:"상품명", field:"gender", hozAlign:"center"},
+        {title:"총 예상 원두생산 수량(kg)", field:"total", hozAlign:"center"},
+    ],
+});
+	var table2 = new Tabulator("#example-table2", {
+    height:"311px",
+    layout:"fitDataTable",
+    columns:[
+        {title:"자재코드", field:"name", hozAlign:"center"},
+        {title:"분류", field:"progress", hozAlign:"center"},
+        {title:"자재명", field:"gender", hozAlign:"center"},
+        {title:"발주/필요 자재량", field:"gender2", hozAlign:"center"},
+    ],
+});
+	var table3 = new Tabulator("#example-table3", {
+    height:"311px",
+    layout:"fitDataTable",
+    columns:[
+        {title:"상품명", field:"name", hozAlign:"center"},
+        {title:"총 예상 생산 수량(kg)", field:"progress", hozAlign:"center"},
+        {title:"납기 일자", field:"gender", hozAlign:"center"},
+    ],
+});
+	</script>
+	</div>
+</body>
+</html>
