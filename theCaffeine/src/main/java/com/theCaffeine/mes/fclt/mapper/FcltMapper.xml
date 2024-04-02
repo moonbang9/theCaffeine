@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.theCaffeine.mes.fclt.mapper.FcltMapper">
+
+<!-- 전체 설비 목록 -->
+<select id="getFcltList" resultType="FcltVO">
+
+	SELECT     	FC_CD,
+				FC_NAME,
+				ST,
+				INS_MF,
+				MNF_COM,
+				STR_DT,
+				INS_CYCLE,
+				LAST_INS_DT,
+				OUTPUT,
+				DUR_TIME
+	FROM FC
+</select>
+
+<!--  단건조회 -->
+<select id="getFltInfo" parameterType="string" resultType="FcltVO">
+	select *
+	from fc
+	where fc_cd = #{fcCd}	
+</select>
+
+
+<!--  설비 등록 -->
+	<insert id="insertFclt" parameterType="FcltVO">
+		INSERT INTO FC
+					(
+					FC_CD
+					,FC_NAME
+					,ST
+					,INS_MF
+					,MNF_COM
+					,STR_DT
+					,INS_CYCLE
+					,OUTPUT
+					,DUR_TIME
+					)
+		    VALUES  (
+		    		  SEQ_FCLT.nextval 
+		    		,#{fcName}
+		    		,#{st}
+		    		,#{insMf}
+		    		,#{mnfCom}
+		    		,#{strDt}
+		    		,#{insCycle}
+		    		,#{output}
+		    		,#{durTime}
+		    		)
+	</insert>
+
+<!-- 설비 삭제 -->
+
+<delete id="deleteFclt" parameterType="String">
+	DELETE FROM fc
+	where fc_cd = #{fcCd}
+</delete>
+
+<!-- 설비 정보 수정 -->
+<update id="updateFclt" parameterType="FcltVO">
+	UPDATE fc
+					FC_NAME=#{fcName},
+					ST=#{st},
+					INS_MF=#{insMf},
+					MNF_COM=#{mnfCom},
+					STR_DT=#{strDt},
+					INS_CYCLE=#{insCycle},
+					OUTPUT=#{output},
+					DUR_TIME=#{durTime}
+	
+	WHERE fc_cd = #{fcCd}
+</update>
+
+</mapper>
