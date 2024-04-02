@@ -11,8 +11,9 @@ public class MtrlVO {
 	String mtName;
 	int cost;
 	String unit;
-	Date expDt;
+	int expDt;
 	int leadtm;
 	int safeStkRate;
 	String cliCd;
+	String cliName;
 }
