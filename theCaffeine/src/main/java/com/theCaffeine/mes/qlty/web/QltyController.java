@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 @RestController
-public class QualityController {
+public class QltyController {
 
 	// 자재검사 페이지이동
 	@GetMapping("/quality/material")
