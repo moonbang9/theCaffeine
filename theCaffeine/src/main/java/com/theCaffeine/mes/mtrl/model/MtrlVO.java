@@ -1,7 +1,5 @@
 package com.theCaffeine.mes.mtrl.model;
 
-import java.util.Date;
-
 import lombok.Data;
 
 @Data

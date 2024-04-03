@@ -7,23 +7,24 @@
 </head>
 <body>
 <div layout:fragment="content">
-	<h1 class="mt-4">자재 관리</h1>
-	<div class="demo-inline-spacing d-grid gap-2 d-md-flex justify-content-md-end">
-		<button id="mtrlSaveBtn2"
-	        type="button"
-	        class="btn btn-primary"
-	        data-bs-toggle="modal"
-	        data-bs-target="#largeModal"
-	      >
-	        자재 등록
-	    </button>
+	<div class="d-flex mt-5 mb-4">
+	  <div class="p-2 flex-grow-1"><h1>자재 관리</h1></div>
+	  	<div class="p-2">		
+		  	<button id="mtrlSaveBtn2"
+		        type="button"
+		        class="btn btn-primary btn-lg"
+		        data-bs-toggle="modal"
+		        data-bs-target="#largeModal">
+		        자재 등록
+		    </button>
+		</div>
 	</div>
-	
 	<div class="modal fade" id="largeModal" tabindex="-1" aria-hidden="true">
-          <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel3">자재 등록</h5>
+                <h5 class="modal-title" id="exampleModalLabel1" style="display:block">자재 등록</h5>
+                <h5 class="modal-title" id="exampleModalLabel2" style="display:none">자재 수정</h5>
                 <button
                   type="button"
                   class="btn-close"
@@ -106,27 +107,44 @@
              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                닫기
              </button>
-             <button type="button" class="btn btn-primary" id="mtrlSaveBtn1">등록</button>
-             <button type="button" class="btn btn-primary" id="mtrlModifyBtn1">수정</button>
+             <button style="display:block" type="button" class="btn btn-primary" id="mtrlSaveBtn1">등록</button>
+             <button style="display:none" type="button" class="btn btn-primary" id="mtrlModifyBtn1">수정</button>
            </div>
          </div>
        </div>
      </div>
      
-     <h3 class="mb-4">원자재 관리</h3>
-	<div id="mtrl_management_list" class="mb-3">
 	
-	</div>
+     <h3 class="mb-4">원자재 관리</h3>
+		<div id="mtrl_management_list" class="mb-3">
+		
+		</div>
+
 
 	 <h3 class="mt-5 mb-4">부자재 관리</h3>
 	 	<div id="mtrl_management_list2">
-	
-	</div>
-	 
+		</div>
+
 	<script>
+	mtrlSaveBtn2.addEventListener("click", e=> {
+		exampleModalLabel1.style.display = "block";
+		exampleModalLabel2.style.display = "none";
+		mtrlSaveBtn1.style.display = "block";
+		mtrlModifyBtn1.style.display = "none";
+		mtrl_management_clicd.value = "MCLI001";
+		mtrl_management_cd.value = "";
+		mtrl_management_div.value = "원자재";
+		mtrl_management_name.value = "";
+		mtrl_management_cost.value = "";
+		mtrl_management_unit.value = "";
+		mtrl_management_expdt.value = "";
+		mtrl_management_leadtm.value = "";
+		mtrl_management_safestkrate.value = "";
+	})
+	
 	var table = new Tabulator("#mtrl_management_list", {
 	    //layout:"fitColumns",
-	    height:"190px",
+	    height:"100%",
 	    rowHeader:{formatter:"rownum", headerSort:false, width:70, hozAlign:"center", resizable:false, frozen:true},
 	   // resizableColumnFit:true,
 	   
@@ -144,7 +162,7 @@
 	
 	var table2 = new Tabulator("#mtrl_management_list2", {
 	   // layout:"fitColumns",
-	   height:"220px",
+	   height:"100%",
 	    rowHeader:{formatter:"rownum", headerSort:false, width:70, hozAlign:"center", resizable:false, frozen:true},
 	    //resizableColumnFit:true,
 	    columns:[
@@ -160,6 +178,10 @@
 	});
 	
 	table.on("rowClick", function(e, row){
+		exampleModalLabel1.style.display = "none";
+		exampleModalLabel2.style.display = "block";
+		mtrlSaveBtn1.style.display = "none";
+		mtrlModifyBtn1.style.display = "block";
 		let mtCd = row.getData().mtCd;
 		console.log(mtCd);
 		fetch("/ajax/mtrlInfo/"+ mtCd)
@@ -176,6 +198,10 @@
 	});
 	
 	table2.on("rowClick", function(e, row){
+		exampleModalLabel1.style.display = "none";
+		exampleModalLabel2.style.display = "block";
+		mtrlSaveBtn1.style.display = "none";
+		mtrlModifyBtn1.style.display = "block";
 		let mtCd = row.getData().mtCd;
 		console.log(mtCd);
 		fetch("/ajax/mtrlInfo/"+ mtCd)
@@ -192,7 +218,6 @@
 	});
 	
 	function getInfo(obj){
-		
 		mtrl_management_clicd.value = obj.cliCd;
 		mtrl_management_cd.value = obj.mtCd;
 		mtrl_management_div.value = obj.mtDiv;
@@ -206,6 +231,7 @@
 	
 	listReq();
 	listReq2();
+	
 	// 원자재 목록 데이터
 	function listReq() {
 		fetch("/ajax/mtrlList")
@@ -219,11 +245,8 @@
 		.then(res => res.json())
 		.then(res => table2.setData(res))
 	}
-	
-	/*function getInfo(){
-		fetch("/ajax/mtrlInfo/"+ {mtCd})
-	}*/
 
+	
 	mtrlSaveBtn1.addEventListener("click", e=> {
 		saveReq();
 	})
@@ -257,6 +280,8 @@
 		alert("등록이 완료되었습니다!");
 		location.href= "/material/management"
 	}
+	
+	
 	mtrlModifyBtn1.addEventListener("click", e=> {
 		modReq();
 	})

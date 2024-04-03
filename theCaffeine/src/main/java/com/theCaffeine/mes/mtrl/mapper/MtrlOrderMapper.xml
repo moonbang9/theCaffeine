@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.theCaffeine.mes.mtrl.mapper.MtrlOrderMapper">
+
+	 <select id="getMtrlOrderList" resultType="MtrlOrderVO"> 
+		SELECT  mp.mt_placeod_cd,
+				m.mt_div,
+		        m.mt_cd,
+		        m.mt_name,
+		        c.cli_name,
+		        mp.placeod_reqdt,
+		        mp.placeod_qt,
+		        m.unit,
+		        mp.placeod_requester
+		FROM 	mt_placeod mp JOIN mt m
+		ON mp.mt_cd = m.mt_cd
+		JOIN cli c
+		ON mp.cli_cd = c.cli_cd
+		WHERE mp.placeod_st = 1
+		ORDER BY mp.placeod_reqdt
+ 	</select>
+ 	
+ 	<select id="getMtrlList" resultType="MtrlOrderVO"> 
+		SELECT  m.mt_cd,
+		        m.mt_name,
+		        c.cli_cd
+		FROM    mt m JOIN cli c
+		ON      m.cli_cd = c.cli_cd
+		WHERE   m.cli_cd = #{cliCd}
+ 	</select>
+ 	
+ 	<insert id="insertMtrlOrder" parameterType="MtrlOrderVO">
+		INSERT INTO mt_placeod
+					(mt_placeod_cd,
+					placeod_qt,
+					placeod_compdt,
+					placeod_requester,
+					placeod_chg,
+					mt_cd,
+					cli_cd)
+		    VALUES  (
+		    		SEQ_MT_PLACEOD.nextval
+		    		,#{placeodQt}
+		    		,#{placeodCompdt}
+		    		,#{placeodRequester}
+		    		,#{placeodChg}
+		    		,#{mtCd}
+		    		,#{cliCd}
+		    		)
+	</insert>
+	
+	<delete id="deleteMtrlOrder" parameterType="String">
+		DELETE FROM mt_placeod
+		WHERE mt_placeod_cd = #{mtPlaceodCd}
+	</delete>
+</mapper>
