@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BomVO {
+	private Integer bomNo; 		//bom 번호
 	private String pdCd; 		//제품코드
 	private String unit; 		//단위
 	private String detailUnit; 	//상세단위
