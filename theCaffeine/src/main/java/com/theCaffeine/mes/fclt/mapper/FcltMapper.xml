@@ -20,7 +20,7 @@
 </select>
 
 <!--  단건조회 -->
-<select id="getFltInfo" parameterType="string" resultType="FcltVO">
+<select id="getFcltInfo" parameterType="string" resultType="FcltVO">
 	select *
 	from fc
 	where fc_cd = #{fcCd}	
@@ -64,6 +64,7 @@
 <!-- 설비 정보 수정 -->
 <update id="updateFclt" parameterType="FcltVO">
 	UPDATE fc
+	SET
 					FC_NAME=#{fcName},
 					ST=#{st},
 					INS_MF=#{insMf},

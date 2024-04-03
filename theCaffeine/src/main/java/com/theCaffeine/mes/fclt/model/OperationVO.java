@@ -1,13 +1,17 @@
 package com.theCaffeine.mes.fclt.model;
 
-import java.sql.Timestamp;
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
 @Data
 public class OperationVO {
 	String nonopCd;
-	Timestamp nonopSttTime;
-	Timestamp nonopFnTime;
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	Date nonopSttTime;
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	Date nonopFnTime;
 	String fcChg;
 	String rsn;
 	String rsnDesc;
