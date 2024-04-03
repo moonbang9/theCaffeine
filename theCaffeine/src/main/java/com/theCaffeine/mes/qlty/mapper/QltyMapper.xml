@@ -2,17 +2,27 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.theCaffeine.mes.qlty.mapper.QltyMapper">
-	<select id="selectQlty" parameterType="QltyVO">
-		SELECT MT_PLACEOD_CD,
-		       CLI_CD,
-		       MT_CD,
-		       PLACEOD_QT,
-		       PLACEOD_REQDT,
-		       PLACEOD_COMPDT,
-		       PLACEOD_REQUESTER,
-		       PLACEOD_CHG,
-		       PLACEOD_ST
-	      FROM MT_PLACEOD
-	     WHERE PLACEOD_ST=3;
+
+	<select id="getMtrlCheckList" parameterType="QltyVO">
+		SELECT p.mt_placeod_cd,
+		       p.cli_cd,
+		       p.mt_cd,
+		       p.placeod_qt,
+		       p.placeod_reqdt,
+		       p.placeod_compdt,
+		       p.placeod_requester,
+		       p.placeod_chg,
+		       p.placeod_st,
+		       m.mt_name,
+		       c.cli_name
+
+		  FROM mt_placeod p 
+		  JOIN mt m ON p.cli_cd = m.cli_cd
+		  JOIN cli c ON p.cli_cd = c.cli_cd
+	  ORDER BY p.mt_placeod_cd
+	        
+	        
+	     <!-- WHERE PLACEOD_ST=3 --> 
 	</select>
+	
 </mapper>
