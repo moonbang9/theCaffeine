@@ -16,7 +16,7 @@
 
 				<a class="list-group-item list-group-item-action active"
 					id="home-list-item" data-bs-toggle="list" href="#horizontal-home">검사대기</a>
-					
+
 				<a class="list-group-item list-group-item-action"
 					id="profile-list-item" data-bs-toggle="list"
 					href="#horizontal-profile">검사완료</a>
@@ -28,21 +28,20 @@
 				<div class="tab-pane fade show active" id="horizontal-home">
 					<div id="waiting-table"></div>
 				</div>
-			
-				
-				
+
 				<div class="tab-pane fade" id="horizontal-profile">
-				<div id="done-table"></div>
+					<div id="done-table"></div>
 				</div>
 			</div>
 		</div>
 
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.20/jspdf.plugin.autotable.min.js"></script>
-
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.20/jspdf.plugin.autotable.min.js"></script>
 		<script>		
 			//검사 대기 테이블 
-			var table = new Tabulator("#waiting-table", {
+			var table1 = new Tabulator("#waiting-table", {
 				height : "311px",
 				layout : "fitColumns",
 				
@@ -50,47 +49,53 @@
 					headerSort : false,
 					resizable : false,
 					frozen : true,
+					width:70,
 					headerHozAlign : "center",
 					hozAlign : "center",
 					formatter : "rowSelection",
 					titleFormatter : "rowSelection",
 					cellClick : function(e, cell) {
 						cell.getRow().toggleSelect();
+						cell.style.width="70px";						
 					}
 				},
+				
 				pagination:"local",
-			    paginationSize:6,
-			    paginationSizeSelector:[3, 6, 8, 10],
+			    paginationSize:10,
+			    paginationSizeSelector:[5, 10, 15, 20],
 			    movableColumns:true,
 			    paginationCounter:"rows",
 
 				columns : [ {
 					title : "No",
-					field : "name"
+					width : 70,
+					field : "mtPlaceodCd"
 				}, {
 					title : "검사명",
-					field : "progress",
-					sorter : "number"
+					field : "ckName",
 				}, {
-					title : "제품정보",
-					field : "gender"
+					title : "제품명",
+					field : "mtName"
 				}, {
 					title : "수량",
-					field : "rating"
+					width : 70,
+					field : "placeodQt"
 				}, {
-					title : "거래처",
-					field : "col"
+					title : "거래처명",
+					field : "cliName"
 				}, {
-					title : "입고 날짜",
-					field : "dob"
+					title : "발주 요청일",
+					field : "placeodReqdt"
 				}, {
-					title : "담당자",
-					field : "dob"
-				}, ],
+					title : "발주 요청자",
+					field : "placeodRequester"
+				},],
 			});
 			
+			
+			
 			//검사완료 테이블
-			var table = new Tabulator("#done-table", {
+			var table2 = new Tabulator("#done-table", {
 				height : "311px",
 				layout : "fitColumns",
 				
@@ -98,6 +103,7 @@
 					headerSort : false,
 					resizable : false,
 					frozen : true,
+					width:70,
 					headerHozAlign : "center",
 					hozAlign : "center",
 					formatter : "rowSelection",
@@ -107,21 +113,21 @@
 					}
 				},
 				pagination:"local",
-			    paginationSize:6,
-			    paginationSizeSelector:[3, 6, 8, 10],
+			    paginationSize:10,
+			    paginationSizeSelector:[5, 10, 15, 20],
 			    movableColumns:true,
 			    paginationCounter:"rows",
 
 				columns : [ {
 					title : "No",
+					width : 70,
 					field : "name"
 				}, {
-					title : "입고일",
-					field : "progress",
-					sorter : "number"
+					title : "발주완료일",
+					field : "placeodCompdt",
 				}, {
 					title : "제품정보",
-					field : "gender"
+					field : "mtName"
 				}, {
 					title : "담당자",
 					field : "rating"
@@ -143,20 +149,32 @@
 				},],
 			});
 			
+			listWaiting();
+			//listDone();
+			
+			//검사대기 목록 데이터
+			function listWaiting(){
+				fetch("/ajax/mtrlCheckList")
+				.then(res => res.json())
+				.then(res => table1.setData(res))
+			}			
+	
+					
+			
 			//print button
 			document.getElementById("print-table").addEventListener("click",
 					function() {
-						table.print(false, true);
+						table1.print(false, true);
 					});
 			
 			//trigger download of data.pdf file
 			document.getElementById("download-pdf").addEventListener("click", function(){
-			    table.download("pdf", "data.pdf", {
+			    table1.download("pdf", "data.pdf", {
 			        orientation:"portrait", //set page orientation to portrait
 			        title:"Example Report", //add title to report
 			    });
 			});
-		</script>
+			</script>
 	</div>
 </body>
 </html>
