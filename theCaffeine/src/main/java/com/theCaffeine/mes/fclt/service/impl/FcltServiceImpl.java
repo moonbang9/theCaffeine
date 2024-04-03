@@ -23,8 +23,8 @@ public class FcltServiceImpl implements FcltService{
 	}
 
 	@Override
-	public List<FcltVO> getFcltList() {
-		return fcltMapper.getFcltList();
+	public List<FcltVO> getFcltList(FcltVO vo) {
+		return fcltMapper.getFcltList(vo);
 	}
 
 	@Override
@@ -40,8 +40,13 @@ public class FcltServiceImpl implements FcltService{
 	@Override
 	public int updateFclt(FcltVO vo) {
 		return fcltMapper.updateFclt(vo);
+
+
 	}
-	
+
+
+
+
 	
 
 }

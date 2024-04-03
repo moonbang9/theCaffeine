@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.theCaffeine.mes.fclt.mapper.OperationMapper">
+
+<!-- 비가동 목록 -->
+<select id="getOprtList" resultType="OperationVO">
+
+	SELECT     	NONOP_CD
+				NONOP_STT_TIME
+				NONOP_FN_TIME
+				FC_CHG
+				RSN
+				RSN_DESC
+				FC_CD
+	FROM NONOP_MGMT
+</select>
+
+<!--  비가동 단건 조회 -->
+<select id="getOprtInfo" parameterType="string" resultType="OperationVO">
+	select *
+	from NONOP_MGMT
+	where NONOP_CD = #{nonopCd}	
+</select>
+
+
+<!--  설비 등록 -->
+	<insert id="insertOprt" parameterType="OperationVO">
+		INSERT INTO NONOP_MGMT
+					(
+					NONOP_CD,
+					NONOP_STT_TIME,
+					NONOP_FN_TIME,
+					FC_CHG,
+					RSN,
+					RSN_DESC,
+					FC_CD
+					)
+		    VALUES  (
+		    		  SEQ_FCNONOP.NEXTVAL
+		    		,#{nonopCd}
+		    		,#{nonopSttTime}
+		    		,#{nonopFnTime}
+		    		,#{fcChg}
+		    		,#{rsn}
+		    		,#{rsnDesc}
+		    		,#{fcCd}
+		    		)
+	</insert>
+
+<!-- 설비 삭제 -->
+
+<delete id="deleteOprt" parameterType="String">
+	DELETE FROM NONOP_MGMT
+	where NONOP_CD = #{nonopCd}
+</delete>
+
+<!-- 설비 정보 수정 -->
+<update id="updateOprt" parameterType="OperationVO">
+	UPDATE NONOP_MGMT
+	SET
+					NONOP_STT_TIME=#{nonopSttTime},
+					NONOP_FN_TIME=#{nonopFnTime},
+					FC_CHG=#{fcChg},
+					RSN=#{rsn},
+					RSN_DESC=#{rsnDesc},
+					FC_CD=#{fcCd}
+	WHERE NONOP_CD = #{nonopCd}
+</update>
+
+</mapper>
