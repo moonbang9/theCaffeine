@@ -10,7 +10,6 @@ select * from send; --제품 출고
 select * from rtn; --제품 반품
 select * from disc_pd; --제품 폐기
 
-
 /* 시퀀스 */
 CREATE SEQUENCE od_seq;
 DROP SEQUENCE od_seq;
@@ -44,3 +43,15 @@ values('PCLI001', '콩다방', '120-86-07029', '02-1577-4708', '서울시 강남
 insert into od
 values (od_seq.nextval, '2024-04-01', '김주문', 0.05, 699200, 'PCLI001',1);
 
+/*  거래처 목록 조회   */
+select cli_cd, cli_name, bussno, tel, addr, cli_chg, mail
+from cli
+where cli_cd LIKE '%58%'
+    OR cli_name LIKE '%58%'
+    OR cli_chg LIKE '%58%'
+    OR tel LIKE '%58%';
+    
+/*  상품 목록 조회    */
+select pd_cd, pd_name, unit, cost
+from pd
+order by pd_cd;

@@ -1,34 +1,32 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.demo.emp.mapper.EmpMapper">
-	
-<resultMap type="ClintVO" id="clientListMap">
-		<id property="employeeId" column="EMPLOYEE_ID"></id>
-		<result property="firstName" column="FIRST_NAME" />
-		<result property="phone" column="PHONE_NUMBER" />
-	</resultMap>
+<mapper namespace="com.theCaffeine.mes.sale.mapper.InsertOrderMapper">
 
 
-<select id="getClientList" resultMap="clientListMap">
-	select * from ( select rownum as rn, a.* from ( 
+	<select id="getClientList" resultType="ClientVO" parameterType="String">
+ 		SELECT cli_cd
+ 				, cli_name
+ 				, bussno
+ 				, tel
+ 				, addr
+ 				, cli_chg
+ 				, mail
+		FROM cli
+		WHERE cli_cd LIKE '%' || #{searchCli} || '%'
+    		OR cli_name LIKE '%' || #{searchCli} || '%'
+    		OR cli_chg LIKE '%' || #{searchCli} || '%'
+    		OR tel LIKE '%' || #{searchCli} || '%'		
+ 		 ORDER BY cli_cd
+	</select>
 	
- 		SELECT EMPLOYEE_ID
-				,FIRST_NAME
-				,LAST_NAME
-				,EMAIL
-				,PHONE_NUMBER "phone"
-				,HIRE_DATE
-				,JOB_ID
-				,SALARY
-				,COMMISSION_PCT
-				,MANAGER_ID
-				,DEPARTMENT_ID
- 		  FROM employees e
-		  <include refid="condition"></include> 			
- 		 ORDER BY employee_id
- 			
- 	) a where rownum <![CDATA[<=]]> #{svo.end} ) b where rn >= #{svo.start}
+	<select id="productList" resultType="ProductVO">
+		SELECT pd_cd
+				, pd_name
+				, unit
+				, cost
+		FROM pd
+		ORDER BY pd_cd
 	</select>
 
 </mapper>
