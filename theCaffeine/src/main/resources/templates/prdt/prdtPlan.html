@@ -18,7 +18,14 @@
 						<span style="font-size: 24px;">생산주간 계획조회 <button id="saveBtn1" type="button" class="btn btn-primary"
 							style="width: 100px; float: right;">등록</button></span>
 					</div>
-					<div id="example-table1"></div>
+					<div id="productionPlan-table"></div>
+				</div>
+				
+				<div class="col-md-6">
+					<div style="margin-bottom: 10px; width: 430px;">
+						<span style="font-size: 24px;">생산주간 계획조회</span><span class="dayy" style="font-size: 18px;"></span>
+					</div>
+					<div id="productionPlan-table3"></div>
 				</div>
 				
 				<div class="col-md-6">
@@ -28,27 +35,24 @@
 					<div id="example-table2"></div>
 				</div>
 				
-				<div class="col-md-6">
-					<div style="margin-bottom: 10px; width: 430px;">
-						<span style="font-size: 24px;">생산주간 계획조회<span style="font-size: 18px;">(24-04 둘째주)</span></span>
-					</div>
-					<div id="example-table3"></div>
-				</div>
+				
 			</div>
 		</div>
 		<script>
+		listReq();
+		
 	saveBtn1.addEventListener("click", e=> {
 		location.href='/production/planRegist'
 	})
 	
-	var table = new Tabulator("#example-table1", {
+	var table = new Tabulator("#productionPlan-table", {
     height:"311px",
     layout:"fitDataTable",
     columns:[
-        {title:"계획코드", field:"name", hozAlign:"center"},
-        {title:"계획기간", field:"progress", hozAlign:"center"},
-        {title:"상품명", field:"gender", hozAlign:"center"},
-        {title:"총 예상 원두생산 수량(kg)", field:"total", hozAlign:"center"},
+        {title:"계획코드", field:"pdtPlanCd", hozAlign:"center"},
+        {title:"계획기간", field:"wkPlanSttDt", hozAlign:"center"},
+        {title:"상품명", field:"plantot", hozAlign:"center"},
+        {title:"총 예상 원두생산 수량(kg)", field:"psum", hozAlign:"center"},
     ],
 });
 	var table2 = new Tabulator("#example-table2", {
@@ -61,15 +65,66 @@
         {title:"발주/필요 자재량", field:"gender2", hozAlign:"center"},
     ],
 });
-	var table3 = new Tabulator("#example-table3", {
+	var table3 = new Tabulator("#productionPlan-table3", {
     height:"311px",
     layout:"fitDataTable",
     columns:[
-        {title:"상품명", field:"name", hozAlign:"center"},
-        {title:"총 예상 생산 수량(kg)", field:"progress", hozAlign:"center"},
-        {title:"납기 일자", field:"gender", hozAlign:"center"},
+        {title:"상품명", field:"pdName", hozAlign:"center"},
+        {title:"총 예상 생산 수량(kg)", field:"qt", hozAlign:"center"},
+        {title:"납기 일자", field:"dueDt", hozAlign:"center"},
     ],
 });
+	
+	// 주간 생산계획조회 데이터
+	function listReq() {
+		fetch("/ajax/planList")
+		.then(res => res.json())
+		.then(res => table.setData(res))
+	}
+	
+	// 주간 생산계획 버튼 이벤트
+	table.on("rowClick", function(e, row){
+		let pdtPlanCd = row.getData().pdtPlanCd;
+		let wkPlanSttDt = row.getData().wkPlanSttDt;
+		
+		let days = `(${weekNumOfMonth(wkPlanSttDt)[1]} ${weekNumOfMonth(wkPlanSttDt)[0]})`
+		document.querySelector(".dayy").innerText = days
+		console.log(pdtPlanCd);
+		
+		fetch("/ajax/planDetailList/"+ pdtPlanCd)
+		.then(res => res.json())
+		.then(res => {
+			console.log(res);
+			table3.setData(res)
+		})
+	});
+	
+	
+	// 월 주차 판단
+	function weekNumOfMonth(date){
+		let dates = new Date(date)
+		var WEEK_KOR = ["첫째주", "둘째주", "셋째주", "넷째주", "다섯째주"];
+		var THURSDAY_NUM = 4;	// 첫째주의 기준은 목요일(4)이다. 
+		console.log(dates);
+
+		var firstDate = new Date(dates.getFullYear(), dates.getMonth(), 1);
+		var firstDayOfWeek = firstDate.getDay();
+
+		var firstThursday = 1 + THURSDAY_NUM - firstDayOfWeek;	// 첫째주 목요일
+		if(firstThursday <= 0){
+			firstThursday = firstThursday + 7;	// 한주는 7일
+		}
+		var untilDateOfFirstWeek = firstThursday-7+3;	// 월요일기준으로 계산 (월요일부터 한주의 시작)
+		var weekNum = Math.ceil((dates.getDate()-untilDateOfFirstWeek) / 7) - 1;
+
+		if(weekNum < 0){	// 첫째주 이하일 경우 전월 마지막주 계산
+			var lastDateOfMonth = new Date(dates.getFullYear(), dates.getMonth(), 0);
+		 	var result = Util.Date.weekNumOfMonth(lastDateOfMonth);
+		 	return result;
+		}
+
+		return [WEEK_KOR[weekNum], (dates.getMonth()+1)+'월'];
+	}
 	</script>
 	</div>
 </body>

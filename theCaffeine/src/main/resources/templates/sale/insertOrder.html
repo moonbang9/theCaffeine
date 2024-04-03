@@ -7,11 +7,12 @@
 <title>주문 등록</title>
 
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
 	<div layout:fragment="content">
 		<!-- Content wrapper -->
-		<div class="content-wrapper">
+		<div class="content-wrapper" id="app">
 			<!-- Content -->
 
 			<div class="container-xxl flex-grow-1 container-p-y">
@@ -37,14 +38,13 @@
 
 										<!-- Button trigger modal -->
 										<button class="btn btn-outline-primary" type="button"
-											id="button-addon1" data-bs-toggle="modal"
-											data-bs-target="#modalCenter">검색</button>
+											id="button-addon1" @click="openModal()">검색</button>
 
 
 
 										<!-- Modal -->
 										<div class="modal fade" id="modalCenter" tabindex="-1"
-											aria-hidden="true">
+											aria-hidden="true" >
 											<div class="modal-dialog modal-dialog-centered"
 												role="document">
 												<div class="modal-content">
@@ -63,9 +63,9 @@
 																	<input type="text" class="form-control"
 																		placeholder="예) PET01, 브라질, 053-1111-1111"
 																		aria-label="Recipient's username"
-																		aria-describedby="button-addon2">
+																		aria-describedby="button-addon2" v-model="keyword">
 																	<button class="btn btn-outline-primary" type="button"
-																		id="button-addon2">검색</button>
+																		id="button-addon2" @click="getCliList(keyword)">검색</button>
 																</div>
 
 
@@ -89,13 +89,12 @@
 																			</tr>
 																		</thead>
 																		<tbody>
-																			<tr>
-
-																				<td>Albert Cook</td>
-																				<td>Albert Cook</td>
-																				<td>Albert Cook</td>
-																				<td>Albert Cook</td>
-
+																			<tr v-bind:key="idx" v-for="(client, idx) in clientList"
+																				v-on:click="insertCli(client)">
+																				<td>{{client.cliCd}}</td>
+																				<td>{{client.cliName}}</td>
+																				<td>{{client.cliChg}}</td>
+																				<td>{{client.tel}}</td>
 																			</tr>
 
 																		</tbody>
@@ -111,7 +110,7 @@
 													<div class="modal-footer">
 														<button type="button" class="btn btn-outline-secondary"
 															data-bs-dismiss="modal">취소</button>
-														<button type="button" class="btn btn-primary">선택</button>
+														<!-- <button type="button" class="btn btn-primary">선택</button> -->
 													</div>
 												</div>
 											</div>
@@ -124,7 +123,7 @@
 										<input type="text" class="form-control"
 											placeholder="거래처를 검색해 주세요"
 											aria-label="Example text with button addon"
-											aria-describedby="button-addon1" />
+											aria-describedby="button-addon1" v-model="clientVO.cliName" readonly/>
 									</div>
 								</div>
 							</div>
@@ -134,7 +133,7 @@
 								<div class="col-md-10">
 
 									<input type="text" readonly class="form-control-plaintext"
-										id="exampleFormControlReadOnlyInputPlain1" value="거래처 코드" />
+										id="exampleFormControlReadOnlyInputPlain1" value="거래처 코드" v-model="clientVO.cliCd"/>
 
 								</div>
 							</div>
@@ -143,7 +142,7 @@
 								<label for="html5-url-input" class="col-md-2 col-form-label">사업자번호</label>
 								<div class="col-md-10">
 									<input type="text" readonly class="form-control-plaintext"
-										id="exampleFormControlReadOnlyInputPlain1" value="거래처 사업자 번호" />
+										id="exampleFormControlReadOnlyInputPlain1" value="거래처 사업자 번호" v-model="clientVO.bussno"/>
 								</div>
 							</div>
 
@@ -152,7 +151,7 @@
 								<div class="col-md-10">
 									<input type="text" class="form-control"
 										id="defaultFormControlInput"
-										aria-describedby="defaultFormControlHelp" />
+										aria-describedby="defaultFormControlHelp" v-model="clientVO.tel"/>
 								</div>
 							</div>
 
@@ -161,7 +160,7 @@
 								<div class="col-md-10">
 									<input type="text" class="form-control"
 										id="defaultFormControlInput"
-										aria-describedby="defaultFormControlHelp" />
+										aria-describedby="defaultFormControlHelp" v-model="clientVO.addr"/>
 								</div>
 							</div>
 
@@ -170,7 +169,7 @@
 								<div class="col-md-10">
 									<input type="text" class="form-control"
 										id="defaultFormControlInput"
-										aria-describedby="defaultFormControlHelp" />
+										aria-describedby="defaultFormControlHelp" v-model="clientVO.mail" />
 								</div>
 							</div>
 
@@ -180,7 +179,7 @@
 								<div class="col-md-10">
 									<input type="text" class="form-control"
 										id="defaultFormControlInput"
-										aria-describedby="defaultFormControlHelp" />
+										aria-describedby="defaultFormControlHelp" v-model="clientVO.cliChg" />
 								</div>
 							</div>
 
@@ -203,7 +202,7 @@
 									담당자</label>
 								<div class="col-md-10">
 									<input type="text" class="form-control"
-										id="defaultFormControlInput" placeholder="최강삼"
+										id="defaultFormControlInput" placeholder="콩볶아조"
 										aria-describedby="defaultFormControlHelp" />
 								</div>
 							</div>
@@ -228,49 +227,39 @@
 
 							<!-- Striped Rows -->
 							<div class="card">
-								<h5 class="card-header">주문 상품</h5>
-								<p>
+								<div>
+								<h5 class="card-header">주문 상품 선택</h5>
+								</div>
 								<div class="table-responsive text-nowrap">
 									<table class="table table-striped">
 										<thead>
 											<tr>
-												<th>상품명</th>
-												<th>상품코드</th>
+												<th>상품</th>
+												<th>
+													<select id="smallSelect" class="form-select form-select-sm" 
+															v-model="selected" @change="selectPd(selected)">
+														<option :value="null" disabled style="display: none;">상품을 선택해주세요</option>
+														<option :key="idx" v-for="(pd, idx) in productList" :value="idx" >{{pd.pdName}}</option>
+												  	</select>
+												</th>
 												<th>수량</th>
+												<th>단위</th>
 												<th>단가</th>
 												<th>합계</th>
+												<th></th>
 											</tr>
 										</thead>
 										<tbody class="table-border-bottom-0">
-											<tr>
-												<td><select id="country" class="select2 form-select">
-														<option value="">Select</option>
-														<option value="Australia">Australia</option>
-														<option value="Bangladesh">Bangladesh</option>
-														<option value="Belarus">Belarus</option>
-														<option value="Brazil">Brazil</option>
-														<option value="Canada">Canada</option>
-												</select></td>
-												<td>Albert Cook</td>
-												<td><input class="form-control" type="number"
-													value="18" id="html5-number-input"></td>
-												<td><div class="input-group input-group-merge">
-														<span class="input-group-text">$</span> <input type="text"
-															class="form-control" placeholder="100"
-															aria-label="Amount (to the nearest dollar)">
-													</div></td>
-												<td>
-													<div class="input-group input-group-merge">
-														<span class="input-group-text">$</span> <input type="text"
-															class="form-control" placeholder="100"
-															aria-label="Amount (to the nearest dollar)"> <span
-															class="input-group-text">원</span>
-													</div>
-												</td>
+											<tr :key="idx" v-for="(selectedPd, idx) in selectedPdList">
+												<td>{{selectedPd.pdCd}}</td>
+												<td>{{selectedPd.pdName}}</td>
+												<td><input class="form-control" type="number" min='1'
+													v-model="selectedPd.qty" id="html5-number-input" @input="makeSubTotal(idx)"></td>
+													<td>{{selectedPd.unit}}</td>
+													<td>{{selectedPd.cost}}</td>
+													<td>{{selectedPd.subTotal}}</td>
+													<td><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></td>
 											</tr>
-
-
-
 										</tbody>
 									</table>
 								</div>
@@ -318,16 +307,113 @@
 		</div>
 		<!-- / Content -->
 		<div class="content-backdrop fade"></div>
+
+	<script>
+		const {
+		createApp
+		} = Vue;
+
+		const app = createApp({
+			data() {
+				return {
+					myModal : '',
+					keyword : '',
+					clientList : [],
+					clientVO : {},
+
+					productList : [],
+					selected: '',
+					selectedPdList : []
+				}
+			},
+			created(){
+				this.getProductList();
+			},
+			mounted() {
+				this.myModal = new bootstrap.Modal('#modalCenter')
+
+			},
+			watch : {
+				// price나 count가 변하면 합계 금액을 계산한다.
+				onChange(idx) {
+					console.log(idx);
+					return this.selectedPdList[idx].cost * this.selectedPdList[idx].qty;
+				},
+				// 합계 금액이 변하면 세금포함 금액을 계산한다.
+				// taxIncluded() {
+				// 	return this.sum * 1.08;
+				// }
+			},
+			methods : {
+				//거래처 검색 결과 목록
+				async getCliList(keyword){
+					let result = await axios.get(`/sales/searchCliList?searchCli=${keyword}`)
+									  .catch(keyword);
+					let list = result.data;
+					this.clientList = list;
+					//console.log(list);
+				},
+				//거래처 검색 결과에서 선택한 행을 주문등록 폼에 넣어주기
+				insertCli(client){
+					this.clientVO = client;	
+					this.closeModal();
+					
+				},
+				//거래처 검색 모달 열기
+				openModal(){
+					const modalToggle = document.getElementById('modalCenter'); 
+					console.log(this.myModal);
+					this.myModal.show(modalToggle);
+				},
+				//거래처 검색 모달 닫기
+				closeModal(){
+					const modalToggle = document.getElementById('modalCenter'); 
+					this.myModal.hide(modalToggle);
+				},
+				//상품명 목록 불러오기
+				async getProductList(){
+					let result = await axios.get('/sales/productList');
+					let list = result.data;
+					console.log(list);
+					this.productList = list;
+				},
+				//상품명 목록에서 선택한 상품을 selectPdList에 넣고, 화면에 보여주기
+				selectPd(idx){
+					console.log(idx);
+					let pdCd = this.productList[idx].pdCd;
+
+					//이미 selectedPdList에 담겨있는지 검증
+					let selectedCheck = true;
+					this.selectedPdList.forEach(ele => {
+						if(ele.pdCd == pdCd){
+							selectedCheck = false;
+						}
+					})
+					if(selectedCheck){
+						let product = this.productList[idx];
+						product.qty = 1;
+						product.subTotal = product.cost * product.qty;
+						console.log(product);
+
+						this.selectedPdList.splice(this.selectedPdList.length, 0, product);
+					}
+				},
+				makeSubTotal(idx){
+					console.log(idx);
+					console.log(this.selectedPdList[idx].qty);
+					let subTotal = this.selectedPdList[idx].cost * this.selectedPdList[idx].qty;
+					this.selectedPdList[idx].subTotal = subTotal;
+					console.log(this.selectedPdList[idx].subTotal);
+				}
+			}
+		})
+		app.mount('#app')
+
+	</script>
 	</div>
 	<!-- Content wrapper -->
 
 
-
-	<script>
-		
-
-
-	</script>
 
 
 

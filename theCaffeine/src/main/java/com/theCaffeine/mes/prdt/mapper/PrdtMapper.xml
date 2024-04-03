@@ -2,5 +2,31 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.theCaffeine.mes.prdt.mapper.PrdtMapper">
+	<select id="getPlanList" resultType="PlanVO">
+		select w.pdt_plan_cd, w.wk_plan_stt_dt, case when r.cnt = '-1' then null
+                                        else r.pd_name || ' 외 ' || r.cnt || '개'
+                                        end as plantot, w.psum from 
+		(select p.pdt_plan_cd, p.wk_plan_stt_dt, sum(d.qt) as psum 
+			from pdt_plan_detail d right outer 
+			join PDTPLAN p on p.pdt_plan_cd=d.pdt_plan_cd 
+			GROUP by p.pdt_plan_cd, p.wk_plan_stt_dt 
+			order by p.pdt_plan_cd) w
+		join    (select pdt_plan_cd, count(pd_name)-1 as cnt, min(pd_name) as pd_name from 
+        (select p.pdt_plan_cd, d.pd_name 
+        	from pdt_plan_detail d 
+        	right outer join PDTPLAN p on p.pdt_plan_cd=d.pdt_plan_cd 
+        	GROUP by p.pdt_plan_cd, d.pd_name 
+        	order by p.pdt_plan_cd) 
+        		group by pdt_plan_cd) r 
+		on w.pdt_plan_cd=r.pdt_plan_cd 
+		order by r.pdt_plan_cd
+	</select>
 	
+	<select id="getPlanDetailList" resultType="PlanVO">
+		SELECT 	pd_name,
+        		qt,
+        		due_dt
+		FROM 	PDT_PLAN_DETAIL
+		WHERE  	pdt_plan_cd = #{pdtPlanCd}
+	</select>
 </mapper>
