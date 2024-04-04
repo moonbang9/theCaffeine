@@ -7,7 +7,7 @@
 </head>
 <body>
 <div layout:fragment="content">
-	<h1 class="mt-4 mb-5">자재 발주</h1>
+	<h1 class="mt-4 mb-5">자재 발주 관리</h1>
 	
 	<div class="modal fade" id="largeModal" tabindex="-1" aria-hidden="true">
           <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
@@ -73,7 +73,7 @@
 	
 	
 	<div class="col">
-		<h4 class="mb-4">안전재고 미달 목록</h4>
+		<h4 class="mb-4">자재 재고 목록</h4>
 
 		<div id="mtrl_safety_stock_list" class="mb-5">
 		
@@ -93,10 +93,46 @@
 
 
 	<script>
+		let selectOrder = "";
+		
 		mtrlOrderBtn.addEventListener("click", e=> {
-			console.log(cell.getRow().toggleSelect());
+			if(selectOrder == "") {
+				alert("선택된 자재가 없습니다.")
+			} else {
+				console.log(selectOrder);
+				modReq(selectOrder);
+			}
 		})
+		
+		// 발주처리
+		function modReq(selectOrder) {
+			for(order of selectOrder) {
+				const placeodSt= order.placeodSt;
+				const placeodChg = order.placeodChg;
+				const mtPlaceodCd = order.mtPlaceodCd;
+				const placeodQt = order.placeodQt;
+				const leadtm = order.leadtm;
+				let param = {placeodSt, placeodChg, mtPlaceodCd, placeodQt, leadtm};
+				fetch("/ajax/updateMtrlOrder",{
+					method : "post",
+					headers: {
+					      "Content-Type": "application/json",
+					    },
+					body : JSON.stringify(param)
+				})
+				.then(res => res.json())
+				.then(res => console.log(res))
+			}
+			modRes();
+		}
 	
+		// 발주처리 응답
+		function modRes() {
+			alert("발주가 완료되었습니다!");
+			location.href= "/material/order"
+		}
+		
+		// 안전재고 미달목록
 		var table = new Tabulator("#mtrl_safety_stock_list", {
 		    //layout:"fitColumns",
 		    height:"100%",
@@ -115,14 +151,20 @@
 		    ],
 		});
 		
+		// 발주 요청목록
 		var table2 = new Tabulator("#mtrl_order_request_list", {
 		   height:"100%",
+		   selectableRows:true,
+		   pagination:"local",
+		    paginationSize:6,
+		    paginationSizeSelector:[3, 6, 8, 10],
+		    movableColumns:true,
+		    paginationCounter:"rows",
 		    rowHeader:{headerSort:false, resizable: false, frozen:true, headerHozAlign:"center", hozAlign:"center", formatter:"rowSelection", titleFormatter:"rowSelection", cellClick:function(e, cell){
 		        cell.getRow().toggleSelect();
-		        console.log(cell.getRow());
 		      }},
 		    columns:[
-		        {title:"분류", field:"mtDiv", width:100, hozAlign:"center"},
+		        {title:"분류", field:"mtDiv", width:129, hozAlign:"center"},
 		        {title:"자재코드", field:"mtCd", width:180, hozAlign:"center"}, 
 		        {title:"자재명", field:"mtName", width:180, hozAlign:"center"},
 		        {title:"거래처", field:"cliName", width:150, hozAlign:"center"},
@@ -151,6 +193,10 @@
 		    ],
 		});
 	
+		table2.on("rowSelectionChanged", function(data, rows, selected, deselected){
+			selectOrder = data;
+		});
+		
 		listReq2();
 		
 		// 발주요청 목록 데이터
