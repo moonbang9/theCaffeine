@@ -23,4 +23,6 @@ public class PlanVO {					//생산계획 + 계획상세
 	private Date dueDt;					//납기 일
 	private String plantot;				//주간 토탈 상품명
 	private Integer psum;				//주간 토탈 원두 생산량
+
+	
 }

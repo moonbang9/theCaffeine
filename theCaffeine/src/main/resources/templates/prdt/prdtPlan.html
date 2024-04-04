@@ -11,31 +11,26 @@
 
 		<h1>주간생산 계획관리</h1>
 		<div class="demo-inline-spacing">
+		
+		<div class="d-flex mt-5">
+	  		<div class="p-2 flex-grow-1"><h3>생산주간 계획조회</h3></div>
+	  		<div class="p-2"><button type="button" class="btn btn-primary" id="saveBtn1">등록</button></div>
+		</div>
+		<div id="productionPlan-table"></div>
 			
-			<div class="row align-items-md-stretch" style="height: 370px;">
+		<div class="d-flex align-items-start bd-highlight mb-3">
 				<div class="col-md-6">
-					<div style="margin-bottom: 10px; width: 430px;">
-						<span style="font-size: 24px;">생산주간 계획조회 <button id="saveBtn1" type="button" class="btn btn-primary"
-							style="width: 100px; float: right;">등록</button></span>
-					</div>
-					<div id="productionPlan-table"></div>
-				</div>
-				
-				<div class="col-md-6">
-					<div style="margin-bottom: 10px; width: 430px;">
+					<div style="margin-bottom: 10px;">
 						<span style="font-size: 24px;">생산주간 계획조회</span><span class="dayy" style="font-size: 18px;"></span>
 					</div>
 					<div id="productionPlan-table3"></div>
 				</div>
-				
 				<div class="col-md-6">
-					<div style="margin-bottom: 10px; width: 430px;">
+					<div style="margin-bottom: 10px;">
 					<span style="font-size: 24px;">발주/주간필요 자재량 조회</span>
 					</div>
 					<div id="example-table2"></div>
 				</div>
-				
-				
 			</div>
 		</div>
 		<script>
@@ -45,28 +40,42 @@
 		location.href='/production/planRegist'
 	})
 	
+	//수정버튼
+	var editorIcon = function(cell, formatterParams, onRendered) {
+  		return "<button class='btn btn-info btn-sm'>수정</button>";
+	}
+	
 	var table = new Tabulator("#productionPlan-table", {
-    height:"311px",
-    layout:"fitDataTable",
+    height:"100%",
+    layout:"fitDataFill",
     columns:[
-        {title:"계획코드", field:"pdtPlanCd", hozAlign:"center"},
-        {title:"계획기간", field:"wkPlanSttDt", hozAlign:"center"},
-        {title:"상품명", field:"plantot", hozAlign:"center"},
-        {title:"총 예상 원두생산 수량(kg)", field:"psum", hozAlign:"center"},
+        {title:"계획코드", field:"pdtPlanCd", hozAlign:"center", width:320},
+        {title:"계획기간", field:"wkPlanSttDt", hozAlign:"center", width:320},
+        {title:"상품명", field:"plantot", hozAlign:"center", width:320},
+        {title:"총 예상 원두생산 수량(kg)", field:"psum", hozAlign:"center", width:320},
+        {title:"수정", field:"updates",width:90,formatter: editorIcon, hozAlign:"center",resizable:false, headerSort:false,
+            cellClick:function(e, cell){
+            	console.log(cell._cell.row.data.pdtPlanCd);
+            	let pdtPlanCd = cell._cell.row.data.pdtPlanCd;
+        		alert("수정창으로 이동");
+        		location.href= "/production/planRegist/"+ pdtPlanCd;
+              }
+        },
     ],
 });
 	var table2 = new Tabulator("#example-table2", {
-    height:"311px",
-    layout:"fitDataTable",
+	height:"100%",
+	layout:"fitDataTable",
     columns:[
-        {title:"자재코드", field:"name", hozAlign:"center"},
-        {title:"분류", field:"progress", hozAlign:"center"},
-        {title:"자재명", field:"gender", hozAlign:"center"},
-        {title:"발주/필요 자재량", field:"gender2", hozAlign:"center"},
+        {title:"자재코드", field:"mtCd", hozAlign:"center"},
+        {title:"분류", field:"mtDiv", hozAlign:"center"},
+        {title:"자재명", field:"mtName", hozAlign:"center"},
+        {title:"발주 단위", field:"unit", hozAlign:"center"},
+        {title:"발주/필요 자재량", field:"placeodQt", hozAlign:"center"},
     ],
 });
 	var table3 = new Tabulator("#productionPlan-table3", {
-    height:"311px",
+	height:"100%",
     layout:"fitDataTable",
     columns:[
         {title:"상품명", field:"pdName", hozAlign:"center"},
@@ -97,6 +106,14 @@
 			console.log(res);
 			table3.setData(res)
 		})
+		
+		fetch("/ajax/qnttMtrlList/"+ pdtPlanCd)
+		.then(res => res.json())
+		.then(res => {
+			console.log(res);
+			table2.setData(res)
+		})
+		
 	});
 	
 	

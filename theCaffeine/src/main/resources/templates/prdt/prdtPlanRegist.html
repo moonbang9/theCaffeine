@@ -1,56 +1,90 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-  layout:decorate="~{layout/index}">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/index}">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
 <body>
-<div layout:fragment="content">
-	
-	<h1>주간생산 계획등록</h1>
-		<div class="demo-inline-spacing" style="margin-bottom: 20px;">
-	    <div class="d-flex justify-content-evenly" style="height: 370px;">
-	    <div>
-	    <div style="float: right; width: 250px;">
-	    <button class="btn btn-primary" type="button" id="saveBtn" style="float: right; margin-top: 8px;">검색</button>
-	    <form action="" class="row gy-2 gx-3 align-items-center">
-	    	<div style="margin-top: 0; padding-right: 0;">
-	    		<label class="col-sm-4 col-form-label">제품코드</label>
-	    		<input type="text" style="width: 95px; height: 30px;">
-	   		</div>
-	   		<div style="margin-top: 0; padding-right: 0;">
-	   			<label class="col-sm-4 col-form-label">납기일</label>
-	    		<input type="date" style="width: 95px;">
-	    	</div>
-	    </form>
-	    </div> 
-	    <h5 style="margin-bottom: 45px;">상세주문 조회</h5>
-			<div id="example-table1"></div>
+	<div layout:fragment="content">
+
+		<h1>주간생산 계획등록</h1>
+		<div class="demo-inline-spacing" style="margin-bottom: 50px;">
+			<div class="d-flex justify-content-evenly" style="height: 370px;">
+				<div>
+					<div style="float: right; width: 250px;">
+						<button class="btn btn-primary" type="button" id="saveBtn"
+							style="float: right; margin-top: 8px;">검색</button>
+						<form action="" class="row gy-2 gx-3 align-items-center">
+							<div style="margin-top: 0; padding-right: 0;">
+								<label class="col-sm-4 col-form-label">제품코드</label> <input
+									type="text" style="width: 95px; height: 30px;">
+							</div>
+							<div style="margin-top: 0; padding-right: 0;">
+								<label class="col-sm-4 col-form-label">납기일</label> <input
+									type="date" style="width: 95px;">
+							</div>
+						</form>
+					</div>
+					<h5 style="margin-bottom: 45px;">상세주문 조회</h5>
+					<div id="example-table1"></div>
+				</div>
+				<div>
+					<h5 style="margin-bottom: 45px;">전 주 생산실패목록</h5>
+					<div id="example-table2"></div>
+				</div>
+				<div>
+					<h5 style="margin-bottom: 45px;">주문량별 수요예측치</h5>
+					<div id="example-table4"></div>
+				</div>
+			</div>
 		</div>
-		<div>
-	    <h5 style="margin-bottom: 45px;">전 주 생산실패목록</h5>
-		<div id="example-table2"></div>
+		<div style="margin-bottom: 20px;">
+			<div>
+				<h5>완재품 재고 조회</h5>
+				<div id="example-table3"></div>
+			</div>
 		</div>
-		<div>
-	    <h5 style="margin-bottom: 45px;">완재품 재고 조회</h5>
-		<div id="example-table3"></div>
+		
+		<h5>생산주간 계획등록</h5>
+		<div class="card mb-4">
+			<div class="card-body">
+				<div class="mb-3 row">
+					<label for="mtrl_management_clicd" class="col-md-2 col-form-label">주간계획시작일자</label>
+					<div class="col-md-10">
+						<input class="form-control" type="date" value=""
+							id="mtrl_management_name">
+					</div>
+				</div>
+				<div class="mb-3 row">
+					<label for="mtrl_management_name" class="col-md-2 col-form-label">총 예상 원두생산 수량(kg)</label>
+					<div class="col-md-10">
+						<input class="form-control" type="text" value="" id="mtrl_management_name" readonly>
+					</div>
+				</div>
+			</div>
 		</div>
-	</div>
-	</div>
-	<div>
-	    <div>
-	    <h5>생산주간 계획등록</h5>
-		<div id="example-table4"></div>
+		<div style="margin-bottom: 20px;">
+			<div>
+				<div id="example-table5"></div>
+			</div>
 		</div>
-	</div>
-	<script>
+
+
+		<script>
 	saveBtn.addEventListener("click", e=> {
 		location.href='/production/planRegist'
 	})
 	
+	function getLists(){
+		//if(${list} != null){
+			//table
+		//}
+	}
+	
 	var table1 = new Tabulator("#example-table1", {
-    height:"311px",
+	height:"311px",
     layout:"fitDataTable",
     pagination:"local",
     paginationSize:5,
@@ -76,14 +110,14 @@
     ],
 });
 	var table3 = new Tabulator("#example-table3", {
-    height:"311px",
-    layout:"fitDataTable",
+	height:"100%",
+	layout:"fitDataFill",
     columns:[
-        {title:"제품명", field:"name", hozAlign:"center"},
-        {title:"단위", field:"progress", hozAlign:"center"},
-        {title:"현재 재고 수량", field:"gender", hozAlign:"center"},
-        {title:"안전 재고 수량", field:"gender2", hozAlign:"center"},
-        {title:"재고 수량차", field:"gender3", hozAlign:"center"},
+        {title:"제품명", field:"name", hozAlign:"center", width:260},
+        {title:"단위", field:"progress", hozAlign:"center", width:250},
+        {title:"현재 재고 수량", field:"gender", hozAlign:"center", width:260},
+        {title:"안전 재고 수량", field:"gender2", hozAlign:"center", width:260},
+        {title:"재고 수량차", field:"gender3", hozAlign:"center", width:260},
     ],
 });
 	var table4 = new Tabulator("#example-table4", {
@@ -92,6 +126,16 @@
 	        {title:"상품명", field:"progress", hozAlign:"center"},
 	        {title:"수량(kg)", field:"gender", hozAlign:"center"},
 	        {title:"납기일", field:"name", hozAlign:"center"},
+	    ],
+	});
+	
+	var table5 = new Tabulator("#example-table5", {
+	    height:"311px",
+	    layout:"fitColumns",
+	    columns:[
+	        {title:"상품명", field:"name", editor:"input", validator:"required"},
+	        {title:"수량(kg)", field:"progress", sorter:"number", hozAlign:"left", editor:"input", editor:true,  validator:["min:0", "numeric"]},
+	        {title:"납기일", field:"gender", editor:"input", validator:["required", "in:male|female"]},
 	    ],
 	});
 	</script>
