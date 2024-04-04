@@ -23,6 +23,7 @@
 				<!-- Basic Layout & Basic with Icons -->
 				<div class="row">
 
+					
 					<!-- HTML5 Inputs -->
 					<div class="card mb-4">
 						<h5 class="card-header">주문 정보</h5>
@@ -133,7 +134,7 @@
 								<div class="col-md-10">
 
 									<input type="text" readonly class="form-control-plaintext"
-										id="exampleFormControlReadOnlyInputPlain1" value="거래처 코드" v-model="clientVO.cliCd"/>
+										id="exampleFormControlReadOnlyInputPlain1" value="거래처 코드" v-model="clientVO.cliCd" name="cliCd"/>
 
 								</div>
 							</div>
@@ -203,7 +204,7 @@
 								<div class="col-md-10">
 									<input type="text" class="form-control"
 										id="defaultFormControlInput" placeholder="콩볶아조"
-										aria-describedby="defaultFormControlHelp" />
+										aria-describedby="defaultFormControlHelp" name="odChg"/>
 								</div>
 							</div>
 
@@ -211,7 +212,7 @@
 								<label for="html5-time-input" class="col-md-2 col-form-label">주문일</label>
 								<div class="col-md-10">
 									<input class="form-control" type="date" value="2024-04-29"
-										id="html5-date-input" />
+										id="html5-date-input" name="odDt"/>
 								</div>
 							</div>
 
@@ -219,7 +220,7 @@
 								<label for="html5-color-input" class="col-md-2 col-form-label">납기일</label>
 								<div class="col-md-10">
 									<input class="form-control" type="date" value="2024-05-29"
-										id="html5-date-input" />
+										id="dueDt" />
 								</div>
 							</div>
 
@@ -254,11 +255,11 @@
 												<td>{{selectedPd.pdCd}}</td>
 												<td>{{selectedPd.pdName}}</td>
 												<td><input class="form-control" type="number" min='1'
-													v-model="selectedPd.qty" id="html5-number-input" @input="makeSubTotal(idx)"></td>
+													v-model="selectedPd.qt" id="html5-number-input" @input="makeDetailPrice(idx)"></td>
 													<td>{{selectedPd.unit}}</td>
 													<td>{{selectedPd.cost}}</td>
-													<td>{{selectedPd.subTotal}}</td>
-													<td><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></td>
+													<td>{{selectedPd.detailPrice}}</td>
+													<td><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="deletePd(idx)"></button></td>
 											</tr>
 										</tbody>
 									</table>
@@ -276,7 +277,10 @@
 								<div class="col-md-10">
 									<input type="text" class="form-control"
 										id="defaultFormControlInput" placeholder="0"
-										aria-describedby="defaultFormControlHelp" />
+										aria-describedby="defaultFormControlHelp"
+										v-model="pct" @change="checkPct()" name="dcRate"
+										onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"
+										 />
 								</div>
 							</div>
 							<div class="mb-3 row">
@@ -285,14 +289,16 @@
 								<div class="col-md-10">
 									<input type="text" class="form-control"
 										id="defaultFormControlInput" placeholder="0"
-										aria-describedby="defaultFormControlHelp" />
+										aria-describedby="defaultFormControlHelp"
+										v-model="total" name="totalPrice"
+										onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"/>
 								</div>
 							</div>
 						</div>
 						<div class="card-body">
 							<div class="row justify-content-end">
 								<div class="col-sm-10">
-									<button type="submit" class="btn btn-primary">Send</button>
+									<button type="submit" class="btn btn-primary" @click="insertOrder()">Send</button>
 								</div>
 							</div>
 						</div>
@@ -301,6 +307,9 @@
 
 
 					</div>
+
+
+
 				</div>
 				<!-- card card mb-4 끝-->
 			</div>
@@ -323,7 +332,11 @@
 
 					productList : [],
 					selected: '',
-					selectedPdList : []
+					selectedPdList : [],
+
+					pct: 0,
+
+					insertOrderDetailList : []
 				}
 			},
 			created(){
@@ -333,17 +346,26 @@
 				this.myModal = new bootstrap.Modal('#modalCenter')
 
 			},
-			watch : {
-				// price나 count가 변하면 합계 금액을 계산한다.
-				onChange(idx) {
-					console.log(idx);
-					return this.selectedPdList[idx].cost * this.selectedPdList[idx].qty;
-				},
-				// 합계 금액이 변하면 세금포함 금액을 계산한다.
-				// taxIncluded() {
-				// 	return this.sum * 1.08;
-				// }
-			},
+			computed : {
+				//주문 총 합계금액 계산
+				total(){
+					let preTotal = 0;				
+					let pct = this.pct;
+					let tot = 0;
+					//선택 상품의 순수 합계 금액
+					this.selectedPdList.forEach(ele=>{
+						//console.log('길이변화감지');
+						preTotal += ele.qt * ele.cost;
+					})
+					//할인율 반영한 합계 금액
+					if(pct > 0){
+						tot = preTotal * (100-pct)/100;
+					}else{
+						tot = preTotal;
+					}
+					return tot;
+				}
+			},			
 			methods : {
 				//거래처 검색 결과 목록
 				async getCliList(keyword){
@@ -351,7 +373,6 @@
 									  .catch(keyword);
 					let list = result.data;
 					this.clientList = list;
-					//console.log(list);
 				},
 				//거래처 검색 결과에서 선택한 행을 주문등록 폼에 넣어주기
 				insertCli(client){
@@ -362,7 +383,7 @@
 				//거래처 검색 모달 열기
 				openModal(){
 					const modalToggle = document.getElementById('modalCenter'); 
-					console.log(this.myModal);
+					//console.log(this.myModal);
 					this.myModal.show(modalToggle);
 				},
 				//거래처 검색 모달 닫기
@@ -374,36 +395,76 @@
 				async getProductList(){
 					let result = await axios.get('/sales/productList');
 					let list = result.data;
-					console.log(list);
 					this.productList = list;
 				},
 				//상품명 목록에서 선택한 상품을 selectPdList에 넣고, 화면에 보여주기
 				selectPd(idx){
-					console.log(idx);
 					let pdCd = this.productList[idx].pdCd;
 
-					//이미 selectedPdList에 담겨있는지 검증
+					//선택한 상품이 이미 selectedPdList에 담겨있는지 검증
 					let selectedCheck = true;
 					this.selectedPdList.forEach(ele => {
 						if(ele.pdCd == pdCd){
 							selectedCheck = false;
 						}
 					})
+					//담겨있지 않을 경우 선택 상품을 selectedPdList에 추가
 					if(selectedCheck){
 						let product = this.productList[idx];
-						product.qty = 1;
-						product.subTotal = product.cost * product.qty;
-						console.log(product);
+						product.qt = 1;
+						product.detailPrice = product.cost * product.qt;
 
 						this.selectedPdList.splice(this.selectedPdList.length, 0, product);
+						console.log(this.selectedPdList);
 					}
 				},
-				makeSubTotal(idx){
-					console.log(idx);
-					console.log(this.selectedPdList[idx].qty);
-					let subTotal = this.selectedPdList[idx].cost * this.selectedPdList[idx].qty;
-					this.selectedPdList[idx].subTotal = subTotal;
-					console.log(this.selectedPdList[idx].subTotal);
+				//선택 상품 하나당 수량 변경에 따른 부분합
+				makeDetailPrice(idx){
+					let detailPrice = this.selectedPdList[idx].cost * this.selectedPdList[idx].qt;
+					this.selectedPdList[idx].detailPrice = detailPrice;
+				},
+				//상품 삭제
+				deletePd(idx){
+					this.selectedPdList.splice(idx, 1);
+				},
+				// 할인율 검사
+				checkPct(){
+					if(this.pct > 30){
+						alert('할인율은 0~30% 입니다');
+						this.pct = 30;
+					}					
+				},
+				// 누락된 정보 체크
+				// validation(){
+				// 	if (!this.check) {
+				// 		alert("아이디 중복확인을 해주세요.");
+				// 		return false;
+				// 	}
+
+				// 	return true;
+				// },
+
+				// 주문, 주문상세 테이블에 넣기
+				async insertOrder(){
+					let dueDt = document.getElementById('dueDt').value;
+					this.selectedPdList.forEach(ele=>{
+						let qt = ele.qt;
+						let cost = ele.cost; // 단가
+						let detailPrice = ele.detailPrice; //부분합
+						let pdCd = ele.pdCd;			
+						let orDetailSt = 1;
+
+						let detail = {qt, cost, detailPrice, pdCd, dueDt, orDetailSt};
+						this.insertOrderDetailList.push(detail);
+						console.log(detail);
+					})
+					// let data = {
+					// 	param : this.insertOrderDetailList
+					// }
+
+					// let result = await axios.post("sales/ajax/insertOrder", data)
+					// 						.catch(err => console.log(err));
+					// console.log(result);
 				}
 			}
 		})

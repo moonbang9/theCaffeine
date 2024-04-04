@@ -28,5 +28,42 @@
 		FROM pd
 		ORDER BY pd_cd
 	</select>
+	<insert id="insertOrder" parameterType="OrderVO">
+		insert into od 
+						(od_no
+						, od_dt
+						, od_chg
+						, dc_rate
+						, total_price
+						, cli_cd )
+		values 
+				(od_seq.nextval
+				, #{odDt}
+				, #{odChg}
+				, #{dcRate}
+				, #{totalPrice}
+				, #{cliCd} )	
+	</insert>
+	<insert id="insertOrderDetail" parameterType="OrderDetailVO">
+		insert into od_detail 
+								(od_detailno
+								, qt
+								, cost
+								, detail_price
+								, od_no
+								, pd_cd
+								, due_dt
+								, od_detail_st )
+		values 
+				( od_detail_seq.nextval
+					, #{qt}
+					, #{cost}
+					, #{detailPrice}
+					, od_seq.currval
+					, #{pdCd}
+					, #{dueDt}
+					, #{odDetailSt}	)
+	</insert>
+	
 
 </mapper>

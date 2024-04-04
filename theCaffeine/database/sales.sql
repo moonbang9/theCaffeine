@@ -9,6 +9,9 @@ select * from od_detail; --주문 상세
 select * from send; --제품 출고
 select * from rtn; --제품 반품
 select * from disc_pd; --제품 폐기
+select * from bom;
+
+
 
 /* 시퀀스 */
 CREATE SEQUENCE od_seq;
@@ -24,16 +27,17 @@ DROP SEQUENCE disc_pd_seq;
 
 /*  제품 등록   */
 insert into pd
-values ( 'PET01', '에티오피아 G1 예가체프 첼바', 'pcs',113000); --단위
+values ( 'PET01', '에티오피아 G1 예가체프 첼바', 'box',339000); --단위
 insert into pd
-values ( 'PBR01', '브라질 홀빈 로스팅 세하도 커피 원두', 'pcs',91000);
+values ( 'PBR01', '브라질 홀빈 로스팅 세하도 커피 원두', 'box',273000);
 insert into pd
-values ( 'PCB01', '콜롬비아 수프리모 후일라 싱글오리진 로스팅원두커피', 'pcs',124000);
+values ( 'PCB01', '콜롬비아 수프리모 후일라 싱글오리진 로스팅원두커피', 'box',372000);
 insert into pd
-values ( 'PPR01', '프리미엄 페루 싱글오리진 찬차마요 원두 커피', 'pcs',245333);
+values ( 'PPR01', '프리미엄 페루 싱글오리진 찬차마요 원두 커피', 'box',736000);
 insert into pd
-values ( 'PCT01', '코스타리카 따라주 로스팅 원두커피 홀빈 싱글오리진', 'pcs',140666);
+values ( 'PCT01', '코스타리카 따라주 로스팅 원두커피 홀빈 싱글오리진', 'box',422000);
 
+delete from pd;
 
 /*  거래처 등록  */
 insert into cli
@@ -55,3 +59,18 @@ where cli_cd LIKE '%58%'
 select pd_cd, pd_name, unit, cost
 from pd
 order by pd_cd;
+
+/* 주문 등록 + 주문상세 등록 */
+select * from od;
+select * from od_detail;
+
+insert into od (od_no, od_dt, od_chg, dc_rate, total_price, cli_cd)
+values (od_seq.nextval,'2024-04-04', '콩볶아', 0.1, 10000, 'PCLI001');
+
+insert into od_detail (od_detailno, qt, cost, detail_price, od_no, pd_cd, due_dt)
+values (od_detail_seq.nextval, 2, 10000, 20000, od_seq.currval, 'PET01', '2024-06-01');
+insert into od_detail (od_detailno, qt, cost, detail_price, od_no, pd_cd, due_dt)
+values (od_detail_seq.nextval, 3, 15000, 45000, od_seq.currval, 'PBR01', '2024-06-05');
+
+delete from od;
+delete from od_detail

@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.theCaffeine.mes.comm.clnt.model.ClientVO;
 import com.theCaffeine.mes.sale.mapper.InsertOrderMapper;
+import com.theCaffeine.mes.sale.model.OrderDetailVO;
+import com.theCaffeine.mes.sale.model.OrderVO;
 import com.theCaffeine.mes.sale.model.ProductVO;
 import com.theCaffeine.mes.sale.service.InsertOrderService;
 
@@ -27,5 +29,14 @@ public class InsertOrderServiceImpl implements InsertOrderService{
 	public List<ProductVO> productList() {
 		return insertOrderMapper.productList();
 	}
+
+	@Override
+	public int insertOrder(OrderVO orderVO, OrderDetailVO orderDetailVO) {
+		int result = insertOrderMapper.insertOrder(orderVO);
+		insertOrderMapper.insertOrderDetail(orderDetailVO);
+		return result;
+	}
+
+	
 
 }
