@@ -9,4 +9,8 @@ public interface MtrlOrderService {
 	List<MtrlOrderVO> getMtrlList(String cliCd);
 	int insertMtrlOrder(MtrlOrderVO vo);
 	int deleteMtrlOrder(String mtPlaceodCd);
+	int updateMtrlOrder(MtrlOrderVO vo);
+	
+	List<MtrlOrderVO> getMtrlqualList(MtrlOrderVO vo);
+	int insertMtrlQuality(MtrlOrderVO vo);
 }

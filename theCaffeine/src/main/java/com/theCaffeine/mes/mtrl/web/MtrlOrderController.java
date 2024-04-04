@@ -1,5 +1,6 @@
 package com.theCaffeine.mes.mtrl.web;
 
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,8 +47,17 @@ public class MtrlOrderController {
 	
 	// 자재발주요청 삭제
 	@PostMapping("/ajax/deleteMtrlOrder")
-	public String deleteMtrl(@RequestBody String mtPlaceodCd) {
+	public String deleteMtrlOrder(@RequestBody String mtPlaceodCd) {
 		mtrlOrderService.deleteMtrlOrder(mtPlaceodCd);
 		return "OK";
 	}
+	
+	// 자재 발주처리
+	@PostMapping("/ajax/updateMtrlOrder")
+	public MtrlOrderVO updateMtrlOrder(@RequestBody MtrlOrderVO vo) {
+		mtrlOrderService.updateMtrlOrder(vo);
+		System.out.println(vo);
+		return vo;
+	}
+		
 }

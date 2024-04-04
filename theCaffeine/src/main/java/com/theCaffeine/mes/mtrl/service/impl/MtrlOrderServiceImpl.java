@@ -2,6 +2,9 @@
 package com.theCaffeine.mes.mtrl.service.impl;
 
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +36,27 @@ public class MtrlOrderServiceImpl implements MtrlOrderService{
 	@Override
 	public int deleteMtrlOrder(String mtPlaceodCd) {
 		return mtrlOrderMapper.deleteMtrlOrder(mtPlaceodCd);
+	}
+
+	@Override
+	public int updateMtrlOrder(MtrlOrderVO vo) {
+        ScheduledExecutorService excutorService = Executors.newScheduledThreadPool(1);
+        excutorService.schedule(() -> {
+        	mtrlOrderMapper.updateMtrlOrder2(vo.getMtPlaceodCd());
+            excutorService.shutdown();
+        }, vo.getLeadtm(), TimeUnit.MINUTES); // TimeUnit.DAYS 로 바꾸면 됨.
+        
+		return mtrlOrderMapper.updateMtrlOrder(vo);
+	}
+
+	@Override
+	public List<MtrlOrderVO> getMtrlqualList(MtrlOrderVO vo) {
+		return mtrlOrderMapper.getMtrlqualList(vo);
+	}
+
+	@Override
+	public int insertMtrlQuality(MtrlOrderVO vo) {
+		return mtrlOrderMapper.insertMtrlQuality(vo);
 	}
 	
 }

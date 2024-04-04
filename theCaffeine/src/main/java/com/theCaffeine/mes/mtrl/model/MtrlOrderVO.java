@@ -24,5 +24,7 @@ public class MtrlOrderVO {
 	String mtName;
 	String cliName;
 	String unit;
-	
+	int leadtm;
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	Date placeodArridt;
 }

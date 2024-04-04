@@ -38,7 +38,7 @@
               	<div class="mb-3 row">
                   <label for="mtrl_management_clicd" class="col-md-2 col-form-label">거래처</label>
                   <div class="col-md-10">
-                   <select id="mtrl_management_clicd" class="form-select">
+                   <select id="mtrl_management_clicd" class="form-select" >
                      <option value="MCLI001">코빈즈 커피 (에티오피아)</option>
                      <option value="MCLI002">블레스빈 (브라질)</option>
                      <option value="MCLI003">카페 노갈레스 (콜롬비아)</option>
@@ -131,6 +131,9 @@
 		exampleModalLabel2.style.display = "none";
 		mtrlSaveBtn1.style.display = "block";
 		mtrlModifyBtn1.style.display = "none";
+		mtrl_management_clicd.disabled = false;
+		mtrl_management_cd.readOnly = false;
+		mtrl_management_div.disabled = false;
 		mtrl_management_clicd.value = "MCLI001";
 		mtrl_management_cd.value = "";
 		mtrl_management_div.value = "원자재";
@@ -152,7 +155,14 @@
 	        {title:"자재코드", field:"mtCd", width:150, hozAlign:"center"},
 	        {title:"자재명", field:"mtName", width:180, hozAlign:"center"}, 
 	        {title:"거래처", field:"cliName", width:180, hozAlign:"center"},
-	        {title:"단가 (원)", field:"cost", width:150, formatter:"money", hozAlign:"center"},
+	        {title:"단가", field:"cost", width:150, formatter:"money", hozAlign:"center", formatterParams:{
+	            decimal:",",
+	            thousand:",",
+	            symbol:" 원",
+	            symbolAfter:"p",
+	            negativeSign:true,
+	            precision:false,
+	        }},
 	        {title:"유통기한 (개월)", field:"expDt", width:170, hozAlign:"center"},
 	        {title:"리드타임 (일)", field:"leadtm", width:150, hozAlign:"center"},
 	        {title:"안전재고 기준 (%)", field:"safeStkRate", width:170, hozAlign:"center"},
@@ -169,8 +179,15 @@
 	        {title:"자재코드", field:"mtCd", width:150, hozAlign:"center"},
 	        {title:"자재명", field:"mtName", width:180, hozAlign:"center"}, 
 	        {title:"거래처", field:"cliName", width:180, hozAlign:"center"},
-	        {title:"단가 (원)", field:"cost", width:150, formatter:"money", hozAlign:"center"},
-	        {title:"유통기한 (개월)", field:"expDt", width:170, hozAlign:"center"},
+	        {title:"단가", field:"cost", width:150, formatter:"money", hozAlign:"center", formatterParams:{
+	            decimal:",",
+	            thousand:",",
+	            symbol:" 원",
+	            symbolAfter:"p",
+	            negativeSign:true,
+	            precision:false,
+	        }},
+	        {title:"유통기한", field:"expDt", width:170, hozAlign:"center"},
 	        {title:"리드타임 (일)", field:"leadtm", width:150, hozAlign:"center"},
 	        {title:"안전재고 기준 (%)", field:"safeStkRate", width:170, hozAlign:"center"},
 	        {title:"월 소비량", field:"week", width:160, hozAlign:"center"}
@@ -182,6 +199,9 @@
 		exampleModalLabel2.style.display = "block";
 		mtrlSaveBtn1.style.display = "none";
 		mtrlModifyBtn1.style.display = "block";
+		mtrl_management_clicd.disabled = true;
+		mtrl_management_cd.readOnly = true;
+		mtrl_management_div.disabled = true;
 		let mtCd = row.getData().mtCd;
 		console.log(mtCd);
 		fetch("/ajax/mtrlInfo/"+ mtCd)
@@ -202,6 +222,9 @@
 		exampleModalLabel2.style.display = "block";
 		mtrlSaveBtn1.style.display = "none";
 		mtrlModifyBtn1.style.display = "block";
+		mtrl_management_clicd.disabled = true;
+		mtrl_management_cd.readOnly = true;
+		mtrl_management_div.disabled = true;
 		let mtCd = row.getData().mtCd;
 		console.log(mtCd);
 		fetch("/ajax/mtrlInfo/"+ mtCd)

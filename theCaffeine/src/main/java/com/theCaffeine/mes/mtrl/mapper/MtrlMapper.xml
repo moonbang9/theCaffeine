@@ -51,7 +51,8 @@
 		        m.mt_name,
 		        m.cost,
 		        m.unit,
-		        m.exp_dt,
+                case when m.exp_dt = 0 then null
+                end as exp_dt,
 		        m.leadtm,
 		        m.safe_stk_rate,
 		        m.cli_cd,
