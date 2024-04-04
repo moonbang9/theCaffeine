@@ -9,5 +9,6 @@ import com.theCaffeine.mes.qlty.model.QltyVO;
 @Service
 public interface QltyService {
 	List<QltyVO> getMtrlCheckList(QltyVO vo);
+	int insertMcRes(QltyVO vo);
 
 }
