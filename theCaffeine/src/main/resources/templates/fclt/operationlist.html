@@ -33,28 +33,28 @@
 										aria-label="Close"></button>
 								</div>
 								<div class="modal-body">
+								<div class="row">
+										<div class="col mb-3">
+											<div class="input-group" style="display: none;">
+												<span class="input-group-text col-2" id="basic-addon14">비가동 코드</span>
+												<input type="number" class="form-control" id="operationCd"
+													aria-describedby="basic-addon14" readonly>
+											</div>
+										</div>
+									</div>
 									<div class="row">
 										<div class="col mb-3">
 											<div class="input-group">
-												<span class="input-group-text" id="basic-addon14">설비명</span>
+												<span class="input-group-text col-2" id="basic-addon14">설비명</span>
 												<input type="text" class="form-control" id="nonopfcltName"
-													aria-describedby="basic-addon14">
+													aria-describedby="basic-addon14" readonly>
 											</div>
 										</div>
 									</div>
 									<div class="row">
 										<div class="col mb-3">
 											<div class="input-group">
-												<span class="input-group-text" id="basic-addon14">제조업체</span>
-												<input type="text" class="form-control" id="nonopCompName"
-													aria-describedby="basic-addon14">
-											</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col mb-3">
-											<div class="input-group">
-												<span class="input-group-text" id="basic-addon14">담당자</span>
+												<span class="input-group-text col-2" id="basic-addon14">담당자</span>
 												<input type="text" class="form-control" id="nonopCharge"
 													aria-describedby="basic-addon14">
 											</div>
@@ -64,7 +64,7 @@
 									<div class="row">
 										<div class="col mb-3">
 											<div class="input-group">
-												<label class="input-group-text" for="inputGroupSelect01">사유 종류</label>
+												<label class="input-group-text col-2" for="inputGroupSelect01">사유 종류</label>
 												<select class="form-select" id="nonopReason">
 													<option selected>정기점검</option>
 													<option value="1">기타</option>
@@ -75,7 +75,7 @@
 									<div class="row">
 										<div class="col mb-3">
 									<div class="input-group">
-			                        <span class="input-group-text">상세 사유</span>
+			                        <span class="input-group-text col-2">사유 상세</span>
 			                        <textarea class="form-control" aria-label="With textarea" placeholder="Comment"></textarea>
 			                      </div>
 			                      </div>
@@ -84,7 +84,7 @@
 									<div class="row">
 										<div class="col mb-3">
 											<div class="input-group">
-												<span class="input-group-text" id="basic-addon14">시작시간</span>
+												<span class="input-group-text col-2" id="basic-addon14">시작시간</span>
 												<div class="col-md-10">
 						                          <input class="form-control" type="time" value="12:30:00" id="nonopStartTime">
 						                        </div>
@@ -94,7 +94,7 @@
 									<div class="row">
 										<div class="col mb-3">
 											<div class="input-group">
-												<span class="input-group-text" id="basic-addon14">종료시간</span>
+												<span class="input-group-text col-2" id="basic-addon14">종료시간</span>
 												<div class="col-md-10">
 						                          <input class="form-control" type="time" value="12:30:00" id="nonopFinishTime">
 						                        </div>
@@ -105,36 +105,129 @@
 								<div class="modal-footer">
 									<button type="button" class="btn btn-outline-secondary"
 										data-bs-dismiss="modal">취소</button>
-									<button type="button" class="btn btn-primary">설비 등록</button>
+									<button type="button" style="display: block;" class="btn btn-primary" id="saveOprtBtn">등록</button>
+										<button type="button" style="display: none;" class="btn btn-primary" id="updateOprtBtn">수정</button>
 								</div>
 							</div>
 						</div>
 					</div>
+					<div id="oprtListTable"></div>
 				</div>
 			</div>
-			
-		</div>
-	</div>
-	
-	<script>
-	var fclttable = new Tabulator("#fcltListTable", {
+				<script>
+	var oprttable = new Tabulator("#oprtListTable", {
 	    //layout:"fitColumns",
+	    pagination:"local",
+			    paginationSize:10,
+			    paginationSizeSelector:[10, 20, 30, 40],
+			    movableColumns:true,
+			    paginationCounter:"rows",
 	    height:"100%",
 	    rowHeader:{formatter:"rownum", headerSort:false, width:84, hozAlign:"center", resizable:false, frozen:true},
 	    //resizableColumnFit:true,
 	   
 	    columns:[
-	        {title:"설비 코드", field:"fcCd", width:100, hozAlign:"center"},
+	        {title:"비가동 코드", field:"nonopCd", width:100, hozAlign:"center"},
 	        {title:"설비 명", field:"fcName", width:195, hozAlign:"center"}, 
-	        {title:"투입 공정", field:"insMf", width:100, hozAlign:"center"},
-	        {title:"제조 업체", field:"mnfCom", width:150, hozAlign:"center"},
-	        {title:"입고 일자", field:"strDt", width:190, hozAlign:"center"},
-	        {title:"점검주기", field:"insCycle", width:150, hozAlign:"center"},
-	        {title:"생산량", field:"output", width:150, hozAlign:"center"},
-	        {title:"소요시간", field:"durTime", width:160, hozAlign:"center"},
-	        {title:"설비 상태", field:"st", width:100, hozAlign:"center"}
+	        {title:"상태", field:"st", width:100, hozAlign:"center"},
+	        {title:"시작 시간", field:"nonopSttTime", width:150, hozAlign:"center"},
+	        {title:"종료 시간", field:"nonopFnTime", width:190, hozAlign:"center"},
+	        {title:"담당자", field:"fcChg", width:150, hozAlign:"center"},
+	        {title:"사유", field:"rsn", width:150, hozAlign:"center"},
+	        {title:"사유 상세", field:"rsnDesc", width:160, hozAlign:"center"},
+	        {title:"설비 코드", field:"fcCd", width:100, hozAlign:"center"}
 	    ],
 	});
+	
+	//클릭 시 단건 데이터 불러오기
+	oprttable.on("rowClick", function(e, row){
+		saveOprtBtn.style.display="none";
+		updateOprtBtn.style.display="block";
+		let nonopCd = row.getData().nonopCd;
+		console.log(nonopCd);
+		fetch("/fclt/operationlist/"+ nonopCd)
+		.then(res => res.json())
+		.then(res => {
+			console.log(res);
+			const myModal = new bootstrap.Modal('#modalCenter', {
+				  keyboard: false
+				})
+			const modalToggle = document.getElementById('modalCenter'); 
+			myModal.show(modalToggle);
+			getInfo(res);
+		})
+	});
+	function getInfo(obj){
+		operationCd.value = obj.nonopCd;
+		nonopfcltName.value=obj.fcName;
+		inspectionDt.value = obj.st;
+		chargeofins.value = obj.nonopSttTime;
+		inspectionCat.value = obj.nonopFnTime;
+		conclusion.value = obj.fcChg;
+		inspectionContent.value = obj.rsnDesc;
+		
+		saveOprtBtn.style.display="block";
+		updateOprtBtn.style.display="none";
+	}
+	
+	listReq();
+	
+	// 비가동 목록 데이터
+	function listReq() {
+		fetch("/fclt/getoperation")
+		.then(res => res.json())
+		.then(res =>{
+			console.log(res)
+			oprttable.setData(res)} )
+		
+	}
+	
+	saveOprtBtn.addEventListener("click", e=> {
+if(nonopSttTime.value == ""){
+	alert("비가동시간이 입력되지 않았습니다.");
+	nonopSttTime.focus();
+}else {
+	saveReq();
+}
+})
+
+	saveOprtBtn.addEventListener("click", e=> {
+			saveReq();
+		});
+	
+	// 등록 요청
+	function saveReq() {
+		const insDt= inspectionDt.value;
+		const insCd= fcltstatus.value;
+		const insCat= chargeofins.value;
+		const insCont= manufacturingCom.value;
+		const cc= strDate.value;
+		const chg= inspectionCycle.value;
+		const fcCd = durationTime.value;
+		const nonopCd = durationTime.value;
+		let param = {insCd, insDt,insCat,insCont,cc,chg,fcCd,nonopCd};
+		console.log(param);
+		fetch("/fclt/insertinsp",{
+			method : "post",
+			headers: {
+			      "Content-Type": "application/json",
+			    },
+			body : JSON.stringify(param)
+		})
+		.then(res => res.json())
+		.then(res => saveRes(res))
+	}
+	
+	// 등록 응답
+	function saveRes(res) {
+		alert("설비등록이 완료되었습니다.");
+		location.href= "/fclt/facilitylist"
+	}
 	</script>
+		</div>
+		
+	</div>
+	
+
 </body>
 </html>

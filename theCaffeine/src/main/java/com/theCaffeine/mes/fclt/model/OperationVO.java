@@ -8,9 +8,11 @@ import lombok.Data;
 @Data
 public class OperationVO {
 	String nonopCd;
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	String fcName;
+	int st;
+	@JsonFormat(pattern = "yy-MM-dd HH:mm:ss")
 	Date nonopSttTime;
-	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yy-MM-dd HH:mm:ss")
 	Date nonopFnTime;
 	String fcChg;
 	String rsn;
