@@ -1,17 +1,40 @@
 package com.theCaffeine.mes.qlty.web;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.theCaffeine.mes.qlty.model.QltyVO;
+import com.theCaffeine.mes.qlty.service.QltyService;
+
 @RestController
-public class QualityController {
+public class QltyController {
+	
+	@Autowired QltyService qltyService;
 
 	// 자재검사 페이지이동
 	@GetMapping("/quality/material")
 	public ModelAndView material() {
 		ModelAndView mv = new ModelAndView("qlty/material");
 		return mv;
+	}
+	
+	// 자재검사대기 목록 
+	@GetMapping("/ajax/mtrlCheckList")
+	public List<QltyVO> qltyList(QltyVO vo){
+		return qltyService.getMtrlCheckList(vo);
+	}
+	
+	// 자재검사결과 등록
+	@PostMapping("/ajax/insertMcRes")
+	public QltyVO insertMcRes(@RequestBody QltyVO vo) {
+		qltyService.insertMcRes(vo);
+		return vo;
 	}
 
 	// 공정검사 페이지이동

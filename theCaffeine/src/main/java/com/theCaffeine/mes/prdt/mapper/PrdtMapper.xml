@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.theCaffeine.mes.prdt.mapper.PrdtMapper">
+
+	<select id="getPlanList" resultType="PlanVO">
+		select w.pdt_plan_cd, w.wk_plan_stt_dt, case when r.cnt = '-1' then null
+                                        else r.pd_name || ' 외 ' || r.cnt || '개'
+                                        end as plantot, w.psum from 
+		(select p.pdt_plan_cd, p.wk_plan_stt_dt, sum(d.qt) as psum from pdt_plan_detail d right outer 
+			join PDTPLAN p 
+			on p.pdt_plan_cd=d.pdt_plan_cd GROUP by p.pdt_plan_cd, p.wk_plan_stt_dt order by p.pdt_plan_cd) w
+		join (select pdt_plan_cd, count(pd_name)-1 as cnt, min(pd_name) as pd_name 
+				from (select p.pdt_plan_cd, d.pd_name 
+        				from pdt_plan_detail d right outer 
+        				join PDTPLAN p 
+        				on p.pdt_plan_cd=d.pdt_plan_cd GROUP by p.pdt_plan_cd, d.pd_name 
+        				order by p.pdt_plan_cd) 
+        		group by pdt_plan_cd) r 
+		on w.pdt_plan_cd=r.pdt_plan_cd 
+		order by r.pdt_plan_cd
+	</select>
+	
+	<select id="getPlanDetailList" resultType="PlanVO">
+		SELECT 	pd_name,
+        		qt,
+        		due_dt
+		FROM 	PDT_PLAN_DETAIL
+		WHERE  	pdt_plan_cd = #{pdtPlanCd}
+	</select>
+	
+	<select id="getQnttMtrlList" resultType="MtrlPlanVO">
+		select * from 
+			(select m.pdt_plan_cd, m.bag as placeod_qt, m.mt_cd, y.mt_div, y.mt_name, m.unit from 
+				(select p.pdt_plan_cd,sum(p.qt)/b.consum bag,b.mt_cd, b.UNIT from bom b 
+					join PDT_PLAN_DETAIL p 
+					on b.pd_cd=p.pd_cd where b.detail_unit='kg' group by p.pdt_plan_cd,b.mt_cd,b.consum, b.UNIT) m 
+				join mt y 
+				on m.mt_cd=y.mt_cd
+			union
+			select m.pdt_plan_cd, m.pcs as placeod_qt, m.mt_cd, y.mt_div, y.mt_name, m.unit from 
+				(select w.pdt_plan_cd,w.bag * bb.consum pcs,bb.mt_cd, bb.unit from 
+					(select p.pdt_plan_cd,p.pd_cd,sum(p.qt)/b.consum bag,b.mt_cd from bom b 
+						join PDT_PLAN_DETAIL p 
+						on b.pd_cd=p.pd_cd where b.detail_unit='kg' group by p.pd_cd,p.pdt_plan_cd,b.mt_cd,b.consum) w 
+					join bom bb 
+					on w.pd_cd=bb.pd_cd where bb.detail_unit='pcs') m 
+				join mt y 
+				on m.mt_cd=y.mt_cd
+			union
+			select m.pdt_plan_cd, m.pcs as placeod_qt, m.mt_cd, y.mt_div, y.mt_name, m.unit from 
+				(select w.pdt_plan_cd, sum(w.bag * bb.consum) pcs,bb.mt_cd, bb.unit from 
+					(select p.pdt_plan_cd,p.pd_cd,sum(p.qt)/b.consum bag,b.mt_cd from bom b 
+						join PDT_PLAN_DETAIL p 
+						on b.pd_cd=p.pd_cd where b.detail_unit='kg' group by p.pd_cd,p.pdt_plan_cd,b.mt_cd,b.consum) w 
+					join bom bb 
+					on w.pd_cd=bb.pd_cd where bb.detail_unit='box' group by w.pdt_plan_cd, bb.mt_cd, bb.unit) m 
+				join mt y 
+				on m.mt_cd=y.mt_cd)
+		where pdt_plan_cd = #{pdtPlanCd}
+	</select>
+	
+	
+	
+</mapper>

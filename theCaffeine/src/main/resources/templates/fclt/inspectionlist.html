@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/index}">
+<head>
+<meta charset="UTF-8">
+<title>facility</title>
+<style>
+
+</style>
+</head>
+<body>
+	<div layout:fragment="content">
+		<h1>점검 관리</h1>
+		<div id="example-table">
+		<div class="divider text-start">
+                        <div class="divider-text">설비 관리</div>
+                      </div>
+			<!-- Vertically Centered Modal -->
+			<div class="col-lg-4 col-md-6">
+				<div class="mt-3">
+					<!-- Button trigger modal -->
+					<button type="button" class="btn btn-primary"
+						data-bs-toggle="modal" data-bs-target="#modalCenter" id="addInspBtn">
+						점검 등록</button>
+
+					
+					<!-- Modal -->
+					<div class="modal fade" id="modalCenter" tabindex="-1"
+						aria-hidden="true">
+						<div class="modal-dialog modal-dialog-centered" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="addModalType" style="display:block">점검 등록</h5>
+									<h5 class="modal-title" id="updateModalType" style="display:none">점검 수정</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal"
+										aria-label="Close"></button>
+								</div>
+								<div class="modal-body" id="inspectionForm">
+								<div class="row">
+										<div class="col mb-3">
+											<div class="input-group" style="display: none;">
+												<span class="input-group-text" id="basic-addon14">점검 코드</span>
+												<input type="number" class="form-control" id="inspectionCd"
+													aria-describedby="basic-addon14" readonly>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col mb-3">
+											<div class="input-group" style="display: none;">
+												<span class="input-group-text" id="basic-addon14">설비 코드</span>
+												<input type="number" class="form-control" id="facilityCd"
+													aria-describedby="basic-addon14">
+											
+											</div>
+										</div>
+									</div>
+									<div class="row" style="display: none;" id="updateHideName">
+										<div class="col mb-3">
+											<div class="input-group" >
+												<span class="input-group-text col-2" id="basic-addon14">설비명</span>
+												
+												<select class="form-select"  disabled>
+													<option  th:each="fclt : ${fcltNames}" th:value="${fclt.fcCd}" th:text="${fclt.fcName}">
+													
+												</select>
+											</div>
+										</div>
+									</div>
+									<div class="row" style="display: block;" id="insertShowName">
+										<div class="col mb-3">
+											<div class="input-group" >
+												<span class="input-group-text col-2" id="basic-addon14">설비명</span>
+												<select class="form-select" id="fcltName" >
+												<option selected value="" >선택</option>
+													<option  th:each="fclt : ${fcltNames}" th:value="${fclt.fcCd}" th:text="${fclt.fcName}" id="facilName">
+													
+												</select>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col mb-3">
+											<div class="input-group">
+												<span class="input-group-text" id="basic-addon14">점검일자</span>
+												
+						                          <input class="form-control" type="date"  id="inspectionDt">
+						                 
+											</div>
+										</div>
+									</div>
+									<div class="row" style="display: none;" id="insCatHide">
+										<div class="col mb-3">
+											<div class="input-group">
+												<label class="input-group-text col-2" for="inputGroupSelect01">점검 구분</label>
+												<select class="form-select" id="insCatSelected" disabled>
+												<option selected value="">선택</option>
+													<option value="0">정기</option>
+													<option value="1">수시</option>
+													<option value="2">기타</option>
+												</select>
+											</div>
+										</div>
+									</div>
+									<div class="row" style="display: block;" id="insCatShow">
+										<div class="col mb-3">
+											<div class="input-group">
+												<label class="input-group-text col-2" for="inputGroupSelect01">점검 구분</label>
+												<select class="form-select" id="inspectionCat">
+												<option selected value="" >선택</option>
+													<option value="0">정기</option>
+													<option value="1">수시</option>
+													<option value="2">기타</option>
+												</select>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col mb-3">
+											<div class="input-group">
+												<span class="input-group-text col-2" id="basic-addon14">담당자</span>
+												<input type="text" class="form-control" id="chargeofins"
+													aria-describedby="basic-addon14">
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col mb-3">
+											<div class="input-group">
+												<label class="input-group-text col-2" for="inputGroupSelect01">판정</label>
+												<select class="form-select" id="conclusion">
+													<option selected value="">선택</option>
+													<option value="적합">적합</option>
+													<option value="부적합">부적합</option>
+													
+												</select>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col mb-3">
+									<div class="input-group">
+			                        <span class="input-group-text col-2">점검 내용</span>
+			                        <textarea class="form-control" aria-label="With textarea" id="inspectionContent"></textarea>
+			                      </div>
+			                      </div>
+									</div>
+									
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-outline-secondary"
+										data-bs-dismiss="modal">취소</button>
+									<button type="button" style="display: block;" class="btn btn-primary" id="saveInspBtnMdl">등록</button>
+									<button style="display: none;" type="button" class="btn btn-primary" id="updateInspBtnMdl">수정</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- END OF Modal -->
+				</div>
+			</div>
+			<div id="inspListTable"></div>
+			<script>
+	
+	//테이블 생성 
+	var insptable = new Tabulator("#inspListTable", {
+	    //layout:"fitColumns",
+	    pagination:"local",
+			    paginationSize:10,
+			    paginationSizeSelector:[10, 20, 30, 40],
+			    movableColumns:true,
+			    paginationCounter:"rows",
+	    height:"100%",
+	    rowHeader:{formatter:"rownum", headerSort:false, width:84, hozAlign:"center", resizable:false},
+	    //resizableColumnFit:true,
+	   
+	    columns:[
+	    	 {title:"설비 코드", field:" fcCd", width:160, hozAlign:"center"},
+	        {title:"점검 코드", field:"insCd", width:160, hozAlign:"center"},
+	        {title:"설비 명", field:"fcName", width:195, hozAlign:"center" ,frozen:true}, 
+	        {title:"점검일", field:"insDt", width:150, hozAlign:"center"},
+	        {title:"점검 구분", field:"insCat", width:150, hozAlign:"center"},
+	        {title:"점검 내용", field:"insCont", width:160, hozAlign:"center"},
+	        {title:"판정", field:"cc", width:150, hozAlign:"center"}, 
+	        {title:"담당자", field:"chg", width:180, hozAlign:"center"}
+	    ],
+	});
+	
+	// 점검 목록 데이터
+	function listReq() {
+		fetch("/fclt/getinspection")
+		.then(res => res.json())
+		.then(res =>{
+			console.log(res)
+			insptable.setData(res)} )
+		
+	}
+	
+	//클릭 시 단건 데이터 요청
+	insptable.on("rowClick", function(e, row){
+		addModalType.style.display="none";
+		updateModalType.style.display="block";
+		saveInspBtnMdl.style.display = "block";
+		updateInspBtnMdl.style.display = "none";
+		let insCd = row.getData().insCd;
+		console.log(insCd);
+		fetch("/fclt/inspectionlist/"+ insCd)
+		.then(res => res.json())
+		.then(res => {
+			console.log(res);
+			const myModal = new bootstrap.Modal('#modalCenter', {
+				  keyboard: false
+				})
+			const modalToggle = document.getElementById('modalCenter'); 
+			myModal.show(modalToggle);
+			getInfo(res);
+		})
+	});
+	
+	// 목록 value 불러오기 및 수정 등록
+	function getInfo(obj){
+		inspectionCd.value = obj.insCd;
+		facilName.value=obj.fcName;
+		facilityCd.value= obj.fcCd;
+		inspectionDt.value = obj.insDt;
+		chargeofins.value = obj.chg;
+		insCatSelected.value = obj.insCat;
+		conclusion.value = obj.cc;
+		inspectionContent.value = obj.insCont;
+		saveInspBtnMdl.style.display="none";
+		updateInspBtnMdl.style.display="block";
+		updateHideName.style.display="block";
+		insertShowName.style.display="none";
+		insCatHide.style.display="block";
+		insCatShow.style.display="none";
+		document.getElementById('inspectionDt').readOnly = true;
+		document.getElementById('inspectionCat').readOnly = true;
+		
+	}
+	
+	listReq();
+	
+	//등록창 값 비워주기 
+	addInspBtn.addEventListener("click",function(){
+		addModalType.style.display = "block";
+		updateModalType.style.display = "none";
+		saveInspBtnMdl.style.display = "block";
+		updateInspBtnMdl.style.display = "none";
+		updateHideName.style.display="none";
+		insertShowName.style.display="block";
+		insCatHide.style.display="none";
+		insCatShow.style.display="block";
+		document.getElementById('inspectionDt').readOnly = false;
+		facilityCd.value = "";
+		inspectionCd.value = "";
+		fcltName.value="";
+		inspectionDt.value ="";
+		chargeofins.value ="";
+		inspectionCat.value ="";
+		conclusion.value ="";
+		inspectionContent.value ="";
+	});
+	
+	
+	fcltName.addEventListener("change",e=>{
+		console.log(fcltName.value);
+		facilityCd.value = fcltName.value; 
+	});
+	
+
+
+	//등록 버튼 클릭 시 데이터 값 넘기기
+	saveInspBtnMdl.addEventListener("click", e=> {
+		updateHideName.style.display="none";
+		insertShowName.style.display="block";
+			saveReq();
+	});
+	
+	// 등록 요청
+	function saveReq() {
+		const fcCd= fcltName.value;
+		const insDt= inspectionDt.value;
+		const insCat= inspectionCat.value;
+		const insCont= inspectionContent.value;
+		const cc= conclusion.value;
+		const chg= chargeofins.value;
+		
+		let param = { insDt,insCat,insCont,cc,chg, fcCd};
+		console.log(param);
+		fetch("/fclt/insertinsp",{
+			method : "post",
+			headers: {
+			      "Content-Type": "application/json",
+			    },
+			body : JSON.stringify(param)
+		})
+		.then(res => res.json())
+		.then(res => saveRes(res))
+	}
+	
+	// 등록 응답
+	function saveRes(res) {
+		alert("점검 등록이 완료되었습니다.");
+		location.href= "/fclt/inspectionlist"
+	}
+	
+	//수정 등록 시 데이터 값 넘기기
+	updateInspBtnMdl.addEventListener("click", e=> {
+		modReq();
+	})
+	// 수정 요청
+	function modReq() {
+		
+		const insCd= inspectionCd.value;
+		const insCont= inspectionContent.value;
+		const cc= conclusion.value;
+		const chg= chargeofins.value;
+		const fcCd = facilityCd.value
+		let param = {insCd, insCont,cc,chg, fcCd};
+		console.log(param);
+		fetch("/fclt/updateinsp",{
+			method : "post",
+			headers: {
+			      "Content-Type": "application/json",
+			    },
+			body : JSON.stringify(param)
+		})
+		.then(res => res.json())
+		.then(res => modRes(res))
+	}
+
+	// 수정 요청 응답
+	function modRes(res) {
+		alert("수정이 완료되었습니다!");
+		location.href= "/fclt/inspectionlist"
+	}
+	</script>
+		</div>
+	</div>
+	
+	
+</body>
+</html>

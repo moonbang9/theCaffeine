@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.theCaffeine.mes.sale.mapper.InsertOrderMapper">
+
+
+	<select id="getClientList" resultType="ClientVO" parameterType="String">
+ 		SELECT cli_cd
+ 				, cli_name
+ 				, bussno
+ 				, tel
+ 				, addr
+ 				, cli_chg
+ 				, mail
+		FROM cli
+		WHERE cli_cd LIKE '%' || #{searchCli} || '%'
+    		OR cli_name LIKE '%' || #{searchCli} || '%'
+    		OR cli_chg LIKE '%' || #{searchCli} || '%'
+    		OR tel LIKE '%' || #{searchCli} || '%'		
+ 		 ORDER BY cli_cd
+	</select>
+	
+	<select id="productList" resultType="ProductVO">
+		SELECT pd_cd
+				, pd_name
+				, unit
+				, cost
+		FROM pd
+		ORDER BY pd_cd
+	</select>
+	<insert id="insertOrder" parameterType="OrderVO">
+		insert into od 
+						(od_no
+						, od_dt
+						, od_chg
+						, dc_rate
+						, total_price
+						, cli_cd )
+		values 
+				(od_seq.nextval
+				, #{odDt}
+				, #{odChg}
+				, #{dcRate}
+				, #{totalPrice}
+				, #{cliCd} )	
+	</insert>
+	<insert id="insertOrderDetail" parameterType="OrderDetailVO">
+		insert into od_detail 
+								(od_detailno
+								, qt
+								, cost
+								, detail_price
+								, od_no
+								, pd_cd
+								, due_dt
+								, od_detail_st )
+		values 
+				( od_detail_seq.nextval
+					, #{qt}
+					, #{cost}
+					, #{detailPrice}
+					, od_seq.currval
+					, #{pdCd}
+					, #{dueDt}
+					, #{odDetailSt}	)
+	</insert>
+	
+
+</mapper>

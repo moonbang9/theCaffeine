@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.theCaffeine.mes.mtrl.mapper.MtrlOrderMapper">
+
+	 <select id="getMtrlOrderList" resultType="MtrlOrderVO"> 
+		SELECT  mp.mt_placeod_cd,
+				m.mt_div,
+		        m.mt_cd,
+		        m.mt_name,
+		        c.cli_name,
+		        mp.placeod_reqdt,
+		        mp.placeod_qt,
+		        m.unit,
+		        mp.placeod_st,
+		        mp.placeod_requester,
+		        m.leadtm
+		FROM 	mt_placeod mp JOIN mt m
+		ON mp.mt_cd = m.mt_cd
+		JOIN cli c
+		ON mp.cli_cd = c.cli_cd
+		WHERE mp.placeod_st = 1
+		ORDER BY mp.placeod_reqdt
+ 	</select>
+ 	
+ 	<select id="getMtrlList" resultType="MtrlOrderVO"> 
+		SELECT  m.mt_cd,
+		        m.mt_name,
+		        c.cli_cd
+		FROM    mt m JOIN cli c
+		ON      m.cli_cd = c.cli_cd
+		WHERE   m.cli_cd = #{cliCd}
+ 	</select>
+ 	
+ 	<insert id="insertMtrlOrder" parameterType="MtrlOrderVO">
+		INSERT INTO mt_placeod
+					(mt_placeod_cd,
+					placeod_qt,
+					placeod_compdt,
+					placeod_requester,
+					placeod_chg,
+					mt_cd,
+					cli_cd)
+		    VALUES  (
+		    		SEQ_MT_PLACEOD.nextval
+		    		,#{placeodQt}
+		    		,#{placeodCompdt}
+		    		,#{placeodRequester}
+		    		,#{placeodChg}
+		    		,#{mtCd}
+		    		,#{cliCd}
+		    		)
+	</insert>
+	
+	<delete id="deleteMtrlOrder" parameterType="String">
+		DELETE FROM mt_placeod
+		WHERE mt_placeod_cd = #{mtPlaceodCd}
+	</delete>
+	
+	<update id="updateMtrlOrder" parameterType="MtrlOrderVO">
+		UPDATE  mt_placeod
+		SET     placeod_st = 2,
+		        placeod_compdt = sysdate,
+		        placeod_chg = '박민수 대리',
+		        placeod_qt = #{placeodQt}
+		WHERE   mt_placeod_cd = #{mtPlaceodCd}
+	</update>
+	
+	<update id="updateMtrlOrder2" parameterType="String">
+		UPDATE  mt_placeod
+		SET     placeod_st = 3
+		WHERE   mt_placeod_cd = #{mtPlaceodCd}
+	</update>
+	
+	<select id="getMtrlqualList" resultType="MtrlOrderVO"> 
+		SELECT  m.mt_cd,
+                m.mt_name,
+                c.cli_name,
+                mp.placeod_compdt + m.leadtm AS placeod_arridt,
+                mp.placeod_qt,
+                m.unit,
+                mp.placeod_chg
+        FROM 	mt_placeod mp JOIN mt m
+		ON mp.mt_cd = m.mt_cd
+		JOIN cli c
+		ON mp.cli_cd = c.cli_cd
+        WHERE mp.placeod_st = 3
+		ORDER BY placeod_arridt
+ 	</select>
+ 	
+	<insert id="insertMtrlQuality" parameterType="MtrlOrderVO">
+		INSERT INTO mt_ck
+					(mt_ck_no,
+					mt_cd,
+					str_qt,
+					str_comp_dt,
+					cli_name,
+					str_chg)
+		    VALUES  (
+		    		SEQ_MT_CK_NO.nextval
+		    		,#{mtCd}
+		    		,#{placeodQt}
+		    		,#{placeodArridt}
+		    		,#{cliName}
+		    		,#{placeodChg}
+		    		)
+	</insert>
+	
+</mapper>

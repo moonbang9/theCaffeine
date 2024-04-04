@@ -25,7 +25,70 @@
 		    		,#{cliCd}
 		    		)
 	</insert>
+	
+	<select id="getMtrlList" resultType="MtrlVO"> 
+		SELECT  
+		        m.mt_cd,
+		        m.mt_div,
+		        m.mt_name,
+		        m.cost,
+		        m.unit,
+		        m.exp_dt,
+		        m.leadtm,
+		        m.safe_stk_rate,
+		        m.cli_cd,
+		        c.cli_name
+		FROM 	mt m join cli c
+		ON 		m.cli_cd = c.cli_cd
+		WHERE 	m.mt_div = '원자재'
+		ORDER BY mt_cd
+ 	</select>
+ 	
+ 	<select id="getMtrlList2" resultType="MtrlVO"> 
+		SELECT  
+		        m.mt_cd,
+		        m.mt_div,
+		        m.mt_name,
+		        m.cost,
+		        m.unit,
+                case when m.exp_dt = 0 then null
+                end as exp_dt,
+		        m.leadtm,
+		        m.safe_stk_rate,
+		        m.cli_cd,
+		        c.cli_name
+		FROM 	mt m join cli c
+		ON 		m.cli_cd = c.cli_cd
+		WHERE 	m.mt_div = '부자재'
+		ORDER BY mt_cd
+ 	</select>
 
+	<select id="getMtrlInfo" parameterType="String" resultType="MtrlVO">
+		SELECT 	m.mt_cd,
+		        m.mt_div,
+		        m.mt_name,
+		        m.cost,
+		        m.unit,
+		        m.exp_dt,
+		        m.leadtm,
+		        m.safe_stk_rate,
+		        m.cli_cd,
+		        c.cli_name
+		FROM 	mt m join cli c
+		ON 		m.cli_cd = c.cli_cd
+		WHERE  	m.mt_cd = #{mtCd}
+	</select>
 
-
+	<update id="updateMtrl" parameterType="MtrlVO">
+		UPDATE mt
+		SET mt_div = #{mtDiv}
+			,mt_name = #{mtName}
+			,cost = #{cost}
+			,unit = #{unit}
+			,exp_dt = #{expDt}
+			,leadtm = #{leadtm}
+			,safe_stk_rate = #{safeStkRate}
+			,cli_cd = #{cliCd}
+		WHERE mt_cd = #{mtCd}
+	</update>
 </mapper>

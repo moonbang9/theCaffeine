@@ -22,6 +22,7 @@
   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 >
   <head>
+  	
     <meta charset="utf-8" />
     <meta
       name="viewport"
@@ -31,11 +32,17 @@
     <title>Dashboard - Analytics | Sneat - Bootstrap 5 HTML Admin Template - Pro</title>
 
     <meta name="description" content="" />
+    
+    <script type="text/javascript" src="https://oss.sheetjs.com/sheetjs/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.20/jspdf.plugin.autotable.min.js"></script>
+    <script type="text/javascript" src="https://oss.sheetjs.com/sheetjs/xlsx.full.min.js"></script>
+    
 	<link href="https://unpkg.com/tabulator-tables@6.2.0/dist/css/tabulator.min.css" rel="stylesheet">
  	<script type="text/javascript" src="https://unpkg.com/tabulator-tables@6.2.0/dist/js/tabulator.min.js"></script>
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="/assets/img/favicon/favicon.ico" />
-
+	
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -62,12 +69,23 @@
 
     <!-- Page CSS -->
 
+	
     <!-- Helpers -->
     <script src="/assets/vendor/js/helpers.js"></script>
 
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="/assets/js/config.js"></script>
+    
+    <script
+	  src="https://code.jquery.com/jquery-3.7.1.js"
+	  integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+	  crossorigin="anonymous"></script>
+	  <!-- Core JS -->
+    <!-- build:js assets/vendor/js/core.js -->
+    <script src="/assets/vendor/libs/popper/popper.js"></script>
+    <script src="/assets/vendor/js/bootstrap.js"></script>
+
   </head>
 
   <body>
@@ -102,32 +120,32 @@
 
               <ul class="menu-sub">
               	<li class="menu-item">
-                  <a href="layouts-blank.html" class="menu-link">
+                  <a href="/sales/clientList" class="menu-link">
                     <div data-i18n="Blank">거래처 관리</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="/material/management" class="menu-link">
+                  <a href="/sales/orderList" class="menu-link">
                     <div data-i18n="Without menu">주문 조회</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="layouts-without-navbar.html" class="menu-link">
+                  <a href="/sales/insertOrderPage" class="menu-link">
                     <div data-i18n="Without navbar">주문 등록</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="layouts-container.html" class="menu-link">
+                  <a href="/sales/clientList" class="menu-link">
                     <div data-i18n="Container">주문 재고 관리</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="layouts-fluid.html" class="menu-link">
+                  <a href="/sales/clientList" class="menu-link">
                     <div data-i18n="Fluid">주문 출고 관리</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="layouts-blank.html" class="menu-link">
+                  <a href="/sales/clientList" class="menu-link">
                     <div data-i18n="Blank">주문 반품 관리</div>
                   </a>
                 </li>
@@ -143,28 +161,28 @@
 
               <ul class="menu-sub">
                 <li class="menu-item">
-                  <a href="/material/management" class="menu-link">
-                    <div data-i18n="Without menu">연간 생산 관리</div>
+                  <a href="/production/prdtYearState" class="menu-link">
+                    <div data-i18n="Without menu">연간 생산 현황</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="layouts-without-navbar.html" class="menu-link">
-                    <div data-i18n="Without navbar">생산~~</div>
+                  <a href="/production/plan" class="menu-link">
+                    <div data-i18n="Without navbar">생산 계획 관리</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="layouts-container.html" class="menu-link">
-                    <div data-i18n="Container">생산 계획 관리</div>
+                  <a href="/production/prdtInst" class="menu-link">
+                    <div data-i18n="Container">생산 지시 관리</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="layouts-fluid.html" class="menu-link">
-                    <div data-i18n="Fluid">Fluid</div>
+                  <a href="/production/prdtHistList" class="menu-link">
+                    <div data-i18n="Fluid">생산 내역 조회</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="layouts-blank.html" class="menu-link">
-                    <div data-i18n="Blank">Blank</div>
+                  <a href="/production/prdtPerformanceList" class="menu-link">
+                    <div data-i18n="Blank">생산 실적 조회</div>
                   </a>
                 </li>
               </ul>
@@ -189,12 +207,12 @@
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="layouts-container.html" class="menu-link">
+                  <a href="/material/order" class="menu-link">
                     <div data-i18n="Container">자재 발주 관리</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="layouts-fluid.html" class="menu-link">
+                  <a href="/material/quality" class="menu-link">
                     <div data-i18n="Fluid">자재 검사 관리</div>
                   </a>
                 </li>
@@ -276,17 +294,17 @@
 
               <ul class="menu-sub">
                 <li class="menu-item">
-                  <a href="/material/management" class="menu-link">
+                  <a href="/fclt/facilitylist" class="menu-link">
                     <div data-i18n="Without menu">설비 관리</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="layouts-without-navbar.html" class="menu-link">
+                  <a href="/fclt/operationlist" class="menu-link">
                     <div data-i18n="Without navbar">비가동 관리</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="layouts-container.html" class="menu-link">
+                  <a href="/fclt/inspectionlist" class="menu-link">
                     <div data-i18n="Container">점검 관리</div>
                   </a>
                 </li>
@@ -384,7 +402,7 @@
             <!-- Content -->
 
             <div class="container-xxl flex-grow-1 container-p-y">
-              <div class="row" layout:fragment="content">
+              <div layout:fragment="content">
                 
               </div>
             </div>
@@ -437,11 +455,7 @@
 
 	
 
-    <!-- Core JS -->
-    <!-- build:js assets/vendor/js/core.js -->
-    <script src="/assets/vendor/libs/jquery/jquery.js"></script>
-    <script src="/assets/vendor/libs/popper/popper.js"></script>
-    <script src="/assets/vendor/js/bootstrap.js"></script>
+    
     <script src="/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
 
     <script src="/assets/vendor/js/menu.js"></script>
@@ -456,6 +470,7 @@
     <!-- Page JS -->
     <script src="/assets/js/dashboards-analytics.js"></script>
 
+ 	
     <!-- Place this tag in your head or just before your close body tag. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
   </body>
