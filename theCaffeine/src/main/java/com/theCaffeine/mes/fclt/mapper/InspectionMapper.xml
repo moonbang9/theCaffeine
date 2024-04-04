@@ -9,12 +9,17 @@
 	SELECT   FINS.INS_CD,
                 F.FC_NAME,
                 FINS.INS_DT,
-                FINS.INS_CAT,
+                CASE WHEN  FINS.INS_CAT = 0 THEN '정기'
+                              WHEN  FINS.INS_CAT = 1 THEN '수기'
+                                            ELSE '기타'
+                END AS INS_CAT ,
                FINS.INS_CONT,
                 FINS.CC,
                FINS. CHG,
                FINS.FC_CD,
-                FINS.NONOP_CD
+                CASE WHEN F.ST = 0 THEN '가동'
+                                                                        ELSE '비가동'
+                END AS ST
 	FROM FC_INS FINS JOIN FC F ON FINS.FC_CD = F.FC_CD
 </select>
 
@@ -27,8 +32,7 @@
                FINS.INS_CONT,
                 FINS.CC,
                FINS. CHG,
-               FINS.FC_CD,
-                FINS.NONOP_CD
+               FINS.FC_CD
 	FROM FC_INS FINS JOIN FC F ON FINS.FC_CD = F.FC_CD
 	where FINS.ins_cd = #{insCd}	
 </select>
@@ -44,8 +48,8 @@
 					INS_CONT,
 					CC,
 					CHG,
-					FC_CD,
-					NONOP_CD
+					FC_CD
+
 					)
 		    VALUES  (
 		    		  SEQ_FCINSP.nextval 
@@ -55,7 +59,6 @@
 		    		,#{cc}
 		    		,#{chg}
 		    		,#{fcCd}
-		    		,#{nonopCd}
 		    		)
 	</insert>
 
@@ -69,12 +72,11 @@
 <!-- 점검 내용 수정 -->
 <update id="updateInspection" parameterType="InspectionVO">
 	UPDATE FC_INS
-					INS_DT= #{insDt},
-					INS_CAT =#{insCat},
+			SET
 					INS_CONT =#{insCont} ,
 					CC = #{cc},
 					CHG =#{chg}
-	WHERE ins_cd = #{insCd}
+	WHERE ins_cd = #{insCd} and fc_cd=#{fcCd}
 </update>
 
 </mapper>

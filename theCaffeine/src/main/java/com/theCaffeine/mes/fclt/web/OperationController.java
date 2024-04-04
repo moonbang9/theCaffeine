@@ -12,9 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.theCaffeine.mes.fclt.model.FcltVO;
+
 import com.theCaffeine.mes.fclt.model.OperationVO;
-import com.theCaffeine.mes.fclt.service.FcltService;
 import com.theCaffeine.mes.fclt.service.OperationService;
 
 @RestController

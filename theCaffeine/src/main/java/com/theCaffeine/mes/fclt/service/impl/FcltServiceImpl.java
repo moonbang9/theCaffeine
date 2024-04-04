@@ -8,9 +8,6 @@ import org.springframework.stereotype.Service;
 import com.theCaffeine.mes.fclt.mapper.FcltMapper;
 import com.theCaffeine.mes.fclt.model.FcltVO;
 import com.theCaffeine.mes.fclt.service.FcltService;
-import com.theCaffeine.mes.mtrl.mapper.MtrlMapper;
-import com.theCaffeine.mes.mtrl.model.MtrlVO;
-import com.theCaffeine.mes.mtrl.service.MtrlService;
 
 @Service
 public class FcltServiceImpl implements FcltService{
@@ -42,6 +39,11 @@ public class FcltServiceImpl implements FcltService{
 		return fcltMapper.updateFclt(vo);
 
 
+	}
+
+	@Override
+	public List<FcltVO> getNonopFcltList(FcltVO vo) {
+		return fcltMapper.getNonopFcltList(vo);
 	}
 
 

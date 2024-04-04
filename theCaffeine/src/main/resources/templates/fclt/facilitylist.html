@@ -36,7 +36,7 @@
 								<div class="row">
 										<div class="col mb-3">
 											<div class="input-group" style="display: none;">
-												<span class="input-group-text" id="basic-addon14">설비코드</span>
+												<span class="input-group-text col-2" id="basic-addon14">설비코드</span>
 												<input type="number" class="form-control" id="facilityCd"
 													aria-describedby="basic-addon14" readonly>
 											</div>
@@ -45,7 +45,7 @@
 									<div class="row">
 										<div class="col mb-3">
 											<div class="input-group">
-												<span class="input-group-text" id="basic-addon14">설비명</span>
+												<span class="input-group-text col-2" id="basic-addon14">설비명</span>
 												<input type="text" class="form-control" id="facilityName"
 													aria-describedby="basic-addon14" >
 											</div>
@@ -54,7 +54,7 @@
 									<div class="row">
 										<div class="col mb-3">
 											<div class="input-group">
-												<span class="input-group-text" id="basic-addon14">제조업체</span>
+												<span class="input-group-text col-2" id="basic-addon14">제조업체</span>
 												<input type="text" class="form-control" id="manufacturingCom"
 													aria-describedby="basic-addon14">
 											</div>
@@ -64,7 +64,7 @@
 									<div class="row">
 										<div class="col mb-3">
 											<div class="input-group">
-												<label class="input-group-text" for="inputGroupSelect01">투입공정</label>
+												<label class="input-group-text col-2" for="inputGroupSelect01">투입공정</label>
 												<select class="form-select" id="insertedMf">
 													<option selected>선택</option>
 													<option value="0">로스팅</option>
@@ -76,7 +76,7 @@
 									<div class="row">
 										<div class="col mb-3">
 											<div class="input-group">
-												<span class="input-group-text" id="basic-addon14">입고일자</span>
+												<span class="input-group-text col-2" id="basic-addon14">입고일자</span>
 												<div class="col-md-10">
 						                          <input class="form-control" type="date" value="2024-04-01" id="strDate">
 						                        </div>
@@ -86,7 +86,7 @@
 									<div class="row">
 										<div class="col mb-3">
 											<div class="input-group">
-												<label class="input-group-text" for="inputGroupSelect01">설비상태</label>
+												<label class="input-group-text col-2" for="inputGroupSelect01">설비상태</label>
 												<select class="form-select" id="fcltstatus">
 												<option selected>선택</option>
 													<option value="0">가동</option>
@@ -98,7 +98,7 @@
 									<div class="row">
 										<div class="col mb-3">
 											<div class="input-group">
-												<span class="input-group-text" id="basic-addon14">점검주기</span>
+												<span class="input-group-text col-2" id="basic-addon14">점검주기</span>
 												<input type="text" class="form-control" id="inspectionCycle"
 													aria-describedby="basic-addon14"> &nbsp;  일 
 											</div>
@@ -107,7 +107,7 @@
 									<div class="row">
 										<div class="col mb-3">
 											<div class="input-group">
-												<span class="input-group-text" id="basic-addon14">생산량</span>
+												<span class="input-group-text col-2" id="basic-addon14">생산량</span>
 												<input type="text" class="form-control" id="coffeeoutput"
 													aria-describedby="basic-addon14"> &nbsp;  KG
 											</div>
@@ -116,7 +116,7 @@
 									<div class="row">
 										<div class="col mb-3">
 											<div class="input-group">
-												<span class="input-group-text" id="basic-addon14">소요시간</span>
+												<span class="input-group-text col-2" id="basic-addon14">소요시간</span>
 												<input type="datetime" class="form-control" id="durationTime"
 													aria-describedby="basic-addon14"> &nbsp;  분
 											</div>
@@ -141,20 +141,26 @@
 			
 			var fclttable = new Tabulator("#fcltListTable", {
 			    //layout:"fitColumns",
+			    pagination:"local",
+			    paginationSize:10,
+			    paginationSizeSelector:[10, 20, 30, 40],
+			    movableColumns:true,
+			    paginationCounter:"rows",
 			    height:"100%",
-			    rowHeader:{formatter:"rownum", headerSort:false, width:84, hozAlign:"center", resizable:false, frozen:true},
+			    rowHeader:{formatter:"rownum", headerSort:false, width:84, hozAlign:"center", resizable:false},
 			    //resizableColumnFit:true,
 			   
 			    columns:[
-			        {title:"설비 코드", field:"fcCd", width:100, hozAlign:"center"},
-			        {title:"설비 명", field:"fcName", width:195, hozAlign:"center"}, 
+			        {title:"설비 코드", field:"fcCd", width:100, hozAlign:"center" },
+			        {title:"설비 명", field:"fcName", width:195, hozAlign:"center", frozen:true}, 
 			        {title:"투입 공정", field:"insMf", width:100, hozAlign:"center"},
 			        {title:"제조 업체", field:"mnfCom", width:150, hozAlign:"center"},
 			        {title:"입고 일자", field:"strDt", width:190, hozAlign:"center"},
 			        {title:"점검주기", field:"insCycle", width:150, hozAlign:"center"},
 			        {title:"생산량", field:"output", width:150, hozAlign:"center"},
 			        {title:"소요시간", field:"durTime", width:160, hozAlign:"center"},
-			        {title:"설비 상태", field:"st", width:100, hozAlign:"center"}
+			        {title:"설비 상태", field:"st", width:100, hozAlign:"center"},
+			        {title:"Col", field:"col" ,formatter:"color", width:50, backgroundColor:"#ff0000"}
 			    ],
 			});
 			
@@ -175,6 +181,8 @@
 					getInfo(res);
 				})
 			});
+			
+			//등록창 값 비워주기
 			
 			addFclt.addEventListener("click",function(){
 				facilityCd.value="";

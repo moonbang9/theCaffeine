@@ -20,10 +20,7 @@ public class InspectionServiceImpl implements InspectionService{
 		return inspMapper.insertInspection(vo);
 	}
 
-	@Override
-	public List<InspectionVO> getInspList() {
-		return inspMapper.getInspList();
-	}
+	
 
 	@Override
 	public InspectionVO getInspInfo(String insCd) {
@@ -38,6 +35,11 @@ public class InspectionServiceImpl implements InspectionService{
 	@Override
 	public int updateInspection(InspectionVO vo) {
 		return inspMapper.updateInspection(vo);
+	}
+
+	@Override
+	public List<InspectionVO> getInspList(InspectionVO vo) {
+		return inspMapper.getInspList(vo);
 	}
 
 	

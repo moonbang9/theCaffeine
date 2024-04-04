@@ -10,7 +10,7 @@ import lombok.Data;
 public class FcltVO {
 	String fcCd;
 	String fcName;
-	int st;
+	String st;
 	String insMf;
 	String mnfCom;
 	@JsonFormat(pattern="yyyy-MM-dd")

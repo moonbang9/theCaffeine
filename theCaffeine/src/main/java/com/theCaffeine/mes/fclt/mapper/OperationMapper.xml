@@ -5,15 +5,18 @@
 
 <!-- 비가동 목록 -->
 <select id="getOprtList" resultType="OperationVO">
-
-	SELECT     	NONOP_CD
-				NONOP_STT_TIME
-				NONOP_FN_TIME
-				FC_CHG
-				RSN
-				RSN_DESC
-				FC_CD
-	FROM NONOP_MGMT
+	SELECT  
+                F.FC_NAME,
+                F.INS_MF,
+                F.ST,
+                N.NONOP_CD,
+                N.NONOP_STT_TIME,
+                N.NONOP_FN_TIME,
+                N.FC_CHG,
+                N.RSN,
+                N.RSN_DESC,
+                N.FC_CD
+	FROM NONOP_MGMT N JOIN FC F ON  N.FC_CD = F.FC_CD
 </select>
 
 <!--  비가동 단건 조회 -->
