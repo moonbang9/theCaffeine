@@ -5,9 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.theCaffeine.mes.prdt.model.MtrlPlanVO;
 import com.theCaffeine.mes.prdt.model.PlanVO;
 import com.theCaffeine.mes.prdt.service.PrdtService;
 
@@ -35,10 +37,27 @@ public class ProductionController {
 		return prdtService.getPlanDetailList(pdtPlanCd);
 	}
 	
+	//생산 주간 계획 상세 목록 데이터
+	@GetMapping("/ajax/qnttMtrlList/{pdtPlanCd}")
+	public List<MtrlPlanVO> getQnttMtrlList(@PathVariable String pdtPlanCd) {
+		return prdtService.getQnttMtrlList(pdtPlanCd);
+	}
+	
 	//생산 주간 계획 등록 페이지이동
 	@GetMapping("/production/planRegist")
 	public ModelAndView planRegist() { 
 		ModelAndView mv = new ModelAndView("prdt/prdtPlanRegist");
+		return mv;
+	}
+	
+	//생산 주간 계획 등록 데이터 포함 이동
+	@GetMapping("/production/planRegist/{pdtPlanCd}")
+	public ModelAndView planRegist(@PathVariable String pdtPlanCd) { 
+		ModelAndView mv = new ModelAndView("prdt/prdtPlanRegist");
+		if(pdtPlanCd != null) {
+			List<PlanVO> list = prdtService.getPlanDetailList(pdtPlanCd);
+			mv.addObject("list",list);
+		}
 		return mv;
 	}
 	

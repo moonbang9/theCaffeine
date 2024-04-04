@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.theCaffeine.mes.prdt.mapper.PrdtMapper;
+import com.theCaffeine.mes.prdt.model.MtrlPlanVO;
 import com.theCaffeine.mes.prdt.model.PlanVO;
 import com.theCaffeine.mes.prdt.service.PrdtService;
 
@@ -24,6 +25,12 @@ public class PrdtServiceImpl implements PrdtService{
 	public List<PlanVO> getPlanDetailList(String pdtPlanCd) {
 		// TODO Auto-generated method stub
 		return prdtMapper.getPlanDetailList(pdtPlanCd);
+	}
+
+	@Override
+	public List<MtrlPlanVO> getQnttMtrlList(String pdtPlanCd) {
+		// TODO Auto-generated method stub
+		return prdtMapper.getQnttMtrlList(pdtPlanCd);
 	}
 	
 }
