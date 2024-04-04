@@ -20,4 +20,9 @@ public class QltyServiceImpl implements QltyService{
 		return qltyMapper.getMtrlCheckList(vo);
 	}
 
+	@Override
+	public int insertMcRes(QltyVO vo) {
+		return qltyMapper.insertMcRes(vo);
+	}
+
 }

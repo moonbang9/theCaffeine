@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -26,6 +28,13 @@ public class QltyController {
 	@GetMapping("/ajax/mtrlCheckList")
 	public List<QltyVO> qltyList(QltyVO vo){
 		return qltyService.getMtrlCheckList(vo);
+	}
+	
+	// 자재검사결과 등록
+	@PostMapping("/ajax/insertMcRes")
+	public QltyVO insertMcRes(@RequestBody QltyVO vo) {
+		qltyService.insertMcRes(vo);
+		return vo;
 	}
 
 	// 공정검사 페이지이동
