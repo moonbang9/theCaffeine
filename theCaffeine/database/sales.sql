@@ -11,7 +11,7 @@ select * from rtn; --제품 반품
 select * from disc_pd; --제품 폐기
 select * from bom;
 
-
+--제품 안전재고량 월주문량의 20~30% 
 
 /* 시퀀스 */
 CREATE SEQUENCE od_seq;
@@ -67,10 +67,42 @@ select * from od_detail;
 insert into od (od_no, od_dt, od_chg, dc_rate, total_price, cli_cd)
 values (od_seq.nextval,'2024-04-04', '콩볶아', 0.1, 10000, 'PCLI001');
 
-insert into od_detail (od_detailno, qt, cost, detail_price, od_no, pd_cd, due_dt)
-values (od_detail_seq.nextval, 2, 10000, 20000, od_seq.currval, 'PET01', '2024-06-01');
-insert into od_detail (od_detailno, qt, cost, detail_price, od_no, pd_cd, due_dt)
-values (od_detail_seq.nextval, 3, 15000, 45000, od_seq.currval, 'PBR01', '2024-06-05');
+insert into od_detail (od_detailno, qt, cost, detail_price, od_no, pd_cd, due_dt, od_detail_st)
+values (od_detail_seq.nextval, 2, 10000, 20000, od_seq.currval, 'PET01', '2024-06-01', 1);
+insert into od_detail (od_detailno, qt, cost, detail_price, od_no, pd_cd, due_dt, od_detail_st)
+values (od_detail_seq.nextval, 3, 15000, 45000, od_seq.currval, 'PBR01', '2024-06-05', 1);
 
 delete from od;
-delete from od_detail
+delete from od_detail;
+
+/* 칼럼 타입 변경 */
+alter table od modify dc_rate number(10,3);
+
+
+/* 주문 조회 - 주문, 주문상세 */
+select o.OD_NO, o.OD_DT, o.OD_CHG, o.DC_RATE, o.TOTAL_PRICE, o.CLI_CD,c.cli_name,c.cli_chg
+from od o JOIN cli c
+ON o.cli_cd = c.cli_cd;
+
+select d.od_no,d.od_detailno,p.pd_name,d.due_dt,d.od_detail_st,d.pd_cd
+from od_detail d JOIN pd p
+ON d.pd_cd = p.pd_cd
+where d.od_no= 87;
+
+
+/* 주문관리 조건검색 주문조회 */
+select o.OD_NO, o.OD_DT, o.OD_CHG, o.DC_RATE, o.TOTAL_PRICE, o.CLI_CD,
+        c.cli_name,c.cli_chg,
+        d.od_no,d.od_detailno,
+        p.pd_name,d.due_dt,d.od_detail_st,d.pd_cd
+from cli c JOIN od o
+                ON c.cli_cd = o.cli_cd
+            LEFT OUTER JOIN od_detail d
+                ON o.od_no = d.od_no
+            JOIN pd p
+                ON d.pd_cd = p.pd_cd
+where o.od_dt BETWEEN TO_DATE('2024-04-20', 'YYYY-MM-DD') AND TO_DATE('2025-01-01', 'YYYY-MM-DD')
+ORDER BY d.od_detailno;
+
+
+

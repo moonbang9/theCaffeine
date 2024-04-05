@@ -13,7 +13,7 @@ public class OrderVO {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date odDt;
 	private String odChg;
-	private int dcRate;
+	private float dcRate;
 	private int totalPrice;
 	private String cliCd;
 }
