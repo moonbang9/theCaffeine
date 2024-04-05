@@ -6,11 +6,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.theCaffeine.mes.comm.clnt.model.ClientVO;
+import com.theCaffeine.mes.sale.model.InsertOrderVO;
 import com.theCaffeine.mes.sale.model.OrderDetailVO;
 import com.theCaffeine.mes.sale.model.OrderVO;
 import com.theCaffeine.mes.sale.model.ProductVO;
@@ -30,12 +32,7 @@ public class InsertOrderController {
 	}
 	
 	
-	// 주문 조회 페이지이동
-	@GetMapping("/orderList")
-	public ModelAndView orderList() { 
-		ModelAndView mv = new ModelAndView("sale/orderList");
-		return mv;
-	}
+	
 	
 	// 주문 등록 페이지이동
 	@GetMapping("/insertOrderPage")
@@ -55,8 +52,8 @@ public class InsertOrderController {
 	}
 	
 	@PostMapping("/ajax/insertOrder")
-	public String insertOrder(OrderVO orderVO, OrderDetailVO orderDetailVO) {
-		insertOrderService.insertOrder(orderVO, orderDetailVO);
-		return orderVO.getOdChg();
+	public String insertOrder(@RequestBody InsertOrderVO insertOrderVO) {
+		insertOrderService.insertOrder(insertOrderVO.getOrderVO(), insertOrderVO.getOrderDetailVO());
+		return "ok";
 	}
 }

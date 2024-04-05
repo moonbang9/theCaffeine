@@ -203,8 +203,8 @@
 									담당자</label>
 								<div class="col-md-10">
 									<input type="text" class="form-control"
-										id="defaultFormControlInput" placeholder="콩볶아조"
-										aria-describedby="defaultFormControlHelp" name="odChg"/>
+										id="odChg" placeholder="콩볶아조"
+										aria-describedby="defaultFormControlHelp" />
 								</div>
 							</div>
 
@@ -212,7 +212,7 @@
 								<label for="html5-time-input" class="col-md-2 col-form-label">주문일</label>
 								<div class="col-md-10">
 									<input class="form-control" type="date" value="2024-04-29"
-										id="html5-date-input" name="odDt"/>
+										id="odDt" />
 								</div>
 							</div>
 
@@ -336,6 +336,7 @@
 
 					pct: 0,
 
+					orderVO : {},
 					insertOrderDetailList : []
 				}
 			},
@@ -446,26 +447,43 @@
 
 				// 주문, 주문상세 테이블에 넣기
 				async insertOrder(){
+					let odDt = document.getElementById('odDt').value;
+					let odChg = document.getElementById('odChg').value;
+					let dcRate = (this.pct/100);
+					let totalPrice = this.total;
+					let cliCd = this.clientVO.cliCd;
+					
 					let dueDt = document.getElementById('dueDt').value;
+
+					this.orderVO = { odDt, odChg, dcRate, totalPrice, cliCd };
+
 					this.selectedPdList.forEach(ele=>{
 						let qt = ele.qt;
 						let cost = ele.cost; // 단가
 						let detailPrice = ele.detailPrice; //부분합
 						let pdCd = ele.pdCd;			
-						let orDetailSt = 1;
+						let odDetailSt = 1;
 
-						let detail = {qt, cost, detailPrice, pdCd, dueDt, orDetailSt};
+						let detail = {qt, cost, detailPrice, pdCd, dueDt, odDetailSt};
 						this.insertOrderDetailList.push(detail);
-						console.log(detail);
+						//console.log(detail);
 					})
-					// let data = {
-					// 	param : this.insertOrderDetailList
-					// }
 
-					// let result = await axios.post("sales/ajax/insertOrder", data)
-					// 						.catch(err => console.log(err));
-					// console.log(result);
+					let data = { orderVO:this.orderVO, orderDetailVO : this.insertOrderDetailList}
+					
+					//console.log('data', data);
+					let result = await axios.post("/sales/ajax/insertOrder", data)
+					 						.catch(err => console.log(err));
+					console.log(result);
+
+					if(result.data == 'ok'){
+						alert('주문이 등록되었습니다.');
+						location.href="/sales/orderList";
+						
+					}
 				}
+				
+				
 			}
 		})
 		app.mount('#app')

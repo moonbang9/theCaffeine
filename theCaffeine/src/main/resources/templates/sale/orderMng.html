@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/index}">
+
+<head>
+	<meta charset="UTF-8">
+	<title>주문 조회</title>
+</head>
+
+<body>
+	<div layout:fragment="content">
+		<!-- Content wrapper -->
+		<div class="content-wrapper">
+			<!-- Content -->
+
+			<div class="container-xxl flex-grow-1 container-p-y">
+				<h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">영업 관리 /</span> 주문 조회</h4>
+
+				<div class="card mb-4">
+					<h5 class="card-header">주문 검색</h5>
+					<div class="card-body">
+						<div class="row">
+
+							<!-- Basic List group -->
+							<!-- 주문목록 -->
+
+
+
+
+
+
+						</div>
+					</div>
+				</div>
+
+				<!-- 주문목록 그리드 -->
+				<div id="mtrl_management_list2">
+				</div>
+
+
+
+			</div>
+		</div>
+
+
+
+	<script>
+		var table2 = new Tabulator("#mtrl_management_list2", {
+			// layout:"fitColumns",
+			height: "100%",
+			responsiveLayout:"hide",
+			rowHeader: { formatter: "rownum", headerSort: false, width: 70, hozAlign: "center", resizable: false, frozen: true },
+			//resizableColumnFit:true,
+			columns: [
+				{ title: "자재코드", field: "mtCd", width: 150, hozAlign: "center" },
+				{ title: "자재명", field: "mtName", width: 180, hozAlign: "center" },
+				{ title: "거래처", field: "cliName", width: 180, hozAlign: "center" },
+				{
+					title: "단가", field: "cost", width: 150, formatter: "money", hozAlign: "center", formatterParams: {
+						decimal: ",",
+						thousand: ",",
+						symbol: " 원",
+						symbolAfter: "p",
+						negativeSign: true,
+						precision: false,
+					}
+				},
+				{ title: "유통기한", field: "expDt", width: 170, hozAlign: "center" },
+				{ title: "리드타임 (일)", field: "leadtm", width: 150, hozAlign: "center" },
+				{ title: "안전재고 기준 (%)", field: "safeStkRate", width: 170, hozAlign: "center" },
+				{ title: "월 소비량", field: "week", width: 160, hozAlign: "center" }
+			],
+		});
+
+	</script>
+	</div>
+
+
+</body>
+
+</html>
