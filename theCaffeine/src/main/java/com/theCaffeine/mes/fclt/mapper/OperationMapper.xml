@@ -7,8 +7,12 @@
 <select id="getOprtList" resultType="OperationVO">
 	SELECT  
                 F.FC_NAME,
-                F.INS_MF,
-                F.ST,
+             CASE WHEN INS_MF = 0 THEN '로스팅'
+                                                        ELSE '포장'
+                END AS INS_MF,
+              CASE WHEN ST = 0 THEN '가동'
+                                                ELSE '비가동'
+                END AS ST,
                 N.NONOP_CD,
                 N.NONOP_STT_TIME,
                 N.NONOP_FN_TIME,
@@ -21,9 +25,18 @@
 
 <!--  비가동 단건 조회 -->
 <select id="getOprtInfo" parameterType="string" resultType="OperationVO">
-	select *
-	from NONOP_MGMT
-	where NONOP_CD = #{nonopCd}	
+	select   F.FC_NAME,
+                F.INS_MF,
+                F.ST,
+                N.NONOP_CD,
+                N.NONOP_STT_TIME,
+                N.NONOP_FN_TIME,
+                N.FC_CHG,
+                N.RSN,
+                N.RSN_DESC,
+                N.FC_CD
+	FROM NONOP_MGMT N JOIN FC F ON  N.FC_CD = F.FC_CD
+	where N.NONOP_CD = #{nonopCd}	
 </select>
 
 
@@ -41,7 +54,6 @@
 					)
 		    VALUES  (
 		    		  SEQ_FCNONOP.NEXTVAL
-		    		,#{nonopCd}
 		    		,#{nonopSttTime}
 		    		,#{nonopFnTime}
 		    		,#{fcChg}
@@ -66,9 +78,13 @@
 					NONOP_FN_TIME=#{nonopFnTime},
 					FC_CHG=#{fcChg},
 					RSN=#{rsn},
-					RSN_DESC=#{rsnDesc},
-					FC_CD=#{fcCd}
-	WHERE NONOP_CD = #{nonopCd}
+					RSN_DESC=#{rsnDesc}
+	WHERE NONOP_CD = #{nonopCd} and fc_cd=#{fcCd}
 </update>
 
+<update id="updateOpStatus" parameterType="String">
+	UPDATE FC 
+	SET ST = 0
+	WHERE FC_CD = #{fcCd}
+</update>
 </mapper>
