@@ -16,22 +16,16 @@
 		       m.mt_name,
 		       c.cli_name
 		  FROM mt_placeod p 
-		  JOIN mt m ON p.cli_cd = m.cli_cd
+		  JOIN mt m ON p.mt_cd = m.mt_cd
 		  JOIN cli c ON p.cli_cd = c.cli_cd
+	     WHERE p.PLACEOD_ST=4 
 	  ORDER BY p.mt_placeod_cd	        
-	     <!-- WHERE PLACEOD_ST=4 --> 
-	     <!-- 검사 완료 후 상태값을 4에서 5로 바꿔줘야됨. -->
+	     <!-- 검사 완료 후 where절 상태값을 4에서 5로 바꿔줘야됨. -->
 	</select>
 	
 	<insert id="insertMcRes" parameterType="QltyVO">
 		INSERT INTO mt_ck
-					(mt_ck_no
-					,mt_cd
-					,str_qt <!-- 입고 수량인데 발주 수량으로 교체할것 -->
-					,cli_name
-					,str_chg <!-- 입고 담당자인데 발주 담당자로 교체할것 -->
-					,ck_name
-					,first_mc
+					(first_mc
 					,second_mc
 					,third_mc
 					,fourth_mc
@@ -39,18 +33,11 @@
 					,mc_avg
 					,mc_res
 					,ck_dt
-					,ck_chg
-					,pass_std
-					,mt_placeod_cd		
+					<!-- ,ck_chg
+					,pass_std -->
 					)
 			VALUES (
-				    seq_mt_ck_no.nextval
-				   ,#{mtCd}
-				   ,#{strQt}
-				   ,#{cliName}
-				   ,#{strChg}
-				   ,#{ckName}
-				   ,#{firstMc}
+				   #{firstMc}
 				   ,#{secondMc}
 				   ,#{thirdMc}
 				   ,#{fouthMc}
@@ -58,9 +45,8 @@
 				   ,#{mcAvg}
 				   ,#{mcRes}
 				   ,sysdate
-				   ,#{ckChg}
-				   ,#{passStd}
-				   ,#{mtPlaceodCd}
+				   <!-- ,#{ckChg}
+				   ,#{passStd} -->
 				   ) 
 	</insert>
 	
