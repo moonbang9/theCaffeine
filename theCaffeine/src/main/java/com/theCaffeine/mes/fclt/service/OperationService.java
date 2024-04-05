@@ -11,4 +11,5 @@ public interface OperationService {
 	OperationVO getOprtInfo(String nonopCd);// 단건 조회 
 	int deleteOprt (String nonopCd); //단건 삭제
 	int updateOprt(OperationVO vo); //단건 수정
+	
 }

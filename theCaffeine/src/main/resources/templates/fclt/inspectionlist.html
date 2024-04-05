@@ -61,7 +61,7 @@
 											<div class="input-group" >
 												<span class="input-group-text col-2" id="basic-addon14">설비명</span>
 												
-												<select class="form-select"  disabled>
+												<select class="form-select" id="facilName" disabled >
 													<option  th:each="fclt : ${fcltNames}" th:value="${fclt.fcCd}" th:text="${fclt.fcName}">
 													
 												</select>
@@ -72,9 +72,9 @@
 										<div class="col mb-3">
 											<div class="input-group" >
 												<span class="input-group-text col-2" id="basic-addon14">설비명</span>
-												<select class="form-select" id="fcltName" >
+												<select class="form-select"  >
 												<option selected value="" >선택</option>
-													<option  th:each="fclt : ${fcltNames}" th:value="${fclt.fcCd}" th:text="${fclt.fcName}" id="facilName">
+													<option  th:each="fclt : ${fcltNames}" th:value="${fclt.fcCd}" th:text="${fclt.fcName}" >
 													
 												</select>
 											</div>
@@ -176,7 +176,6 @@
 	    //resizableColumnFit:true,
 	   
 	    columns:[
-	    	 {title:"설비 코드", field:" fcCd", width:160, hozAlign:"center"},
 	        {title:"점검 코드", field:"insCd", width:160, hozAlign:"center"},
 	        {title:"설비 명", field:"fcName", width:195, hozAlign:"center" ,frozen:true}, 
 	        {title:"점검일", field:"insDt", width:150, hozAlign:"center"},
@@ -203,8 +202,10 @@
 		updateModalType.style.display="block";
 		saveInspBtnMdl.style.display = "block";
 		updateInspBtnMdl.style.display = "none";
+		let fcCd = row.getData().fcCd;
 		let insCd = row.getData().insCd;
 		console.log(insCd);
+		console.log(fcCd);
 		fetch("/fclt/inspectionlist/"+ insCd)
 		.then(res => res.json())
 		.then(res => {
@@ -221,7 +222,7 @@
 	// 목록 value 불러오기 및 수정 등록
 	function getInfo(obj){
 		inspectionCd.value = obj.insCd;
-		facilName.value=obj.fcName;
+		facilName.value=obj.fcCd;
 		facilityCd.value= obj.fcCd;
 		inspectionDt.value = obj.insDt;
 		chargeofins.value = obj.chg;
@@ -263,11 +264,7 @@
 	});
 	
 	
-	fcltName.addEventListener("change",e=>{
-		console.log(fcltName.value);
-		facilityCd.value = fcltName.value; 
-	});
-	
+
 
 
 	//등록 버튼 클릭 시 데이터 값 넘기기

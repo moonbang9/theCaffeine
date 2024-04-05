@@ -1,5 +1,7 @@
 package com.theCaffeine.mes.fclt.model;
 
+
+
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -9,10 +11,10 @@ import lombok.Data;
 public class OperationVO {
 	String nonopCd;
 	String fcName;
-	int st;
-	@JsonFormat(pattern = "yy-MM-dd HH:mm:ss")
+	String st;
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm")
 	Date nonopSttTime;
-	@JsonFormat(pattern = "yy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm")
 	Date nonopFnTime;
 	String fcChg;
 	String rsn;

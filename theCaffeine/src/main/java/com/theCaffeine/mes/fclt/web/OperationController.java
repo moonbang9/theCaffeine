@@ -12,18 +12,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-
+import com.theCaffeine.mes.fclt.model.FcltVO;
 import com.theCaffeine.mes.fclt.model.OperationVO;
+import com.theCaffeine.mes.fclt.service.FcltService;
 import com.theCaffeine.mes.fclt.service.OperationService;
 
 @RestController
 public class OperationController {
 	@Autowired OperationService oprtService;
+	@Autowired
+	FcltService fcltService;
 
 	// 비가동 페이지이동
 		@GetMapping("/fclt/operationlist")
-		public ModelAndView facility() { 
+		public ModelAndView facility(FcltVO vo) { 
 			ModelAndView mv = new ModelAndView("fclt/operationlist");
+			mv.addObject("nonopFcltNames",fcltService.getFcltList(vo));
 			return mv;
 		}
 		
