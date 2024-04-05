@@ -91,4 +91,13 @@
 			,cli_cd = #{cliCd}
 		WHERE mt_cd = #{mtCd}
 	</update>
+	
+	<select id="getCliList" resultType="MtrlVO"> 
+		SELECT  cli_cd,
+		        cli_name
+		FROM    cli
+		WHERE   cli_cd LIKE 'M%'
+		ORDER BY cli_cd
+ 	</select>
+ 	
 </mapper>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.theCaffeine.mes.mtrl.mapper.MtrlStorionMapper">
+
+	<select id="getMtrlPassList" resultType="MtrlStoreVO"> 
+		SELECT  m.mt_cd,
+		        m.mt_name,
+		        mp.placeod_qt,
+		        m.unit,
+		        mc.ck_dt,
+		        mc.ck_chg
+		FROM mt m JOIN mt_placeod mp
+		ON m.mt_cd = mp.mt_cd
+		JOIN mt_ck mc
+		ON mc.mt_placeod_cd = mp.mt_placeod_cd
+		WHERE mp.placeod_st = 5 AND mc.mc_res = '합격'
+		ORDER BY mc.str_comp_dt
+ 	</select>
+
+	<select id="getMtrlFailList" resultType="MtrlStoreVO"> 
+		SELECT  m.mt_cd,
+		        m.mt_name,
+		        mp.placeod_qt,
+		        m.unit,
+		        mc.ck_dt,
+		        mc.ck_chg
+		FROM mt m JOIN mt_placeod mp
+		ON m.mt_cd = mp.mt_cd
+		JOIN mt_ck mc
+		ON mc.mt_placeod_cd = mp.mt_placeod_cd
+		WHERE mp.placeod_st = 5 AND mc.mc_res = '불합격'
+		ORDER BY mc.str_comp_dt
+ 	</select>
+ 	
+
+</mapper>
