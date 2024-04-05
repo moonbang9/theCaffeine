@@ -6,11 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.theCaffeine.mes.prdt.model.MtrlPlanVO;
+import com.theCaffeine.mes.prdt.model.PlanOrderDetailVO;
 import com.theCaffeine.mes.prdt.model.PlanVO;
+import com.theCaffeine.mes.prdt.model.SafePlanVO;
 import com.theCaffeine.mes.prdt.service.PrdtService;
 
 @RestController
@@ -59,6 +63,18 @@ public class ProductionController {
 			mv.addObject("list",list);
 		}
 		return mv;
+	}
+	
+	//상세 주문목록 데이터
+	@PostMapping("/ajax/planOrderDetail")
+	public List<PlanOrderDetailVO> planOrderDetail(@RequestBody PlanOrderDetailVO vo) {
+		return prdtService.getDetailOrderList(vo);
+	}
+	
+	//상세 주문목록 데이터
+	@GetMapping("/ajax/planSafeList")
+	public List<SafePlanVO> planSafeList() {
+		return prdtService.getSafeInventoryList();
 	}
 	
 	//연간 생산 현황 페이지이동

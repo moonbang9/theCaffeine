@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 
 import com.theCaffeine.mes.prdt.mapper.PrdtMapper;
 import com.theCaffeine.mes.prdt.model.MtrlPlanVO;
+import com.theCaffeine.mes.prdt.model.PlanOrderDetailVO;
 import com.theCaffeine.mes.prdt.model.PlanVO;
+import com.theCaffeine.mes.prdt.model.SafePlanVO;
 import com.theCaffeine.mes.prdt.service.PrdtService;
 
 @Service
@@ -31,6 +33,18 @@ public class PrdtServiceImpl implements PrdtService{
 	public List<MtrlPlanVO> getQnttMtrlList(String pdtPlanCd) {
 		// TODO Auto-generated method stub
 		return prdtMapper.getQnttMtrlList(pdtPlanCd);
+	}
+
+	@Override
+	public List<PlanOrderDetailVO> getDetailOrderList(PlanOrderDetailVO vo) {
+		// TODO Auto-generated method stub
+		return prdtMapper.getDetailOrderList(vo);
+	}
+
+	@Override
+	public List<SafePlanVO> getSafeInventoryList() {
+		// TODO Auto-generated method stub
+		return prdtMapper.getSafeInventoryList();
 	}
 	
 }
