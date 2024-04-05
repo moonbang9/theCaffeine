@@ -60,6 +60,39 @@
 		where pdt_plan_cd = #{pdtPlanCd}
 	</select>
 	
+	<select id="getDetailOrderList" resultType="PlanOrderDetailVO">
+		select 	od.pd_cd, 
+				p.unit, 
+				od.qt, 
+				od.due_dt 
+		from od_detail od 
+		left outer join pd p 
+		on od.pd_cd = p.pd_cd 
+		<where>
+			od.od_detail_st= 1
+			<if test="pdCd != null and pdCd != ''">
+				AND od.pd_cd = #{pdCd}
+			</if>
+			<if test="dueDt != null">
+				AND due_dt = #{dueDt}
+			</if>
+		</where>
+		order by od.due_dt
+	</select>
 	
+	<select id="getSafeInventoryList" resultType="SafePlanVO">
+		select 	e.pd_cd, 
+				e.unit, 
+				nvl(w.tat,0) now_stk, 
+				nvl(e.safe_stk_qt,0) safe_stk, 
+				nvl((w.tat - e.safe_stk_qt),0) ms_stk 
+		from (select p.pd_name, ps.unit,sum(qt) tat, ps.pd_cd 
+				from PD_STK ps 
+				join pd p 
+				on ps.pd_cd = p.pd_cd 
+				where qt > 0 and pdt_dt >= sysdate group by p.pd_name, ps.unit, ps.pd_cd) w 
+			right outer join (select pd_cd, safe_stk_qt, pd_name, unit from pd) e 
+			on w.pd_cd = e.pd_cd
+	</select>
 	
 </mapper>
