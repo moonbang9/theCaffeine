@@ -26,15 +26,14 @@
  		   		AND o.od_dt >= TO_DATE(#{vo.minOdDt}, 'YYYY-MM-DD') 			
  			</if>
  			<if test="vo.maxOdDt != null and vo.maxOdDt != '' ">
- 		   		AND o.od_dt <= TO_DATE(#{vo.maxOdDt}, 'YYYY-MM-DD') 			
+ 		   		AND o.od_dt <![CDATA[<=]]> TO_DATE(#{vo.maxOdDt}, 'YYYY-MM-DD') 			
  			</if>
  			<if test="vo.minDueDt != null and vo.minDueDt != '' ">
- 		   		AND o.od_dt >= TO_DATE(#{vo.minDueDt}, 'YYYY-MM-DD') 			
+ 		   		AND d.due_dt >= TO_DATE(#{vo.minDueDt}, 'YYYY-MM-DD') 			
  			</if>
  			<if test="vo.maxDueDt != null and vo.maxDueDt != '' ">
- 		   		AND o.od_dt >= TO_DATE(#{vo.maxDueDt}, 'YYYY-MM-DD') 			
- 			</if>
- 			
+ 		   		AND d.due_dt <![CDATA[<=]]> TO_DATE(#{vo.maxDueDt}, 'YYYY-MM-DD') 			
+ 			</if> 			
  			<if test="vo.odDetailSt != null">
 				AND employee_id 
  				<foreach collection="svo.employeeIds" open="in (" close=")" separator="," item="empid">				
