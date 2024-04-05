@@ -101,7 +101,8 @@ from cli c JOIN od o
                 ON o.od_no = d.od_no
             JOIN pd p
                 ON d.pd_cd = p.pd_cd
-where o.od_dt BETWEEN TO_DATE('2024-04-20', 'YYYY-MM-DD') AND TO_DATE('2025-01-01', 'YYYY-MM-DD')
+--where o.od_dt BETWEEN TO_DATE('2024-04-20', 'YYYY-MM-DD') AND TO_DATE('2025-01-01', 'YYYY-MM-DD')
+where (o.od_dt >= TO_DATE('2024-04-20', 'YYYY-MM-DD')) AND (o.od_dt <= TO_DATE('2025-01-01', 'YYYY-MM-DD'))
 ORDER BY d.od_detailno;
 
 
