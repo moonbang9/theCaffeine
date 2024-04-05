@@ -59,5 +59,11 @@ public class MtrlOrderController {
 		System.out.println(vo);
 		return vo;
 	}
+	
+	// 거래처 목록 데이터
+	@GetMapping("/ajax/mtrlCliList")
+	public List<MtrlOrderVO> getMtrlCliList() {
+		return mtrlOrderService.getMtrlCliList();
+	}
 		
 }

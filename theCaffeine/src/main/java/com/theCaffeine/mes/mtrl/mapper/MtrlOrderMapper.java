@@ -15,7 +15,9 @@ public interface MtrlOrderMapper {
 	int deleteMtrlOrder(String mtPlaceodCd);
 	int updateMtrlOrder(MtrlOrderVO vo);
 	int updateMtrlOrder2(String mtPlaceodCd);
+	List<MtrlOrderVO> getMtrlCliList();
 	
 	List<MtrlOrderVO> getMtrlqualList(MtrlOrderVO vo);
 	int insertMtrlQuality(MtrlOrderVO vo);
+	int updateMtrlOrder3(String mtPlaceodCd);
 }

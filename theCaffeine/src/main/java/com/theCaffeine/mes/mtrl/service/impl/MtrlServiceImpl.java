@@ -39,4 +39,9 @@ public class MtrlServiceImpl implements MtrlService{
 		return mtrlMapper.updateMtrl(vo);
 	}
 
+	@Override
+	public List<MtrlVO> getCliList() {
+		return mtrlMapper.getCliList();
+	}
+
 }

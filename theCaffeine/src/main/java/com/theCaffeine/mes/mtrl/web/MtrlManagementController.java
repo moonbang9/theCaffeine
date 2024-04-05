@@ -59,4 +59,10 @@ public class MtrlManagementController {
 		return vo;
 	}	
 	
+	// 거래처 목록 데이터
+	@GetMapping("/ajax/cliList")
+	public List<MtrlVO> getMtrlList() {
+		return mtrlService.getCliList();
+	}
+	
 }
