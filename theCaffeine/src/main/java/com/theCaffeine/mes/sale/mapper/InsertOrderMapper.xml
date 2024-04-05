@@ -44,6 +44,8 @@
 				, #{totalPrice}
 				, #{cliCd} )	
 	</insert>
+	
+	
 	<insert id="insertOrderDetail" parameterType="OrderDetailVO">
 		insert into od_detail 
 								(od_detailno

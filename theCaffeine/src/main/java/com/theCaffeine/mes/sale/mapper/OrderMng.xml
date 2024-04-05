@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.emp.mapper.EmpMapper">
+	<sql id="condition">
+		<where>
+ 			<if test="vo.pdCd != null and vo.pdCd != '' ">
+	 		 	DEPARTMENT_ID = #{vo.departmentId} 			
+ 			</if>
+ 			<if test="vo.pdName != null and vo.pdName != '' ">
+ 		   		AND FIRST_NAME like '%' || #{vo.firstName} || '%'			
+ 			</if>
+ 			<if test="vo.cliCd != null and vo.cliCd != '' ">
+ 		   		AND MANAGER_ID = #{vo.managerId} 			
+ 			</if>
+ 			<if test="vo.cliName != null and vo.cliName != '' ">
+ 		   		AND MANAGER_ID = #{vo.managerId} 			
+ 			</if>
+ 			<if test="vo.cliChg != null and vo.cliChg != '' ">
+ 		   		AND MANAGER_ID = #{vo.managerId} 			
+ 			</if>
+ 			<if test="vo.odChg != null and vo.odChg != '' ">
+ 		   		AND MANAGER_ID = #{vo.managerId} 			
+ 			</if>
+ 			<if test="vo.minOdDt != null and vo.minOdDt != '' ">
+ 		   		AND o.od_dt >= TO_DATE(#{vo.minOdDt}, 'YYYY-MM-DD') 			
+ 			</if>
+ 			<if test="vo.maxOdDt != null and vo.maxOdDt != '' ">
+ 		   		AND o.od_dt <= TO_DATE(#{vo.maxOdDt}, 'YYYY-MM-DD') 			
+ 			</if>
+ 			<if test="vo.minDueDt != null and vo.minDueDt != '' ">
+ 		   		AND o.od_dt >= TO_DATE(#{vo.minDueDt}, 'YYYY-MM-DD') 			
+ 			</if>
+ 			<if test="vo.maxDueDt != null and vo.maxDueDt != '' ">
+ 		   		AND o.od_dt >= TO_DATE(#{vo.maxDueDt}, 'YYYY-MM-DD') 			
+ 			</if>
+ 			
+ 			<if test="vo.odDetailSt != null">
+				AND employee_id 
+ 				<foreach collection="svo.employeeIds" open="in (" close=")" separator="," item="empid">				
+ 					#{empid}
+ 				</foreach>
+ 			</if>
+ 		   </where>
+	</sql>
+	
+	<select id="getOdMngList" resultType="OrderMngVO">
+		select o.OD_NO
+				, o.OD_DT
+				, o.OD_CHG
+				, o.DC_RATE
+				, o.TOTAL_PRICE
+				, o.CLI_CD
+				, c.cli_name
+				, c.cli_chg
+				, d.od_no
+				, d.od_detailno
+				, p.pd_name
+				, d.due_dt
+				, d.od_detail_st
+				, d.pd_cd
+		from cli c 
+				JOIN od o 
+					ON c.cli_cd = o.cli_cd
+            	LEFT OUTER JOIN od_detail d
+                	ON o.od_no = d.od_no
+            	JOIN pd p
+                	ON d.pd_cd = p.pd_cd
+		ORDER BY d.od_detailno;
+	</select>
+	
+</mapper>
