@@ -95,4 +95,20 @@
 			on w.pd_cd = e.pd_cd
 	</select>
 	
+	<select id="getFailProdList" resultType="FailPlanVO">
+		select q.pd_cd, nvl(w.tat,0) fail_tat 
+		from 	(select pid.pd_cd, sum(pid.qt) tat 
+				from PDT_INST_DETAIL pid 
+				join PDT_INST pi 
+				on pid.pdt_inst_no = pi.pdt_inst_no 
+				where pid.comp_st = 4 and pi.pdt_plan_cd = (select pdt_plan_cd 
+															from PDTPLAN 
+														<![CDATA[	where wk_plan_stt_dt < (select max(wk_plan_stt_dt) 
+																					from PDTPLAN 
+																					where wk_plan_stt_dt <= sysdate))]]> 
+				group by pid.pd_cd) w 
+		right outer join pd q 
+		on w.pd_cd=q.pd_cd
+	</select>
+	
 </mapper>
