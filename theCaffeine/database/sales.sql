@@ -102,7 +102,19 @@ from cli c JOIN od o
             JOIN pd p
                 ON d.pd_cd = p.pd_cd
 --where o.od_dt BETWEEN TO_DATE('2024-04-20', 'YYYY-MM-DD') AND TO_DATE('2025-01-01', 'YYYY-MM-DD')
-where (o.od_dt >= TO_DATE('2024-04-20', 'YYYY-MM-DD')) AND (o.od_dt <= TO_DATE('2025-01-01', 'YYYY-MM-DD'))
+--where (o.od_dt >= TO_DATE('2024-04-20', 'YYYY-MM-DD')) AND (o.od_dt <= TO_DATE('2025-01-01', 'YYYY-MM-DD'))
+WHERE 
+d.pd_cd like '%P%'
+AND p.pd_name like '% %'
+AND o.cli_cd like '%0%'
+--AND c.cli_name like '%
+AND c.cli_chg like '% %'
+--AND o.od_chg like '%
+AND o.od_dt >= TO_DATE('2023-01-01', 'YYYY-MM-DD')
+AND o.od_dt <= TO_DATE('2025-01-01', 'YYYY-MM-DD') 			
+AND d.due_dt >= TO_DATE('2023-01-01', 'YYYY-MM-DD') 			
+AND d.due_dt <= TO_DATE('2025-01-01', 'YYYY-MM-DD') 			
+AND d.od_detail_st IN (0,1,2)
 ORDER BY d.od_detailno;
 
 
