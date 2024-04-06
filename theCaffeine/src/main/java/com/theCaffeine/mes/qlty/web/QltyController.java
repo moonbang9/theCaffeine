@@ -31,9 +31,9 @@ public class QltyController {
 	}
 	
 	// 자재검사결과 등록
-	@PostMapping("/ajax/insertMcRes")
-	public QltyVO insertMcRes(@RequestBody QltyVO vo) {
-		qltyService.insertMcRes(vo);
+	@PostMapping("/ajax/updateMcRes")
+	public QltyVO updateMcRes(@RequestBody QltyVO vo) {
+		qltyService.updateMcRes(vo);
 		return vo;
 	}
 
