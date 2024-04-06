@@ -84,6 +84,12 @@ public class ProductionController {
 		return prdtService.getFailProdList();
 	}
 	
+	//전주 생산 수량 파악 데이터
+	@GetMapping("/ajax/successProdList")
+	public List<FailPlanVO> successProdList() {
+		return prdtService.getSuccessProdList();
+	}
+	
 	//연간 생산 현황 페이지이동
 	@GetMapping("/production/prdtYearState")
 	public ModelAndView prdtYearStateList() { 

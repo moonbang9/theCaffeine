@@ -126,6 +126,13 @@
 		.then(res => table2.setData(res))
 	}
 	
+	// 전주 실패수량 조회 데이터
+	function successListReq() {
+		fetch("/ajax/successProdList")
+		.then(res => res.json())
+		.then(res => table4.setData(res))
+	}
+	
 	
 	function detailOrderListReq(param) {
 		fetch("/ajax/planOrderDetail",{
@@ -180,9 +187,8 @@
 	var table4 = new Tabulator("#example-table4", {
 	    height:"311px",
 	    columns:[
-	        {title:"상품명", field:"progress", hozAlign:"center"},
-	        {title:"수량(kg)", field:"gender", hozAlign:"center"},
-	        {title:"납기일", field:"name", hozAlign:"center"},
+	    	{title:"상품코드", field:"pdCd", hozAlign:"center"},
+	        {title:"전 주 생산량(kg)", field:"befSuccessTat", hozAlign:"center"},
 	    ],
 	});
 	

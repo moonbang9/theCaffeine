@@ -15,4 +15,5 @@ public interface PrdtService {
 	List<PlanOrderDetailVO> getDetailOrderList(PlanOrderDetailVO vo); //상세 주문조회
 	List<SafePlanVO> getSafeInventoryList(); //안전재고량 조회
 	List<FailPlanVO> getFailProdList(); //실패수량 조회
+	List<FailPlanVO> getSuccessProdList(); //전주생산수량 파악
 }

@@ -11,4 +11,5 @@ public class FailPlanVO {				//실패 수량 파악
 	private String pdCd;				//제품코드
 	private String unit;				//단위
 	private Integer failTat; 			//전주 실패 수량
+	private Integer befSuccessTat; 		//전주 생산 수량
 }

@@ -19,4 +19,5 @@ public interface PrdtMapper {
 	List<PlanOrderDetailVO> getDetailOrderList(PlanOrderDetailVO vo); //상세주문조회
 	List<SafePlanVO> getSafeInventoryList(); //재고수량 파악
 	List<FailPlanVO> getFailProdList(); //실패수량 파악
+	List<FailPlanVO> getSuccessProdList(); //전주생산수량 파악
 }

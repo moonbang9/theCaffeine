@@ -111,4 +111,21 @@
 		on w.pd_cd=q.pd_cd
 	</select>
 	
+	<select id="getSuccessProdList" resultType="FailPlanVO">
+		select p.pd_cd, nvl(sum(r.qt),0) bef_success_tat 
+		from pd p 
+		left outer join (select * 
+						from PDT_INST_DETAIL q 
+						join (select * 
+							  from PDT_INST 
+							  where pdt_plan_cd=(select pdt_plan_cd 
+								  				from PDTPLAN 
+								  	<![CDATA[	where wk_plan_stt_dt < (select max(wk_plan_stt_dt) 
+								  										from PDTPLAN 
+								  										where wk_plan_stt_dt <= sysdate))) w ]]> 
+						on q.pdt_inst_no=w.pdt_inst_no where q.comp_st=3) r 
+		on p.pd_cd=r.pd_cd 
+		group by p.pd_cd
+	</select>
+	
 </mapper>

@@ -53,5 +53,11 @@ public class PrdtServiceImpl implements PrdtService{
 		// TODO Auto-generated method stub
 		return prdtMapper.getFailProdList();
 	}
+
+	@Override
+	public List<FailPlanVO> getSuccessProdList() {
+		// TODO Auto-generated method stub
+		return prdtMapper.getSuccessProdList();
+	}
 	
 }
