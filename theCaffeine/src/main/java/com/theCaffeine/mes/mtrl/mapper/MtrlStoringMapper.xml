@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.theCaffeine.mes.mtrl.mapper.MtrlStoringMapper">
+
+	<select id="getMtrlPassList" resultType="MtrlOrderVO"> 
+		SELECT  m.mt_cd,
+		        m.mt_name,
+		        mp.placeod_qt,
+		        mp.mt_placeod_cd,
+		        m.unit,
+		        mc.ck_dt,
+		        mc.ck_chg
+		FROM mt m JOIN mt_placeod mp
+		ON m.mt_cd = mp.mt_cd
+		JOIN mt_ck mc
+		ON mc.mt_placeod_cd = mp.mt_placeod_cd
+		WHERE mp.placeod_st = 5 AND mc.mc_res = '합격'
+		ORDER BY mc.str_comp_dt
+ 	</select>
+
+	<select id="getMtrlFailList" resultType="MtrlOrderVO"> 
+		SELECT  m.mt_cd,
+		        m.mt_name,
+		        mp.placeod_qt,
+		        mp.mt_placeod_cd,
+		        m.unit,
+		        mc.ck_dt,
+		        mc.ck_chg
+		FROM mt m JOIN mt_placeod mp
+		ON m.mt_cd = mp.mt_cd
+		JOIN mt_ck mc
+		ON mc.mt_placeod_cd = mp.mt_placeod_cd
+		WHERE mp.placeod_st = 5 AND mc.mc_res = '불합격'
+		ORDER BY mc.str_comp_dt
+ 	</select>
+ 	
+ 	<select id="getMtrlSubsidiaryList" resultType="MtrlOrderVO"> 
+		SELECT  m.mt_cd,
+		        m.mt_name,
+		        mp.placeod_qt,
+		        mp.mt_placeod_cd,
+		        m.unit,
+		        mp.placeod_compdt + m.leadtm AS placeod_arridt, -- 자재도착일
+		        mp.placeod_chg -- 발주담당자
+		FROM mt m JOIN mt_placeod mp
+		ON m.mt_cd = mp.mt_cd
+		WHERE mp.placeod_st = 3 AND m.mt_div = '부자재'
+		ORDER BY placeod_arridt
+	</select>
+	
+	<insert id="insertMtrlStr" parameterType="MtrlStoreVO">
+		INSERT INTO mt_str
+					(mt_str_no
+					,str_qt
+					,str_compdt
+					,str_chg
+					,mt_placeod_cd
+					,mt_cd)
+		    VALUES  (
+		    		seq_mt_str_no.nextval
+		    		,#{strQt}
+		    		,sysdate
+		    		,#{strChg}
+		    		,#{mtPlaceodCd}
+		    		,#{mtCd}
+		    		)
+	</insert>
+
+</mapper>

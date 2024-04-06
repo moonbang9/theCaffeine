@@ -41,7 +41,7 @@ public class MtrlOrderServiceImpl implements MtrlOrderService{
 	}
 
 	@Override
-	public int updateMtrlOrder(MtrlOrderVO vo) {
+	public int updateMtrlOrder(MtrlOrderVO vo) { // 비동기 처리방식
         ScheduledExecutorService excutorService = Executors.newScheduledThreadPool(1);
         excutorService.schedule(() -> {
         	mtrlOrderMapper.updateMtrlOrder2(vo.getMtPlaceodCd());

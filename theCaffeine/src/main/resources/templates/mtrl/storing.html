@@ -40,6 +40,11 @@
 	</div>
 
 	<script>
+	
+		passListReq();
+		failListReq();
+		subListReq();
+	
 		// 합격 목록
 		var table = new Tabulator("#mtrl_pass_list", {
 		   height:"100%",
@@ -61,6 +66,13 @@
 		        {title:"검사 담당자", field:"ckChg", width:230, hozAlign:"center"}
 		    ],
 		});
+		
+		// 합격 목록 데이터
+		function passListReq() {
+			fetch("/ajax/mtrlPassList")
+			.then(res => res.json())
+			.then(res => table.setData(res))
+		}
 		
 		// 불합격 목록
 		var table2 = new Tabulator("#mtrl_fail_list", {
@@ -84,6 +96,13 @@
 		    ],
 		});
 		
+		// 불합격 목록 데이터
+		function failListReq() {
+			fetch("/ajax/mtrlFailList")
+			.then(res => res.json())
+			.then(res => table2.setData(res))
+		}
+		
 		// 부자재 목록
 		var table3 = new Tabulator("#mtrl_subsidiary_list", {
 		   height:"100%",
@@ -106,6 +125,147 @@
 		    ],
 		});
 		
+		// 부자재 목록 데이터
+		function subListReq() {
+			fetch("/ajax/mtrlSubList")
+			.then(res => res.json())
+			.then(res => table3.setData(res))
+		}
+		
+		
+		let selectPassMtrl = "";
+		
+		table.on("rowSelectionChanged", function(data, rows, selected, deselected){
+			selectPassMtrl = data;
+		});
+		
+		// 합격자재 입고처리 버튼 이벤트
+		mtrlStroingBtn.addEventListener("click", e=> {
+			if(selectPassMtrl == "") {
+				alert("선택된 자재가 없습니다.")
+			} else {
+				console.log(selectPassMtrl);
+				//passModReq(selectPassMtrl);
+			}
+		})
+		
+		function passModReq(selectPassMtrl) {
+			for(order of selectPassMtrl) {
+				const mtCd = order.mtCd;
+				const placeodQt= order.placeodQt;
+				const placeodArridt = order.placeodArridt;
+				const cliName = order.cliName;
+				const placeodChg = order.placeodChg;
+				const mtPlaceodCd = order.mtPlaceodCd;
+				let param = {mtCd, placeodQt, placeodArridt, cliName, placeodChg, mtPlaceodCd};
+				fetch("/ajax/mtrlQuality",{
+					method : "post",
+					headers: {
+					      "Content-Type": "application/json",
+					    },
+					body : JSON.stringify(param)
+				})
+				.then(res => res.json())
+				.then(res => console.log(res))
+			}
+			passModRes();
+		}
+		
+		// 합격자재 입고처리 응답
+		function passModRes() {
+			alert("자재입고가 완료되었습니다!");
+			location.href= "/material/storing"
+		}
+		
+		
+		
+		let selectFailMtrl = "";
+		
+		table2.on("rowSelectionChanged", function(data, rows, selected, deselected){
+			selectFailMtrl = data;
+		});
+		
+		// 불합격자재 반품처리 버튼 이벤트
+		mtrlReturnBtn.addEventListener("click", e=> {
+			if(selectFailMtrl == "") {
+				alert("선택된 자재가 없습니다.")
+			} else {
+				console.log(selectFailMtrl);
+				//failModReq(selectFailMtrl);
+			}
+		})
+		
+		function failModReq(selectFailMtrl) {
+			for(order of selectFailMtrl) {
+				const mtCd = order.mtCd;
+				const placeodQt= order.placeodQt;
+				const placeodArridt = order.placeodArridt;
+				const cliName = order.cliName;
+				const placeodChg = order.placeodChg;
+				const mtPlaceodCd = order.mtPlaceodCd;
+				let param = {mtCd, placeodQt, placeodArridt, cliName, placeodChg, mtPlaceodCd};
+				fetch("/ajax/mtrlQuality",{
+					method : "post",
+					headers: {
+					      "Content-Type": "application/json",
+					    },
+					body : JSON.stringify(param)
+				})
+				.then(res => res.json())
+				.then(res => console.log(res))
+			}
+			failModRes();
+		}
+		
+		// 검사요청 처리 응답
+		function failModRes() {
+			alert("자재반품이 완료되었습니다!");
+			location.href= "/material/storing"
+		}
+		
+		
+		
+		let selectSubMtrl = "";
+		
+		table3.on("rowSelectionChanged", function(data, rows, selected, deselected){
+			selectSubMtrl = data;
+		});
+		
+		// 부자재 입고처리 버튼 이벤트
+		mtrlStroingBtn2.addEventListener("click", e=> {
+			if(selectSubMtrl == "") {
+				alert("선택된 자재가 없습니다.")
+			} else {
+				console.log(selectSubMtrl);
+				//subModReq(selectSubMtrl);
+			}
+		})
+		
+		function subModReq(selectSubMtrl) {
+			for(order of selectSubMtrl) {
+				const placeodQt= order.placeodQt;
+				const strChg = "최민수 사원"; // 로그인 정보있을 시 order.strChg 로 변경
+				const mtPlaceodCd = order.mtPlaceodCd;
+				const mtCd = order.mtCd;
+				let param = {placeodQt, strChg, mtPlaceodCd, mtCd};
+				fetch("/ajax/mtrlSubStr",{
+					method : "post",
+					headers: {
+					      "Content-Type": "application/json",
+					    },
+					body : JSON.stringify(param)
+				})
+				.then(res => res.json())
+				.then(res => console.log(res))
+			}
+			subModRes();
+		}
+		
+		// 검사요청 처리 응답
+		function subModRes() {
+			alert("부자재입고가 완료되었습니다!");
+			location.href= "/material/storing"
+		}
 		
 		
 	</script>
