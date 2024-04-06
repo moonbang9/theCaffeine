@@ -21,8 +21,8 @@ public class QltyServiceImpl implements QltyService{
 	}
 
 	@Override
-	public int insertMcRes(QltyVO vo) {
-		return qltyMapper.insertMcRes(vo);
+	public int updateMcRes(QltyVO vo) {
+		return qltyMapper.updateMcRes(vo);
 	}
 
 }

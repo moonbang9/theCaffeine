@@ -97,16 +97,12 @@
           columns: [{
             title: "No",
             width: 60,
-            field: "mtPlaceodCd"
+            field: "mtCkNo"
           }, {
             title: "검사명",
             width: 120,
             field: "ckName",
-          }, {
-      	    title: "검사결과",
-            width: 100,
-            field: "ckRes",
-           }, {  
+          }, {  
             title: "제품명",
             field: "mtName"
           }, {
@@ -125,9 +121,6 @@
           }, {
             title: "발주 담당자",
             field: "placeodChg"
-          },{
-            title: "검사 담당자",
-            field: "ckChg"
           },
           ],
 
@@ -144,35 +137,43 @@
           paginationCounter: "rows",
 
           columns: [{
-            title: "No",
-            width: 70,
-            field: "name"
-          }, {
-            title: "발주완료일",
-            field: "placeodCompdt",
-          }, {
-            title: "제품정보",
-            field: "mtName"
-          }, {
-            title: "담당자",
-            field: "rating"
-          }, {
-            title: "검사명",
-            field: "col"
-          }, {
-            title: "결과",
-            field: "dob"
-          }, {
-            title: "결과값",
-            field: "dob"
-          }, {
-            title: "검사일",
-            field: "dob"
-          }, {
-            title: "담당자",
-            field: "dob"
-          },],
-        });
+              title: "No",
+              width: 60,
+              field: "mtPlaceodCd"
+            }, {
+              title: "검사명",
+              width: 120,
+              field: "ckName",
+            }, {
+        	    title: "검사결과",
+              width: 100,
+              field: "ckRes",
+             }, {  
+              title: "제품명",
+              field: "mtName"
+            }, {
+              title: "수량",
+              width: 70,
+              field: "placeodQt"
+            }, {
+              title: "거래처명",
+              field: "cliName"
+            }, {
+              title: "발주 요청일",
+              field: "placeodReqdt"
+            }, {
+              title: "발주 요청자",
+              field: "placeodRequester"
+            }, {
+              title: "발주 담당자",
+              field: "placeodChg"
+            },{
+              title: "검사 담당자",
+              field: "ckChg"
+            },
+            ],
+
+          });
 
         listWaiting();
         //listDone();
@@ -199,9 +200,12 @@
         });
         
 		let averageFixed = "";
-		let testResult = "";		
+		let testResult = "";
+		let letMtCkNo = "";
         //행 클릭시 모달창 출력
         table1.on("rowClick", function (e, row) {
+        	console.log(row.getData());
+        	letMtCkNo = row.getData().mtCkNo;
           const myModal = new bootstrap.Modal('#basicModal', {
             keyboard: false
           })
@@ -249,7 +253,7 @@
         confirm_button.addEventListener("click", e => {
           saveReq();
         })
-        //검사값 디비 전송
+        //검사값 디비 등록
         function saveReq() {
           //const ckName 추가 필요
           const firstMc = result1.value;
@@ -259,9 +263,10 @@
           const fifthMc = result5.value;
           const mcAvg = averageFixed;
           const mcRes = testResult;
-          let param = { firstMc, secondMc, thirdMc, fourthMc, fifthMc, mcAvg, mcRes };
+          const mtCkNo = letMtCkNo;
+          let param = { firstMc, secondMc, thirdMc, fourthMc, fifthMc, mcAvg, mcRes, mtCkNo };
           console.log(param);
-          fetch("/ajax/insertMcRes",{
+          fetch("/ajax/updateMcRes",{
         	  method : "post",
         	  headers: {
         		  "Content-Type": "application/json",
@@ -269,10 +274,10 @@
         	  body : JSON.stringify(param)
           })
           .then(res => res.json())
-          .then(res => saveRes(res))
+          .then(res => console.log(res))
         }
         
-     	// 등록 응답 (디비 전송 성공하면 주석 풀기)
+     	// 등록 응답 (디비 등록 성공하면 주석 풀기)
     	/* function saveRes(res) {
     		alert("등록이 완료되었습니다!");
     		location.href= "/quality/material"
