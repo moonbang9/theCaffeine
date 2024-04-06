@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.theCaffeine.mes.prdt.mapper.PrdtMapper;
+import com.theCaffeine.mes.prdt.model.FailPlanVO;
 import com.theCaffeine.mes.prdt.model.MtrlPlanVO;
 import com.theCaffeine.mes.prdt.model.PlanOrderDetailVO;
 import com.theCaffeine.mes.prdt.model.PlanVO;
@@ -45,6 +46,12 @@ public class PrdtServiceImpl implements PrdtService{
 	public List<SafePlanVO> getSafeInventoryList() {
 		// TODO Auto-generated method stub
 		return prdtMapper.getSafeInventoryList();
+	}
+
+	@Override
+	public List<FailPlanVO> getFailProdList() {
+		// TODO Auto-generated method stub
+		return prdtMapper.getFailProdList();
 	}
 	
 }

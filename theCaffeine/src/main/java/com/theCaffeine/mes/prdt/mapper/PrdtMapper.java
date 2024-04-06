@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.theCaffeine.mes.prdt.model.FailPlanVO;
 import com.theCaffeine.mes.prdt.model.MtrlPlanVO;
 import com.theCaffeine.mes.prdt.model.PlanOrderDetailVO;
 import com.theCaffeine.mes.prdt.model.PlanVO;
@@ -17,4 +18,5 @@ public interface PrdtMapper {
 	List<MtrlPlanVO> getQnttMtrlList(String pdtPlanCd); //주간 발주계획
 	List<PlanOrderDetailVO> getDetailOrderList(PlanOrderDetailVO vo); //상세주문조회
 	List<SafePlanVO> getSafeInventoryList(); //재고수량 파악
+	List<FailPlanVO> getFailProdList(); //실패수량 파악
 }

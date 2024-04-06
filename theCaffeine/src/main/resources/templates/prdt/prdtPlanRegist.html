@@ -91,6 +91,7 @@
 	$(window).on("load",function(e) {
 		detailOrderListReq({});
 		safeListReq();
+		failListReq();
 	})
 	
 	research1.addEventListener("click", e=> {
@@ -116,6 +117,13 @@
 		fetch("/ajax/planSafeList")
 		.then(res => res.json())
 		.then(res => table3.setData(res))
+	}
+	
+	// 전주 실패수량 조회 데이터
+	function failListReq() {
+		fetch("/ajax/failProdList")
+		.then(res => res.json())
+		.then(res => table2.setData(res))
 	}
 	
 	
@@ -154,8 +162,8 @@
     height:"311px",
     layout:"fitDataTable",
     columns:[
-        {title:"상품명", field:"name", hozAlign:"center"},
-        {title:"전 주 실패량(kg)", field:"progress", hozAlign:"center"},
+        {title:"상품코드", field:"pdCd", hozAlign:"center"},
+        {title:"전 주 실패량(kg)", field:"failTat", hozAlign:"center"},
     ],
 });
 	var table3 = new Tabulator("#example-table3", {

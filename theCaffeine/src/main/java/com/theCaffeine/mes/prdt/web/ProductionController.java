@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.theCaffeine.mes.prdt.model.FailPlanVO;
 import com.theCaffeine.mes.prdt.model.MtrlPlanVO;
 import com.theCaffeine.mes.prdt.model.PlanOrderDetailVO;
 import com.theCaffeine.mes.prdt.model.PlanVO;
@@ -75,6 +76,12 @@ public class ProductionController {
 	@GetMapping("/ajax/planSafeList")
 	public List<SafePlanVO> planSafeList() {
 		return prdtService.getSafeInventoryList();
+	}
+	
+	//실패 수량 파악 데이터
+	@GetMapping("/ajax/failProdList")
+	public List<FailPlanVO> failProdList() {
+		return prdtService.getFailProdList();
 	}
 	
 	//연간 생산 현황 페이지이동
