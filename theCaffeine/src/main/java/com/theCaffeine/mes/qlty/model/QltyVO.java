@@ -30,7 +30,7 @@ public class QltyVO {
 	private Integer thirdMc; // 3차 수분검사
 	private Integer fourthMc; // 4차 수분검사
 	private Integer fifthMc; // 5차 수분검사
-	private Integer mcAvg; // 수분검사 평균
+	private double mcAvg; // 수분검사 평균
 	private String mcRes; // 수분검사 결과
 	private String ckDt; // 검사일
 	private String ckChg; // 검사담당자

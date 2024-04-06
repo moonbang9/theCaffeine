@@ -14,40 +14,28 @@
 		       p.placeod_chg,
 		       p.placeod_st,
 		       m.mt_name,
-		       c.cli_name
+		       c.cli_name,
+		       mc.mt_ck_no
 		  FROM mt_placeod p 
 		  JOIN mt m ON p.mt_cd = m.mt_cd
 		  JOIN cli c ON p.cli_cd = c.cli_cd
+		  JOIN mt_ck mc ON p.mt_placeod_cd = mc.mt_placeod_cd
 	     WHERE p.PLACEOD_ST=4 
 	  ORDER BY p.mt_placeod_cd	        
 	     <!-- 검사 완료 후 where절 상태값을 4에서 5로 바꿔줘야됨. -->
 	</select>
 	
-	<insert id="insertMcRes" parameterType="QltyVO">
-		INSERT INTO mt_ck
-					(first_mc
-					,second_mc
-					,third_mc
-					,fourth_mc
-					,fifth_mc
-					,mc_avg
-					,mc_res
-					,ck_dt
-					<!-- ,ck_chg
-					,pass_std -->
-					)
-			VALUES (
-				   #{firstMc}
-				   ,#{secondMc}
-				   ,#{thirdMc}
-				   ,#{fouthMc}
-				   ,#{fifthMc}
-				   ,#{mcAvg}
-				   ,#{mcRes}
-				   ,sysdate
-				   <!-- ,#{ckChg}
-				   ,#{passStd} -->
-				   ) 
-	</insert>
+	<update id="updateMcRes" parameterType="QltyVO">
+		     UPDATE mt_ck
+		        SET first_mc = #{firstMc}
+					,second_mc = #{secondMc}
+					,third_mc = #{thirdMc}
+					,fourth_mc = #{fourthMc}
+					,fifth_mc = #{fifthMc}
+					,mc_avg = #{mcAvg}
+					,mc_res = #{mcRes}
+					,ck_dt = sysdate
+			  WHERE mt_ck_no = #{mtCkNo}
+	</update>
 	
 </mapper>
