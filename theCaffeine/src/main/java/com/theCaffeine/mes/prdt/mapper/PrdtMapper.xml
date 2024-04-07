@@ -64,7 +64,10 @@
 		select 	od.pd_cd, 
 				p.unit, 
 				od.qt, 
-				od.due_dt 
+				od.due_dt,
+                nvl(od.pdt_qt,0) pdt_qt,
+                0 as pre_pdt_qt,
+                od.od_detailno
 		from od_detail od 
 		left outer join pd p 
 		on od.pd_cd = p.pd_cd 
@@ -74,7 +77,7 @@
 				AND od.pd_cd = #{pdCd}
 			</if>
 			<if test="dueDt != null">
-				AND due_dt = #{dueDt}
+			<![CDATA[	AND due_dt >= #{dueDt} ]]>
 			</if>
 		</where>
 		order by od.due_dt
@@ -101,7 +104,7 @@
 				from PDT_INST_DETAIL pid 
 				join PDT_INST pi 
 				on pid.pdt_inst_no = pi.pdt_inst_no 
-				where pid.comp_st = 4 and pi.pdt_plan_cd = (select pdt_plan_cd 
+				where pid.comp_st = 4 and pi.pdt_plan_cd = (select max(pdt_plan_cd) 
 															from PDTPLAN 
 														<![CDATA[	where wk_plan_stt_dt < (select max(wk_plan_stt_dt) 
 																					from PDTPLAN 
@@ -128,4 +131,44 @@
 		group by p.pd_cd
 	</select>
 	
+	<select id="getNotDate" resultType="FailPlanVO">
+		select max(f.w) no_date 
+		from 	(select wk_plan_stt_dt+(select max(leadtm) from mt)+1 w 
+				from pdtplan 
+				group by wk_plan_stt_dt) f
+	</select>
+	
+	<select id="getBasicPlanList" resultType="PlanVO">
+		select pd_cd, 0 qt, null due_dt from pd
+	</select>
+	
+	<select id="getPlanConsum" resultType="FailPlanVO">
+		select a.pd_cd,(a.consum / b.consum) consum 
+		from (select pd_cd,consum from bom where detail_unit='kg') a 
+		join (select pd_cd,consum from bom where detail_unit='box') b 
+		on a.pd_cd=b.pd_cd
+	</select>
+	
+	<insert id="insertPrdtPlan" parameterType="PlanVO">
+		insert into PDTPLAN(pdt_plan_cd, wk_plan_stt_dt, od_name) 
+		VALUES 	(#{pdtPlanCd},
+				#{wkPlanSttDt},
+				#{odName})
+	</insert>
+	
+	<insert id="insertPrdtDetailPlan" parameterType="PlanVO">
+		insert into PDT_PLAN_DETAIL(pdt_plan_detail_no, pdt_plan_cd, pd_name, qt, due_dt,pd_cd) 
+		VALUES 	(pdt_plan_detail_seq.nextval,
+				#{pdtPlanCd},
+				#{pdName},
+				#{qt},
+				#{dueDt},
+				#{pdCd})
+	</insert>
+	
+	<update id="updatePrdtOdDetail" parameterType="PlanOrderDetailVO">
+		UPDATE  od_detail
+		SET     pdt_qt = pdt_qt + #{pdtQt}
+		WHERE   od_detailno = #{odDetailno}
+	</update>
 </mapper>

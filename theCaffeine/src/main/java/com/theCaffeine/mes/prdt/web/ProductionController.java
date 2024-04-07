@@ -90,12 +90,32 @@ public class ProductionController {
 		return prdtService.getSuccessProdList();
 	}
 	
+	//선택안되는 일자
+	@GetMapping("/ajax/noDate")
+	public FailPlanVO notDate() {
+		return prdtService.getNotDate();
+	}
+	
+	//주간계획등록 기본 양식
+	@GetMapping("/ajax/basicPlan")
+	public List<PlanVO> basicPlanList() {
+		return prdtService.getBasicPlanList();
+	}
+	
+	//box -> kg 단위변경 
+	@GetMapping("/ajax/planConsum")
+	public List<FailPlanVO> planConsum() {
+		return prdtService.getPlanConsum();
+	}
+	
 	//연간 생산 현황 페이지이동
 	@GetMapping("/production/prdtYearState")
 	public ModelAndView prdtYearStateList() { 
 		ModelAndView mv = new ModelAndView("prdt/prdtYearState");
 		return mv;
 	}
+	
+	
 	
 	//생산 지시 관리 목록 페이지이동
 	@GetMapping("/production/prdtInst")
