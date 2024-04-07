@@ -19,9 +19,11 @@ public class PlanOrderDetailVO {
 	private Integer odDetailno;			//상세제품번호
 	private String pdCd;			//제품코드
 	private String unit;			//단위
-	private Integer qt;                 //수량(Box)
+	private Integer qt;             //수량(Box)
+	private Integer pdtQt;			//생산 수량
+	private Integer prePdtQt;		//생산 예정수량
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date dueDt;				//납기 일
-	private Integer odDetailSt;			//주문상태
+	private Integer odDetailSt;		//주문상태
 }

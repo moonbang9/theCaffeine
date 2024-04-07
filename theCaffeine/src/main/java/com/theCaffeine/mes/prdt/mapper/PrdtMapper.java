@@ -20,4 +20,7 @@ public interface PrdtMapper {
 	List<SafePlanVO> getSafeInventoryList(); //재고수량 파악
 	List<FailPlanVO> getFailProdList(); //실패수량 파악
 	List<FailPlanVO> getSuccessProdList(); //전주생산수량 파악
+	FailPlanVO getNotDate(); //선택안되는 일자
+	List<PlanVO> getBasicPlanList(); // 주간계획등록 기본 양식
+	List<FailPlanVO> getPlanConsum(); // box -> kg 단위변경
 }

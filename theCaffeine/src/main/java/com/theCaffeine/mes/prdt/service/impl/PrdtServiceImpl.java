@@ -59,5 +59,23 @@ public class PrdtServiceImpl implements PrdtService{
 		// TODO Auto-generated method stub
 		return prdtMapper.getSuccessProdList();
 	}
+
+	@Override
+	public FailPlanVO getNotDate() {
+		// TODO Auto-generated method stub
+		return prdtMapper.getNotDate();
+	}
+
+	@Override
+	public List<PlanVO> getBasicPlanList() {
+		// TODO Auto-generated method stub
+		return prdtMapper.getBasicPlanList();
+	}
+
+	@Override
+	public List<FailPlanVO> getPlanConsum() {
+		// TODO Auto-generated method stub
+		return prdtMapper.getPlanConsum();
+	}
 	
 }
