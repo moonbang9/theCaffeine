@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/index}">
+<head>
+<meta charset="UTF-8">
+<title>storing</title>
+</head>
+<body>
+<div layout:fragment="content">
+	<div class="mt-4 mb-5">
+	  <h1>자재 입고 관리</h1>
+	</div>
+	
+	<div class="mt-3 mb-4">
+	  <h3>검사완료 원자재 목록</h3>
+	</div>
+	
+	<div class="d-flex mt-1">
+	  <div class="p-2 flex-grow-1"><h5>&nbsp&nbsp합격 목록</h5></div>
+	  <div class="p-2"><button type="button" class="btn btn-primary" id="mtrlStroingBtn">입고 처리</button></div>
+	</div>
+	<div id="mtrl_pass_list">
+	 	
+	</div>
+	
+	<div class="d-flex mt-4">
+	  <div class="p-2 flex-grow-1"><h5>&nbsp&nbsp불합격 목록</h5></div>
+	  <div class="p-2"><button type="button" class="btn btn-warning" id="mtrlReturnBtn">반품 처리</button></div>
+	</div>
+	<div id="mtrl_fail_list">
+	 	
+	</div>
+	
+	<div class="d-flex mt-5">
+	  <div class="p-2 flex-grow-1"><h3>부자재 목록</h3></div>
+	  <div class="p-2"><button type="button" class="btn btn-primary" id="mtrlStroingBtn2">입고 처리</button></div>
+	</div>
+	<div class="mb-5" id="mtrl_subsidiary_list">
+	 	
+	</div>
+
+	<script>
+	
+		passListReq();
+		failListReq();
+		subListReq();
+	
+		// 합격 목록
+		var table = new Tabulator("#mtrl_pass_list", {
+		   height:"100%",
+		   selectableRows:true,
+		   pagination:"local",
+		    paginationSize:6,
+		    paginationSizeSelector:[3, 6, 8, 10],
+		    movableColumns:true,
+		    paginationCounter:"rows",
+		    rowHeader:{headerSort:false, resizable: false, frozen:true, headerHozAlign:"center", hozAlign:"center", formatter:"rowSelection", titleFormatter:"rowSelection", cellClick:function(e, cell){
+		        cell.getRow().toggleSelect();
+		      }},
+		    columns:[
+		        {title:"자재코드", field:"mtCd", width:220, hozAlign:"center"},
+		        {title:"자재명", field:"mtName", width:239, hozAlign:"center"}, 
+		        {title:"수량", field:"placeodQt", width:210, hozAlign:"center"},
+		        {title:"단위", field:"unit", width:210, hozAlign:"center"},
+		        {title:"검사 완료일", field:"ckDt", width:230, hozAlign:"center", editor:"input"},
+		        {title:"검사 담당자", field:"ckChg", width:230, hozAlign:"center"}
+		    ],
+		});
+		
+		// 합격 목록 데이터
+		function passListReq() {
+			fetch("/ajax/mtrlPassList")
+			.then(res => res.json())
+			.then(res => table.setData(res))
+		}
+		
+		// 불합격 목록
+		var table2 = new Tabulator("#mtrl_fail_list", {
+		   height:"100%",
+		   selectableRows:true,
+		   pagination:"local",
+		    paginationSize:6,
+		    paginationSizeSelector:[3, 6, 8, 10],
+		    movableColumns:true,
+		    paginationCounter:"rows",
+		    rowHeader:{headerSort:false, resizable: false, frozen:true, headerHozAlign:"center", hozAlign:"center", formatter:"rowSelection", titleFormatter:"rowSelection", cellClick:function(e, cell){
+		        cell.getRow().toggleSelect();
+		      }},
+		    columns:[
+		        {title:"자재코드", field:"mtCd", width:220, hozAlign:"center"},
+		        {title:"자재명", field:"mtName", width:239, hozAlign:"center"}, 
+		        {title:"수량", field:"placeodQt", width:210, hozAlign:"center"},
+		        {title:"단위", field:"unit", width:210, hozAlign:"center"},
+		        {title:"검사 완료일", field:"ckDt", width:230, hozAlign:"center", editor:"input"},
+		        {title:"검사 담당자", field:"ckChg", width:230, hozAlign:"center"}
+		    ],
+		});
+		
+		// 불합격 목록 데이터
+		function failListReq() {
+			fetch("/ajax/mtrlFailList")
+			.then(res => res.json())
+			.then(res => table2.setData(res))
+		}
+		
+		// 부자재 목록
+		var table3 = new Tabulator("#mtrl_subsidiary_list", {
+		   height:"100%",
+		   selectableRows:true,
+		   pagination:"local",
+		    paginationSize:6,
+		    paginationSizeSelector:[3, 6, 8, 10],
+		    movableColumns:true,
+		    paginationCounter:"rows",
+		    rowHeader:{headerSort:false, resizable: false, frozen:true, headerHozAlign:"center", hozAlign:"center", formatter:"rowSelection", titleFormatter:"rowSelection", cellClick:function(e, cell){
+		        cell.getRow().toggleSelect();
+		      }},
+		    columns:[
+		        {title:"자재코드", field:"mtCd", width:220, hozAlign:"center"},
+		        {title:"자재명", field:"mtName", width:239, hozAlign:"center"}, 
+		        {title:"수량", field:"placeodQt", width:210, hozAlign:"center"},
+		        {title:"단위", field:"unit", width:210, hozAlign:"center"},
+		        {title:"자재 도착일", field:"placeodArridt", width:230, hozAlign:"center", editor:"input"},
+		        {title:"발주 담당자", field:"placeodChg", width:230, hozAlign:"center"}
+		    ],
+		});
+		
+		// 부자재 목록 데이터
+		function subListReq() {
+			fetch("/ajax/mtrlSubList")
+			.then(res => res.json())
+			.then(res => table3.setData(res))
+		}
+		
+		
+		let selectPassMtrl = "";
+		
+		table.on("rowSelectionChanged", function(data, rows, selected, deselected){
+			selectPassMtrl = data;
+		});
+		
+		// 합격자재 입고처리 버튼 이벤트
+		mtrlStroingBtn.addEventListener("click", e=> {
+			if(selectPassMtrl == "") {
+				alert("선택된 자재가 없습니다.")
+			} else {
+				console.log(selectPassMtrl);
+				passModReq(selectPassMtrl);
+			}
+		})
+		
+		function passModReq(selectPassMtrl) {
+			for(order of selectPassMtrl) {
+				const strQt= order.placeodQt;
+				const strChg = "최민수 사원"; // 로그인 정보있을 시 order.strChg 로 변경
+				const mtPlaceodCd = order.mtPlaceodCd;
+				const mtCd = order.mtCd;
+				const expDt = order.expDt;
+				let param = {strQt, strChg, mtPlaceodCd, mtCd, expDt};
+				fetch("/ajax/mtrlMainStr",{
+					method : "post",
+					headers: {
+					      "Content-Type": "application/json",
+					    },
+					body : JSON.stringify(param)
+				})
+				.then(res => res.json())
+				.then(res => console.log(res))
+			}
+			passModRes();
+		}
+		
+		// 합격자재 입고처리 응답
+		function passModRes() {
+			alert("자재입고가 완료되었습니다!");
+			location.href= "/material/storing"
+		}
+		
+		
+		
+		let selectFailMtrl = "";
+		
+		table2.on("rowSelectionChanged", function(data, rows, selected, deselected){
+			selectFailMtrl = data;
+		});
+		
+		// 불합격자재 반품처리 버튼 이벤트
+		mtrlReturnBtn.addEventListener("click", e=> {
+			if(selectFailMtrl == "") {
+				alert("선택된 자재가 없습니다.")
+			} else {
+				console.log(selectFailMtrl);
+				failModReq(selectFailMtrl);
+			}
+		})
+		
+		function failModReq(selectFailMtrl) {
+			for(order of selectFailMtrl) {
+				const rtnQt= order.placeodQt;
+				const rtnChg = "이지훈 과장"; // 로그인한 입고관리 담당자 이름 들어감.
+				const mtPlaceodCd = order.mtPlaceodCd;
+				const mtCd = order.mtCd;
+				let param = {mtCd, rtnQt, rtnChg, mtPlaceodCd};
+				fetch("/ajax/mtrlReturn",{
+					method : "post",
+					headers: {
+					      "Content-Type": "application/json",
+					    },
+					body : JSON.stringify(param)
+				})
+				.then(res => res.json())
+				.then(res => console.log(res))
+			}
+			failModRes();
+		}
+		
+		// 불합격자재 반품처리 응답
+		function failModRes() {
+			alert("자재반품이 완료되었습니다!");
+			location.href= "/material/storing"
+		}
+		
+		
+		
+		let selectSubMtrl = "";
+		
+		table3.on("rowSelectionChanged", function(data, rows, selected, deselected){
+			selectSubMtrl = data;
+		});
+		
+		// 부자재 입고처리 버튼 이벤트
+		mtrlStroingBtn2.addEventListener("click", e=> {
+			if(selectSubMtrl == "") {
+				alert("선택된 자재가 없습니다.")
+			} else {
+				console.log(selectSubMtrl);
+				subModReq(selectSubMtrl);
+			}
+		})
+		
+		function subModReq(selectSubMtrl) {
+			for(order of selectSubMtrl) {
+				const strQt= order.placeodQt;
+				const strChg = "최민수 사원"; // 로그인 정보있을 시 order.strChg 로 변경
+				const mtPlaceodCd = order.mtPlaceodCd;
+				const mtCd = order.mtCd;
+				const expDt = order.expDt;
+				let param = {strQt, strChg, mtPlaceodCd, mtCd, expDt};
+				fetch("/ajax/mtrlSubStr",{
+					method : "post",
+					headers: {
+					      "Content-Type": "application/json",
+					    },
+					body : JSON.stringify(param)
+				})
+				.then(res => res.json())
+				.then(res => console.log(res))
+			}
+			subModRes();
+		}
+		
+		// 부자재 입고처리 응답
+		function subModRes() {
+			alert("부자재입고가 완료되었습니다!");
+			location.href= "/material/storing"
+		}
+		
+		
+		
+		
+	</script>
+
+
+</div>
+</body>
+</html>

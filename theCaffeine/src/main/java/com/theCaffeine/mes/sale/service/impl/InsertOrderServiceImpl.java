@@ -2,6 +2,8 @@ package com.theCaffeine.mes.sale.service.impl;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,10 +32,16 @@ public class InsertOrderServiceImpl implements InsertOrderService{
 		return insertOrderMapper.productList();
 	}
 
+	
 	@Override
-	public int insertOrder(OrderVO orderVO, OrderDetailVO orderDetailVO) {
+	@Transactional
+	public int insertOrder(OrderVO orderVO, List<OrderDetailVO> orderDetailVO) {
 		int result = insertOrderMapper.insertOrder(orderVO);
-		insertOrderMapper.insertOrderDetail(orderDetailVO);
+		
+		for(OrderDetailVO vo : orderDetailVO) {
+			insertOrderMapper.insertOrderDetail(vo);
+		}
+		
 		return result;
 	}
 

@@ -27,4 +27,9 @@ public class MtrlOrderVO {
 	int leadtm;
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	Date placeodArridt;
+	
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	Date ckDt;
+	String ckChg;
+	int expDt;
 }

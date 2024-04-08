@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 public class OrderDetailVO {
 	
-	private int odDetailno;
+	private int odDetailNo;
 	private int qt;
 	private int cost;
 	private int detailPrice;

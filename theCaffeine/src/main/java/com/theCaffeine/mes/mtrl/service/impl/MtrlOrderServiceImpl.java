@@ -6,6 +6,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,13 +41,12 @@ public class MtrlOrderServiceImpl implements MtrlOrderService{
 	}
 
 	@Override
-	public int updateMtrlOrder(MtrlOrderVO vo) {
+	public int updateMtrlOrder(MtrlOrderVO vo) { // 비동기 처리방식
         ScheduledExecutorService excutorService = Executors.newScheduledThreadPool(1);
         excutorService.schedule(() -> {
         	mtrlOrderMapper.updateMtrlOrder2(vo.getMtPlaceodCd());
             excutorService.shutdown();
-        }, vo.getLeadtm(), TimeUnit.MINUTES); // TimeUnit.DAYS 로 바꾸면 됨.
-        
+        }, vo.getLeadtm(), TimeUnit.SECONDS); // TimeUnit.DAYS 로 바꾸면 됨.   SECONDS    MINUTES
 		return mtrlOrderMapper.updateMtrlOrder(vo);
 	}
 
@@ -54,9 +55,16 @@ public class MtrlOrderServiceImpl implements MtrlOrderService{
 		return mtrlOrderMapper.getMtrlqualList(vo);
 	}
 
+	@Transactional
 	@Override
 	public int insertMtrlQuality(MtrlOrderVO vo) {
+		mtrlOrderMapper.updateMtrlOrder3(vo.getMtPlaceodCd());
 		return mtrlOrderMapper.insertMtrlQuality(vo);
+	}
+
+	@Override
+	public List<MtrlOrderVO> getMtrlCliList() {
+		return mtrlOrderMapper.getMtrlCliList();
 	}
 	
 }

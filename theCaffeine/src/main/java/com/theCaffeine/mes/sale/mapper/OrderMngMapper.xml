@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.theCaffeine.mes.sale.mapper.OrderMngMapper">
+	<sql id="condition">
+		<where>
+ 			<if test="pdCd != null and pdCd != '' ">
+	 		 	AND d.pd_cd like '%' || #{pdCd} || '%' 			
+ 			</if>
+ 			<if test="pdName != null and pdName != '' ">
+ 		   		AND p.pd_name like '%' || #{pdName} || '%'			
+ 			</if>
+ 			<if test="cliCd != null and cliCd != '' ">
+ 		   		AND o.cli_cd like '%' || #{cliCd} || '%'		
+ 			</if>
+ 			<if test="cliName != null and cliName != '' ">
+ 		   		AND c.cli_name like '%' || #{cliName} || '%'		
+ 			</if>
+ 			<if test="cliChg != null and cliChg != '' ">
+ 		   		AND c.cli_chg like '%' || #{cliChg} || '%'		
+ 			</if>
+ 			<if test="odChg != null and odChg != '' ">
+ 		   		AND o.od_chg like '%' || #{odChg} || '%'	
+ 			</if>
+ 			<if test="minOdDt != null and minOdDt != '' ">
+ 		   		AND o.od_dt >= TO_DATE(#{minOdDt}, 'YYYY-MM-DD') 			
+ 			</if>
+ 			<if test="maxOdDt != null and maxOdDt != '' ">
+ 		   		AND o.od_dt <![CDATA[<=]]> TO_DATE(#{maxOdDt}, 'YYYY-MM-DD') 			
+ 			</if>
+ 			<if test="minDueDt != null and minDueDt != '' ">
+ 		   		AND d.due_dt >= TO_DATE(#{minDueDt}, 'YYYY-MM-DD') 			
+ 			</if>
+ 			<if test="maxDueDt != null and maxDueDt != '' ">
+ 		   		AND d.due_dt <![CDATA[<=]]> TO_DATE(#{maxDueDt}, 'YYYY-MM-DD') 			
+ 			</if> 			
+ 			<if test="stList != null">
+				AND d.od_detail_st 
+ 				<foreach collection="stList" open="in (" close=")" separator="," item="st">				
+ 					#{st}
+ 				</foreach>
+ 			</if>
+ 		   </where>
+	</sql>
+	
+	<select id="getOrderList" resultType="OrderMngVO" parameterType="OrderMngVO">
+		select o.OD_NO
+				, o.OD_DT
+				, o.OD_CHG
+				, o.DC_RATE
+				, o.TOTAL_PRICE
+				, o.CLI_CD
+				, c.cli_name
+				, c.cli_chg
+				, d.od_no
+				, d.od_detailno
+				, p.pd_name
+				, d.due_dt
+				, d.od_detail_st
+				, d.pd_cd
+		from cli c 
+				JOIN od o 
+					ON c.cli_cd = o.cli_cd
+            	LEFT OUTER JOIN od_detail d
+                	ON o.od_no = d.od_no
+            	JOIN pd p
+                	ON d.pd_cd = p.pd_cd
+        <include refid="condition"></include> 
+		ORDER BY d.od_detailno
+	</select>
+	
+</mapper>

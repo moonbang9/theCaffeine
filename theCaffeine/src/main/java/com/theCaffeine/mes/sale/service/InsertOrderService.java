@@ -15,6 +15,6 @@ public interface InsertOrderService {
 	List<ProductVO> productList();
 	
 	//주문 + 주문 상세 등록
-	public int insertOrder(OrderVO orderVO, OrderDetailVO orderDetailVO);
+	public int insertOrder(OrderVO orderVO, List<OrderDetailVO> orderDetailVO);
 	
 }

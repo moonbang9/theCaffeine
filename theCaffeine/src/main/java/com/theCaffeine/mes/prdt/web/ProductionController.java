@@ -6,11 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.theCaffeine.mes.prdt.model.FailPlanVO;
 import com.theCaffeine.mes.prdt.model.MtrlPlanVO;
+import com.theCaffeine.mes.prdt.model.PlanOrderDetailVO;
 import com.theCaffeine.mes.prdt.model.PlanVO;
+import com.theCaffeine.mes.prdt.model.SafePlanVO;
 import com.theCaffeine.mes.prdt.service.PrdtService;
 
 @RestController
@@ -61,12 +66,56 @@ public class ProductionController {
 		return mv;
 	}
 	
+	//상세 주문목록 데이터
+	@PostMapping("/ajax/planOrderDetail")
+	public List<PlanOrderDetailVO> planOrderDetail(@RequestBody PlanOrderDetailVO vo) {
+		return prdtService.getDetailOrderList(vo);
+	}
+	
+	//상세 주문목록 데이터
+	@GetMapping("/ajax/planSafeList")
+	public List<SafePlanVO> planSafeList() {
+		return prdtService.getSafeInventoryList();
+	}
+	
+	//실패 수량 파악 데이터
+	@GetMapping("/ajax/failProdList")
+	public List<FailPlanVO> failProdList() {
+		return prdtService.getFailProdList();
+	}
+	
+	//전주 생산 수량 파악 데이터
+	@GetMapping("/ajax/successProdList")
+	public List<FailPlanVO> successProdList() {
+		return prdtService.getSuccessProdList();
+	}
+	
+	//선택안되는 일자
+	@GetMapping("/ajax/noDate")
+	public FailPlanVO notDate() {
+		return prdtService.getNotDate();
+	}
+	
+	//주간계획등록 기본 양식
+	@GetMapping("/ajax/basicPlan")
+	public List<PlanVO> basicPlanList() {
+		return prdtService.getBasicPlanList();
+	}
+	
+	//box -> kg 단위변경 
+	@GetMapping("/ajax/planConsum")
+	public List<FailPlanVO> planConsum() {
+		return prdtService.getPlanConsum();
+	}
+	
 	//연간 생산 현황 페이지이동
 	@GetMapping("/production/prdtYearState")
 	public ModelAndView prdtYearStateList() { 
 		ModelAndView mv = new ModelAndView("prdt/prdtYearState");
 		return mv;
 	}
+	
+	
 	
 	//생산 지시 관리 목록 페이지이동
 	@GetMapping("/production/prdtInst")

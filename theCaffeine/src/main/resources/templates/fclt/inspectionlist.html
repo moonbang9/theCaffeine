@@ -50,7 +50,7 @@
 										<div class="col mb-3">
 											<div class="input-group" style="display: none;">
 												<span class="input-group-text" id="basic-addon14">설비 코드</span>
-												<input type="number" class="form-control" id="facilityCd"
+												<input type="text" class="form-control" id="facilityCd"
 													aria-describedby="basic-addon14">
 											
 											</div>
@@ -72,8 +72,10 @@
 										<div class="col mb-3">
 											<div class="input-group" >
 												<span class="input-group-text col-2" id="basic-addon14">설비명</span>
+
 												<select class="form-select" id="nonopFacility" >
 												<option selected value="" >선택</option>
+
 													<option  th:each="fclt : ${fcltNames}" th:value="${fclt.fcCd}" th:text="${fclt.fcName}" >
 													
 												</select>
@@ -276,8 +278,10 @@
 	
 	// 등록 요청
 	function saveReq() {
+
 		const fcCd = nonopFacility.value
 		const insDt= inspectionDt.value.replace('T',' ');
+
 		const insCat= inspectionCat.value;
 		const insCont= inspectionContent.value;
 		const cc= conclusion.value;
@@ -301,6 +305,10 @@
 		alert("점검 등록이 완료되었습니다.");
 		location.href= "/fclt/inspectionlist"
 	}
+	
+	facilityCd1.addEventListener("change", e=> {
+		console.log(facilityCd1.value);
+	})
 	
 	//수정 등록 시 데이터 값 넘기기
 	updateInspBtnMdl.addEventListener("click", e=> {

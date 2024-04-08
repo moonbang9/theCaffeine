@@ -10,25 +10,14 @@
 	<div layout:fragment="content">
 
 		<h1>주간생산 계획등록</h1>
+		<div class="divider text-start">
+			<div class="divider-text "></div>
+		</div>
 		<div class="demo-inline-spacing" style="margin-bottom: 50px;">
-			<div class="d-flex justify-content-evenly" style="height: 370px;">
+			<div class="d-flex justify-content-evenly" style="height: 250px;">
 				<div>
-					<div style="float: right; width: 250px;">
-						<button class="btn btn-primary" type="button" id="saveBtn"
-							style="float: right; margin-top: 8px;">검색</button>
-						<form action="" class="row gy-2 gx-3 align-items-center">
-							<div style="margin-top: 0; padding-right: 0;">
-								<label class="col-sm-4 col-form-label">제품코드</label> <input
-									type="text" style="width: 95px; height: 30px;">
-							</div>
-							<div style="margin-top: 0; padding-right: 0;">
-								<label class="col-sm-4 col-form-label">납기일</label> <input
-									type="date" style="width: 95px;">
-							</div>
-						</form>
-					</div>
-					<h5 style="margin-bottom: 45px;">상세주문 조회</h5>
-					<div id="example-table1"></div>
+					<h5 style="margin-bottom: 45px;">완재품 재고 조회</h5>
+					<div id="example-table3"></div>
 				</div>
 				<div>
 					<h5 style="margin-bottom: 45px;">전 주 생산실패목록</h5>
@@ -42,25 +31,63 @@
 		</div>
 		<div style="margin-bottom: 20px;">
 			<div>
-				<h5>완재품 재고 조회</h5>
-				<div id="example-table3"></div>
+			<div class="d-flex mt-5">
+				<div class="p-2 flex-grow-1"><h5>상세주문 조회</h5></div>
+				<div class="p-1" style="width: 320px;">
+					<button class="btn btn-primary" type="button" id="research1"
+						style="float: right; margin-top: 12px;">검색</button>
+					<form action="" name="frmSearch"
+						class="">
+						<div style="margin-top: 0; padding-right: 0;">
+							<label class="col-sm-2 col-form-label">제품코드</label> <input
+								class="codes" type="text" style="width: 150px; height: 30px;">
+						</div>
+						<div style="margin-top: 0; padding-right: 0;">
+							<label class="col-sm-2 col-form-label">납기일</label> <input
+								class="dates" type="date" style="width: 150px;">
+						</div>
+					</form>
+				</div>
+			</div>
+				<div id="example-table1"></div>
 			</div>
 		</div>
-		
-		<h5>생산주간 계획등록</h5>
+		<div class="divider text-start">
+			<div class="divider-text "></div>
+		</div>
+		<div class="d-flex mt-5">
+			<div class="p-2 flex-grow-1">
+				<h3 id="prdtModalLabel1" style="display:block">생산주간 계획등록</h3>
+				<h3 id="prdtModalLabel2" style="display:none">생산주간 계획수정</h3>
+			</div>
+			<div class="p-2">
+				<button type="button" id="" class="btn btn-warning">자동계산</button>
+			</div>
+			<div class="p-2" >
+				<button type="button" id="prdtSaveBtn1" class="btn btn-info" style="display:block">등록</button>
+				<button type="button" id="prdtModifyBtn1" class="btn btn-info" style="display:none">수정</button>
+			</div>
+		</div>
 		<div class="card mb-4">
 			<div class="card-body">
 				<div class="mb-3 row">
 					<label for="mtrl_management_clicd" class="col-md-2 col-form-label">주간계획시작일자</label>
 					<div class="col-md-10">
-						<input class="form-control" type="date" value=""
-							id="mtrl_management_name">
+						<input class="form-control notDay" type="date" value="" id="" min="">
 					</div>
 				</div>
 				<div class="mb-3 row">
-					<label for="mtrl_management_name" class="col-md-2 col-form-label">총 예상 원두생산 수량(kg)</label>
+					<label for="mtrl_management_clicd" class="col-md-2 col-form-label">주간계획명</label>
 					<div class="col-md-10">
-						<input class="form-control" type="text" value="" id="mtrl_management_name" readonly>
+						<input class="form-control naming" type="text" value="" id="">
+					</div>
+				</div>
+				<div class="mb-3 row">
+					<label for="mtrl_management_name" class="col-md-2 col-form-label">총
+						예상 원두생산 수량(kg)</label>
+					<div class="col-md-10">
+						<input class="form-control totConsum" type="text" value=""
+							id="" readonly>
 					</div>
 				</div>
 			</div>
@@ -71,11 +98,41 @@
 			</div>
 		</div>
 
-
 		<script>
-	saveBtn.addEventListener("click", e=> {
-		location.href='/production/planRegist'
+		
+	$(window).on("load",function(e) {
+		detailOrderListReq({});
+		safeListReq();
+		failListReq();
+		noDateReq();
+		basicPlanListReq();
+		planConsumReq();
 	})
+	let noDay = null;
+	let selectOrder = "";
+	let consum = "";
+	let dayNameing = document.querySelector('.notDay');
+	let naming = document.querySelector('.naming');
+	
+	research1.addEventListener("click", e=> {
+		console.log(e.target.nextElementSibling.childNodes[1].childNodes[3].value)
+		console.log(e.target.nextElementSibling.childNodes[3].childNodes[3].value)
+		const pdCd= e.target.nextElementSibling.childNodes[1].childNodes[3].value;
+		const dueDt = e.target.nextElementSibling.childNodes[3].childNodes[3].value;
+		let param = {pdCd, dueDt};
+		console.log(param)
+		detailOrderListReq(param)
+	})
+	
+	prdtSaveBtn1.addEventListener("click", e=> {
+		console.log(selectOrder)
+		console.log(consum)
+		
+		
+		alert('등록이 완료되었습니다.')
+		//location.href='/production/plan'
+	})
+	
 	
 	function getLists(){
 		//if(${list} != null){
@@ -83,61 +140,300 @@
 		//}
 	}
 	
+	// 안전재고량 조회 데이터
+	function safeListReq() {
+		fetch("/ajax/planSafeList")
+		.then(res => res.json())
+		.then(res => table3.setData(res))
+	}
+	
+	// 전주 실패수량 조회 데이터
+	function failListReq() {
+		fetch("/ajax/failProdList")
+		.then(res => res.json())
+		.then(res => {
+			console.log(res)
+			table2.setData(res)})
+	}
+	
+	// 전주 실패수량 조회 데이터
+	function successListReq() {
+		fetch("/ajax/successProdList")
+		.then(res => res.json())
+		.then(res => table4.setData(res))
+	}
+	
+	// 주간계획등록 기본 양식 데이터
+	function basicPlanListReq() {
+		fetch("/ajax/basicPlan")
+		.then(res => res.json())
+		.then(res => table5.setData(res))
+	}
+	
+	// 선택안되는 일자
+	function noDateReq() {
+		fetch("/ajax/noDate")
+		.then(res => res.json())
+		.then(res => {
+			document.querySelector('.notDay').min = res.noDate
+		})
+	}
+	
+	// box -> kg 단위변경
+	function planConsumReq() {
+		fetch("/ajax/planConsum")
+		.then(res => res.json())
+		.then(res => consum = res)
+	}
+	
+	
+	dayNameing.addEventListener("change", e => {
+		naming.value = weekNumOfMonth(dayNameing.value)[1] + " " + weekNumOfMonth(dayNameing.value)[0]
+	});
+	
+	
+	function detailOrderListReq(param) {
+		fetch("/ajax/planOrderDetail",{
+			method : "post",
+			headers: {
+			      "Content-Type": "application/json",
+			    },
+			body : JSON.stringify(param)
+		})
+		.then(res => res.json())
+		.then(res => table1.setData(res))
+	}
+	
+	
+	var dateEditor = function(cell, onRendered, success, cancel, editorParams){
+
+	    var data = cell.getRow().getData();
+	    
+	    var editor = document.createElement("input");
+	    editor.setAttribute("type", "number");
+	    editor.style.padding = "3px";
+	    editor.style.width = "100%";
+	    editor.style.boxSizing = "border-box";
+	    editor.value = data.prePdtQt;
+	    editor.addEventListener("change", e=> {
+	    	if((data.qt-data.pdtQt) < e.target.value){
+				editor.value = data.qt-data.pdtQt;
+				successFunc()
+			}else if(e.target.value < 0){
+				editor.value = 0;
+				successFunc()
+			}else{
+	    		console.log(e.target.value)
+				editor.value = e.target.value;
+	    		successFunc()
+			}
+	    })
+	    function successFunc(){
+	        success(editor.value);
+	        setResistList()
+	    }
+	    
+		return editor;
+	}
+	
+	var dateEditor5 = function(cell, onRendered, success, cancel, editorParams){
+
+	    var data = cell.getRow().getData();
+	    
+	    var editor2 = document.createElement("input");
+	    editor2.setAttribute("type", "number");
+	    editor2.style.padding = "3px";
+	    editor2.style.width = "100%";
+	    editor2.style.boxSizing = "border-box";
+	    editor2.value = data.qt;
+	    let tot = 0;
+	    editor2.addEventListener("change", e=> {
+	    	
+	    	for(let i of consum){
+	    		if(i.pdCd == data.pdCd){
+	    			if(i.totConsum > e.target.value){
+	    				editor2.value = i.totConsum;
+	    				successFunc()
+	    			}else if(e.target.value == null || e.target.value < 0){
+	    				editor2.value = 0;
+	    				successFunc()
+	    			}else{
+	    				editor2.value = e.target.value;
+	    				i.totConsum = e.target.value;
+	    	    		successFunc()
+	    			}
+	    		}
+	    	}
+	    	//전체수량변경
+			//let s = document.querySelector(".totConsum").value;
+	    	//console.log(s)
+	    	//console.log(e.target.value)
+	    	//console.log(data.qt)
+	    	//if(s == ""){
+	    	//	s = 0;
+	    	//}
+	    	//console.log(s)
+			//s = Number(e.target.value) + "";
+	    	//console.log(s)
+	    	//document.querySelector(".totConsum").value = s;
+	    })
+	    function successFunc(){
+	        success(editor2.value);
+	    }
+		return editor2;
+	}
+	
+	
+	
 	var table1 = new Tabulator("#example-table1", {
-	height:"311px",
-    layout:"fitDataTable",
+    height:"100%",
+	layout:"fitDataFill",
+	selectableRows:true,
     pagination:"local",
-    paginationSize:5,
+    paginationSize:8,
     movableColumns:true,
     paginationCounter:"rows",
-    rowHeader:{resizable: false, frozen: true, hozAlign:"center", formatter: "rownum", cssClass:"range-header-col"},
+    selectableRows:true,
+    rowHeader:{resizable: false, frozen: true, hozAlign:"center", formatter: "rowSelection", cssClass:"range-header-col", cellClick:function(e, cell){
+        cell.getRow().toggleSelect();
+    }},
     columnDefaults:{
       headerSort:false,
       resizable:"header",
     },
     columns:[
-        {title:"제품코드", field:"name", hozAlign:"center", width:100},
-        {title:"수량(Bag * 4kg)kg", field:"progress", hozAlign:"center", width:150},
-        {title:"납기 일", field:"gender", hozAlign:"center", width:100},
+        {title:"제품코드", field:"pdCd", hozAlign:"center", width:200},
+        {title:"단위(1 Box= 3 Bag)", field:"unit", hozAlign:"center", width:200},
+        {title:"수량(Box)", field:"qt", hozAlign:"center", width:200},
+        {title:"생산중인 수량(Box)", field:"pdtQt", hozAlign:"center", width:200},
+        {title:"선택 수량(Box)", field:"prePdtQt", hozAlign:"center", width:200, editor:dateEditor},
+        {title:"납기 일", field:"dueDt", hozAlign:"center", width:200},
     ],
 });
+	
 	var table2 = new Tabulator("#example-table2", {
-    height:"311px",
+    height:"180px",
     layout:"fitDataTable",
     columns:[
-        {title:"상품명", field:"name", hozAlign:"center"},
-        {title:"전 주 실패량(kg)", field:"progress", hozAlign:"center"},
+        {title:"상품코드", field:"pdCd", hozAlign:"center"},
+        {title:"전 주 실패량(kg)", field:"failTat", hozAlign:"center"},
     ],
 });
 	var table3 = new Tabulator("#example-table3", {
-	height:"100%",
-	layout:"fitDataFill",
+	height:"180px",
+	layout:"fitDataTable",
     columns:[
-        {title:"제품명", field:"name", hozAlign:"center", width:260},
-        {title:"단위", field:"progress", hozAlign:"center", width:250},
-        {title:"현재 재고 수량", field:"gender", hozAlign:"center", width:260},
-        {title:"안전 재고 수량", field:"gender2", hozAlign:"center", width:260},
-        {title:"재고 수량차", field:"gender3", hozAlign:"center", width:260},
+        {title:"제품코드", field:"pdCd", hozAlign:"center", width:120},
+        {title:"단위", field:"unit", hozAlign:"center", width:100},
+        {title:"현재 재고 수량", field:"nowStk", hozAlign:"center", width:160},
+        {title:"안전 재고 수량", field:"safeStk", hozAlign:"center", width:160},
+        {title:"재고 수량차", field:"msStk", hozAlign:"center", width:150},
     ],
 });
 	var table4 = new Tabulator("#example-table4", {
-	    height:"311px",
+	    height:"180px",
 	    columns:[
-	        {title:"상품명", field:"progress", hozAlign:"center"},
-	        {title:"수량(kg)", field:"gender", hozAlign:"center"},
-	        {title:"납기일", field:"name", hozAlign:"center"},
+	    	{title:"상품코드", field:"pdCd", hozAlign:"center"},
+	        {title:"전 주 생산량(kg)", field:"befSuccessTat", hozAlign:"center"},
 	    ],
 	});
 	
 	var table5 = new Tabulator("#example-table5", {
-	    height:"311px",
+	    height:"180px",
 	    layout:"fitColumns",
+	    columnDefaults:{
+	        headerSort:false,
+	        resizable:"header",
+	      },
 	    columns:[
-	        {title:"상품명", field:"name", editor:"input", validator:"required"},
-	        {title:"수량(kg)", field:"progress", sorter:"number", hozAlign:"left", editor:"input", editor:true,  validator:["min:0", "numeric"]},
-	        {title:"납기일", field:"gender", editor:"input", validator:["required", "in:male|female"]},
+	        {title:"제품코드", field:"pdCd", validator:"required", hozAlign:"center"},
+	        {title:"수량(kg)", field:"qt", hozAlign:"center", editor:dateEditor5,  validator:["min:0", "numeric"]},
+	        {title:"최소 납기일", field:"dueDt", hozAlign:"center"},
 	    ],
 	});
+	
+	//저장될 데이터 이동
+	function setResistList(){
+		console.log(selectOrder)
+		fetch("/ajax/basicPlan")
+		.then(res => res.json())
+		.then(res => {
+			//console.log(res)
+			let tot = 0;
+			for(let i of res){
+				for(let j of selectOrder){
+					if(i.pdCd == j.pdCd){
+						i.qt = ""+(Number(i.qt) + Number(j.prePdtQt));
+						if(i.dueDt == null || i.dueDt > j.dueDt){
+							i.dueDt = j.dueDt;
+						}
+					}
+				}
+			}
+			
+			for(let i of res){
+				for(let j of consum){
+					if(i.pdCd == j.pdCd){
+						i.qt = ""+(Number(i.qt) * Number(j.consum));
+					}
+				}
+			tot += Number(i.qt);
+			}
+			
+			for(let i of consum){
+				i.totConsum = ""
+				for(let j of selectOrder){
+					if(i.pdCd == j.pdCd){
+						i.totConsum = ""+((Number(j.prePdtQt) * Number(i.consum))+Number(i.totConsum));
+					}
+				}
+			}
+			//전체수량변경
+			document.querySelector(".totConsum").value = tot
+			
+			table5.setData(res)
+		})
+	}
+	
+	table1.on("rowSelectionChanged", function(data, rows, selected, deselected){
+		selectOrder = data;
+		setResistList();
+	});
+	
+	table5.on("dataChanged", function(data){
+        console.log(data)
+        let w = 0;
+        for(let i of data){
+        	w += Number(i.qt); 
+        }
+        document.querySelector(".totConsum").value = w + "";
+	});
+	
+	// 월 주차 판단
+	function weekNumOfMonth(date){
+		let dates = new Date(date)
+		var WEEK_KOR = ["첫째주", "둘째주", "셋째주", "넷째주", "다섯째주"];
+		var THURSDAY_NUM = 4;	// 첫째주의 기준은 목요일(4)이다. 
+		console.log(dates);
+
+		var firstDate = new Date(dates.getFullYear(), dates.getMonth(), 1);
+		var firstDayOfWeek = firstDate.getDay();
+
+		var firstThursday = 1 + THURSDAY_NUM - firstDayOfWeek;	// 첫째주 목요일
+		if(firstThursday <= 0){
+			firstThursday = firstThursday + 7;	// 한주는 7일
+		}
+		var untilDateOfFirstWeek = firstThursday-7+3;	// 월요일기준으로 계산 (월요일부터 한주의 시작)
+		var weekNum = Math.ceil((dates.getDate()-untilDateOfFirstWeek) / 7) - 1;
+
+		if(weekNum < 0){	// 첫째주 이하일 경우 전월 마지막주 계산
+			var lastDateOfMonth = new Date(dates.getFullYear(), dates.getMonth(), 0);
+		 	var result = Util.Date.weekNumOfMonth(lastDateOfMonth);
+		 	return result;
+		}
+
+		return [WEEK_KOR[weekNum], (dates.getMonth()+1)+'월'];
+	}
 	</script>
 	</div>
 </body>

@@ -23,6 +23,14 @@
 		ORDER BY mp.placeod_reqdt
  	</select>
  	
+ 	<select id="getMtrlCliList" resultType="MtrlOrderVO"> 
+		SELECT  cli_cd,
+		        cli_name
+		FROM    cli
+		WHERE   cli_cd LIKE 'M%'
+		ORDER BY cli_cd
+ 	</select>
+ 	
  	<select id="getMtrlList" resultType="MtrlOrderVO"> 
 		SELECT  m.mt_cd,
 		        m.mt_name,
@@ -79,12 +87,13 @@
                 mp.placeod_compdt + m.leadtm AS placeod_arridt,
                 mp.placeod_qt,
                 m.unit,
-                mp.placeod_chg
+                mp.placeod_chg,
+                mp.mt_placeod_cd
         FROM 	mt_placeod mp JOIN mt m
 		ON mp.mt_cd = m.mt_cd
 		JOIN cli c
 		ON mp.cli_cd = c.cli_cd
-        WHERE mp.placeod_st = 3
+        WHERE mp.placeod_st = 3 AND m.mt_div = '원자재'
 		ORDER BY placeod_arridt
  	</select>
  	
@@ -95,7 +104,8 @@
 					str_qt,
 					str_comp_dt,
 					cli_name,
-					str_chg)
+					str_chg,
+					mt_placeod_cd)
 		    VALUES  (
 		    		SEQ_MT_CK_NO.nextval
 		    		,#{mtCd}
@@ -103,7 +113,15 @@
 		    		,#{placeodArridt}
 		    		,#{cliName}
 		    		,#{placeodChg}
+		    		,#{mtPlaceodCd}
 		    		)
 	</insert>
 	
+	<update id="updateMtrlOrder3" parameterType="String">
+		UPDATE  mt_placeod
+		SET     placeod_st = 4
+		WHERE   mt_placeod_cd = #{mtPlaceodCd}
+	</update>
+	
+
 </mapper>

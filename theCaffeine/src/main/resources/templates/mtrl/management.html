@@ -7,7 +7,7 @@
 </head>
 <body>
 <div layout:fragment="content">
-	<div class="d-flex mt-5 mb-4">
+	<div class="d-flex mt-4 mb-4">
 	  <div class="p-2 flex-grow-1"><h1>자재 관리</h1></div>
 	  	<div class="p-2">		
 		  	<button id="mtrlSaveBtn2"
@@ -39,13 +39,7 @@
                   <label for="mtrl_management_clicd" class="col-md-2 col-form-label">거래처</label>
                   <div class="col-md-10">
                    <select id="mtrl_management_clicd" class="form-select" >
-                     <option value="MCLI001">코빈즈 커피 (에티오피아)</option>
-                     <option value="MCLI002">블레스빈 (브라질)</option>
-                     <option value="MCLI003">카페 노갈레스 (콜롬비아)</option>
-                     <option value="MCLI004">1597coffee (페루)</option>
-                     <option value="MCLI005">엠아이 커피 (코스타리카)</option>
-                     <option value="MCLI006">PAI PACK (원두봉투)</option>
-                     <option value="MCLI007">BOX4U (박스)</option>
+
                    </select>
                   </div>
                 </div>
@@ -126,7 +120,28 @@
 		</div>
 
 	<script>
+	
+	function getCliName() {
+		fetch("/ajax/cliList")
+		.then(res => res.json())
+		.then(res => {
+			mtrl_management_clicd.innerHTML = '';
+			for( obj of res ) {
+				mtrl_management_clicd.innerHTML += makeOption(obj);
+			}
+		})
+	}
+	
+	// option생성
+	function makeOption(obj) {
+		let newTag = `
+			<option value=${obj.cliCd}>${obj.cliName}</option>
+		`
+		return newTag;
+	}
+	
 	mtrlSaveBtn2.addEventListener("click", e=> {
+		getCliName();
 		exampleModalLabel1.style.display = "block";
 		exampleModalLabel2.style.display = "none";
 		mtrlSaveBtn1.style.display = "block";

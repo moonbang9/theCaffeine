@@ -10,4 +10,5 @@ public interface MtrlService {
 	List<MtrlVO> getMtrlList2(MtrlVO vo);
 	MtrlVO getMtrlInfo(String mtCd);
 	int updateMtrl(MtrlVO vo);
+	List<MtrlVO> getCliList();
 }
