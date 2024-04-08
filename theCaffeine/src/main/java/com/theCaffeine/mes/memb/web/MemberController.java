@@ -51,5 +51,12 @@ public class MemberController {
 					ModelAndView mv = new ModelAndView("memb/myinfo");
 					return mv;
 				}
+				
+	//사원 관리 페이지
+				@GetMapping("/memb/addmembers")
+				public ModelAndView myMembers() { 
+					ModelAndView mv = new ModelAndView("memb/addmembers");
+					return mv;
+				}
 	
 }

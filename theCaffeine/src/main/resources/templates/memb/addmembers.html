@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/index}">
+<head>
+<meta charset="UTF-8">
+<title>management</title>
+</head>
+<body>
+<div layout:fragment="content">
+	<h1>마이 페이지</h1>
+	<div id="example-table">
+	   <div class="col-xl">
+                  <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                      <h5 class="mb-0">사원 관리</h5>
+                      
+                       
+                    </div>
+                   
+                    <div class="card-body">
+                      <form>
+                        <div class="mb-3" style="width: 200px;">
+                          <label class="form-label" for="basic-default-fullname">사원ID</label>
+                          <input type="text" class="form-control" id="basic-default-fullname" placeholder="사원ID" />
+                        </div>
+                        <div class="mb-3" style="width: 200px;">
+                          <label class="form-label" for="basic-default-company">비밀번호</label>
+                          <input type="password" class="form-control" id="basic-default-company" placeholder="비밀번호" />
+                        </div>
+                        <div class="mb-3" style="width: 200px">
+                          <label class="form-label" for="basic-default-email">사원 이름</label>
+                          <div class="input-group input-group-merge">
+                           <input type="text" class="form-control" id="basic-default-company" placeholder="사원 이름" />
+                          </div>
+                        </div>
+                        <div class="mb-3" style="width: 200px">
+                          <label class="form-label" for="basic-default-phone">부서</label>
+                          <input type="text" class="form-control" id="basic-default-company" placeholder="소속 부서" />
+                        </div>
+                        <div class="mb-3" style="width: 200px">
+                          <label class="form-label" for="basic-default-message">연락처</label>
+                          <input type="tel" class="form-control" id="basic-default-company" placeholder="-없이 입력" />
+                        </div>
+                      </form>
+                      <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#smallModal">
+                        등록
+                        </button>
+						</div>
+                    </div>
+                  </div>
+                </div>
+	</div>
+
+</div>
+<script>
+	
+	/* var table = new Tabulator("#example-table", {
+	    height:"311px",
+	    columns:[
+	    {title:"Name", field:"name"},
+	    {title:"Progress", field:"progress", sorter:"number"},
+	    {title:"Gender", field:"gender"},
+	    {title:"Rating", field:"rating"},
+	    {title:"Favourite Color", field:"col"},
+	    {title:"Date Of Birth", field:"dob", hozAlign:"center"},
+	    ],
+	}); */
+</script>
+</body>
+</html>

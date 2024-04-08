@@ -10,17 +10,17 @@
 	<div layout:fragment="content">
 		<h1>비가동 관리</h1>
 		<div id="example-table">
-<div class="divider text-start">
-                        <div class="divider-text ">설비 관리</div>
-                      </div>
+			<div class="divider text-start">
+				<div class="divider-text ">설비 관리</div>
+			</div>
 
 			<!-- Vertically Centered Modal -->
 			<div class="col">
 				<div class="mt-3">
 					<!-- Button trigger modal -->
 					<button type="button" class="btn btn-primary"
-						data-bs-toggle="modal" data-bs-target="#modalCenter" id="addNonopBtn" >
-						비가동 처리</button>
+						data-bs-toggle="modal" data-bs-target="#modalCenter"
+						id="addNonopBtn">비가동 처리</button>
 
 					<!-- Modal -->
 					<div class="modal fade" id="modalCenter" tabindex="-1"
@@ -28,18 +28,20 @@
 						<div class="modal-dialog modal-dialog-centered" role="document">
 							<div class="modal-content">
 								<div class="modal-header">
-									<h5 class="modal-title" id="addOpType" style="display:block">비가동 등록</h5>
-									<h5 class="modal-title" id="updtOpType" style="display:none">비가동 수정</h5>
+									<h5 class="modal-title" id="addOpType" style="display: block">비가동
+										등록</h5>
+									<h5 class="modal-title" id="updtOpType" style="display: none">비가동
+										수정</h5>
 									<button type="button" class="btn-close" data-bs-dismiss="modal"
-										aria-label="Close" ></button>
+										aria-label="Close"></button>
 								</div>
 								<div class="modal-body">
-								<div class="row">
+									<div class="row">
 										<div class="col mb-3">
 											<div class="input-group" style="display: none;">
-												<span class="input-group-text col-2" id="basic-addon14">비가동 코드</span>
-												<input type="number" class="form-control" id="operationCd"
-													aria-describedby="basic-addon14" readonly>
+												<span class="input-group-text col-2" id="basic-addon14">비가동
+													코드</span> <input type="number" class="form-control"
+													id="operationCd" aria-describedby="basic-addon14" readonly>
 											</div>
 										</div>
 									</div>
@@ -47,9 +49,9 @@
 										<div class="col mb-3">
 											<div class="input-group">
 												<span class="input-group-text col-2" id="basic-addon14">설비명</span>
-												<select class="form-select" id="nonopfacilName"  >
-													<option  th:each="fclt : ${nonopFcltNames}" th:value="${fclt.fcCd}" th:text="${fclt.fcName}">
-													
+												<select class="form-select" id="nonopfacilName">
+													<option th:each="fclt : ${OperatingFcltNames}"
+														th:value="${fclt.fcCd}" th:text="${fclt.fcName}">
 												</select>
 											</div>
 										</div>
@@ -67,9 +69,10 @@
 									<div class="row">
 										<div class="col mb-3">
 											<div class="input-group">
-												<label class="input-group-text col-2" for="inputGroupSelect01">사유 종류</label>
-												<select class="form-select" id="nonopReason">
-												<option selected value="">선택</option>
+												<label class="input-group-text col-2"
+													for="inputGroupSelect01">사유 종류</label> <select
+													class="form-select" id="nonopReason">
+													<option selected value="">선택</option>
 													<option value="정기점검">정기점검</option>
 													<option value="기타">기타</option>
 												</select>
@@ -78,30 +81,22 @@
 									</div>
 									<div class="row">
 										<div class="col mb-3">
-									<div class="input-group">
-			                        <span class="input-group-text col-2">사유 상세</span>
-			                        <textarea class="form-control" aria-label="With textarea" placeholder="Comment" id="nonopDetail"></textarea>
-			                      </div>
-			                      </div>
+											<div class="input-group">
+												<span class="input-group-text col-2">사유 상세</span>
+												<textarea class="form-control" aria-label="With textarea"
+													placeholder="Comment" id="nonopDetail"></textarea>
+											</div>
+										</div>
 									</div>
-									
+
 									<div class="row">
 										<div class="col mb-3">
 											<div class="input-group">
 												<span class="input-group-text col-2" id="basic-addon14">시작시간</span>
 												<div class="col-md-10">
-						                          <input class="form-control" type="datetime-local" id="nonopStartTime">
-						                        </div>
-											</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col mb-3">
-											<div class="input-group">
-												<span class="input-group-text col-2" id="basic-addon14">종료시간</span>
-												<div class="col-md-10">
-						                          <input class="form-control" type="datetime-local" id="nonopFinishTime">
-						                        </div>
+													<input class="form-control" type="datetime-local"
+														id="nonopStartTime">
+												</div>
 											</div>
 										</div>
 									</div>
@@ -109,8 +104,10 @@
 								<div class="modal-footer">
 									<button type="button" class="btn btn-outline-secondary"
 										data-bs-dismiss="modal">취소</button>
-									<button type="button" style="display: block;" class="btn btn-primary" id="saveOprtBtn">등록</button>
-										<button type="button" style="display: none;" class="btn btn-primary" id="updateOprtBtn">수정</button>
+									<button type="button" style="display: block;"
+										class="btn btn-primary" id="saveOprtBtn">등록</button>
+									<button type="button" style="display: none;"
+										class="btn btn-primary" id="updateOprtBtn">수정</button>
 								</div>
 							</div>
 						</div>
@@ -118,7 +115,12 @@
 					<div id="oprtListTable"></div>
 				</div>
 			</div>
-				<script>
+			<script>
+				
+				//수정버튼
+				var editorIcon = function(cell, formatterParams, onRendered) {
+			  		return "<button class='btn btn-info btn-sm'>종료</button>";
+				}
 	var oprttable = new Tabulator("#oprtListTable", {
 	    //layout:"fitColumns",
 	    pagination:"local",
@@ -139,7 +141,27 @@
 	        {title:"담당자", field:"fcChg", width:150, hozAlign:"center"},
 	        {title:"사유", field:"rsn", width:150, hozAlign:"center"},
 	        {title:"사유 상세", field:"rsnDesc", width:160, hozAlign:"center"},
-	        {title:"설비 코드", field:"fcCd", width:100, hozAlign:"center"}
+	        {title:"비가동 종료", field:"nonopFnTime",width:90,formatter: editorIcon, hozAlign:"center",resizable:false, headerSort:false,
+	            cellClick:function(e, cell){
+	            	console.log('nonopCd:'+cell._cell.row.data.nonopCd);
+	            	let nonopCd = cell._cell.row.data.nonopCd;
+	        		let param = {nonopCd};
+	        		console.log(param);
+	        		fetch("/fclt/updatefntime",{
+	        			method : "post",
+	        			headers: {
+	        			      "Content-Type": "application/json",
+	        			    },
+	        			body : JSON.stringify(param)
+	        		})
+	        		.then(res => res.json())
+	        		.then(res => alert("비가동 처리가 종료되었습니다")
+	        		
+	        		);
+	        		location.href= "/fclt/operationlist";
+	        	}
+	        		
+	        },
 	    ],
 	});
 	// 비가동 목록 데이터
@@ -178,12 +200,12 @@
 		operationCd.value = obj.nonopCd;
 		nonopfacilName.value=obj.fcCd;
 		nonopCharge.value = obj.fcChg;
-		nonopReason.value = obj.fcName;
+		nonopReason.value = obj.rsn;
 		console.log(obj.rsn);
 		nonopDetail.value = obj.rsnDesc;
 		document.getElementById("nonopStartTime").value = obj.nonopSttTime;
 		nonopStartTime.value = obj.nonopSttTime;
-		nonopFinishTime.value = obj.nonopFnTime;
+		//nonopFinishTime.value = obj.nonopFnTime;
 		saveOprtBtn.style.display="none";
 		updateOprtBtn.style.display="block";
 		
@@ -203,7 +225,7 @@
 		nonopReason.value = "";
 		nonopDetail.value = "";
 		nonopStartTime.value = "";
-		nonopFinishTime.value = "";
+		//nonopFinishTime.value = "";
 		
 	});
 	
@@ -215,12 +237,11 @@
 	function saveReq() {
 		
 		const nonopSttTime= nonopStartTime.value.replace('T',' ');
-		const nonopFnTime= nonopFinishTime.value.replace('T',' ');
 		const fcChg= nonopCharge.value;
 		const rsn= nonopReason.value;
 		const rsnDesc= nonopDetail.value;
 		const fcCd = nonopfacilName.value;
-		let param = {nonopSttTime, nonopFnTime,fcChg,rsn,rsnDesc,fcCd};
+		let param = {nonopSttTime,fcChg,rsn,rsnDesc,fcCd};
 		console.log(param);
 		fetch("/fclt/insertoprt",{
 			method : "post",
@@ -247,14 +268,13 @@
 	function modReq() {
 		
 		const nonopSttTime= nonopStartTime.value.replace('T',' ');
-		const nonopFnTime= nonopFinishTime.value.replace('T',' ');
 		const fcChg= nonopCharge.value;
 		const rsn= nonopReason.value;
 		const rsnDesc= nonopDetail.value;
 		const fcCd = nonopfacilName.value;
 		const nonopCd = operationCd.value;
 		
-		let param = {nonopSttTime, nonopFnTime,fcChg,rsn,rsnDesc,fcCd,nonopCd};
+		let param = {nonopSttTime,fcChg,rsn,rsnDesc,fcCd,nonopCd};
 		console.log(param);
 		fetch("/fclt/updateoprt",{
 			method : "post",
@@ -274,9 +294,6 @@
 	}
 	</script>
 		</div>
-		
 	</div>
-	
-
 </body>
 </html>

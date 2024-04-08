@@ -27,7 +27,8 @@ public class OperationController {
 		@GetMapping("/fclt/operationlist")
 		public ModelAndView facility(FcltVO vo) { 
 			ModelAndView mv = new ModelAndView("fclt/operationlist");
-			mv.addObject("nonopFcltNames",fcltService.getFcltList(vo));
+			mv.addObject("nonopFcltNames",fcltService.getNonopFcltList(vo));
+			mv.addObject("OperatingFcltNames",fcltService.getOpFcltList(vo));
 			return mv;
 		}
 		
@@ -51,11 +52,18 @@ public class OperationController {
 		
 		// 비가동 수정
 		@PostMapping("/fclt/updateoprt")
-		public OperationVO updateMtrl(@RequestBody OperationVO vo) {
+		public OperationVO updateOprt(@RequestBody OperationVO vo) {
 			oprtService.updateOprt(vo);
 			System.out.println(vo);
 			return vo;
 		}	
+		// 비가동 종료 시간 수정
+				@PostMapping("/fclt/updatefntime")
+				public OperationVO updatefntime(@RequestBody OperationVO vo) {
+					oprtService.updateFnTime(vo);
+					System.out.println(vo);
+					return vo;
+				}	
 		 
 		 //비가동 삭제
 		 @GetMapping("/fclt/deleteoprt") // <!-- localhost:8091/delete?employeeId=100&name=xxx -->
@@ -64,5 +72,6 @@ public class OperationController {
 			 System.out.println(nonopCd);
 			 return "operationlist"; 
 		 }
+		 
 		 
 }

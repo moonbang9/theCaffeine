@@ -18,6 +18,9 @@
 				STR_DT,
 				INS_CYCLE,
 				LAST_INS_DT,
+				CASE WHEN LAST_INS_DT IS NULL THEN STR_DT+INS_CYCLE  
+                ELSE LAST_INS_DT+INS_CYCLE
+                END AS NEXT_INS_DT,
 				OUTPUT,
 				DUR_TIME
 	FROM FC
@@ -38,10 +41,37 @@
                         STR_DT,
                         INS_CYCLE,
                         LAST_INS_DT,
+                       CASE WHEN LAST_INS_DT IS NULL THEN STR_DT+INS_CYCLE  
+		                ELSE LAST_INS_DT+INS_CYCLE
+		                END AS NEXT_INS_DT,
                         OUTPUT,
                         DUR_TIME
 	FROM FC
     WHERE st = 1
+</select>
+
+<!-- 가동중인 설비 목록 -->
+<select id="getOpFcltList" resultType="FcltVO">
+
+ SELECT     	FC_CD,
+                        FC_NAME,
+                        CASE WHEN ST = 0 THEN '가동'
+                                                        ELSE '비가동'
+                        END AS ST,
+                        CASE WHEN INS_MF = 0 THEN '로스팅'
+                                                                ELSE '포장'
+                        END AS INS_MF,
+                        MNF_COM,
+                        STR_DT,
+                        INS_CYCLE,
+                        LAST_INS_DT,
+                       CASE WHEN LAST_INS_DT IS NULL THEN STR_DT+INS_CYCLE  
+		                ELSE LAST_INS_DT+INS_CYCLE
+		                END AS NEXT_INS_DT,
+                        OUTPUT,
+                        DUR_TIME
+	FROM FC
+    WHERE st = 0
 </select>
 
 <!--  단건조회 -->

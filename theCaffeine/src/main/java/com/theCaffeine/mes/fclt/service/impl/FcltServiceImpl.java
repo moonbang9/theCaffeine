@@ -46,6 +46,12 @@ public class FcltServiceImpl implements FcltService{
 		return fcltMapper.getNonopFcltList(vo);
 	}
 
+	@Override
+	public List<FcltVO> getOpFcltList(FcltVO vo) {
+	
+		return fcltMapper.getOpFcltList(vo);
+	}
+
 
 
 

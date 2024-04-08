@@ -28,7 +28,7 @@ public class InspectionController {
 	public ModelAndView inspection(FcltVO vo) {
 
 		ModelAndView mv = new ModelAndView("fclt/inspectionlist");
-		mv.addObject("fcltNames", fcltService.getFcltList(vo));
+		mv.addObject("fcltNames", fcltService.getNonopFcltList(vo));
 		return mv;
 	}
 

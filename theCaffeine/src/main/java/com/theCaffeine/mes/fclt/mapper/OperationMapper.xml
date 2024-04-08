@@ -40,7 +40,7 @@
 </select>
 
 
-<!--  설비 등록 -->
+<!--  설비 비가동 등록 -->
 	<insert id="insertOprt" parameterType="OperationVO">
 		INSERT INTO NONOP_MGMT
 					(
@@ -75,7 +75,6 @@
 	UPDATE NONOP_MGMT
 	SET
 					NONOP_STT_TIME=#{nonopSttTime},
-					NONOP_FN_TIME=#{nonopFnTime},
 					FC_CHG=#{fcChg},
 					RSN=#{rsn},
 					RSN_DESC=#{rsnDesc}
@@ -87,4 +86,12 @@
 	SET ST = 0
 	WHERE FC_CD = #{fcCd}
 </update>
+
+<!-- 비가동 종료 시간 -->
+<update id="updateFnTime" parameterType="OperationVO">
+	UPDATE NONOP_MGMT
+	SET NONOP_FN_TIME = SYSDATE
+	WHERE NONOP_CD = #{nonopCd}
+</update>
+
 </mapper>

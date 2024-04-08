@@ -17,6 +17,15 @@ public class InspectionServiceImpl implements InspectionService{
 
 	@Override
 	public int insertInspection(InspectionVO vo) {
+		//설비 lastInsDt 업데이트 
+		
+		//설비 번호 단건조회;
+		
+		//설비 점검 일자 lastInsDt
+		
+		//update 호출
+		
+		//점검 내역 등록
 		return inspMapper.insertInspection(vo);
 	}
 
