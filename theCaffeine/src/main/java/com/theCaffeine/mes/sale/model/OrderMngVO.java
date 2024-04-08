@@ -1,7 +1,12 @@
 package com.theCaffeine.mes.sale.model;
 
-import java.sql.Date;
+
+import java.util.Date;
 import java.util.List;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
 
@@ -14,7 +19,11 @@ public class OrderMngVO {
 	private int odNo;
 	private int odDetailNo;
 	
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date odDt;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date dueDt;
 	
 	private String cliCd;
@@ -29,11 +38,21 @@ public class OrderMngVO {
 	private String pdName;
 	private Integer odDetailSt;
 	
+	int cnt;
+	int detailPrice;
 	//주문일자 조건검색
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	Date minOdDt;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	Date maxOdDt;
 	//납기일자 조건검색
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	Date minDueDt;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	Date maxDueDt;
 	//주문상태 조건검색
 	List<Integer> stList;
