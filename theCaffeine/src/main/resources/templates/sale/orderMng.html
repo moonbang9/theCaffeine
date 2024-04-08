@@ -65,7 +65,7 @@
               <div class="mb-3 row col-md-6">
                 <label for="html5-date-input" class="col-md-3 col-form-label">주문일</label>
                 <div class="col-md-9">
-                  <input class="form-control" type="date" id="minOdDt">
+                  <input class="form-control" type="date" id="minOdDt" value="">
                 </div>
               </div>
               <div class="mb-3 row col-md-6">
@@ -199,6 +199,7 @@
         let pdName = document.getElementById('pdName').value;
         let odChg = document.getElementById('odChg').value;
         let minOdDt = document.getElementById('minOdDt').value;
+        //Date minOdDt = new Date(minOdDt, 'yyyy-MM-dd');
         let maxOdDt = document.getElementById('maxOdDt').value;
         let minDueDt = document.getElementById('minDueDt').value;
         let maxDueDt = document.getElementById('maxDueDt').value;
