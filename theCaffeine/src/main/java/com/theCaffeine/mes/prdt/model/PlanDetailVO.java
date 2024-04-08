@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PlanVO {					//생산계획 + 계획상세
+public class PlanDetailVO {					//생산계획 + 계획상세
 	private String pdtPlanCd;			//생산계획코드
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -21,7 +21,7 @@ public class PlanVO {					//생산계획 + 계획상세
 	private String odName; 				//계획명
 	private Integer pdtPlanDetailNo; 	//생산계획 상세번호
 	private String pdName; 				//제품 명
-	private Integer qt;					//주문 수량
+	private Integer qt;					//수량
 	private Integer addQt;				//추가 수량
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")

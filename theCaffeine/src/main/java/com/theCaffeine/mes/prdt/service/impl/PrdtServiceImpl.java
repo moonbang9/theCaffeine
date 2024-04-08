@@ -4,11 +4,14 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.theCaffeine.mes.prdt.mapper.PrdtMapper;
 import com.theCaffeine.mes.prdt.model.FailPlanVO;
 import com.theCaffeine.mes.prdt.model.MtrlPlanVO;
+import com.theCaffeine.mes.prdt.model.PlanDetailVO;
 import com.theCaffeine.mes.prdt.model.PlanOrderDetailVO;
+import com.theCaffeine.mes.prdt.model.PlanResistVO;
 import com.theCaffeine.mes.prdt.model.PlanVO;
 import com.theCaffeine.mes.prdt.model.SafePlanVO;
 import com.theCaffeine.mes.prdt.service.PrdtService;
@@ -76,6 +79,17 @@ public class PrdtServiceImpl implements PrdtService{
 	public List<FailPlanVO> getPlanConsum() {
 		// TODO Auto-generated method stub
 		return prdtMapper.getPlanConsum();
+	}
+	
+	@Transactional
+	@Override
+	public int planResist(PlanResistVO vo) {
+		// TODO Auto-generated method stub
+		prdtMapper.insertPrdtPlan(vo.getPlanVO());
+		for(PlanDetailVO i : vo.getPlanDetailVO()) {
+			prdtMapper.insertPrdtDetailPlan(i);
+		}
+		return prdtMapper.updatePrdtOdDetail(vo.getPlanOrderDetailVO());
 	}
 	
 }

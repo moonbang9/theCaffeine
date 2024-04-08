@@ -139,7 +139,7 @@
 	</select>
 	
 	<select id="getBasicPlanList" resultType="PlanVO">
-		select pd_cd, 0 qt, null due_dt from pd
+		select pd_cd, 0 qt, null due_dt, pd_name, 0 add_qt from pd
 	</select>
 	
 	<select id="getPlanConsum" resultType="FailPlanVO">
@@ -156,7 +156,7 @@
 				#{odName})
 	</insert>
 	
-	<insert id="insertPrdtDetailPlan" parameterType="PlanVO">
+	<insert id="insertPrdtDetailPlan" parameterType="PlanDetailVO">
 		insert into PDT_PLAN_DETAIL(pdt_plan_detail_no, pdt_plan_cd, pd_name, qt, due_dt,pd_cd) 
 		VALUES 	(pdt_plan_detail_seq.nextval,
 				#{pdtPlanCd},
@@ -171,4 +171,5 @@
 		SET     pdt_qt = pdt_qt + #{pdtQt}
 		WHERE   od_detailno = #{odDetailno}
 	</update>
+
 </mapper>
