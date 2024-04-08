@@ -1,6 +1,7 @@
 package com.theCaffeine.mes.sale.model;
 
 import java.sql.Date;
+import java.util.List;
 
 import lombok.Data;
 
@@ -26,7 +27,7 @@ public class OrderMngVO {
 	
 	private String pdCd;
 	private String pdName;
-	private int odDetailSt;
+	private Integer odDetailSt;
 	
 	//주문일자 조건검색
 	Date minOdDt;
@@ -34,4 +35,6 @@ public class OrderMngVO {
 	//납기일자 조건검색
 	Date minDueDt;
 	Date maxDueDt;
+	//주문상태 조건검색
+	List<Integer> stList;
 }
