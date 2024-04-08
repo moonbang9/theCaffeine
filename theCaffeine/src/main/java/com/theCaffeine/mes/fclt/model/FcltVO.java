@@ -15,6 +15,10 @@ public class FcltVO {
 	String mnfCom;
 	@JsonFormat(pattern="yyyy-MM-dd")
 	Date strDt;
+	@JsonFormat(pattern="yyyy-MM-dd")
+	Date lastInsDt;
+	@JsonFormat(pattern="yyyy-MM-dd")
+	Date nextInsDt;
 	int insCycle;
 	int output;
 	int durTime;

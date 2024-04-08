@@ -10,8 +10,10 @@ import lombok.Data;
 @Data
 public class InspectionVO {
 	String insCd;
-	@JsonFormat(pattern="yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm")
 	Date insDt;
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+	Date lastInsDt;
 	String insCat;
 	String insCont;
 	String cc;

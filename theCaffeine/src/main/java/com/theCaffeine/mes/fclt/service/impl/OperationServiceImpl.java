@@ -46,6 +46,11 @@ public class OperationServiceImpl implements OperationService{
 		return oprtMapper.updateOprt(vo);
 	}
 
+	@Override
+	public int updateFnTime(OperationVO vo) {
+		return oprtMapper.updateFnTime(vo);
+	}
+
 	
 	
 

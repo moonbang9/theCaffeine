@@ -72,7 +72,7 @@
 										<div class="col mb-3">
 											<div class="input-group" >
 												<span class="input-group-text col-2" id="basic-addon14">설비명</span>
-												<select class="form-select"  >
+												<select class="form-select" id="nonopFacility" >
 												<option selected value="" >선택</option>
 													<option  th:each="fclt : ${fcltNames}" th:value="${fclt.fcCd}" th:text="${fclt.fcName}" >
 													
@@ -85,7 +85,7 @@
 											<div class="input-group">
 												<span class="input-group-text" id="basic-addon14">점검일자</span>
 												
-						                          <input class="form-control" type="date"  id="inspectionDt">
+						                          <input class="form-control" type="datetime-local"  id="inspectionDt">
 						                 
 											</div>
 										</div>
@@ -276,8 +276,8 @@
 	
 	// 등록 요청
 	function saveReq() {
-		const fcCd = facilityCd.value
-		const insDt= inspectionDt.value;
+		const fcCd = nonopFacility.value
+		const insDt= inspectionDt.value.replace('T',' ');
 		const insCat= inspectionCat.value;
 		const insCont= inspectionContent.value;
 		const cc= conclusion.value;

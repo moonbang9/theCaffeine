@@ -27,7 +27,7 @@
 <select id="getInspInfo" parameterType="string" resultType="InspectionVO">
 	SELECT   FINS.INS_CD,
                 F.FC_NAME,
-                FINS.INS_DT,
+                F.LAST_INS_DT,
                 FINS.INS_CAT,
                FINS.INS_CONT,
                 FINS.CC,
