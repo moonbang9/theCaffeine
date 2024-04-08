@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.theCaffeine.mes.prdt.model.FailPlanVO;
 import com.theCaffeine.mes.prdt.model.MtrlPlanVO;
 import com.theCaffeine.mes.prdt.model.PlanOrderDetailVO;
+import com.theCaffeine.mes.prdt.model.PlanResistVO;
 import com.theCaffeine.mes.prdt.model.PlanVO;
 import com.theCaffeine.mes.prdt.model.SafePlanVO;
 import com.theCaffeine.mes.prdt.service.PrdtService;
@@ -106,6 +107,15 @@ public class ProductionController {
 	@GetMapping("/ajax/planConsum")
 	public List<FailPlanVO> planConsum() {
 		return prdtService.getPlanConsum();
+	}
+	
+	//계획 등록
+	@PostMapping("/ajax/planResist")
+	public String planResist(@RequestBody PlanResistVO vo) {
+		if(prdtService.planResist(vo) > 0) {
+			System.out.println("등록성공");
+		}
+		return "ok";
 	}
 	
 	//연간 생산 현황 페이지이동

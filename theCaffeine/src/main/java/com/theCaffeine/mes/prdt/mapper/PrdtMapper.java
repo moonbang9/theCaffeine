@@ -6,7 +6,9 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.theCaffeine.mes.prdt.model.FailPlanVO;
 import com.theCaffeine.mes.prdt.model.MtrlPlanVO;
+import com.theCaffeine.mes.prdt.model.PlanDetailVO;
 import com.theCaffeine.mes.prdt.model.PlanOrderDetailVO;
+import com.theCaffeine.mes.prdt.model.PlanResistVO;
 import com.theCaffeine.mes.prdt.model.PlanVO;
 import com.theCaffeine.mes.prdt.model.SafePlanVO;
 
@@ -23,4 +25,7 @@ public interface PrdtMapper {
 	FailPlanVO getNotDate(); //선택안되는 일자
 	List<PlanVO> getBasicPlanList(); // 주간계획등록 기본 양식
 	List<FailPlanVO> getPlanConsum(); // box -> kg 단위변경
+	int insertPrdtPlan(PlanVO vo); //계획 등록
+	int insertPrdtDetailPlan(PlanDetailVO vo); //계획상세 등록
+	int updatePrdtOdDetail(PlanOrderDetailVO vo); //주문상세 수량조절
 }

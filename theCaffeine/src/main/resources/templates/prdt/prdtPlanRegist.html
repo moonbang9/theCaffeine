@@ -113,6 +113,8 @@
 	let consum = "";
 	let dayNameing = document.querySelector('.notDay');
 	let naming = document.querySelector('.naming');
+	let basicPlans = "";
+	let totConsums = document.querySelector(".totConsum");
 	
 	research1.addEventListener("click", e=> {
 		console.log(e.target.nextElementSibling.childNodes[1].childNodes[3].value)
@@ -127,10 +129,32 @@
 	prdtSaveBtn1.addEventListener("click", e=> {
 		console.log(selectOrder)
 		console.log(consum)
+		console.log(basicPlans)
+		console.log('K'+dayNameing.value.substring(2, 4) + dayNameing.value.substring(5, 7) + dayNameing.value.substring(8, 10))
+		
+		let planCds = 'K' + dayNameing.value.substring(2, 4) + dayNameing.value.substring(5, 7) + dayNameing.value.substring(8, 10);
+		let params1 = {pdtPlanCd : planCds, wkPlanSttDt : dayNameing.value, odName : naming.value}
+		let params2 = PlanDetailData();
+		let params3 = PlanOrderDetailData();
+		
+		let param = {planVO : params1, 
+					planDetailVO : params2,
+					planOrderDetailVO : params3
+					};
 		
 		
-		alert('등록이 완료되었습니다.')
-		//location.href='/production/plan'
+		fetch("/ajax/planResist",{
+			method : "post",
+			headers: {
+			      "Content-Type": "application/json",
+			    },
+			body : JSON.stringify(param)
+		})
+		.then(res => {
+			console.log(res)
+			alert('등록이 완료되었습니다.')
+			location.href='/production/plan'
+		})
 	})
 	
 	
@@ -167,7 +191,10 @@
 	function basicPlanListReq() {
 		fetch("/ajax/basicPlan")
 		.then(res => res.json())
-		.then(res => table5.setData(res))
+		.then(res => {
+			table5.setData(res)
+			basicPlans = res;
+		})
 	}
 	
 	// 선택안되는 일자
@@ -245,37 +272,21 @@
 	    editor2.style.padding = "3px";
 	    editor2.style.width = "100%";
 	    editor2.style.boxSizing = "border-box";
-	    editor2.value = data.qt;
+	    editor2.value = data.addQt;
 	    let tot = 0;
 	    editor2.addEventListener("change", e=> {
 	    	
 	    	for(let i of consum){
 	    		if(i.pdCd == data.pdCd){
-	    			if(i.totConsum > e.target.value){
-	    				editor2.value = i.totConsum;
-	    				successFunc()
-	    			}else if(e.target.value == null || e.target.value < 0){
+	    			if(e.target.value == null || e.target.value < 0){
 	    				editor2.value = 0;
 	    				successFunc()
 	    			}else{
 	    				editor2.value = e.target.value;
-	    				i.totConsum = e.target.value;
 	    	    		successFunc()
 	    			}
 	    		}
 	    	}
-	    	//전체수량변경
-			//let s = document.querySelector(".totConsum").value;
-	    	//console.log(s)
-	    	//console.log(e.target.value)
-	    	//console.log(data.qt)
-	    	//if(s == ""){
-	    	//	s = 0;
-	    	//}
-	    	//console.log(s)
-			//s = Number(e.target.value) + "";
-	    	//console.log(s)
-	    	//document.querySelector(".totConsum").value = s;
 	    })
 	    function successFunc(){
 	        success(editor2.value);
@@ -328,8 +339,8 @@
         {title:"현재 재고 수량", field:"nowStk", hozAlign:"center", width:160},
         {title:"안전 재고 수량", field:"safeStk", hozAlign:"center", width:160},
         {title:"재고 수량차", field:"msStk", hozAlign:"center", width:150},
-    ],
-});
+    	],
+	});
 	var table4 = new Tabulator("#example-table4", {
 	    height:"180px",
 	    columns:[
@@ -347,7 +358,8 @@
 	      },
 	    columns:[
 	        {title:"제품코드", field:"pdCd", validator:"required", hozAlign:"center"},
-	        {title:"수량(kg)", field:"qt", hozAlign:"center", editor:dateEditor5,  validator:["min:0", "numeric"]},
+	        {title:"주문수량(kg)", field:"qt", hozAlign:"center", validator:["min:0", "numeric"]},
+	        {title:"추가수량(kg)", field:"addQt", hozAlign:"center", editor:dateEditor5,  validator:["min:0", "numeric"]},
 	        {title:"최소 납기일", field:"dueDt", hozAlign:"center"},
 	    ],
 	});
@@ -363,7 +375,7 @@
 			for(let i of res){
 				for(let j of selectOrder){
 					if(i.pdCd == j.pdCd){
-						i.qt = ""+(Number(i.qt) + Number(j.prePdtQt));
+						i.qt = (Number(i.qt) + Number(j.prePdtQt));
 						if(i.dueDt == null || i.dueDt > j.dueDt){
 							i.dueDt = j.dueDt;
 						}
@@ -374,7 +386,7 @@
 			for(let i of res){
 				for(let j of consum){
 					if(i.pdCd == j.pdCd){
-						i.qt = ""+(Number(i.qt) * Number(j.consum));
+						i.qt = Number(i.qt) * Number(j.consum);
 					}
 				}
 			tot += Number(i.qt);
@@ -384,12 +396,12 @@
 				i.totConsum = ""
 				for(let j of selectOrder){
 					if(i.pdCd == j.pdCd){
-						i.totConsum = ""+((Number(j.prePdtQt) * Number(i.consum))+Number(i.totConsum));
+						i.totConsum = ""+((Number(j.prePdtQt) * Number(i.consum)));
 					}
 				}
 			}
 			//전체수량변경
-			document.querySelector(".totConsum").value = tot
+			totConsums.value = tot
 			
 			table5.setData(res)
 		})
@@ -404,9 +416,22 @@
         console.log(data)
         let w = 0;
         for(let i of data){
-        	w += Number(i.qt); 
+        	w += Number(i.qt) + Number(i.addQt);
+        	for(let j of consum){
+        		if(i.pdCd == j.pdCd){
+        			j.totConsum = Number(i.qt) + Number(i.addQt);
+        		}
+        	}
         }
-        document.querySelector(".totConsum").value = w + "";
+        for(let i of data){
+        	for(let j of basicPlans){
+        		if(i.pdCd == j.pdCd){
+        			j.addQt = Number(i.addQt);
+        		}
+        	}
+        }
+        
+        totConsums.value = w + "";
 	});
 	
 	// 월 주차 판단
@@ -434,6 +459,60 @@
 
 		return [WEEK_KOR[weekNum], (dates.getMonth()+1)+'월'];
 	}
+	
+	//상세계획 데이터 포멧
+	function PlanDetailData() {
+	  let newArr1 = [];
+	  let planCds = 'K' + dayNameing.value.substring(2, 4) + dayNameing.value.substring(5, 7) + dayNameing.value.substring(8, 10);
+	  
+	  for(let i of consum){
+		  if(i.totConsum == null){
+			  i.totConsum = 0;
+		  }
+	  }
+	  
+	  for(let i of selectOrder){
+		  for(let j of basicPlans){
+			  for(let e of consum){
+			  	if(j.pdCd == i.pdCd && e.pdCd == i.pdCd && j.pdCd == e.pdCd){
+	      			
+			  		newArr1.push({
+			  			pdtPlanCd : planCds,
+	          			pdName : j.pdName,
+	          			pdCd : i.pdCd,
+	          			qt : Number(i.prePdtQt * e.consum), 
+	          			dueDt : i.dueDt
+	       			});
+			  	}
+			  }
+		  }
+	  }
+	  
+	  for(let j of basicPlans){
+   		newArr1.push({
+ 	  		pdtPlanCd : planCds,
+       		pdName : j.pdName,
+       		pdCd : j.pdCd,
+       		qt : j.addQt,  
+       		dueDt : null 
+    	});
+	  }
+	 
+	  return newArr1;
+	};
+	
+	//상세주문계획 데이터 포멧
+	function PlanOrderDetailData() {
+		let newArr2 = [];
+		
+		for(let i of selectOrder){
+			newArr2.push({
+ 				odDetailno : i.odDetailno,
+   				pdtQt : i.prePdtQt
+   			});
+		}
+	}
+	
 	</script>
 	</div>
 </body>

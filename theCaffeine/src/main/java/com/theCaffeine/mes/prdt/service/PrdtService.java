@@ -5,6 +5,7 @@ import java.util.List;
 import com.theCaffeine.mes.prdt.model.FailPlanVO;
 import com.theCaffeine.mes.prdt.model.MtrlPlanVO;
 import com.theCaffeine.mes.prdt.model.PlanOrderDetailVO;
+import com.theCaffeine.mes.prdt.model.PlanResistVO;
 import com.theCaffeine.mes.prdt.model.PlanVO;
 import com.theCaffeine.mes.prdt.model.SafePlanVO;
 
@@ -19,4 +20,5 @@ public interface PrdtService {
 	FailPlanVO getNotDate(); //선택안되는 일자
 	List<PlanVO> getBasicPlanList(); //주간계획등록 기본 양식
 	List<FailPlanVO> getPlanConsum(); // box -> kg 단위변경 
+	int planResist(PlanResistVO vo); //계획 등록
 }
