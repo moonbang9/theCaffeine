@@ -29,6 +29,7 @@ public class OrderMngController {
 	// 다중 조건 주문 검색
 		@PostMapping("/ajax/orderMng")
 		public List<OrderMngVO> getOrderList(@RequestBody OrderMngVO vo) {
+			System.out.println("브이오다"+ vo);
 			return orderMngService.getOrderList(vo);
 		}
 }

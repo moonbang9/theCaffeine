@@ -119,3 +119,124 @@ ORDER BY d.od_detailno;
 
 
 
+select o.OD_NO, o.OD_DT, o.OD_CHG, o.DC_RATE, o.TOTAL_PRICE, o.CLI_CD,
+        c.cli_name,c.cli_chg,
+        d.od_no,d.od_detailno,
+        p.pd_name,d.due_dt,d.od_detail_st,d.pd_cd
+from cli c JOIN od o
+                ON c.cli_cd = o.cli_cd
+            JOIN (select count(*) as cnt, od_no
+                    from od_detail
+                    group by od_no) c
+                ON o.od_no = c.od_no
+                
+            JOIN (select od.pd_cd, od.od_no, od.od_detailno, od.due_dt, od.od_detail_st,
+                        op.pd_name, op.pd_cd
+                    from od_detail od JOIN pd op
+                    ON od.pd_cd = op.pd_cd
+                    WHERE ROWNUM <= 1 ) d
+                ON o.od_no = od.od_no;
+                
+                
+select o.OD_NO, o.OD_DT, o.OD_CHG, o.DC_RATE, o.TOTAL_PRICE, o.CLI_CD,
+        c.cli_name,c.cli_chg,
+        d.od.od_no,d.od.od_detailno,
+        p.pd_name,d.od.due_dt,d.od.od_detail_st,d.od.pd_cd, cd.cnt
+from cli c JOIN od o
+                ON c.cli_cd = o.cli_cd
+            JOIN (select count(*) as cnt, od_no
+                    from od_detail
+                    group by od_no) cd
+                ON o.od_no = cd.od_no
+                
+            JOIN (select od.pd_cd, od.od_no, od.od_detailno, od.due_dt, od.od_detail_st,
+                        op.pd_name, op.pd_cd
+                    from od_detail od JOIN pd op
+                    ON od.pd_cd = op.pd_cd
+                    WHERE ROWNUM <= 1 ) d
+                ON o.od_no = od.od_no;
+
+
+select distinct o.OD_NO, o.OD_DT, o.OD_CHG, o.DC_RATE, o.TOTAL_PRICE, o.CLI_CD,
+        c.cli_name,c.cli_chg,
+        d.od_no,
+        --d.pd_name,d.pd_cd,
+        d.due_dt,d.od_detail_st,
+        t.od_cnt
+from cli c JOIN od o 
+                ON c.cli_cd = o.cli_cd
+            JOIN (select ((count(*))||'건') as od_cnt, od_no
+                                    from od_detail
+                                    group by od_no) t
+                ON o.od_no = t.od_no
+            JOIN (select od.od_no od_no, od.pd_cd pd_cd, od.due_dt due_dt, od.od_detail_st od_detail_st, op.pd_name pd_name
+                    from od_detail od JOIN pd op
+                    ON od.pd_cd = op.pd_cd
+                    ) d
+                ON o.od_no = d.od_no
+ORDER BY o.od_no;
+
+            
+select ('외 '||(count(*)-1)||'건') as cnt, od_no
+from od_detail
+where od_no = 87
+group by od_no;
+--having od_no = 87; 
+
+select od.od_no, od.pd_cd, od.due_dt, od_detail_st, op.pd_name
+from od_detail od JOIN pd op
+ON od.pd_cd = op.pd_cd
+WHERE ROWNUM <= 1;
+
+select od.od_no, od.pd_cd, od.due_dt, od_detail_st, op.pd_name
+from od_detail od JOIN pd op
+ON od.pd_cd = op.pd_cd
+;
+
+
+
+
+select od_no, pd_cd, due_dt, od_detail_st
+from od_detail
+GROUP BY od_no;
+
+select * from od;
+select * from od_detail
+order by od_detailno;         
+
+
+
+
+select distinct o.od_no
+						, o.od_dt
+						, o.od_chg
+						, o.dc_rate
+						, o.total_price
+						, o.cli_cd
+						, c.cli_name
+						, c.cli_chg
+						, d.od_no
+						,
+				        
+				        d.due_dt
+				        , d.od_detail_st
+				        , t.od_cnt
+		from cli c JOIN od o 
+                		ON c.cli_cd = o.cli_cd
+            		JOIN (select ((count(*))||'건') as od_cnt, od_no
+                          from od_detail
+                          group by od_no) t
+                		ON o.od_no = t.od_no
+            		JOIN (select od.od_no od_no
+            					, od.pd_cd pd_cd
+            					, od.due_dt due_dt
+            					, od.od_detail_st od_detail_st
+            					, op.pd_name pd_name
+                    		from od_detail od JOIN pd op
+                    							ON od.pd_cd = op.pd_cd
+                    		) d
+                		ON o.od_no = d.od_no;
+                        
+                        
+                        
+                        

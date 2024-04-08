@@ -58,6 +58,7 @@
 				, d.due_dt
 				, d.od_detail_st
 				, d.pd_cd
+				, d.detail_price
 		from cli c 
 				JOIN od o 
 					ON c.cli_cd = o.cli_cd
@@ -66,7 +67,7 @@
             	JOIN pd p
                 	ON d.pd_cd = p.pd_cd
         <include refid="condition"></include> 
-		ORDER BY d.od_detailno
+		ORDER BY d.od_detailno DESC
 	</select>
 	
 </mapper>
