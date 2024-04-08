@@ -145,20 +145,19 @@
 				alert("선택된 자재가 없습니다.")
 			} else {
 				console.log(selectPassMtrl);
-				//passModReq(selectPassMtrl);
+				passModReq(selectPassMtrl);
 			}
 		})
 		
 		function passModReq(selectPassMtrl) {
 			for(order of selectPassMtrl) {
-				const mtCd = order.mtCd;
-				const placeodQt= order.placeodQt;
-				const placeodArridt = order.placeodArridt;
-				const cliName = order.cliName;
-				const placeodChg = order.placeodChg;
+				const strQt= order.placeodQt;
+				const strChg = "최민수 사원"; // 로그인 정보있을 시 order.strChg 로 변경
 				const mtPlaceodCd = order.mtPlaceodCd;
-				let param = {mtCd, placeodQt, placeodArridt, cliName, placeodChg, mtPlaceodCd};
-				fetch("/ajax/mtrlQuality",{
+				const mtCd = order.mtCd;
+				const expDt = order.expDt;
+				let param = {strQt, strChg, mtPlaceodCd, mtCd, expDt};
+				fetch("/ajax/mtrlMainStr",{
 					method : "post",
 					headers: {
 					      "Content-Type": "application/json",
@@ -191,20 +190,18 @@
 				alert("선택된 자재가 없습니다.")
 			} else {
 				console.log(selectFailMtrl);
-				//failModReq(selectFailMtrl);
+				failModReq(selectFailMtrl);
 			}
 		})
 		
 		function failModReq(selectFailMtrl) {
 			for(order of selectFailMtrl) {
-				const mtCd = order.mtCd;
-				const placeodQt= order.placeodQt;
-				const placeodArridt = order.placeodArridt;
-				const cliName = order.cliName;
-				const placeodChg = order.placeodChg;
+				const rtnQt= order.placeodQt;
+				const rtnChg = "이지훈 과장"; // 로그인한 입고관리 담당자 이름 들어감.
 				const mtPlaceodCd = order.mtPlaceodCd;
-				let param = {mtCd, placeodQt, placeodArridt, cliName, placeodChg, mtPlaceodCd};
-				fetch("/ajax/mtrlQuality",{
+				const mtCd = order.mtCd;
+				let param = {mtCd, rtnQt, rtnChg, mtPlaceodCd};
+				fetch("/ajax/mtrlReturn",{
 					method : "post",
 					headers: {
 					      "Content-Type": "application/json",
@@ -217,7 +214,7 @@
 			failModRes();
 		}
 		
-		// 검사요청 처리 응답
+		// 불합격자재 반품처리 응답
 		function failModRes() {
 			alert("자재반품이 완료되었습니다!");
 			location.href= "/material/storing"
@@ -237,17 +234,18 @@
 				alert("선택된 자재가 없습니다.")
 			} else {
 				console.log(selectSubMtrl);
-				//subModReq(selectSubMtrl);
+				subModReq(selectSubMtrl);
 			}
 		})
 		
 		function subModReq(selectSubMtrl) {
 			for(order of selectSubMtrl) {
-				const placeodQt= order.placeodQt;
+				const strQt= order.placeodQt;
 				const strChg = "최민수 사원"; // 로그인 정보있을 시 order.strChg 로 변경
 				const mtPlaceodCd = order.mtPlaceodCd;
 				const mtCd = order.mtCd;
-				let param = {placeodQt, strChg, mtPlaceodCd, mtCd};
+				const expDt = order.expDt;
+				let param = {strQt, strChg, mtPlaceodCd, mtCd, expDt};
 				fetch("/ajax/mtrlSubStr",{
 					method : "post",
 					headers: {
@@ -261,11 +259,13 @@
 			subModRes();
 		}
 		
-		// 검사요청 처리 응답
+		// 부자재 입고처리 응답
 		function subModRes() {
 			alert("부자재입고가 완료되었습니다!");
 			location.href= "/material/storing"
 		}
+		
+		
 		
 		
 	</script>

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.theCaffeine.mes.mtrl.model.MtrlOrderVO;
+import com.theCaffeine.mes.mtrl.model.MtrlReturnVO;
 import com.theCaffeine.mes.mtrl.model.MtrlStoreVO;
 import com.theCaffeine.mes.mtrl.service.MtrlStoringService;
 
@@ -47,14 +48,23 @@ public class MtrlStoringController {
 	
 	
 	// 검사 불합격 반품처리
+	@PostMapping("/ajax/mtrlReturn")
+	public MtrlReturnVO insertMtrlReturn(@RequestBody MtrlReturnVO vo) {
+		mtrlStoringService.insertMtrlReturn(vo);
+		return vo;
+	}
 	
-	
-	// 부자재 입고처리
-	@PostMapping("/ajax/mtrlSubStr")
-	public MtrlStoreVO insertMtrl(@RequestBody MtrlStoreVO vo) {
+	// 원자재 입고처리
+	@PostMapping("/ajax/mtrlMainStr")
+	public MtrlStoreVO insertMtrlMain(@RequestBody MtrlStoreVO vo) {
 		mtrlStoringService.insertMtrlStr(vo);
 		return vo;
 	}
 	
-	
+	// 부자재 입고처리
+	@PostMapping("/ajax/mtrlSubStr")
+	public MtrlStoreVO insertMtrlSub(@RequestBody MtrlStoreVO vo) {
+		mtrlStoringService.insertMtrlStr(vo);
+		return vo;
+	}
 }
