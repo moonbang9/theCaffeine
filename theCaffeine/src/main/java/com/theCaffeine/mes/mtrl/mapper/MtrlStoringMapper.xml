@@ -9,6 +9,7 @@
 		        mp.placeod_qt,
 		        mp.mt_placeod_cd,
 		        m.unit,
+		        m.exp_dt,
 		        mc.ck_dt,
 		        mc.ck_chg
 		FROM mt m JOIN mt_placeod mp
@@ -41,6 +42,7 @@
 		        mp.placeod_qt,
 		        mp.mt_placeod_cd,
 		        m.unit,
+		        m.exp_dt,
 		        mp.placeod_compdt + m.leadtm AS placeod_arridt, -- 자재도착일
 		        mp.placeod_chg -- 발주담당자
 		FROM mt m JOIN mt_placeod mp
@@ -49,22 +51,43 @@
 		ORDER BY placeod_arridt
 	</select>
 	
-	<insert id="insertMtrlStr" parameterType="MtrlStoreVO">
-		INSERT INTO mt_str
-					(mt_str_no
-					,str_qt
-					,str_compdt
-					,str_chg
+	<insert id="insertMtrlReturn" parameterType="MtrlReturnVO">
+		INSERT INTO mt_rtn
+					(mt_rtn_no
+					,rtn_qt
+					,rtn_compdt
+					,rtn_chg
 					,mt_placeod_cd
 					,mt_cd)
 		    VALUES  (
-		    		seq_mt_str_no.nextval
-		    		,#{strQt}
+		    		SEQ_MT_RTN_NO.nextval
+		    		,#{rtnQt}
 		    		,sysdate
-		    		,#{strChg}
+		    		,#{rtnChg}
 		    		,#{mtPlaceodCd}
 		    		,#{mtCd}
 		    		)
 	</insert>
+	
+	<update id="updateMtrlOrder2" parameterType="String">
+		UPDATE  mt_placeod
+		SET     placeod_st = 7
+		WHERE   mt_placeod_cd = #{mtPlaceodCd}
+	</update>
+
+	<select id="insertMtrlStr" statementType="CALLABLE" parameterType="MtrlStoreVO">
+        CALL MT_STORING(
+                #{strQt, mode=INOUT, jdbcType=INTEGER},
+                #{strChg, mode=IN, jdbcType=VARCHAR},
+                #{mtPlaceodCd, mode=IN, jdbcType=VARCHAR},
+                #{mtCd, mode=IN, jdbcType=VARCHAR},
+                #{expDt, mode=IN, jdbcType=INTEGER})
+    </select>
+    
+    <update id="updateMtrlOrder" parameterType="String">
+		UPDATE  mt_placeod
+		SET     placeod_st = 6
+		WHERE   mt_placeod_cd = #{mtPlaceodCd}
+	</update>
 
 </mapper>

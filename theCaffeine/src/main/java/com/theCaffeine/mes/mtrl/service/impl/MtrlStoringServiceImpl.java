@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.theCaffeine.mes.mtrl.mapper.MtrlStoringMapper;
 import com.theCaffeine.mes.mtrl.model.MtrlOrderVO;
+import com.theCaffeine.mes.mtrl.model.MtrlReturnVO;
 import com.theCaffeine.mes.mtrl.model.MtrlStoreVO;
 import com.theCaffeine.mes.mtrl.service.MtrlStoringService;
 
@@ -34,9 +35,18 @@ public class MtrlStoringServiceImpl implements MtrlStoringService{
 
 	@Transactional
 	@Override
-	public int insertMtrlStr(MtrlStoreVO vo) {
-		
-		return mtrlStoringMapper.insertMtrlStr(vo);
+	public int insertMtrlReturn(MtrlReturnVO vo) {
+		mtrlStoringMapper.updateMtrlOrder2(vo.getMtPlaceodCd());
+		return mtrlStoringMapper.insertMtrlReturn(vo);
+	}
+
+	@Transactional
+	@Override
+	public String insertMtrlStr(MtrlStoreVO vo) {
+		mtrlStoringMapper.updateMtrlOrder(vo.getMtPlaceodCd());
+		mtrlStoringMapper.insertMtrlStr(vo);
+		String result = "OK";
+		return result;
 	}
 
 }

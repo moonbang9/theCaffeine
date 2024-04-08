@@ -93,7 +93,7 @@
 		ON mp.mt_cd = m.mt_cd
 		JOIN cli c
 		ON mp.cli_cd = c.cli_cd
-        WHERE mp.placeod_st = 3
+        WHERE mp.placeod_st = 3 AND m.mt_div = '원자재'
 		ORDER BY placeod_arridt
  	</select>
  	

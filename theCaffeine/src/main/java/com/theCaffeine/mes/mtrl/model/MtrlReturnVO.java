@@ -7,15 +7,14 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 @Data
-public class MtrlStoreVO {
-	int mtStrNo;
-	int strQt;
+public class MtrlReturnVO {
+
+	int mtRtnNo;
+	int rtnQt;
 	@JsonFormat(pattern = "yyyy-MM-dd")
-	Date strCompdt;
-	String strChg;
+	Date rtnCompdt;
+	String rtnChg;
 	String mtPlaceodCd;
 	String mtCd;
-	
-	int expDt;
 	
 }
