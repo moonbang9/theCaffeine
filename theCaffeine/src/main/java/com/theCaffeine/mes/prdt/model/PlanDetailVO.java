@@ -29,6 +29,6 @@ public class PlanDetailVO {					//생산계획 + 계획상세
 	private String plantot;				//주간 토탈 상품명
 	private Integer psum;				//주간 토탈 원두 생산량
 	private String pdCd;				//제품코드
-
+	private Integer unitQt;				//박스별 단위 무게
 	
 }
