@@ -3,6 +3,20 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.theCaffeine.mes.fclt.mapper.FcltMapper">
 
+<sql id="condition">
+<where>
+<if test="fcName != null and fcName != '' ">
+fc_name LIKE '%' || #{fcName} || '%'
+</if>
+<if test="insMf != null and insMf != '' ">
+AND ins_mf = #{insMf}	
+</if>
+<if test="st != null and st != '' ">
+AND st = #{st}
+</if>
+</where>
+</sql>
+
 <!-- 전체 설비 목록 -->
 <select id="getFcltList" resultType="FcltVO">
 
@@ -24,6 +38,7 @@
 				OUTPUT,
 				DUR_TIME
 	FROM FC
+	<include refid="condition"></include>
 </select>
 
 <!-- 비가동 설비 목록 -->

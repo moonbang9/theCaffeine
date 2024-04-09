@@ -10,18 +10,59 @@
 	<div layout:fragment="content">
 		<h1>설비 관리</h1>
 		<div id="example-table">
-		<div class="divider text-start">
-                        <div class="divider-text ">설비 관리</div>
-                      </div>
+			<div class="divider text-start">
+				<div class="divider-text ">설비 관리</div>
+			</div>
 			<!-- Vertically Centered Modal -->
-			<div class="col">
+			<div class="row gy-2 gx-3 align-items-center">
 				<div class="mt-3">
-					<!-- Button trigger modal -->
-					<div class="demo-inline-spacing d-grid gap-2 d-md-flex justify-content-md-end">
-					<button type="button" class="btn btn-primary"
-						data-bs-toggle="modal" data-bs-target="#modalCenter" id="addFclt">
-						설비 등록</button>
-						</div>
+					<div class="d-flex">
+						<form action="" name="frmSearch" class="col">
+
+							<div class="mb-3 row"
+								style="justify-content: center; align-content: center;">
+								<label class="col-sm-2">설비명</label>
+								<div class="col-md-4">
+									<input class="form-control" type="text" name="searchName">
+								</div>
+							</div>
+							<div class="mb-3 row"
+								style="justify-content: center; align-content: center;">
+								<label class="col-sm-2">공정라인</label>
+								<div class="col-md-4">
+									<select class="form-select" name="searchMf">
+										<option >선택</option>
+										<option value="0">로스팅</option>
+										<option value="1">포장</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="mb-3 row"
+								style="justify-content: center; align-content: center;">
+								<label class="col-sm-2 ">설비상태</label>
+								<div class="col-md-4">
+									<label class="form-check-label" for="defaultRadio1">전체 </label> 
+										<input class="form-check-input" type="radio" id="defaultRadio1" name="searchSt"> 
+										<label class="form-check-label" for="defaultRadio1" style="padding-left: 10px;"> 가동 </label> 
+										<input class="form-check-input" type="radio" value="0" id="defaultRadio1" name="searchSt"> 
+										<label class="form-check-label" for="defaultRadio2" style="padding-left: 10px;"> 비가동 </label>
+									<input class="form-check-input" type="radio" value="1" id="defaultRadio2" name="searchSt">
+								</div>
+							</div>
+							<div class="d-grid gap-2 d-md-flex justify-content-md-center">
+								<button class="btn btn-secondary" type="button" id="resetBtn" style="margin-top: 12px;">초기화</button>
+								<button class="btn btn-primary" type="button" id="searchBtn" style="margin-top: 12px; margin-right: 5px;">검색</button>
+							</div>
+						</form>
+
+
+					</div>
+					<div class="divider text-start">
+						<div class="divider-text "></div>
+					</div>
+
+
 					<!-- Modal -->
 					<div class="modal fade" id="modalCenter" tabindex="-1"
 						aria-hidden="true">
@@ -33,7 +74,7 @@
 										aria-label="Close"></button>
 								</div>
 								<div class="modal-body" id="facilityForm">
-								<div class="row">
+									<div class="row">
 										<div class="col mb-3">
 											<div class="input-group" style="display: none;">
 												<span class="input-group-text col-2" id="basic-addon14">설비코드</span>
@@ -47,7 +88,7 @@
 											<div class="input-group">
 												<span class="input-group-text col-2" id="basic-addon14">설비명</span>
 												<input type="text" class="form-control" id="facilityName"
-													aria-describedby="basic-addon14" >
+													aria-describedby="basic-addon14">
 											</div>
 										</div>
 									</div>
@@ -55,8 +96,8 @@
 										<div class="col mb-3">
 											<div class="input-group">
 												<span class="input-group-text col-2" id="basic-addon14">제조업체</span>
-												<input type="text" class="form-control" id="manufacturingCom"
-													aria-describedby="basic-addon14">
+												<input type="text" class="form-control"
+													id="manufacturingCom" aria-describedby="basic-addon14">
 											</div>
 										</div>
 									</div>
@@ -64,8 +105,9 @@
 									<div class="row">
 										<div class="col mb-3">
 											<div class="input-group">
-												<label class="input-group-text col-2" for="inputGroupSelect01">투입공정</label>
-												<select class="form-select" id="insertedMf">
+												<label class="input-group-text col-2"
+													for="inputGroupSelect01">투입공정</label> <select
+													class="form-select" id="insertedMf">
 													<option selected>선택</option>
 													<option value="0">로스팅</option>
 													<option value="1">포장</option>
@@ -78,17 +120,19 @@
 											<div class="input-group">
 												<span class="input-group-text col-2" id="basic-addon14">입고일자</span>
 												<div class="col-md-10">
-						                          <input class="form-control" type="date" value="2024-04-01" id="strDate">
-						                        </div>
+													<input class="form-control" type="date" value="2024-04-01"
+														id="strDate">
+												</div>
 											</div>
 										</div>
 									</div>
 									<div class="row">
 										<div class="col mb-3">
 											<div class="input-group">
-												<label class="input-group-text col-2" for="inputGroupSelect01">설비상태</label>
-												<select class="form-select" id="fcltstatus">
-												<option selected>선택</option>
+												<label class="input-group-text col-2"
+													for="inputGroupSelect01">설비상태</label> <select
+													class="form-select" id="fcltstatus">
+													<option selected>선택</option>
 													<option value="0">가동</option>
 													<option value="1">비가동</option>
 												</select>
@@ -100,7 +144,7 @@
 											<div class="input-group">
 												<span class="input-group-text col-2" id="basic-addon14">점검주기</span>
 												<input type="text" class="form-control" id="inspectionCycle"
-													aria-describedby="basic-addon14"> &nbsp;  일 
+													aria-describedby="basic-addon14"> &nbsp; 일
 											</div>
 										</div>
 									</div>
@@ -109,7 +153,7 @@
 											<div class="input-group">
 												<span class="input-group-text col-2" id="basic-addon14">생산량</span>
 												<input type="text" class="form-control" id="coffeeoutput"
-													aria-describedby="basic-addon14"> &nbsp;  KG
+													aria-describedby="basic-addon14"> &nbsp; KG
 											</div>
 										</div>
 									</div>
@@ -117,23 +161,33 @@
 										<div class="col mb-3">
 											<div class="input-group">
 												<span class="input-group-text col-2" id="basic-addon14">소요시간</span>
-												<input type="datetime" class="form-control" id="durationTime"
-													aria-describedby="basic-addon14"> &nbsp;  분
+												<input type="datetime" class="form-control"
+													id="durationTime" aria-describedby="basic-addon14">
+												&nbsp; 분
 											</div>
 										</div>
+									</div>
 								</div>
-								</div>
-								
-									<div class="modal-footer">
+
+								<div class="modal-footer">
 									<button type="button" class="btn btn-outline-secondary"
 										data-bs-dismiss="modal">취소</button>
-									<button style="display: block;" type="button" class="btn btn-primary" id="saveBtn">등록</button>
-									<button style="display: none;" type="button" class="btn btn-primary" id="updateBtn">수정</button>
+									<button style="display: block;" type="button"
+										class="btn btn-primary" id="saveBtn">등록</button>
+									<button style="display: none;" type="button"
+										class="btn btn-primary" id="updateBtn">수정</button>
 								</div>
 							</div>
 						</div>
 					</div>
 					<div id="fcltListTable"></div>
+					<!-- Button trigger modal -->
+					<div
+						class="demo-inline-spacing d-grid gap-2 d-md-flex justify-content-md-end">
+						<button type="button" class="btn btn-primary"
+							data-bs-toggle="modal" data-bs-target="#modalCenter" id="addFclt">
+							설비 등록</button>
+					</div>
 				</div>
 			</div>
 			<script>
@@ -212,11 +266,27 @@
 				updateBtn.style.display="block";
 			}
 			
-			listReq();
+			searchBtn.addEventListener("click",function(){
+				listReq();
+			})
+			
 			
 			// 원자재 목록 데이터
 			function listReq() {
-				fetch("/fclt/getfacility")
+				const fcName= frmSearch.searchName.value;
+				console.log(fcName);
+				const insMf = frmSearch.searchMf.value;
+				console.log(insMf);
+				const st = document.querySelector('input[name="searchSt"]:checked').value;
+				console.log(st);
+				let param = {fcName, insMf,st}
+				fetch("/fclt/getfacility",{
+					method:"post",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body:JSON.stringify(param)
+				})
 				.then(res => res.json())
 				.then(res =>{
 					console.log(res)
@@ -296,7 +366,7 @@
 	</script>
 		</div>
 	</div>
-	
-	
+
+
 </body>
 </html>
