@@ -299,5 +299,27 @@ group by pd_cd;
 
 
 /* 재고관리 페이지 - LOT 재고 조회 */
+select l.pd_lot, l.pd_cd, p.pd_name, l.qt, l.pdt_dt, l.exp_dt
+from pd p, pd_stk l
+where l.qt > 0
+    and l.pd_cd = 'PBR01'
+ORDER BY l.pdt_dt DESC;
 
+select l.pd_lot, l.pd_cd, l.qt, l.pdt_dt, l.exp_dt, p.pd_name
+from pd_stk l JOIN ( select pd_name, pd_cd
+from pd) p
+ON l.pd_cd = p.pd_cd
+where l.qt > 0
+    and l.pd_cd = 'PBR01'
+ORDER BY l.pdt_dt DESC;
+
+select l.pd_lot, l.pd_cd, l.qt, l.pdt_dt, l.exp_dt, p.pd_name
+from pd_stk l JOIN ( select pd_name, pd_cd
+from pd) p
+ON l.pd_cd = p.pd_cd
+where l.qt > 0
+    and l.pd_cd = 'PBR01'
+ORDER BY l.pdt_dt DESC;
+
+select * from pd_stk;
 
