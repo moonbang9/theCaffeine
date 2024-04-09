@@ -9,12 +9,12 @@ import lombok.Data;
 @Data
 public class MtrlReturnVO {
 
-	int mtRtnNo;
-	int rtnQt;
+	private int mtRtnNo;
+	private int rtnQt;
 	@JsonFormat(pattern = "yyyy-MM-dd")
-	Date rtnCompdt;
-	String rtnChg;
-	String mtPlaceodCd;
-	String mtCd;
+	private Date rtnCompdt;
+	private String rtnChg;
+	private String mtPlaceodCd;
+	private String mtCd;
 	
 }
