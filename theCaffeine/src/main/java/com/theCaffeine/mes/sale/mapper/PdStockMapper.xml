@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.theCaffeine.mes.sale.mapper.PdStockMapper">
+
+	<sql id="condition">
+		<where>
+			<if test="zeroQt == false">
+				and l.qt > 0
+			</if>
+			<if test="pdLot != null and pdLot != '' ">
+				and l.pd_lot LIKE '%' || #{pdLot} || '%'
+			</if>
+			<if test="pdCd != null and pdCd != '' ">
+				and l.pd_cd LIKE '%' || #{pdCd} || '%'
+			</if>
+			<if test="pdName != null and pdName != '' ">
+				and p.pd_name LIKE '%' || #{pdName} || '%'
+			</if>
+			<if test="minPdtDt != null">
+ 		   		AND l.pdt_dt >= #{minPdtDt} 			
+ 			</if>
+ 			<if test="maxPdtDt != null">
+ 		   		AND l.pdt_dt <![CDATA[<=]]> #{maxPdtDt}			
+ 			</if>
+ 			<if test="minExpDt != null">
+ 		   		AND l.exp_dt >= #{minExpDt}		
+ 			</if>
+ 			<if test="maxExpDt != null ">
+ 		   		AND l.exp_dt <![CDATA[<=]]> #{maxExpDt}		
+ 			</if> 			
+		</where>
+		
+	</sql>
+
+
+	<select id="pdStockList" resultType="PdStockVO">
+		<![CDATA[ select p.pd_cd
+						, p.pd_name
+						, p.unit
+						, c.curStk
+						, t.threeWNotSend
+						, n.notSend
+						, trunc( (p.safe_stk_qt/21)*30.5 , 0 ) as monthlyPrd
+						, trunc( (p.safe_stk_qt/3), 0 )as weeklyPrd
+						, CASE WHEN t.threeWnotSend > c.curStk
+		        					THEN t.threeWnotSend - c.curStk
+		    				   ELSE 0
+		    				   END AS shortage
+				from pd p 
+					JOIN (select count(*) as curStk
+								, pd_cd
+						  from pd_stk
+						  where qt >0 
+						  	and exp_dt > sysdate
+						  group by pd_cd) c
+					ON c.pd_cd = p.pd_cd
+					JOIN (select count(*) as threeWnotSend
+								, pd_cd
+						  from od_detail
+						  where od_detail_st<3 
+						  	and (sysdate-due_dt) <21
+						  group by pd_cd) t
+		    		ON p.pd_cd = t.pd_cd    
+					JOIN (select count(*) as notSend
+								, pd_cd
+						  from od_detail
+						  where od_detail_st<3
+						  group by pd_cd) n
+					ON p.pd_cd = n.pd_cd
+				ORDER BY p.pd_cd ]]>
+	</select>
+	
+	<select id="lotStockList" parameterType="LotStockVO" resultType="LotStockVO">
+		SELECT l.pd_lot
+				, l.pd_cd
+				, p.pd_name
+				, l.qt
+				, l.pdt_dt
+				, l.exp_dt
+		FROM pd_stk l 
+			JOIN ( select pd_name
+							, pd_cd
+				   from pd
+					) p
+			ON l.pd_cd = p.pd_cd
+    	<include refid="condition"></include>
+		ORDER BY l.pdt_dt DESC
+	</select>
+
+</mapper>
