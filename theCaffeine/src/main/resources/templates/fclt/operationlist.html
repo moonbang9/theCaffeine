@@ -15,13 +15,59 @@
 			</div>
 
 			<!-- Vertically Centered Modal -->
-			<div class="col">
+			<div class="row gy-2 gx-3 align-items-center" >
 				<div class="mt-3">
-					<!-- Button trigger modal -->
-					<button type="button" class="btn btn-primary"
-						data-bs-toggle="modal" data-bs-target="#modalCenter"
-						id="addNonopBtn">비가동 처리</button>
+					<div class="d-flex" >
+						<form action="" name="frmSearch" class="col">
+						
+							<div class="mb-3 row" style="justify-content: center;align-content: center;">
+								<label class="col-sm-2">설비명</label>
+								<div class="col-md-4">
+									<input class="form-control" type="text">
+								</div>
+								</div>
+								<div class="mb-3 row" style="justify-content: center;align-content: center;">
+								<label class="col-sm-2">공정라인</label>
+								<div class="col-md-4">
+									<select class="form-select" id="insertedMf">
+										<option selected>선택</option>
+										<option value="0">로스팅</option>
+										<option value="1">포장</option>
+									</select>
+								</div>
+							</div>
 
+							<div class="mb-3 row" style="justify-content: center;align-content: center;">
+								<label class="col-sm-2 ">설비상태</label>
+								<div class="col-md-4">
+									<label class="form-check-label" for="defaultRadio1" > 전체
+									</label> <input name="default-radio-1" class="form-check-input"
+										type="radio" value="" id="defaultRadio1" checked=""> 
+										<label class="form-check-label" for="defaultRadio1" style="padding-left: 10px;"> 가동 </label> 
+										<input name="default-radio-1" class="form-check-input" type="radio"
+										value="" id="defaultRadio1"> 
+										<label class="form-check-label" for="defaultRadio2" style="padding-left: 10px;"> 비가동 </label> 
+										<input name="default-radio-1" class="form-check-input" type="radio"
+										value="" id="defaultRadio2">
+								</div>
+							</div>
+							<div class="d-grid gap-2 d-md-flex justify-content-md-center">
+								<button class="btn btn-secondary" type="button" id="research1"
+									style="margin-top: 12px;">초기화</button>
+								<button class="btn btn-primary" type="button" id="research1"
+									style="margin-top: 12px; margin-right: 5px;">검색</button>
+
+							</div>
+						</form>
+
+
+					</div>
+					<div class="divider text-start">
+						<div class="divider-text "></div>
+					</div>
+
+
+					
 					<!-- Modal -->
 					<div class="modal fade" id="modalCenter" tabindex="-1"
 						aria-hidden="true">
@@ -113,6 +159,13 @@
 						</div>
 					</div>
 					<div id="oprtListTable"></div>
+					<div
+						class="demo-inline-spacing d-grid gap-2 d-md-flex justify-content-md-end">
+					<!-- Button trigger modal -->
+					<button type="button" class="btn btn-primary"
+						data-bs-toggle="modal" data-bs-target="#modalCenter"
+						id="addNonopBtn">비가동 처리</button>
+					</div>
 				</div>
 			</div>
 			<script>

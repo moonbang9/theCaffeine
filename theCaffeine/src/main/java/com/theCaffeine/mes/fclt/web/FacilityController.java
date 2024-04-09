@@ -27,8 +27,8 @@ public class FacilityController {
 		}
 		
 		// 원자재 목록 데이터
-		@GetMapping("/fclt/getfacility")
-		public List<FcltVO> fcltList(FcltVO vo) {
+		@PostMapping("/fclt/getfacility")
+		public List<FcltVO> fcltList(@RequestBody FcltVO vo) {
 			return fcltService.getFcltList(vo);
 		}
 		
