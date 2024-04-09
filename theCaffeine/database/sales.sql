@@ -238,5 +238,66 @@ select distinct o.od_no
                 		ON o.od_no = d.od_no;
                         
                         
-                        
-                        
+                    
+
+/* 재고관리 페이지 - 전체 재고 조회 */
+select * from pd;
+select * from pd_stk;
+
+--p, c, t, n
+select p.pd_cd, p.pd_name, p.unit, c.curStk, t.threeWnotSend, n.notSend,
+trunc((p.safe_stk_qt/21)*30.5, 0)as monthlyPrd, trunc((p.safe_stk_qt/3), 0)as weeklyPrd,
+CASE WHEN t.threeWnotSend > c.curStk
+        THEN t.threeWnotSend - c.curStk
+    ELSE 0
+    END AS shortage
+from pd p 
+JOIN (select count(*) as curStk, pd_cd
+from pd_stk
+where qt >0 and exp_dt > sysdate
+group by pd_cd) c
+ON c.pd_cd = p.pd_cd
+JOIN (select count(*) as threeWnotSend, pd_cd
+from od_detail
+where od_detail_st<3 and (sysdate-due_dt) <21
+group by pd_cd) t
+    ON p.pd_cd = t.pd_cd    
+JOIN (select count(*) as notSend, pd_cd
+from od_detail
+where od_detail_st<3
+group by pd_cd) n
+ON p.pd_cd = n.pd_cd
+;
+
+--미출고주문량
+select count(*) as notSend, pd_cd
+from od_detail
+where od_detail_st<3
+group by pd_cd;
+
+--현재수량
+select count(*) as curStk, pd_cd
+from pd_stk
+where qt >0 and exp_dt > sysdate
+group by pd_cd;
+
+--1. 월별 예측 생산 수량(디비에는 3주단위, 전체 3주 생산량의 100%)
+select round((safe_stk_qt/21)*30.5, 0)as monthlyPrd, pd_cd
+from pd;
+--2. 주별 예측 생산 수량
+select round((safe_stk_qt/3), 0)as weeklyPrd, pd_cd
+from pd;
+
+-- 납기일 3주 미만 남은 주문량
+select count(*) as threeWnotSend, pd_cd
+from od_detail
+where od_detail_st<3 and (sysdate-due_dt) <21
+group by pd_cd;
+
+
+
+
+
+/* 재고관리 페이지 - LOT 재고 조회 */
+
+

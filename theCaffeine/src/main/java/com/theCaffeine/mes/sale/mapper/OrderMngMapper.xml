@@ -22,17 +22,17 @@
  			<if test="odChg != null and odChg != '' ">
  		   		AND o.od_chg like '%' || #{odChg} || '%'	
  			</if>
- 			<if test="minOdDt != null and minOdDt != '' ">
- 		   		AND o.od_dt >= TO_DATE(#{minOdDt}, 'YYYY-MM-DD') 			
+ 			<if test="minOdDt != null">
+ 		   		AND o.od_dt >= #{minOdDt} 			
  			</if>
- 			<if test="maxOdDt != null and maxOdDt != '' ">
- 		   		AND o.od_dt <![CDATA[<=]]> TO_DATE(#{maxOdDt}, 'YYYY-MM-DD') 			
+ 			<if test="maxOdDt != null">
+ 		   		AND o.od_dt <![CDATA[<=]]> #{maxOdDt}			
  			</if>
- 			<if test="minDueDt != null and minDueDt != '' ">
- 		   		AND d.due_dt >= TO_DATE(#{minDueDt}, 'YYYY-MM-DD') 			
+ 			<if test="minDueDt != null">
+ 		   		AND d.due_dt >= #{minDueDt}		
  			</if>
- 			<if test="maxDueDt != null and maxDueDt != '' ">
- 		   		AND d.due_dt <![CDATA[<=]]> TO_DATE(#{maxDueDt}, 'YYYY-MM-DD') 			
+ 			<if test="maxDueDt != null ">
+ 		   		AND d.due_dt <![CDATA[<=]]> #{maxDueDt}		
  			</if> 			
  			<if test="stList != null">
 				AND d.od_detail_st 
