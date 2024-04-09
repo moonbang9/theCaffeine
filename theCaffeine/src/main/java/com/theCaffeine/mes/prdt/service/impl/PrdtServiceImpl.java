@@ -86,10 +86,25 @@ public class PrdtServiceImpl implements PrdtService{
 	public int planResist(PlanResistVO vo) {
 		// TODO Auto-generated method stub
 		prdtMapper.insertPrdtPlan(vo.getPlanVO());
-		for(PlanDetailVO i : vo.getPlanDetailVO()) {
-			prdtMapper.insertPrdtDetailPlan(i);
+		
+		if(vo.getPlanDetailVO() != null) {
+			for(PlanDetailVO i : vo.getPlanDetailVO()) {
+				if(i.getQt() != 0) {
+					prdtMapper.insertPrdtDetailPlan(i);
+				}
+			}
 		}
-		return prdtMapper.updatePrdtOdDetail(vo.getPlanOrderDetailVO());
+		
+		if(vo.getPlanOrderDetailVO() != null) {
+			for(PlanOrderDetailVO i : vo.getPlanOrderDetailVO()) {
+				prdtMapper.updatePrdtOdDetail(i);
+				if(i.getQt()==i.getPdtQt()) {
+					prdtMapper.updatePrdtOdDetailSt(i);
+				}
+			}
+		}
+		
+		return 1;
 	}
 	
 }

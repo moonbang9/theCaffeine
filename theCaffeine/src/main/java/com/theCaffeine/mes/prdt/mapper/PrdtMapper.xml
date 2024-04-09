@@ -30,33 +30,45 @@
 	</select>
 	
 	<select id="getQnttMtrlList" resultType="MtrlPlanVO">
-		select * from 
-			(select m.pdt_plan_cd, m.bag as placeod_qt, m.mt_cd, y.mt_div, y.mt_name, m.unit from 
-				(select p.pdt_plan_cd,sum(p.qt)/b.consum bag,b.mt_cd, b.UNIT from bom b 
-					join PDT_PLAN_DETAIL p 
-					on b.pd_cd=p.pd_cd where b.detail_unit='kg' group by p.pdt_plan_cd,b.mt_cd,b.consum, b.UNIT) m 
-				join mt y 
-				on m.mt_cd=y.mt_cd
-			union
-			select m.pdt_plan_cd, m.pcs as placeod_qt, m.mt_cd, y.mt_div, y.mt_name, m.unit from 
-				(select w.pdt_plan_cd,w.bag * bb.consum pcs,bb.mt_cd, bb.unit from 
-					(select p.pdt_plan_cd,p.pd_cd,sum(p.qt)/b.consum bag,b.mt_cd from bom b 
-						join PDT_PLAN_DETAIL p 
-						on b.pd_cd=p.pd_cd where b.detail_unit='kg' group by p.pd_cd,p.pdt_plan_cd,b.mt_cd,b.consum) w 
-					join bom bb 
-					on w.pd_cd=bb.pd_cd where bb.detail_unit='pcs') m 
-				join mt y 
-				on m.mt_cd=y.mt_cd
-			union
-			select m.pdt_plan_cd, m.pcs as placeod_qt, m.mt_cd, y.mt_div, y.mt_name, m.unit from 
-				(select w.pdt_plan_cd, sum(w.bag * bb.consum) pcs,bb.mt_cd, bb.unit from 
-					(select p.pdt_plan_cd,p.pd_cd,sum(p.qt)/b.consum bag,b.mt_cd from bom b 
-						join PDT_PLAN_DETAIL p 
-						on b.pd_cd=p.pd_cd where b.detail_unit='kg' group by p.pd_cd,p.pdt_plan_cd,b.mt_cd,b.consum) w 
-					join bom bb 
-					on w.pd_cd=bb.pd_cd where bb.detail_unit='box' group by w.pdt_plan_cd, bb.mt_cd, bb.unit) m 
-				join mt y 
-				on m.mt_cd=y.mt_cd)
+		select * 
+		from (select m.pdt_plan_cd, m.bag as placeod_qt, m.mt_cd, y.mt_div, y.mt_name, m.unit 
+        		from    (select a.pd_cd, b.unit, b.mt_cd, a.box/2 bag, a.pdt_plan_cd 
+                		from bom b 
+                		join    (select ppd.pdt_plan_cd, ppd.pd_cd, sum(ppd.qt)/p.unit_qt as box, p.unit 
+                        		from PDT_PLAN_DETAIL ppd 
+                        		join pd p 
+                        		on p.pd_cd=ppd.pd_cd 
+                        		group by ppd.pdt_plan_cd,p.unit_qt,p.unit,ppd.pd_cd) a 
+                		on a.pd_cd=b.pd_cd 
+                		where b.detail_unit='kg') m 
+        		join mt y 
+        		on m.mt_cd=y.mt_cd
+    		union
+    		select m.pdt_plan_cd, m.bag as placeod_qt, m.mt_cd, y.mt_div, y.mt_name, m.unit 
+    		from    (select a.pd_cd, b.unit, b.mt_cd, a.box * b.consum bag, a.pdt_plan_cd
+            		from bom b 
+            		join    (select ppd.pdt_plan_cd, ppd.pd_cd, sum(ppd.qt)/p.unit_qt as box, p.unit 
+                    		from PDT_PLAN_DETAIL ppd 
+                    		join pd p 
+                    		on p.pd_cd=ppd.pd_cd 
+                    		group by ppd.pdt_plan_cd,p.unit_qt,p.unit,ppd.pd_cd) a 
+            		on a.pd_cd=b.pd_cd 
+            		where b.detail_unit='pcs') m 
+    		join mt y 
+    		on m.mt_cd=y.mt_cd
+    		union
+    		select m.pdt_plan_cd, m.bag as placeod_qt, m.mt_cd, y.mt_div, y.mt_name, m.unit 
+    		from    (select b.unit, b.mt_cd, sum(a.box * b.consum) bag, a.pdt_plan_cd
+            		from bom b 
+            		join    (select ppd.pdt_plan_cd, ppd.pd_cd, sum(ppd.qt)/p.unit_qt as box, p.unit 
+                    		from PDT_PLAN_DETAIL ppd 
+                    		join pd p 
+                    		on p.pd_cd=ppd.pd_cd 
+                    		group by ppd.pdt_plan_cd,p.unit_qt,p.unit,ppd.pd_cd) a 
+            		on a.pd_cd=b.pd_cd 
+            		where b.detail_unit='box' group by a.pdt_plan_cd,b.unit, b.mt_cd) m 
+    		join mt y 
+    		on m.mt_cd=y.mt_cd)
 		where pdt_plan_cd = #{pdtPlanCd}
 	</select>
 	
@@ -88,9 +100,9 @@
 				e.unit, 
 				nvl(w.tat,0) now_stk, 
 				nvl(e.safe_stk_qt,0) safe_stk, 
-				nvl((w.tat - e.safe_stk_qt),0) ms_stk 
+				nvl((nvl(w.tat,0) - nvl(e.safe_stk_qt,0)),0) ms_stk 
 		from (select p.pd_name, ps.unit,sum(qt) tat, ps.pd_cd 
-				from PD_STK ps 
+				from PD_STK ps 	
 				join pd p 
 				on ps.pd_cd = p.pd_cd 
 				where qt > 0 and pdt_dt >= sysdate group by p.pd_name, ps.unit, ps.pd_cd) w 
@@ -121,11 +133,11 @@
 						from PDT_INST_DETAIL q 
 						join (select * 
 							  from PDT_INST 
-							  where pdt_plan_cd=(select pdt_plan_cd 
+							  where pdt_plan_cd=(select max(pdt_plan_cd) pdt_plan_cd 
 								  				from PDTPLAN 
-								  	<![CDATA[	where wk_plan_stt_dt < (select max(wk_plan_stt_dt) 
+                                    <![CDATA[   where wk_plan_stt_dt < (select max(wk_plan_stt_dt) 
 								  										from PDTPLAN 
-								  										where wk_plan_stt_dt <= sysdate))) w ]]> 
+								  										where wk_plan_stt_dt <= sysdate))) w ]]>
 						on q.pdt_inst_no=w.pdt_inst_no where q.comp_st=3) r 
 		on p.pd_cd=r.pd_cd 
 		group by p.pd_cd
@@ -139,7 +151,7 @@
 	</select>
 	
 	<select id="getBasicPlanList" resultType="PlanVO">
-		select pd_cd, 0 qt, null due_dt, pd_name, 0 add_qt from pd
+		select pd_cd, 0 qt, null due_dt, pd_name, 0 add_qt, unit_qt from pd
 	</select>
 	
 	<select id="getPlanConsum" resultType="FailPlanVO">
@@ -168,8 +180,14 @@
 	
 	<update id="updatePrdtOdDetail" parameterType="PlanOrderDetailVO">
 		UPDATE  od_detail
-		SET     pdt_qt = pdt_qt + #{pdtQt}
+		SET     pdt_qt = nvl(pdt_qt,0) + #{pdtQt}
 		WHERE   od_detailno = #{odDetailno}
 	</update>
-
+	
+	<update id="updatePrdtOdDetailSt" parameterType="PlanOrderDetailVO">
+		UPDATE  od_detail
+		SET     od_detail_st=2
+		WHERE   od_detailno = #{odDetailno}
+	</update>
+	
 </mapper>

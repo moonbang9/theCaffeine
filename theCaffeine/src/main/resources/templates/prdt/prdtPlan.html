@@ -20,14 +20,15 @@
 			
 		<div class="d-flex align-items-start bd-highlight mb-3">
 				<div class="col-md-6">
-					<div style="margin-bottom: 10px;">
-						<span style="font-size: 24px;">생산주간 계획조회</span><span class="dayy" style="font-size: 18px;"></span>
+					<div class="d-flex mt-5" style="margin-bottom: 10px;">
+						<div class="p-2 flex-grow-1"><span style="font-size: 24px;">생산주간 계획조회</span><span class="dayy" style="font-size: 18px;"></span></div>
 					</div>
 					<div id="productionPlan-table3"></div>
 				</div>
 				<div class="col-md-6">
-					<div style="margin-bottom: 10px;">
-					<span style="font-size: 24px;">발주/주간필요 자재량 조회</span>
+					<div class="d-flex mt-5" style="margin-bottom: 10px;">
+	  					<div class="p-2 flex-grow-1"><span style="font-size: 24px;">발주/주간필요 자재량 조회</span></div>
+	  					<!-- <div class="p-2"><button type="button" class="btn btn-warning" id="orderBnt" style="display:none">발주신청</button></div> -->
 					</div>
 					<div id="example-table2"></div>
 				</div>
@@ -43,8 +44,11 @@
 	//수정버튼
 	var editorIcon = function(cell, formatterParams, onRendered) {
 		console.log(cell._cell.row.data.wkPlanSttDt);
-    	let dates = new Date(cell._cell.row.data.wkPlanSttDt)
-  		return "<button class='btn btn-info btn-sm'>수정</button>";
+		if(cell._cell.row.data.wkPlanSttDt < lastWeek(new Date())){
+			return null;	
+		}else{
+  			return "<button class='btn btn-info btn-sm'>수정</button>";
+		}
 	}
 	
 	var table = new Tabulator("#productionPlan-table", {
@@ -60,10 +64,20 @@
             	console.log(cell._cell.row.data.pdtPlanCd);
             	let pdtPlanCd = cell._cell.row.data.pdtPlanCd;
             	console.log(cell._cell.row.data.wkPlanSttDt);
-            	let dates = new Date(cell._cell.row.data.wkPlanSttDt)
-        		alert("수정창으로 이동");
+            	
+            	//수정중
+            	if(cell._cell.row.data.wkPlanSttDt >= lastWeek(new Date())){
+            		fetch("/ajax/planDetailList/"+ pdtPlanCd)
+            		.then(res => res.json())
+            		.then(res => {
+            			
+            		})
+            		
+            		
+            		alert("수정창으로 이동");
         		//location.href= "/production/planRegist/"+ pdtPlanCd;
-              }
+            	}
+            }
         },
     ],
 });
@@ -102,23 +116,47 @@
 		
 		let days = `(${weekNumOfMonth(wkPlanSttDt)[1]} ${weekNumOfMonth(wkPlanSttDt)[0]})`
 		document.querySelector(".dayy").innerText = days
+		
+		/*if(wkPlanSttDt > lastWeek()  && wkPlanSttDt <= getDateStr(new Date())){
+			orderBnt.style.display = "block";
+		}else{
+			orderBnt.style.display = "none";
+		}*/
 		console.log(pdtPlanCd);
 		
 		fetch("/ajax/planDetailList/"+ pdtPlanCd)
 		.then(res => res.json())
 		.then(res => {
-			console.log(res);
 			table3.setData(res)
 		})
 		
 		fetch("/ajax/qnttMtrlList/"+ pdtPlanCd)
 		.then(res => res.json())
 		.then(res => {
-			console.log(res);
 			table2.setData(res)
 		})
 		
 	});
+	
+	//날짜
+	function getDateStr(myDate){
+		var year = myDate.getFullYear();
+		var month = (myDate.getMonth() + 1);
+		var day = myDate.getDate();
+		
+		month = (month < 10) ? "0" + String(month) : month;
+		day = (day < 10) ? "0" + String(day) : day;
+		
+		return  (year + '-' + month + '-' + day );
+	}
+	
+	//5일전
+	function lastWeek() {
+		  var d = new Date();
+		  var dayOfMonth = d.getDate();
+		  d.setDate(dayOfMonth - 5);
+		  return getDateStr(d);
+	}
 	
 	
 	// 월 주차 판단

@@ -107,6 +107,7 @@
 		noDateReq();
 		basicPlanListReq();
 		planConsumReq();
+		successListReq();
 	})
 	let noDay = null;
 	let selectOrder = "";
@@ -152,8 +153,12 @@
 		})
 		.then(res => {
 			console.log(res)
-			alert('등록이 완료되었습니다.')
-			location.href='/production/plan'
+			if(res.ok==true){
+				alert('등록이 완료되었습니다.')
+				location.href='/production/plan'
+			}else{
+				alert('등록에 실패하였습니다.')
+			}
 		})
 	})
 	
@@ -175,16 +180,16 @@
 	function failListReq() {
 		fetch("/ajax/failProdList")
 		.then(res => res.json())
-		.then(res => {
-			console.log(res)
-			table2.setData(res)})
+		.then(res => 
+			table2.setData(res))
 	}
 	
-	// 전주 실패수량 조회 데이터
+	// 전주 생산수량 조회 데이터
 	function successListReq() {
 		fetch("/ajax/successProdList")
 		.then(res => res.json())
-		.then(res => table4.setData(res))
+		.then(res => 
+			table4.setData(res))
 	}
 	
 	// 주간계획등록 기본 양식 데이터
@@ -352,12 +357,14 @@
 	var table5 = new Tabulator("#example-table5", {
 	    height:"180px",
 	    layout:"fitColumns",
+	    reactiveData:true,
 	    columnDefaults:{
 	        headerSort:false,
 	        resizable:"header",
 	      },
 	    columns:[
 	        {title:"제품코드", field:"pdCd", validator:"required", hozAlign:"center"},
+	        {title:"단위무게(kg)", field:"unitQt", hozAlign:"center"},
 	        {title:"주문수량(kg)", field:"qt", hozAlign:"center", validator:["min:0", "numeric"]},
 	        {title:"추가수량(kg)", field:"addQt", hozAlign:"center", editor:dateEditor5,  validator:["min:0", "numeric"]},
 	        {title:"최소 납기일", field:"dueDt", hozAlign:"center"},
@@ -367,44 +374,31 @@
 	//저장될 데이터 이동
 	function setResistList(){
 		console.log(selectOrder)
-		fetch("/ajax/basicPlan")
-		.then(res => res.json())
-		.then(res => {
+		
 			//console.log(res)
 			let tot = 0;
-			for(let i of res){
+			let tables = table5.getData()
+			for(let i of tables){
+				let sum1 =0;
+				let date1 = null;
 				for(let j of selectOrder){
 					if(i.pdCd == j.pdCd){
-						i.qt = (Number(i.qt) + Number(j.prePdtQt));
-						if(i.dueDt == null || i.dueDt > j.dueDt){
-							i.dueDt = j.dueDt;
+						sum1 += Number(j.prePdtQt);
+						if(date1 == null || i.dueDt > j.dueDt){
+							date1 = j.dueDt;
 						}
 					}
 				}
+				i.qt = sum1 * i.unitQt;	
+				i.dueDt = date1;
 			}
-			
-			for(let i of res){
-				for(let j of consum){
-					if(i.pdCd == j.pdCd){
-						i.qt = Number(i.qt) * Number(j.consum);
-					}
-				}
-			tot += Number(i.qt);
-			}
-			
-			for(let i of consum){
-				i.totConsum = ""
-				for(let j of selectOrder){
-					if(i.pdCd == j.pdCd){
-						i.totConsum = ""+((Number(j.prePdtQt) * Number(i.consum)));
-					}
-				}
-			}
+			table5.setData(tables)
 			//전체수량변경
+			for(let i of table5.getData()){
+				tot += Number(i.qt) + Number(i.addQt);
+			}
 			totConsums.value = tot
-			
-			table5.setData(res)
-		})
+		
 	}
 	
 	table1.on("rowSelectionChanged", function(data, rows, selected, deselected){
@@ -413,7 +407,12 @@
 	});
 	
 	table5.on("dataChanged", function(data){
-        console.log(data)
+        for(let i of data){
+        	if(Number(i.addQt) % Number(i.unitQt) != 0){
+        		i.addQt = (Math.round((Number(i.addQt) / Number(i.unitQt))) * Number(i.unitQt));
+        	}
+        }
+        
         let w = 0;
         for(let i of data){
         	w += Number(i.qt) + Number(i.addQt);
@@ -423,6 +422,7 @@
         		}
         	}
         }
+        
         for(let i of data){
         	for(let j of basicPlans){
         		if(i.pdCd == j.pdCd){
@@ -490,7 +490,7 @@
 	  
 	  for(let j of basicPlans){
    		newArr1.push({
- 	  		pdtPlanCd : planCds,
+   			pdtPlanCd : planCds,
        		pdName : j.pdName,
        		pdCd : j.pdCd,
        		qt : j.addQt,  
@@ -508,7 +508,8 @@
 		for(let i of selectOrder){
 			newArr2.push({
  				odDetailno : i.odDetailno,
-   				pdtQt : i.prePdtQt
+   				pdtQt : i.prePdtQt,
+   				qt : i.qt
    			});
 		}
 	}
