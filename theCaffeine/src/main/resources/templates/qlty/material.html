@@ -139,7 +139,7 @@
           columns: [{
               title: "No",
               width: 60,
-              field: "mtPlaceodCd"
+              field: "mtCkNo"
             }, {
               title: "검사명",
               width: 120,
@@ -147,7 +147,7 @@
             }, {
         	    title: "검사결과",
               width: 100,
-              field: "ckRes",
+              field: "mcRes",
              }, {  
               title: "제품명",
               field: "mtName"
@@ -176,13 +176,20 @@
           });
 
         listWaiting();
-        //listDone();
+        listDone();
 
         //검사대기 목록 데이터
         function listWaiting() {
           fetch("/ajax/mtrlCheckList")
             .then(res => res.json())
             .then(res => table1.setData(res))
+        }
+        
+        //검사완료 목록 데이터
+        function listDone(){
+        	fetch("/ajax/mtrlDoneList")
+        	  .then(res => res.json())
+        	  .then(res => table2.setData(res))
         }
 
         //print button
@@ -202,10 +209,12 @@
 		let averageFixed = "";
 		let testResult = "";
 		let letMtCkNo = "";
+		let letMtPlaceodCd = "";
         //행 클릭시 모달창 출력
         table1.on("rowClick", function (e, row) {
         	console.log(row.getData());
         	letMtCkNo = row.getData().mtCkNo;
+        	letMtPlaceodCd = row.getData().mtPlaceodCd;
           const myModal = new bootstrap.Modal('#basicModal', {
             keyboard: false
           })
@@ -264,7 +273,8 @@
           const mcAvg = averageFixed;
           const mcRes = testResult;
           const mtCkNo = letMtCkNo;
-          let param = { firstMc, secondMc, thirdMc, fourthMc, fifthMc, mcAvg, mcRes, mtCkNo };
+          const mtPlaceodCd = letMtPlaceodCd;
+          let param = { firstMc, secondMc, thirdMc, fourthMc, fifthMc, mcAvg, mcRes, mtCkNo, mtPlaceodCd };
           console.log(param);
           fetch("/ajax/updateMcRes",{
         	  method : "post",
@@ -274,14 +284,22 @@
         	  body : JSON.stringify(param)
           })
           .then(res => res.json())
-          .then(res => console.log(res))
-        }
+          .then(res => {
+              console.log(res);
+              saveRes(res);
+          });
+      } 
         
-     	// 등록 응답 (디비 등록 성공하면 주석 풀기)
-    	/* function saveRes(res) {
-    		alert("등록이 완료되었습니다!");
-    		location.href= "/quality/material"
-    	} */
+     // 등록 응답 처리
+        function saveRes(res) {
+    	 console.log(res)
+            if (res>=1) {
+                alert("등록이 완료되었습니다!");
+                location.href = "/quality/material";
+            } else {
+                alert("등록에 실패했습니다.");
+            }
+        }
 
 
 

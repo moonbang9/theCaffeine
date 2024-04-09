@@ -8,6 +8,9 @@ import com.theCaffeine.mes.qlty.model.QltyVO;
 @Mapper
 public interface QltyMapper {
 	List<QltyVO> getMtrlCheckList(QltyVO vo);
+	List<QltyVO> getMtrlDoneList(QltyVO vo);
+	
 	int updateMcRes(QltyVO vo);
+	int updatePlaceodSt(String mtPlaceodCd);
 
 }

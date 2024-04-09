@@ -35,7 +35,7 @@ public class QltyVO {
 	private String ckDt; // 검사일
 	private String ckChg; // 검사담당자
 	
-	
+		
 		
 	
 	

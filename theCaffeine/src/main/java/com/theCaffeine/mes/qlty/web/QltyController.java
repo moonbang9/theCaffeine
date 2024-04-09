@@ -32,10 +32,16 @@ public class QltyController {
 	
 	// 자재검사결과 등록
 	@PostMapping("/ajax/updateMcRes")
-	public QltyVO updateMcRes(@RequestBody QltyVO vo) {
-		qltyService.updateMcRes(vo);
-		return vo;
+	public int updateMcRes(@RequestBody QltyVO vo) {
+		//qltyService.updateMcRes(vo);
+		return qltyService.updateMcRes(vo);
 	}
+	// 자재검사완료 목록 
+	@GetMapping("/ajax/mtrlDoneList")
+	public List<QltyVO> qltyDoneList(QltyVO vo){
+		return qltyService.getMtrlDoneList(vo);
+	}
+
 
 	// 공정검사 페이지이동
 	@GetMapping("/quality/process")
