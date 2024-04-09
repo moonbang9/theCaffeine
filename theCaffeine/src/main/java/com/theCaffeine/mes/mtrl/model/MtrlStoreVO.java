@@ -8,14 +8,14 @@ import lombok.Data;
 
 @Data
 public class MtrlStoreVO {
-	int mtStrNo;
-	int strQt;
+	private int mtStrNo;
+	private int strQt;
 	@JsonFormat(pattern = "yyyy-MM-dd")
-	Date strCompdt;
-	String strChg;
-	String mtPlaceodCd;
-	String mtCd;
+	private Date strCompdt;
+	private String strChg;
+	private String mtPlaceodCd;
+	private String mtCd;
 	
-	int expDt;
+	private int expDt;
 	
 }

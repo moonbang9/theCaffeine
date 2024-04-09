@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.theCaffeine.mes.mtrl.mapper.MtrlOrderMapper;
 import com.theCaffeine.mes.mtrl.model.MtrlOrderVO;
+import com.theCaffeine.mes.mtrl.model.MtrlStkListVO;
 import com.theCaffeine.mes.mtrl.service.MtrlOrderService;
 
 @Service
@@ -46,7 +47,7 @@ public class MtrlOrderServiceImpl implements MtrlOrderService{
         excutorService.schedule(() -> {
         	mtrlOrderMapper.updateMtrlOrder2(vo.getMtPlaceodCd());
             excutorService.shutdown();
-        }, vo.getLeadtm(), TimeUnit.SECONDS); // TimeUnit.DAYS 로 바꾸면 됨.   SECONDS    MINUTES
+        }, vo.getLeadtm(), TimeUnit.MINUTES); // TimeUnit.DAYS 로 바꾸면 됨.   SECONDS    MINUTES
 		return mtrlOrderMapper.updateMtrlOrder(vo);
 	}
 
@@ -65,6 +66,11 @@ public class MtrlOrderServiceImpl implements MtrlOrderService{
 	@Override
 	public List<MtrlOrderVO> getMtrlCliList() {
 		return mtrlOrderMapper.getMtrlCliList();
+	}
+
+	@Override
+	public List<MtrlStkListVO> getMtrlStkList() {
+		return mtrlOrderMapper.getMtrlStkList();
 	}
 	
 }

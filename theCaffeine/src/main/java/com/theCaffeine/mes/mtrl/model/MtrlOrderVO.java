@@ -9,27 +9,27 @@ import lombok.Data;
 @Data
 public class MtrlOrderVO {
 
-	String mtPlaceodCd;
-	int placeodQt;
+	private String mtPlaceodCd;
+	private int placeodQt;
 	@JsonFormat(pattern = "yyyy-MM-dd")
-	Date placeodReqdt;
+	private Date placeodReqdt;
 	@JsonFormat(pattern = "yyyy-MM-dd")
-	Date placeodCompdt;
-	String placeodRequester;
-	String placeodChg;
-	int placeodSt;
-	String mtCd;
-	String cliCd;
-	String mtDiv;
-	String mtName;
-	String cliName;
-	String unit;
-	int leadtm;
+	private Date placeodCompdt;
+	private String placeodRequester;
+	private String placeodChg;
+	private int placeodSt;
+	private String mtCd;
+	private String cliCd;
+	private String mtDiv;
+	private String mtName;
+	private String cliName;
+	private String unit;
+	private int leadtm;
 	@JsonFormat(pattern = "yyyy-MM-dd")
-	Date placeodArridt;
+	private Date placeodArridt;
 	
 	@JsonFormat(pattern = "yyyy-MM-dd")
-	Date ckDt;
-	String ckChg;
-	int expDt;
+	private Date ckDt;
+	private String ckChg;
+	private int expDt;
 }

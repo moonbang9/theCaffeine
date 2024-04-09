@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.theCaffeine.mes.mtrl.model.MtrlOrderVO;
+import com.theCaffeine.mes.mtrl.model.MtrlStkListVO;
 import com.theCaffeine.mes.mtrl.service.MtrlOrderService;
 
 @RestController
@@ -24,6 +25,12 @@ public class MtrlOrderController {
 	public ModelAndView list() { 
 		ModelAndView mv = new ModelAndView("mtrl/order");
 		return mv;
+	}
+	
+	// 자재재고 목록 데이터
+	@GetMapping("/ajax/stkList")
+	public List<MtrlStkListVO> stkList() {
+		return mtrlOrderService.getMtrlStkList();
 	}
 	
 	// 자재발주요청 목록 데이터
