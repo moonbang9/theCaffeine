@@ -323,3 +323,59 @@ ORDER BY l.pdt_dt DESC;
 
 select * from pd_stk;
 
+
+
+
+/*  다시 만드는 주문조회~    */
+-- 주문, 주문상세, 거래처, 제품
+select * from pd;
+select * from cli;
+select * from od;
+select * from od_detail;
+
+--제품명 외 2건
+select o.od_dt, o.cli_cd, o.total_price, c.cli_name, c.cli_chg , d.pd_cd, d.due_dt, d.od_detail_st, de.od_no, 
+        CASE WHEN (de.cnt > 0) THEN p.pd_name || ' 외 ' || de.cnt || '건'
+             ELSE p.pd_name
+             END AS pdName        
+from od_detail d 
+    JOIN (select min(od_detailno) as minDetailNo, (count(*)-1) as cnt, od_no
+            from od_detail
+            group by od_no) de 
+    ON d.od_detailno = de.minDetailNO
+    JOIN pd p
+    ON d.pd_cd = p.pd_cd
+    JOIN od o
+    ON o.od_no = de.od_no
+    JOIN cli c
+    ON c.cli_cd = o.cli_cd
+ORDER BY de.od_no DESC;
+
+
+--화면에 보일 정보만 추리기
+select de.od_no, o.od_dt, c.cli_name, c.cli_chg ,   
+        CASE WHEN (de.cnt > 0) THEN p.pd_name || ' 외 ' || de.cnt || '건'
+             ELSE p.pd_name
+             END AS pdName  ,
+        o.total_price,  d.due_dt,
+        CASE (d.od_detail_st)
+            WHEN 1 THEN '주문접수' 
+            WHEN 2 THEN '생산요청'
+            WHEN 3 THEN '출고완료'
+            WHEN 4 THEN '구매확정'
+            WHEN 5 THEN '반품접수'
+            WHEN 9 THEN '반품완료'
+            END AS odSt
+from od_detail d 
+    JOIN (select min(od_detailno) as minDetailNo, (count(*)-1) as cnt, od_no
+            from od_detail
+            group by od_no) de 
+    ON d.od_detailno = de.minDetailNO
+    JOIN pd p
+    ON d.pd_cd = p.pd_cd
+    JOIN od o
+    ON o.od_no = de.od_no
+    JOIN cli c
+    ON c.cli_cd = o.cli_cd
+ORDER BY de.od_no DESC;
+
