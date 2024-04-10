@@ -26,4 +26,5 @@ public class PlanOrderDetailVO {
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date dueDt;				//납기 일
 	private Integer odDetailSt;		//주문상태
+	private Integer totQt;		//주문합계
 }
