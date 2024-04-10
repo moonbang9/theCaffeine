@@ -6,7 +6,7 @@
 <sql id="condition">
 <where>
 <if test="fcName != null and fcName != '' ">
-fc_name LIKE '%' || #{fcName} || '%'
+lower(fc_name) LIKE '%' || #{fcName} || '%'
 </if>
 <if test="insMf != null and insMf != '' ">
 AND ins_mf = #{insMf}	

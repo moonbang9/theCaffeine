@@ -235,7 +235,15 @@
 	        {title:"점검 내용", field:"insCont", width:160, hozAlign:"center"},
 	        {title:"판정", field:"cc", width:150, hozAlign:"center"}, 
 	        {title:"담당자", field:"chg", width:180, hozAlign:"center"}
-	    ],
+	    ],rowFormatter: function(row) {
+	        var data = row.getData();
+	        var ccValue = data.cc;
+	        if (ccValue === "적합") {
+	            row.getElement().style.backgroundColor = "#c8e6c9"; 
+	        } else if (ccValue === "부적합") {
+	            row.getElement().style.backgroundColor = "#ffcdd2"; 
+	        }
+	    }
 	});
 	
 	// 점검 목록 데이터
