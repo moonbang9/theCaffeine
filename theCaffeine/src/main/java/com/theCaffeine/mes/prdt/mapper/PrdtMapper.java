@@ -27,6 +27,5 @@ public interface PrdtMapper {
 	List<FailPlanVO> getPlanConsum(); // box -> kg 단위변경
 	int insertPrdtPlan(PlanVO vo); //계획 등록
 	int insertPrdtDetailPlan(PlanDetailVO vo); //계획상세 등록
-	int updatePrdtOdDetail(PlanOrderDetailVO vo); //주문상세 수량조절
 	int updatePrdtOdDetailSt(PlanOrderDetailVO vo); //주문상세 상태변경
 }

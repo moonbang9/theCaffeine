@@ -77,9 +77,9 @@
 				p.unit, 
 				od.qt, 
 				od.due_dt,
-                nvl(od.pdt_qt,0) pdt_qt,
                 0 as pre_pdt_qt,
-                od.od_detailno
+                od.od_detailno,
+                0 as tot_qt
 		from od_detail od 
 		left outer join pd p 
 		on od.pd_cd = p.pd_cd 
@@ -151,7 +151,7 @@
 	</select>
 	
 	<select id="getBasicPlanList" resultType="PlanVO">
-		select pd_cd, 0 qt, null due_dt, pd_name, 0 add_qt, unit_qt from pd
+		select pd_cd, 0 qt, null due_dt, pd_name, 0 add_qt, unit_qt, 0 as tot_qt from pd
 	</select>
 	
 	<select id="getPlanConsum" resultType="FailPlanVO">
@@ -178,11 +178,6 @@
 				#{pdCd})
 	</insert>
 	
-	<update id="updatePrdtOdDetail" parameterType="PlanOrderDetailVO">
-		UPDATE  od_detail
-		SET     pdt_qt = nvl(pdt_qt,0) + #{pdtQt}
-		WHERE   od_detailno = #{odDetailno}
-	</update>
 	
 	<update id="updatePrdtOdDetailSt" parameterType="PlanOrderDetailVO">
 		UPDATE  od_detail

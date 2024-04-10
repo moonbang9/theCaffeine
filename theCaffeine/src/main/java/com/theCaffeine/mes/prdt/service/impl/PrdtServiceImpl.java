@@ -97,7 +97,6 @@ public class PrdtServiceImpl implements PrdtService{
 		
 		if(vo.getPlanOrderDetailVO() != null) {
 			for(PlanOrderDetailVO i : vo.getPlanOrderDetailVO()) {
-				prdtMapper.updatePrdtOdDetail(i);
 				if(i.getQt()==i.getPdtQt()) {
 					prdtMapper.updatePrdtOdDetailSt(i);
 				}

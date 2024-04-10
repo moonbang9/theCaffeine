@@ -114,7 +114,6 @@
 	let consum = "";
 	let dayNameing = document.querySelector('.notDay');
 	let naming = document.querySelector('.naming');
-	let basicPlans = "";
 	let totConsums = document.querySelector(".totConsum");
 	
 	research1.addEventListener("click", e=> {
@@ -129,8 +128,6 @@
 	
 	prdtSaveBtn1.addEventListener("click", e=> {
 		console.log(selectOrder)
-		console.log(consum)
-		console.log(basicPlans)
 		console.log('K'+dayNameing.value.substring(2, 4) + dayNameing.value.substring(5, 7) + dayNameing.value.substring(8, 10))
 		
 		let planCds = 'K' + dayNameing.value.substring(2, 4) + dayNameing.value.substring(5, 7) + dayNameing.value.substring(8, 10);
@@ -198,7 +195,6 @@
 		.then(res => res.json())
 		.then(res => {
 			table5.setData(res)
-			basicPlans = res;
 		})
 	}
 	
@@ -220,7 +216,7 @@
 	
 	
 	dayNameing.addEventListener("change", e => {
-		naming.value = weekNumOfMonth(dayNameing.value)[1] + " " + weekNumOfMonth(dayNameing.value)[0]
+		naming.value = weekNumOfMonth(dayNameing.value)[1] + " " + weekNumOfMonth(dayNameing.value)[0] + " 생산계획"
 	});
 	
 	
@@ -281,16 +277,21 @@
 	    let tot = 0;
 	    editor2.addEventListener("change", e=> {
 	    	
-	    	for(let i of consum){
-	    		if(i.pdCd == data.pdCd){
-	    			if(e.target.value == null || e.target.value < 0){
-	    				editor2.value = 0;
-	    				successFunc()
-	    			}else{
-	    				editor2.value = e.target.value;
-	    	    		successFunc()
-	    			}
+	    	if(e.target.value == null || e.target.value < 0){
+	    		editor2.value = 0;
+	    		data.totQt = data.qt;
+	    		successFunc()
+	    	}else{
+	    		data.addQt = Number(e.target.value);
+	    		if(Number(e.target.value) % Number(data.unitQt) != 0){
+	        		data.addQt = (Math.round((Number(data.addQt) / Number(data.unitQt))) * Number(data.unitQt));
+	        	}
+	    		if((data.qt + data.addQt) % (Number(data.unitQt)*2) != 0){
+	    			data.addQt += Number(data.unitQt);
 	    		}
+	    		data.totQt = data.qt + data.addQt;
+	    		editor2.value = data.addQt;
+	    	    successFunc()
 	    	}
 	    })
 	    function successFunc(){
@@ -312,6 +313,7 @@
     selectableRows:true,
     rowHeader:{resizable: false, frozen: true, hozAlign:"center", formatter: "rowSelection", cssClass:"range-header-col", cellClick:function(e, cell){
         cell.getRow().toggleSelect();
+        setResistList()
     }},
     columnDefaults:{
       headerSort:false,
@@ -321,8 +323,8 @@
         {title:"제품코드", field:"pdCd", hozAlign:"center", width:200},
         {title:"단위(1 Box= 3 Bag)", field:"unit", hozAlign:"center", width:200},
         {title:"수량(Box)", field:"qt", hozAlign:"center", width:200},
-        {title:"생산중인 수량(Box)", field:"pdtQt", hozAlign:"center", width:200},
-        {title:"선택 수량(Box)", field:"prePdtQt", hozAlign:"center", width:200, editor:dateEditor},
+        //{title:"생산중인 수량(Box)", field:"pdtQt", hozAlign:"center", width:200},
+        //{title:"선택 수량(Box)", field:"prePdtQt", hozAlign:"center", width:200, editor:dateEditor},
         {title:"납기 일", field:"dueDt", hozAlign:"center", width:200},
     ],
 });
@@ -362,11 +364,13 @@
 	        headerSort:false,
 	        resizable:"header",
 	      },
+	    index:"pdCd",
 	    columns:[
 	        {title:"제품코드", field:"pdCd", validator:"required", hozAlign:"center"},
 	        {title:"단위무게(kg)", field:"unitQt", hozAlign:"center"},
 	        {title:"주문수량(kg)", field:"qt", hozAlign:"center", validator:["min:0", "numeric"]},
 	        {title:"추가수량(kg)", field:"addQt", hozAlign:"center", editor:dateEditor5,  validator:["min:0", "numeric"]},
+	        {title:"수량합계(kg)", field:"totQt", hozAlign:"center", validator:["min:0", "numeric"]},
 	        {title:"최소 납기일", field:"dueDt", hozAlign:"center"},
 	    ],
 	});
@@ -383,20 +387,26 @@
 				let date1 = null;
 				for(let j of selectOrder){
 					if(i.pdCd == j.pdCd){
-						sum1 += Number(j.prePdtQt);
+						sum1 += Number(j.qt);
 						if(date1 == null || i.dueDt > j.dueDt){
 							date1 = j.dueDt;
 						}
 					}
 				}
-				i.qt = sum1 * i.unitQt;	
+				i.qt = sum1 * Number(i.unitQt);	
 				i.dueDt = date1;
+				if(((Number(i.qt)) + (Number(i.addQt))) % (Number(i.unitQt)*2) != 0){
+					i.addQt += Number(i.unitQt);
+				}
 			}
+			
 			table5.setData(tables)
 			//전체수량변경
-			for(let i of table5.getData()){
+			for(let i of tables){
 				tot += Number(i.qt) + Number(i.addQt);
+				i.totQt = Number(i.qt) + Number(i.addQt);
 			}
+			table5.updateData(tables)
 			totConsums.value = tot
 		
 	}
@@ -407,37 +417,21 @@
 	});
 	
 	table5.on("dataChanged", function(data){
-        for(let i of data){
-        	if(Number(i.addQt) % Number(i.unitQt) != 0){
-        		i.addQt = (Math.round((Number(i.addQt) / Number(i.unitQt))) * Number(i.unitQt));
-        	}
-        }
-        
+		
         let w = 0;
         for(let i of data){
+        	/*if(Number(i.addQt) % Number(i.unitQt) != 0){
+        		i.addQt = (Math.round((Number(i.addQt) / Number(i.unitQt))) * Number(i.unitQt));
+        	}*/
         	w += Number(i.qt) + Number(i.addQt);
-        	for(let j of consum){
-        		if(i.pdCd == j.pdCd){
-        			j.totConsum = Number(i.qt) + Number(i.addQt);
-        		}
-        	}
         }
-        
-        for(let i of data){
-        	for(let j of basicPlans){
-        		if(i.pdCd == j.pdCd){
-        			j.addQt = Number(i.addQt);
-        		}
-        	}
-        }
-        
         totConsums.value = w + "";
 	});
 	
 	// 월 주차 판단
 	function weekNumOfMonth(date){
 		let dates = new Date(date)
-		var WEEK_KOR = ["첫째주", "둘째주", "셋째주", "넷째주", "다섯째주"];
+		var WEEK_KOR = ["1주차", "2주차", "3주차", "4주차", "5주차"];
 		var THURSDAY_NUM = 4;	// 첫째주의 기준은 목요일(4)이다. 
 		console.log(dates);
 
@@ -465,30 +459,42 @@
 	  let newArr1 = [];
 	  let planCds = 'K' + dayNameing.value.substring(2, 4) + dayNameing.value.substring(5, 7) + dayNameing.value.substring(8, 10);
 	  
-	  for(let i of consum){
+	  let tables = table5.getData();
+	  
+	  for(let i of tables){
+		  newArr1.push({
+	  			pdtPlanCd : planCds,
+    			pdName : i.pdName,
+    			pdCd : i.pdCd,
+    			qt : i.totQt, 
+    			dueDt : i.dueDt
+ 			});
+	  }
+	  
+	  
+	  /*for(let i of consum){
 		  if(i.totConsum == null){
 			  i.totConsum = 0;
 		  }
-	  }
+	  }*/
 	  
-	  for(let i of selectOrder){
+	  //수정필요
+	  /*for(let i of selectOrder){
 		  for(let j of basicPlans){
-			  for(let e of consum){
-			  	if(j.pdCd == i.pdCd && e.pdCd == i.pdCd && j.pdCd == e.pdCd){
+			  if(j.pdCd == i.pdCd){
 	      			
 			  		newArr1.push({
 			  			pdtPlanCd : planCds,
 	          			pdName : j.pdName,
 	          			pdCd : i.pdCd,
-	          			qt : Number(i.prePdtQt * e.consum), 
+	          			qt : totConsums.value, 
 	          			dueDt : i.dueDt
 	       			});
-			  	}
 			  }
 		  }
-	  }
+	  }*/
 	  
-	  for(let j of basicPlans){
+	  /*for(let j of basicPlans){
    		newArr1.push({
    			pdtPlanCd : planCds,
        		pdName : j.pdName,
@@ -496,7 +502,7 @@
        		qt : j.addQt,  
        		dueDt : null 
     	});
-	  }
+	  }*/
 	 
 	  return newArr1;
 	};
@@ -507,9 +513,7 @@
 		
 		for(let i of selectOrder){
 			newArr2.push({
- 				odDetailno : i.odDetailno,
-   				pdtQt : i.prePdtQt,
-   				qt : i.qt
+ 				odDetailno : i.odDetailno
    			});
 		}
 	}
