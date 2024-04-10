@@ -28,7 +28,7 @@ public class OperationController {
 		public ModelAndView facility(FcltVO vo) { 
 			ModelAndView mv = new ModelAndView("fclt/operationlist");
 			mv.addObject("nonopFcltNames",fcltService.getNonopFcltList(vo));
-			mv.addObject("OperatingFcltNames",fcltService.getOpFcltList(vo));
+			mv.addObject("OperatingFcltNames",fcltService.getFcltList(vo));
 			return mv;
 		}
 		

@@ -21,17 +21,17 @@
 
 							<div class="mb-3 row"
 								style="justify-content: center; align-content: center;">
-								<label class="col-sm-2">설비명</label>
+								<label class="col-sm-2" for="searchName">설비명</label>
 								<div class="col-md-4">
-									<input class="form-control" type="text" name="searchName">
+									<input class="form-control" type="text" name="searchName" id="searchName">
 								</div>
 							</div>
 							<div class="mb-3 row"
 								style="justify-content: center; align-content: center;">
-								<label class="col-sm-2">공정라인</label>
+								<label class="col-sm-2" for="searchMf">공정라인</label>
 								<div class="col-md-4">
-									<select class="form-select" name="searchMf">
-										<option >선택</option>
+									<select class="form-select" name="searchMf" id="searchMf">
+										<option value="">선택</option>
 										<option value="0">로스팅</option>
 										<option value="1">포장</option>
 									</select>
@@ -43,11 +43,11 @@
 								<label class="col-sm-2 ">설비상태</label>
 								<div class="col-md-4">
 									<label class="form-check-label" for="defaultRadio1">전체 </label> 
-										<input class="form-check-input" type="radio" id="defaultRadio1" name="searchSt"> 
+										<input class="form-check-input" type="radio" value="" id="defaultRadio1" name="searchSt" checked> 
 										<label class="form-check-label" for="defaultRadio1" style="padding-left: 10px;"> 가동 </label> 
-										<input class="form-check-input" type="radio" value="0" id="defaultRadio1" name="searchSt"> 
+										<input class="form-check-input" type="radio" value="0" id="defaultRadio2" name="searchSt"> 
 										<label class="form-check-label" for="defaultRadio2" style="padding-left: 10px;"> 비가동 </label>
-									<input class="form-check-input" type="radio" value="1" id="defaultRadio2" name="searchSt">
+									<input class="form-check-input" type="radio" value="1" id="defaultRadio3" name="searchSt">
 								</div>
 							</div>
 							<div class="d-grid gap-2 d-md-flex justify-content-md-center">
@@ -106,7 +106,7 @@
 										<div class="col mb-3">
 											<div class="input-group">
 												<label class="input-group-text col-2"
-													for="inputGroupSelect01">투입공정</label> <select
+													for="insertedMf">투입공정</label> <select
 													class="form-select" id="insertedMf">
 													<option selected>선택</option>
 													<option value="0">로스팅</option>
@@ -130,7 +130,7 @@
 										<div class="col mb-3">
 											<div class="input-group">
 												<label class="input-group-text col-2"
-													for="inputGroupSelect01">설비상태</label> <select
+													for="fcltstatus">설비상태</label> <select
 													class="form-select" id="fcltstatus">
 													<option selected>선택</option>
 													<option value="0">가동</option>
@@ -266,20 +266,23 @@
 				updateBtn.style.display="block";
 			}
 			
+			
+			// 검색 조건 기준 원자재 목록 데이터
 			searchBtn.addEventListener("click",function(){
-				listReq();
-			})
-			
-			
-			// 원자재 목록 데이터
-			function listReq() {
-				const fcName= frmSearch.searchName.value;
-				console.log(fcName);
-				const insMf = frmSearch.searchMf.value;
-				console.log(insMf);
-				const st = document.querySelector('input[name="searchSt"]:checked').value;
-				console.log(st);
-				let param = {fcName, insMf,st}
+				const searchName= frmSearch.searchName.value;
+				console.log(searchName);
+				const searchMf = frmSearch.searchMf.value;
+				console.log(searchMf);
+				const searchStatus = document.querySelector('input[name="searchSt"]:checked').value;
+				//const searchStVal = searchStatus.value;
+				console.log(searchStatus);
+				let param = {
+						fcName: searchName,
+				        // 값이 없으면 undefined
+				        insMf: searchMf ? searchMf : '',
+				        st: searchStatus ? searchStatus : ''
+				};
+				
 				fetch("/fclt/getfacility",{
 					method:"post",
 					headers: {
@@ -290,9 +293,22 @@
 				.then(res => res.json())
 				.then(res =>{
 					console.log(res)
-					fclttable.setData(res)} )
-				
-			}
+					fclttable.setData(res);
+			})
+			.catch(err=>{
+				console.log(err);
+			});
+			});
+			
+			//초기화 버튼 값 비워주기 
+			
+			resetBtn.addEventListener("click",function(){
+				searchName.value= '';
+				searchMf.value ='';
+			});
+			
+			
+			
 			
 	saveBtn.addEventListener("click", e=> {
 		if(facilityName.value == ""){
@@ -362,9 +378,10 @@
 	function modRes(res) {
 		alert("수정이 완료되었습니다!");
 		location.href= "/fclt/facilitylist"
-	}
-	</script>
-		</div>
+	};
+	
+</script>
+</div>
 	</div>
 
 
