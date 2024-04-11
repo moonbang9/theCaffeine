@@ -19,10 +19,10 @@ public class OrderMngVO {
 	private int odNo;
 	private int odDetailNo;
 	
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date odDt;
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date dueDt;
 	
@@ -36,7 +36,7 @@ public class OrderMngVO {
 	
 	private String pdCd;
 	private String pdName;
-	private Integer odDetailSt;
+	private String odSt;
 	
 	int cnt;
 	int detailPrice;
@@ -55,5 +55,5 @@ public class OrderMngVO {
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	Date maxDueDt;
 	//주문상태 조건검색
-	List<Integer> stList;
+	List<String> stList;
 }

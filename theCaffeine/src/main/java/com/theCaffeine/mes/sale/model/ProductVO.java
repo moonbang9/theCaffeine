@@ -9,4 +9,8 @@ public class ProductVO {
 	private String pdName;
 	private String unit;
 	private int cost;
+	
+	private int qt;
+	private int detailPrice;
+
 }

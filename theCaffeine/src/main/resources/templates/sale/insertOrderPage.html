@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{layout/index}">
-<head>
-<meta charset="UTF-8">
-<title>주문 등록</title>
 
-<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<head>
+	<meta charset="UTF-8">
+	<title>주문 등록</title>
+
+	<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
+
 <body>
 	<div layout:fragment="content">
 		<!-- Content wrapper -->
@@ -23,7 +24,7 @@
 				<!-- Basic Layout & Basic with Icons -->
 				<div class="row">
 
-					
+
 					<!-- HTML5 Inputs -->
 					<div class="card mb-4">
 						<h5 class="card-header">주문 정보</h5>
@@ -38,21 +39,19 @@
 									<div class="input-group">
 
 										<!-- Button trigger modal -->
-										<button class="btn btn-outline-primary" type="button"
-											id="button-addon1" @click="openModal()">검색</button>
+										<button class="btn btn-outline-primary" type="button" id="button-addon1"
+											@click="openModal()">검색</button>
 
 
 
 										<!-- Modal -->
-										<div class="modal fade" id="modalCenter" tabindex="-1"
-											aria-hidden="true" >
-											<div class="modal-dialog modal-dialog-centered"
-												role="document">
+										<div class="modal fade" id="modalCenter" tabindex="-1" aria-hidden="true">
+											<div class="modal-dialog modal-dialog-centered" role="document">
 												<div class="modal-content">
 													<div class="modal-header">
 														<h5 class="modal-title" id="modalCenterTitle">거래처 찾기</h5>
-														<button type="button" class="btn-close"
-															data-bs-dismiss="modal" aria-label="Close"></button>
+														<button type="button" class="btn-close" data-bs-dismiss="modal"
+															aria-label="Close"></button>
 													</div>
 													<div class="modal-body">
 														<div class="row">
@@ -64,9 +63,11 @@
 																	<input type="text" class="form-control"
 																		placeholder="예) PET01, 브라질, 053-1111-1111"
 																		aria-label="Recipient's username"
-																		aria-describedby="button-addon2" v-model="keyword">
-																	<button class="btn btn-outline-primary" type="button"
-																		id="button-addon2" @click="getCliList(keyword)">검색</button>
+																		aria-describedby="button-addon2"
+																		v-model="keyword">
+																	<button class="btn btn-outline-primary"
+																		type="button" id="button-addon2"
+																		@click="getCliList(keyword)">검색</button>
 																</div>
 
 
@@ -75,7 +76,7 @@
 
 														<!-- 모달바디 -->
 														<div class="row g-2">
-													
+
 															<!-- Borderless Table -->
 															<div class="card">
 																<!-- 		<h5 class="card-header">거래처 검색결과</h5> -->
@@ -90,7 +91,8 @@
 																			</tr>
 																		</thead>
 																		<tbody>
-																			<tr v-bind:key="idx" v-for="(client, idx) in clientList"
+																			<tr v-bind:key="idx"
+																				v-for="(client, idx) in clientList"
 																				v-on:click="insertCli(client)">
 																				<td>{{client.cliCd}}</td>
 																				<td>{{client.cliName}}</td>
@@ -121,10 +123,9 @@
 
 
 
-										<input type="text" class="form-control"
-											placeholder="거래처를 검색해 주세요"
-											aria-label="Example text with button addon"
-											aria-describedby="button-addon1" v-model="clientVO.cliName" readonly/>
+										<input type="text" class="form-control" placeholder="거래처를 검색해 주세요"
+											aria-label="Example text with button addon" aria-describedby="button-addon1"
+											v-model="clientVO.cliName" readonly />
 									</div>
 								</div>
 							</div>
@@ -134,7 +135,8 @@
 								<div class="col-md-10">
 
 									<input type="text" readonly class="form-control-plaintext"
-										id="exampleFormControlReadOnlyInputPlain1" value="거래처 코드" v-model="clientVO.cliCd" name="cliCd"/>
+										id="exampleFormControlReadOnlyInputPlain1" value="거래처 코드"
+										v-model="clientVO.cliCd" name="cliCd" />
 
 								</div>
 							</div>
@@ -143,33 +145,31 @@
 								<label for="html5-url-input" class="col-md-2 col-form-label">사업자번호</label>
 								<div class="col-md-10">
 									<input type="text" readonly class="form-control-plaintext"
-										id="exampleFormControlReadOnlyInputPlain1" value="거래처 사업자 번호" v-model="clientVO.bussno"/>
+										id="exampleFormControlReadOnlyInputPlain1" value="거래처 사업자 번호"
+										v-model="clientVO.bussno" />
 								</div>
 							</div>
 
 							<div class="mb-3 row">
 								<label for="html5-tel-input" class="col-md-2 col-form-label">전화번호</label>
 								<div class="col-md-10">
-									<input type="text" class="form-control"
-										id="defaultFormControlInput"
-										aria-describedby="defaultFormControlHelp" v-model="clientVO.tel"/>
+									<input type="text" class="form-control" id="defaultFormControlInput"
+										aria-describedby="defaultFormControlHelp" v-model="clientVO.tel" />
 								</div>
 							</div>
 
 							<div class="mb-3 row">
 								<label for="html5-tel-input" class="col-md-2 col-form-label">주소</label>
 								<div class="col-md-10">
-									<input type="text" class="form-control"
-										id="defaultFormControlInput"
-										aria-describedby="defaultFormControlHelp" v-model="clientVO.addr"/>
+									<input type="text" class="form-control" id="defaultFormControlInput"
+										aria-describedby="defaultFormControlHelp" v-model="clientVO.addr" />
 								</div>
 							</div>
 
 							<div class="mb-3 row">
 								<label for="html5-tel-input" class="col-md-2 col-form-label">이메일</label>
 								<div class="col-md-10">
-									<input type="text" class="form-control"
-										id="defaultFormControlInput"
+									<input type="text" class="form-control" id="defaultFormControlInput"
 										aria-describedby="defaultFormControlHelp" v-model="clientVO.mail" />
 								</div>
 							</div>
@@ -178,8 +178,7 @@
 								<label for="html5-tel-input" class="col-md-2 col-form-label">거래처
 									담당자</label>
 								<div class="col-md-10">
-									<input type="text" class="form-control"
-										id="defaultFormControlInput"
+									<input type="text" class="form-control" id="defaultFormControlInput"
 										aria-describedby="defaultFormControlHelp" v-model="clientVO.cliChg" />
 								</div>
 							</div>
@@ -202,8 +201,7 @@
 								<label for="html5-tel-input" class="col-md-2 col-form-label">주문
 									담당자</label>
 								<div class="col-md-10">
-									<input type="text" class="form-control"
-										id="odChg" placeholder="콩볶아조"
+									<input type="text" class="form-control" id="odChg" placeholder="콩볶아조"
 										aria-describedby="defaultFormControlHelp" />
 								</div>
 							</div>
@@ -211,25 +209,23 @@
 							<div class="mb-3 row">
 								<label for="html5-time-input" class="col-md-2 col-form-label">주문일</label>
 								<div class="col-md-10">
-									<input class="form-control" type="date" value="2024-04-29"
-										id="odDt" />
+									<input class="form-control" type="date" value="2024-04-29" id="odDt" />
 								</div>
 							</div>
 
 							<div class="mb-3 row">
 								<label for="html5-color-input" class="col-md-2 col-form-label">납기일</label>
 								<div class="col-md-10">
-									<input class="form-control" type="date" value="2024-05-29"
-										id="dueDt" />
+									<input class="form-control" type="date" value="2024-05-29" id="dueDt" />
 								</div>
 							</div>
 
-							
+
 
 							<!-- Striped Rows -->
 							<div class="card">
 								<div>
-								<h5 class="card-header">주문 상품 선택</h5>
+									<h5 class="card-header">주문 상품 선택</h5>
 								</div>
 								<div class="table-responsive text-nowrap">
 									<table class="table table-striped">
@@ -237,11 +233,13 @@
 											<tr>
 												<th>상품</th>
 												<th>
-													<select id="smallSelect" class="form-select form-select-sm" 
-															v-model="selected" @change="selectPd(selected)">
-														<option :value="null" disabled style="display: none;">상품을 선택해주세요</option>
-														<option :key="idx" v-for="(pd, idx) in productList" :value="idx" >{{pd.pdName}}</option>
-												  	</select>
+													<select id="smallSelect" class="form-select form-select-sm"
+														v-model="selected" @change="selectPd(selected)">
+														<option :value="null" disabled style="display: none;">상품을 선택해주세요
+														</option>
+														<option :key="idx" v-for="(pd, idx) in productList"
+															:value="idx">{{pd.pdName}}</option>
+													</select>
 												</th>
 												<th>수량</th>
 												<th>단위</th>
@@ -255,11 +253,13 @@
 												<td>{{selectedPd.pdCd}}</td>
 												<td>{{selectedPd.pdName}}</td>
 												<td><input class="form-control" type="number" min='1'
-													v-model="selectedPd.qt" id="html5-number-input" @input="makeDetailPrice(idx)"></td>
-													<td>{{selectedPd.unit}}</td>
-													<td>{{selectedPd.cost}}</td>
-													<td>{{selectedPd.detailPrice}}</td>
-													<td><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="deletePd(idx)"></button></td>
+														v-model="selectedPd.qt" id="html5-number-input"
+														@input="makeDetailPrice(idx)"></td>
+												<td>{{selectedPd.unit}}</td>
+												<td>{{selectedPd.cost}}</td>
+												<td>{{selectedPd.detailPrice}}</td>
+												<td><button type="button" class="btn-close" data-bs-dismiss="modal"
+														aria-label="Close" @click="deletePd(idx)"></button></td>
 											</tr>
 										</tbody>
 									</table>
@@ -275,23 +275,18 @@
 							<div class="mb-3 row">
 								<label for="html5-tel-input" class="col-md-2 col-form-label">할인율</label>
 								<div class="col-md-10">
-									<input type="text" class="form-control"
-										id="defaultFormControlInput" placeholder="0"
-										aria-describedby="defaultFormControlHelp"
-										v-model="pct" @change="checkPct()" name="dcRate"
-										onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"
-										 />
+									<input type="text" class="form-control" id="defaultFormControlInput" placeholder="0"
+										aria-describedby="defaultFormControlHelp" v-model="pct" @change="checkPct()"
+										name="dcRate" onKeyup="this.value=this.value.replace(/[^0-9]/g,'');" />
 								</div>
 							</div>
 							<div class="mb-3 row">
 								<label for="html5-tel-input" class="col-md-2 col-form-label">총
 									주문금액</label>
 								<div class="col-md-10">
-									<input type="text" class="form-control"
-										id="defaultFormControlInput" placeholder="0"
-										aria-describedby="defaultFormControlHelp"
-										v-model="total" name="totalPrice"
-										onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"/>
+									<input type="text" class="form-control" id="defaultFormControlInput" placeholder="0"
+										aria-describedby="defaultFormControlHelp" v-model="total" name="totalPrice"
+										onKeyup="this.value=this.value.replace(/[^0-9]/g,'');" />
 								</div>
 							</div>
 						</div>
@@ -317,178 +312,178 @@
 		<!-- / Content -->
 		<div class="content-backdrop fade"></div>
 
-	<script>
-		const {
-		createApp
-		} = Vue;
+		<script>
+			const {
+				createApp
+			} = Vue;
 
-		const app = createApp({
-			data() {
-				return {
-					myModal : '',
-					keyword : '',
-					clientList : [],
-					clientVO : {},
+			const app = createApp({
+				data() {
+					return {
+						myModal: '',
+						keyword: '',
+						clientList: [],
+						clientVO: {},
 
-					productList : [],
-					selected: '',
-					selectedPdList : [],
+						productList: [],
+						selected: '',
+						selectedPdList: [],
 
-					pct: 0,
+						pct: 0,
 
-					orderVO : {},
-					insertOrderDetailList : []
-				}
-			},
-			created(){
-				this.getProductList();
-			},
-			mounted() {
-				this.myModal = new bootstrap.Modal('#modalCenter')
-
-			},
-			computed : {
-				//주문 총 합계금액 계산
-				total(){
-					let preTotal = 0;				
-					let pct = this.pct;
-					let tot = 0;
-					//선택 상품의 순수 합계 금액
-					this.selectedPdList.forEach(ele=>{
-						//console.log('길이변화감지');
-						preTotal += ele.qt * ele.cost;
-					})
-					//할인율 반영한 합계 금액
-					if(pct > 0){
-						tot = preTotal * (100-pct)/100;
-					}else{
-						tot = preTotal;
+						orderVO: {},
+						insertOrderDetailList: []
 					}
-					return tot;
-				}
-			},			
-			methods : {
-				//거래처 검색 결과 목록
-				async getCliList(keyword){
-					let result = await axios.get(`/sales/searchCliList?searchCli=${keyword}`)
-									  .catch(keyword);
-					let list = result.data;
-					this.clientList = list;
 				},
-				//거래처 검색 결과에서 선택한 행을 주문등록 폼에 넣어주기
-				insertCli(client){
-					this.clientVO = client;	
-					this.closeModal();
-					
+				created() {
+					this.getProductList();
 				},
-				//거래처 검색 모달 열기
-				openModal(){
-					const modalToggle = document.getElementById('modalCenter'); 
-					//console.log(this.myModal);
-					this.myModal.show(modalToggle);
-				},
-				//거래처 검색 모달 닫기
-				closeModal(){
-					const modalToggle = document.getElementById('modalCenter'); 
-					this.myModal.hide(modalToggle);
-				},
-				//상품명 목록 불러오기
-				async getProductList(){
-					let result = await axios.get('/sales/productList');
-					let list = result.data;
-					this.productList = list;
-				},
-				//상품명 목록에서 선택한 상품을 selectPdList에 넣고, 화면에 보여주기
-				selectPd(idx){
-					let pdCd = this.productList[idx].pdCd;
+				mounted() {
+					this.myModal = new bootstrap.Modal('#modalCenter')
 
-					//선택한 상품이 이미 selectedPdList에 담겨있는지 검증
-					let selectedCheck = true;
-					this.selectedPdList.forEach(ele => {
-						if(ele.pdCd == pdCd){
-							selectedCheck = false;
+				},
+				computed: {
+					//주문 총 합계금액 계산
+					total() {
+						let preTotal = 0;
+						let pct = this.pct;
+						let tot = 0;
+						//선택 상품의 순수 합계 금액
+						this.selectedPdList.forEach(ele => {
+							//console.log('길이변화감지');
+							preTotal += ele.qt * ele.cost;
+						})
+						//할인율 반영한 합계 금액
+						if (pct > 0) {
+							tot = preTotal * (100 - pct) / 100;
+						} else {
+							tot = preTotal;
 						}
-					})
-					//담겨있지 않을 경우 선택 상품을 selectedPdList에 추가
-					if(selectedCheck){
-						let product = this.productList[idx];
-						product.qt = 1;
-						product.detailPrice = product.cost * product.qt;
-
-						this.selectedPdList.splice(this.selectedPdList.length, 0, product);
-						console.log(this.selectedPdList);
+						return tot;
 					}
 				},
-				//선택 상품 하나당 수량 변경에 따른 부분합
-				makeDetailPrice(idx){
-					let detailPrice = this.selectedPdList[idx].cost * this.selectedPdList[idx].qt;
-					this.selectedPdList[idx].detailPrice = detailPrice;
-				},
-				//상품 삭제
-				deletePd(idx){
-					this.selectedPdList.splice(idx, 1);
-				},
-				// 할인율 검사
-				checkPct(){
-					if(this.pct > 30){
-						alert('할인율은 0~30% 입니다');
-						this.pct = 30;
-					}					
-				},
-				// 누락된 정보 체크
-				// validation(){
-				// 	if (!this.check) {
-				// 		alert("아이디 중복확인을 해주세요.");
-				// 		return false;
-				// 	}
+				methods: {
+					//거래처 검색 결과 목록
+					async getCliList(keyword) {
+						let result = await axios.get(`/sales/searchCliList?searchCli=${keyword}`)
+							.catch(keyword);
+						let list = result.data;
+						this.clientList = list;
+					},
+					//거래처 검색 결과에서 선택한 행을 주문등록 폼에 넣어주기
+					insertCli(client) {
+						this.clientVO = client;
+						this.closeModal();
 
-				// 	return true;
-				// },
+					},
+					//거래처 검색 모달 열기
+					openModal() {
+						const modalToggle = document.getElementById('modalCenter');
+						//console.log(this.myModal);
+						this.myModal.show(modalToggle);
+					},
+					//거래처 검색 모달 닫기
+					closeModal() {
+						const modalToggle = document.getElementById('modalCenter');
+						this.myModal.hide(modalToggle);
+					},
+					//상품명 목록 불러오기
+					async getProductList() {
+						let result = await axios.get('/sales/productList');
+						let list = result.data;
+						this.productList = list;
+					},
+					//상품명 목록에서 선택한 상품을 selectPdList에 넣고, 화면에 보여주기
+					selectPd(idx) {
+						let pdCd = this.productList[idx].pdCd;
 
-				// 주문, 주문상세 테이블에 넣기
-				async insertOrder(){
-					let odDt = document.getElementById('odDt').value;
-					let odChg = document.getElementById('odChg').value;
-					let dcRate = (this.pct/100);
-					let totalPrice = this.total;
-					let cliCd = this.clientVO.cliCd;
-					
-					let dueDt = document.getElementById('dueDt').value;
+						//선택한 상품이 이미 selectedPdList에 담겨있는지 검증
+						let selectedCheck = true;
+						this.selectedPdList.forEach(ele => {
+							if (ele.pdCd == pdCd) {
+								selectedCheck = false;
+							}
+						})
+						//담겨있지 않을 경우 선택 상품을 selectedPdList에 추가
+						if (selectedCheck) {
+							let product = this.productList[idx];
+							product.qt = 1;
+							product.detailPrice = product.cost * product.qt;
 
-					this.orderVO = { odDt, odChg, dcRate, totalPrice, cliCd };
+							this.selectedPdList.splice(this.selectedPdList.length, 0, product);
+							console.log(this.selectedPdList);
+						}
+					},
+					//선택 상품 하나당 수량 변경에 따른 부분합
+					makeDetailPrice(idx) {
+						let detailPrice = this.selectedPdList[idx].cost * this.selectedPdList[idx].qt;
+						this.selectedPdList[idx].detailPrice = detailPrice;
+					},
+					//상품 삭제
+					deletePd(idx) {
+						this.selectedPdList.splice(idx, 1);
+					},
+					// 할인율 검사
+					checkPct() {
+						if (this.pct > 30) {
+							alert('할인율은 0~30% 입니다');
+							this.pct = 30;
+						}
+					},
+					// 누락된 정보 체크
+					// validation(){
+					// 	if (!this.check) {
+					// 		alert("아이디 중복확인을 해주세요.");
+					// 		return false;
+					// 	}
 
-					this.selectedPdList.forEach(ele=>{
-						let qt = ele.qt;
-						let cost = ele.cost; // 단가
-						let detailPrice = ele.detailPrice; //부분합
-						let pdCd = ele.pdCd;			
-						let odDetailSt = 1;
+					// 	return true;
+					// },
 
-						let detail = {qt, cost, detailPrice, pdCd, dueDt, odDetailSt};
-						this.insertOrderDetailList.push(detail);
-						//console.log(detail);
-					})
+					// 주문, 주문상세 테이블에 넣기
+					async insertOrder() {
+						let odDt = document.getElementById('odDt').value;
+						let odChg = document.getElementById('odChg').value;
+						let dcRate = (this.pct / 100);
+						let totalPrice = this.total;
+						let cliCd = this.clientVO.cliCd;
 
-					let data = { orderVO:this.orderVO, orderDetailVO : this.insertOrderDetailList}
-					
-					//console.log('data', data);
-					let result = await axios.post("/sales/ajax/insertOrder", data)
-					 						.catch(err => console.log(err));
-					console.log(result);
+						let dueDt = document.getElementById('dueDt').value;
 
-					if(result.data == 'ok'){
-						alert('주문이 등록되었습니다.');
-						location.href="/sales/orderList";
-						
+						this.orderVO = { odDt, odChg, dcRate, totalPrice, cliCd };
+
+						this.selectedPdList.forEach(ele => {
+							let qt = ele.qt;
+							let cost = ele.cost; // 단가
+							let detailPrice = ele.detailPrice; //부분합
+							let pdCd = ele.pdCd;
+							let odDetailSt = 1;
+
+							let detail = { qt, cost, detailPrice, pdCd, dueDt, odDetailSt };
+							this.insertOrderDetailList.push(detail);
+							//console.log(detail);
+						})
+
+						let data = { orderVO: this.orderVO, orderDetailVO: this.insertOrderDetailList }
+
+						//console.log('data', data);
+						let result = await axios.post("/sales/ajax/insertOrder", data)
+							.catch(err => console.log(err));
+						console.log(result);
+
+						if (result.data == 'ok') {
+							alert('주문이 등록되었습니다.');
+							location.href = "/sales/orderList";
+
+						}
 					}
+
+
 				}
-				
-				
-			}
-		})
-		app.mount('#app')
+			})
+			app.mount('#app')
 
-	</script>
+		</script>
 	</div>
 	<!-- Content wrapper -->
 
@@ -497,4 +492,5 @@
 
 
 </body>
+
 </html>
