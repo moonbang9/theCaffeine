@@ -90,4 +90,45 @@
 		WHERE   mt_placeod_cd = #{mtPlaceodCd}
 	</update>
 
+
+	<sql id="condition">
+		<where>
+			<if test="mtCd != null and mtCd != '' ">
+				m.mt_cd LIKE '%' || #{mtCd} || '%'
+			</if>
+			<if test="mtName != null and mtName != '' ">
+				AND m.mt_name = #{mtName}	
+			</if>
+			<if test="mtDiv != null and mtDiv != '' ">
+				AND m.mt_div = #{mtDiv}
+			</if>
+		</where>
+	</sql>
+
+	<select id="getMtrlStockList" resultType="MtrlStkListVO"> 
+		SELECT m.mt_div
+			   ,ms.mt_cd
+			   ,m.mt_name
+			   ,SUM(ms.stk_qt) as sum_stk_qt
+			   ,m.unit
+		  FROM mt_stk ms
+		  JOIN mt m
+		    ON m.mt_cd = ms.mt_cd
+		    <include refid="condition"></include>
+		 GROUP BY m.mt_div, ms.mt_cd, m.mt_name, m.unit
+		 ORDER BY mt_div desc
+ 	</select>
+ 	
+	<select id="getRotStockList" resultType="MtrlStkListVO" parameterType="String"> 
+		SELECT mk.mt_lot
+		       ,mk.mt_cd
+		       ,mk.stk_qt
+		       ,mk.exp_dt
+		       ,mr.str_compdt
+		FROM   mt_stk mk
+		JOIN   mt_str mr
+		ON     mk.mt_str_no = mr.mt_str_no
+		WHERE  mk.mt_cd = #{mtCd}
+		ORDER BY str_compdt
+	</select>
 </mapper>

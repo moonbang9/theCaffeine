@@ -8,39 +8,64 @@
 		with p as (SELECT mp.mt_cd 
 		                  ,SUM(mp.placeod_qt) as pqd
 		            FROM (SELECT mt_cd
-		                         ,placeod_qt  
+		                        ,placeod_qt  
 		                    FROM mt_placeod 
 		                    WHERE placeod_st BETWEEN 2 AND 5) mp 
 		            JOIN mt_stk ms
 		              ON ms.mt_cd = mp.mt_cd
 		           GROUP BY mp.mt_cd)
 		            ,
+		            
 		-- 자재별 재고현황
 		 msp as (SELECT mp.mt_cd
 				        ,SUM(ms.stk_qt) AS sum_stk_qt
 				        ,SUM(mp.placeod_qt) AS safe_stk_qt
 				        ,SUM(ms.stk_qt) as nn
 		                ,SUM(mp.placeod_qt) AS qt_difference
-				  FROM mt_placeod mp 
-				  JOIN mt_stk ms
-				    ON ms.mt_cd = mp.mt_cd
-				 WHERE placeod_reqdt BETWEEN TO_CHAR(add_months(SYSDATE, -1), 'yyyy-mm-dd') AND SYSDATE
-				 GROUP BY mp.mt_cd)
+				FROM mt_placeod mp 
+				JOIN mt_stk ms
+				  ON ms.mt_cd = mp.mt_cd
+				WHERE placeod_reqdt BETWEEN TO_CHAR(add_months(SYSDATE, -1), 'yyyy-mm-dd') AND SYSDATE
+				GROUP BY mp.mt_cd)
+		        ,
+		        
+		-- 자재별 차주 생산계획현황 
+		 mpp as (SELECT b.mt_cd
+		                ,ab.pd_cd
+		                ,ab.pqt
+		                ,b.unit
+		                ,b.consum
+		        FROM bom b 
+		        JOIN (SELECT pd_cd ,SUM(qt / 24) pqt
+		             FROM pdt_plan_detail 
+		             WHERE pdt_plan_cd = 'K240408'
+		             GROUP BY pd_cd) ab
+		        ON b.pd_cd = ab.pd_cd)
 		 
-		 SELECT  m.mt_div
-		         ,m.mt_cd
-		         ,m.mt_name
-		         ,m.unit
-		         ,msp.sum_stk_qt
-		         ,NVL(p.pqd, 0) AS sum_placeod_qt
-		         ,msp.safe_stk_qt * (m.safe_stk_rate / 100) AS safe_stk_qt
-		         ,msp.nn + NVL(p.pqd, 0) - (msp.safe_stk_qt * m.safe_stk_rate / 100) AS qt_difference     
+		 SELECT DISTINCT m.mt_div
+		        ,m.mt_cd
+		        ,m.mt_name
+		        ,m.unit
+		        ,CASE WHEN mpp.unit = 'Bag' THEN mpp.pqt
+		              WHEN mpp.unit = 'Box' THEN (SELECT SUM(mpp.pqt) FROM mpp WHERE mpp.unit = 'Box') * mpp.consum
+		              WHEN mpp.unit = 'pcs' THEN mpp.pqt * mpp.consum
+		         END  AS pqtt
+		        ,msp.sum_stk_qt
+		        ,NVL(p.pqd, 0) AS sum_placeod_qt
+		        ,TRUNC(msp.safe_stk_qt * (m.safe_stk_rate / 100)) AS safe_stk_qt
+		        ,msp.nn + NVL(p.pqd, 0) - TRUNC(msp.safe_stk_qt * m.safe_stk_rate / 100) - (CASE WHEN mpp.unit = 'Bag' THEN mpp.pqt
+			                                                                                     WHEN mpp.unit = 'Box' THEN (SELECT SUM(mpp.pqt) FROM mpp WHERE mpp.unit = 'Box') * mpp.consum
+			                                                                                     WHEN mpp.unit = 'pcs' THEN mpp.pqt * mpp.consum
+			                                                                                END) AS qt_difference    
 		FROM msp 
 		LEFT OUTER JOIN p
 		  ON msp.mt_cd = p.mt_cd
 		JOIN mt m
 		  ON m.mt_cd = msp.mt_cd
+		JOIN mpp
+		  ON mpp.mt_cd = msp.mt_cd
 		ORDER BY qt_difference
+
  	</select>
 
 	 <select id="getMtrlOrderList" resultType="MtrlOrderVO"> 
@@ -145,6 +170,7 @@
 					str_comp_dt,
 					cli_name,
 					str_chg,
+					mc_name,
 					mt_placeod_cd)
 		    VALUES  (
 		    		SEQ_MT_CK_NO.nextval
@@ -153,6 +179,7 @@
 		    		,#{placeodArridt}
 		    		,#{cliName}
 		    		,#{placeodChg}
+		    		,'수분검사'
 		    		,#{mtPlaceodCd}
 		    		)
 	</insert>
