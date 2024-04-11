@@ -140,5 +140,24 @@ public class PrdtServiceImpl implements PrdtService{
 		// TODO Auto-generated method stub
 		return prdtMapper.getInstDetailList(pdtInstNo);
 	}
+
+	@Override
+	public int instDelete(Integer pdtInstNo) {
+		prdtMapper.instDelete(pdtInstNo);
+		
+		return prdtMapper.instDetailDelete(pdtInstNo);
+	}
+
+	@Override
+	public int instDetailDelete(Integer pdtInstDetailNo) {
+		// TODO Auto-generated method stub
+		return prdtMapper.instDetailDelete2(pdtInstDetailNo);
+	}
+
+	@Override
+	public List<PlanVO> getPlanCdList() {
+		// TODO Auto-generated method stub
+		return prdtMapper.getPlanCdList();
+	}
 	
 }

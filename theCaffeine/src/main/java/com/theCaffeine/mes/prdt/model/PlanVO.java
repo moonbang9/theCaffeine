@@ -18,6 +18,9 @@ public class PlanVO {					//생산계획 + 계획상세
 	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date wkPlanSttDt; 			//주간계획시작일
+	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date wkPlanSttDt2; 			//주간계획종료일
 	private String odName; 				//계획명
 	private Integer pdtPlanDetailNo; 	//생산계획 상세번호
 	private String pdName; 				//제품 명

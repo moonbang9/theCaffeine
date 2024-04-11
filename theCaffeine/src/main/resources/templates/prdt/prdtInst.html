@@ -18,17 +18,37 @@
 		<div id="productionPlan-table"></div>
 		<div class="d-flex mt-5">
 	  		<div class="p-2 flex-grow-1"><h3>생산주간 지시상세조회</h3></div>
+	  		<div class="p-2"><button type="button" class="btn btn-danger" id="deleteBtn1">선택삭제</button></div>
+	  		<div class="p-2"><button type="button" class="btn btn-warning" id="download-pdf">pdf</button></div>
 		</div>
 		<div id="productionPlan-table2"></div>
 		</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.20/jspdf.plugin.autotable.min.js"></script>
 <script th:inline="javascript">
 	$(window).on("load",function(e) {
 		listReq();
 		
 	})
-
+	
 	saveBtn1.addEventListener("click", e=> {
 		location.href='/production/prdtInstRegist'
+	})
+	
+	deleteBtn1.addEventListener("click", e=> {
+		let selectOrder = table2.getSelectedData();
+		console.log(selectOrder)
+		if(selectOrder != []){
+			for(let i of selectOrder){
+				fetch("/ajax/instDetailDel2/"+ i.pdtInstDetailNo)
+				.then(res => {
+					console.log(res)
+					if(res.ok){
+						alert('삭제가 완료되었습니다.')
+					}
+				})
+			}
+		}
 	})
 	
 	//수정버튼
@@ -41,7 +61,6 @@
 	}
 	//삭제버튼
 	var editorIcon2 = function(cell, formatterParams, onRendered) {
-		console.log(cell._cell.row.data.wkPlanSttDt);
 		if(cell._cell.row.data.pdtInstDt <= getDateStr(new Date())){
 			return null;	
 		}else{
@@ -54,15 +73,15 @@
     layout:"fitDataFill",
     columns:[
         {title:"계획일자", field:"pdtInstDt", hozAlign:"center", width:200},
-        {title:"상품명", field:"insttot", hozAlign:"center", width:500},
+        {title:"상품명", field:"insttot", hozAlign:"center", width:400},
         {title:"총 원두생산 수량(kg)", field:"isum", hozAlign:"center", width:200},
         {title:"총 예상작업시간(시간)", field:"msum", hozAlign:"center", width:200},
         {title:"삭제", formatter:editorIcon2, width:90, hozAlign:"center", cellClick:function(e, cell){
-        	let pdtPlanCd = cell._cell.row.data.pdtPlanCd;
-            			console.log(pdtPlanCd)
-        	if(cell._cell.row.data.wkPlanSttDt >= lastWeek(new Date())){
+        	let pdtInstNo = cell._cell.row.data.pdtInstNo;
+            			console.log(pdtInstNo)
+        	if(cell._cell.row.data.pdtInstDt > getDateStr(new Date())){
         		if(confirm("삭제하시겠습니까?")) {
-        			fetch("/ajax/planDelete/"+ pdtPlanCd)
+        			fetch("/ajax/instDetailDel/"+ pdtInstNo)
             		.then(res => {
             			console.log(res)
             			if(res.ok){
@@ -116,12 +135,20 @@
 	var table2 = new Tabulator("#productionPlan-table2", {
 		height:"100%",
 		layout:"fitDataFill",
+		selectableRows:true,
+	    selectableRowsCheck : function ( row ){
+	    	return row.getData().pdtSttTime > getDateStr2(new Date());
+	    	},
+	    columnDefaults:{
+	        headerSort:false,
+	        resizable:"header",
+	    },
 	    columns:[
-	        {title:"생산상품코드", field:"pdCd", hozAlign:"center"},
-	        {title:"상품명", field:"pdName", hozAlign:"center"},
-	        {title:"수량", field:"qt", hozAlign:"center"},
-	        {title:"생산시작시간", field:"pdtSttTime", hozAlign:"center"},
-	        {title:"생산예상종료시간", field:"pdtexptFnTime", hozAlign:"center"},
+	        {title:"생산상품코드", field:"pdCd", hozAlign:"center", width:200},
+	        {title:"상품명", field:"pdName", hozAlign:"center", width:320},
+	        {title:"수량", field:"qt", hozAlign:"center", width:200},
+	        {title:"생산시작시간", field:"pdtSttTime", hozAlign:"center", width:320},
+	        {title:"생산예상종료시간", field:"pdtexptFnTime", hozAlign:"center", width:320},
 	    ],
 	});
 	
@@ -154,6 +181,21 @@
 		day = (day < 10) ? "0" + String(day) : day;
 		
 		return  (year + '-' + month + '-' + day );
+	}
+	
+	//초단위 날짜
+	function getDateStr2(myDate){
+		var year = myDate.getFullYear();
+		var month = (myDate.getMonth() + 1);
+		var day = myDate.getDate();
+		var hur = myDate.getHours();
+		var min = myDate.getMinutes();
+		var sec = myDate.getSeconds();
+		
+		month = (month < 10) ? "0" + String(month) : month;
+		day = (day < 10) ? "0" + String(day) : day;
+		
+		return  (year + '-' + month + '-' + day + " " + hur + ":" + min + ":" + sec);
 	}
 	
 	//5일전
@@ -190,6 +232,15 @@
 
 		return [WEEK_KOR[weekNum], (dates.getMonth()+1)+'월'];
 	}
+	
+	//trigger download of data.pdf file
+    document.getElementById("download-pdf").addEventListener("click", function () {
+      table2.download("pdf", "data.pdf", {
+        orientation: "portrait", // 페이지 방향을 세로로 설정
+        title: "Example Report", // 보고서 제목 설정
+      });
+    });
+	
 </script>
 </div>
 </body>

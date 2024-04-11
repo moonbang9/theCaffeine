@@ -190,4 +190,28 @@ public class ProductionController {
 	public List<InstVO> instDetailList(@PathVariable Integer pdtInstNo) {
 		return prdtService.getInstDetailList(pdtInstNo);
 	}
+	
+	//지시 삭제
+	@GetMapping("/ajax/instDetailDel/{pdtInstNo}")
+	public String instDelete(@PathVariable Integer pdtInstNo) {
+		if(prdtService.instDelete(pdtInstNo) > 0) {
+			System.out.println("삭제성공");
+		}
+		return "ok";
+	}
+	
+	//지시상세선택 삭제
+	@GetMapping("/ajax/instDetailDel2/{pdtInstDetailNo}")
+	public String instDetailDelete(@PathVariable Integer pdtInstDetailNo) {
+		if(prdtService.instDetailDelete(pdtInstDetailNo) > 0) {
+			System.out.println("삭제성공");
+		}
+		return "ok";
+	}
+	
+	//계획코드 리스트
+	@GetMapping("/ajax/planCdList")
+	public List<PlanVO> planCdList() {
+		return prdtService.getPlanCdList();
+	}
 }
