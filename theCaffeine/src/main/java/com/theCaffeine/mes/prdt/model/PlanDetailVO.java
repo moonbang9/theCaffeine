@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PlanDetailVO {					//생산계획 + 계획상세
 	private String pdtPlanCd;			//생산계획코드
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date wkPlanSttDt; 			//주간계획시작일
 	private String odName; 				//계획명
@@ -23,7 +23,7 @@ public class PlanDetailVO {					//생산계획 + 계획상세
 	private String pdName; 				//제품 명
 	private Integer qt;					//수량
 	private Integer addQt;				//추가 수량
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date dueDt;					//납기 일
 	private String plantot;				//주간 토탈 상품명

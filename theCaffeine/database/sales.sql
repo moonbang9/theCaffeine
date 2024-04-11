@@ -90,155 +90,6 @@ ON d.pd_cd = p.pd_cd
 where d.od_no= 87;
 
 
-/* 주문관리 조건검색 주문조회 */
-select o.OD_NO, o.OD_DT, o.OD_CHG, o.DC_RATE, o.TOTAL_PRICE, o.CLI_CD,
-        c.cli_name,c.cli_chg,
-        d.od_no,d.od_detailno,
-        p.pd_name,d.due_dt,d.od_detail_st,d.pd_cd
-from cli c JOIN od o
-                ON c.cli_cd = o.cli_cd
-            LEFT OUTER JOIN od_detail d
-                ON o.od_no = d.od_no
-            JOIN pd p
-                ON d.pd_cd = p.pd_cd
---where o.od_dt BETWEEN TO_DATE('2024-04-20', 'YYYY-MM-DD') AND TO_DATE('2025-01-01', 'YYYY-MM-DD')
---where (o.od_dt >= TO_DATE('2024-04-20', 'YYYY-MM-DD')) AND (o.od_dt <= TO_DATE('2025-01-01', 'YYYY-MM-DD'))
-WHERE 
-d.pd_cd like '%P%'
-AND p.pd_name like '% %'
-AND o.cli_cd like '%0%'
---AND c.cli_name like '%
-AND c.cli_chg like '% %'
---AND o.od_chg like '%
-AND o.od_dt >= TO_DATE('2023-01-01', 'YYYY-MM-DD')
-AND o.od_dt <= TO_DATE('2025-01-01', 'YYYY-MM-DD') 			
-AND d.due_dt >= TO_DATE('2023-01-01', 'YYYY-MM-DD') 			
-AND d.due_dt <= TO_DATE('2025-01-01', 'YYYY-MM-DD') 			
-AND d.od_detail_st IN (0,1,2)
-ORDER BY d.od_detailno;
-
-
-
-select o.OD_NO, o.OD_DT, o.OD_CHG, o.DC_RATE, o.TOTAL_PRICE, o.CLI_CD,
-        c.cli_name,c.cli_chg,
-        d.od_no,d.od_detailno,
-        p.pd_name,d.due_dt,d.od_detail_st,d.pd_cd
-from cli c JOIN od o
-                ON c.cli_cd = o.cli_cd
-            JOIN (select count(*) as cnt, od_no
-                    from od_detail
-                    group by od_no) c
-                ON o.od_no = c.od_no
-                
-            JOIN (select od.pd_cd, od.od_no, od.od_detailno, od.due_dt, od.od_detail_st,
-                        op.pd_name, op.pd_cd
-                    from od_detail od JOIN pd op
-                    ON od.pd_cd = op.pd_cd
-                    WHERE ROWNUM <= 1 ) d
-                ON o.od_no = od.od_no;
-                
-                
-select o.OD_NO, o.OD_DT, o.OD_CHG, o.DC_RATE, o.TOTAL_PRICE, o.CLI_CD,
-        c.cli_name,c.cli_chg,
-        d.od.od_no,d.od.od_detailno,
-        p.pd_name,d.od.due_dt,d.od.od_detail_st,d.od.pd_cd, cd.cnt
-from cli c JOIN od o
-                ON c.cli_cd = o.cli_cd
-            JOIN (select count(*) as cnt, od_no
-                    from od_detail
-                    group by od_no) cd
-                ON o.od_no = cd.od_no
-                
-            JOIN (select od.pd_cd, od.od_no, od.od_detailno, od.due_dt, od.od_detail_st,
-                        op.pd_name, op.pd_cd
-                    from od_detail od JOIN pd op
-                    ON od.pd_cd = op.pd_cd
-                    WHERE ROWNUM <= 1 ) d
-                ON o.od_no = od.od_no;
-
-
-select distinct o.OD_NO, o.OD_DT, o.OD_CHG, o.DC_RATE, o.TOTAL_PRICE, o.CLI_CD,
-        c.cli_name,c.cli_chg,
-        d.od_no,
-        --d.pd_name,d.pd_cd,
-        d.due_dt,d.od_detail_st,
-        t.od_cnt
-from cli c JOIN od o 
-                ON c.cli_cd = o.cli_cd
-            JOIN (select ((count(*))||'건') as od_cnt, od_no
-                                    from od_detail
-                                    group by od_no) t
-                ON o.od_no = t.od_no
-            JOIN (select od.od_no od_no, od.pd_cd pd_cd, od.due_dt due_dt, od.od_detail_st od_detail_st, op.pd_name pd_name
-                    from od_detail od JOIN pd op
-                    ON od.pd_cd = op.pd_cd
-                    ) d
-                ON o.od_no = d.od_no
-ORDER BY o.od_no;
-
-            
-select ('외 '||(count(*)-1)||'건') as cnt, od_no
-from od_detail
-where od_no = 87
-group by od_no;
---having od_no = 87; 
-
-select od.od_no, od.pd_cd, od.due_dt, od_detail_st, op.pd_name
-from od_detail od JOIN pd op
-ON od.pd_cd = op.pd_cd
-WHERE ROWNUM <= 1;
-
-select od.od_no, od.pd_cd, od.due_dt, od_detail_st, op.pd_name
-from od_detail od JOIN pd op
-ON od.pd_cd = op.pd_cd
-;
-
-
-
-
-select od_no, pd_cd, due_dt, od_detail_st
-from od_detail
-GROUP BY od_no;
-
-select * from od;
-select * from od_detail
-order by od_detailno;         
-
-
-
-
-select distinct o.od_no
-						, o.od_dt
-						, o.od_chg
-						, o.dc_rate
-						, o.total_price
-						, o.cli_cd
-						, c.cli_name
-						, c.cli_chg
-						, d.od_no
-						,
-				        
-				        d.due_dt
-				        , d.od_detail_st
-				        , t.od_cnt
-		from cli c JOIN od o 
-                		ON c.cli_cd = o.cli_cd
-            		JOIN (select ((count(*))||'건') as od_cnt, od_no
-                          from od_detail
-                          group by od_no) t
-                		ON o.od_no = t.od_no
-            		JOIN (select od.od_no od_no
-            					, od.pd_cd pd_cd
-            					, od.due_dt due_dt
-            					, od.od_detail_st od_detail_st
-            					, op.pd_name pd_name
-                    		from od_detail od JOIN pd op
-                    							ON od.pd_cd = op.pd_cd
-                    		) d
-                		ON o.od_no = d.od_no;
-                        
-                        
-                    
 
 /* 재고관리 페이지 - 전체 재고 조회 */
 select * from pd;
@@ -353,18 +204,18 @@ ORDER BY de.od_no DESC;
 
 
 --화면에 보일 정보만 추리기
-select de.od_no, o.od_dt, c.cli_name, c.cli_chg ,   
+select de.od_no, o.od_dt, c.cli_name, c.cli_chg ,
         CASE WHEN (de.cnt > 0) THEN p.pd_name || ' 외 ' || de.cnt || '건'
              ELSE p.pd_name
              END AS pdName  ,
-        o.total_price,  d.due_dt,
-        CASE (d.od_detail_st)
+        o.total_price, o.od_chg, d.due_dt,
+        CASE (o.od_st)
             WHEN 1 THEN '주문접수' 
             WHEN 2 THEN '생산요청'
             WHEN 3 THEN '출고완료'
             WHEN 4 THEN '구매확정'
-            WHEN 5 THEN '반품접수'
             WHEN 9 THEN '반품완료'
+            ELSE '반품중'
             END AS odSt
 from od_detail d 
     JOIN (select min(od_detailno) as minDetailNo, (count(*)-1) as cnt, od_no
@@ -377,5 +228,38 @@ from od_detail d
     ON o.od_no = de.od_no
     JOIN cli c
     ON c.cli_cd = o.cli_cd
+    
+WHERE d.pd_cd LIKE '%01%'
+    AND p.pd_name LIKE '%%'
+    AND o.cli_cd LIKE '%%'
+    AND c.cli_name LIKE '%%'
+    AND c.cli_chg LIKE '%%'
+    AND o.od_chg LIKE '%%'
+    AND o.od_dt >= '2023-01-01'
+    AND o.od_dt <= '2025-01-01'
+    AND d.due_dt >= '2023-01-01'
+    AND d.due_dt <= '2025-01-01'
+    AND o.od_st = '1'
 ORDER BY de.od_no DESC;
 
+
+
+/* 주문 상세 조회 */
+select * from od;
+select * from od_detail;
+select * from cli;
+--거래처명, 거래처코드, 사업자번호, 전화번호, 주소, 이메일, 거래처담당자, 주문담당자, 주문일, 납기일, 할인율, 총금액
+--제품코드	제품명	수량	단위	단가	합계
+select min(due_dt) due_dt, od_no
+from od_detail
+group by od_no;
+
+select c.cli_name, o.cli_cd, c.bussno, c.tel, c.addr, c.mail, c.cli_chg, o.od_chg, o.od_dt, d.due_dt, (o.dc_rate*100) || '%' as dc_percent, o.total_price
+from od o
+    JOIN cli c
+    ON o.cli_cd = c.cli_cd
+    JOIN (select min(due_dt) due_dt, od_no
+from od_detail
+group by od_no) d
+    ON o.od_no = d.od_no
+where o.od_no = d.od_no;

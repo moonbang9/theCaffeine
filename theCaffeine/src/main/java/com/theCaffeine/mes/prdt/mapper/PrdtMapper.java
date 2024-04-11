@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.theCaffeine.mes.prdt.model.FailPlanVO;
+import com.theCaffeine.mes.prdt.model.InstVO;
 import com.theCaffeine.mes.prdt.model.MtrlPlanVO;
 import com.theCaffeine.mes.prdt.model.PlanDetailVO;
 import com.theCaffeine.mes.prdt.model.PlanOrderDetailVO;
@@ -16,6 +17,7 @@ import com.theCaffeine.mes.prdt.model.SafePlanVO;
 @Mapper
 public interface PrdtMapper {
 	List<PlanVO> getPlanList(PlanVO vo); //주간 생산계획조회
+	PlanVO getPlanInfo(String pdtPlanCd); // 생산계획 단건 조회
 	List<PlanVO> getPlanDetailList(String pdtPlanCd); //주간 생산계획조회
 	List<MtrlPlanVO> getQnttMtrlList(String pdtPlanCd); //주간 발주계획
 	List<PlanOrderDetailVO> getDetailOrderList(PlanOrderDetailVO vo); //상세주문조회
@@ -27,5 +29,10 @@ public interface PrdtMapper {
 	List<FailPlanVO> getPlanConsum(); // box -> kg 단위변경
 	int insertPrdtPlan(PlanVO vo); //계획 등록
 	int insertPrdtDetailPlan(PlanDetailVO vo); //계획상세 등록
-	int updatePrdtOdDetailSt(PlanOrderDetailVO vo); //주문상세 상태변경
+	int updatePrdtPlan(PlanVO vo); //계획 수정
+	int updatePrdtDetailPlan(PlanDetailVO vo); //계획상세 수정
+	int planDelete(String pdtPlanCd); //계획 삭제
+	int planDetailDelete(String pdtPlanCd); //계획상세 삭제
+	List<InstVO> getInstList(); //일별 지시조회
+	List<InstVO> getInstDetailList(Integer pdtInstNo); //일별 지시상세조회
 }

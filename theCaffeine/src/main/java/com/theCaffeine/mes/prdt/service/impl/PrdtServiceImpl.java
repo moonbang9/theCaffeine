@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.theCaffeine.mes.prdt.mapper.PrdtMapper;
 import com.theCaffeine.mes.prdt.model.FailPlanVO;
+import com.theCaffeine.mes.prdt.model.InstVO;
 import com.theCaffeine.mes.prdt.model.MtrlPlanVO;
 import com.theCaffeine.mes.prdt.model.PlanDetailVO;
 import com.theCaffeine.mes.prdt.model.PlanOrderDetailVO;
@@ -95,15 +96,49 @@ public class PrdtServiceImpl implements PrdtService{
 			}
 		}
 		
-		if(vo.getPlanOrderDetailVO() != null) {
-			for(PlanOrderDetailVO i : vo.getPlanOrderDetailVO()) {
-				if(i.getQt()==i.getPdtQt()) {
-					prdtMapper.updatePrdtOdDetailSt(i);
+		return 1;
+	}
+
+	@Override
+	public PlanVO getPlanInfo(String pdtPlanCd) {
+		// TODO Auto-generated method stub
+		return prdtMapper.getPlanInfo(pdtPlanCd);
+	}
+	
+	@Transactional
+	@Override
+	public int planUpdate(PlanResistVO vo) {
+		prdtMapper.updatePrdtPlan(vo.getPlanVO());
+		
+		if(vo.getPlanDetailVO() != null) {
+			for(PlanDetailVO i : vo.getPlanDetailVO()) {
+				if(i.getQt() != 0) {
+					prdtMapper.updatePrdtDetailPlan(i);
 				}
 			}
 		}
-		
 		return 1;
+	}
+	
+	@Transactional
+	@Override
+	public int planDelete(String pdtPlanCd) {
+		// TODO Auto-generated method stub
+		prdtMapper.planDelete(pdtPlanCd);
+		
+		return prdtMapper.planDetailDelete(pdtPlanCd);
+	}
+
+	@Override
+	public List<InstVO> getInstList() {
+		// TODO Auto-generated method stub
+		return prdtMapper.getInstList();
+	}
+
+	@Override
+	public List<InstVO> getInstDetailList(Integer pdtInstNo) {
+		// TODO Auto-generated method stub
+		return prdtMapper.getInstDetailList(pdtInstNo);
 	}
 	
 }

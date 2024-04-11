@@ -15,14 +15,15 @@
 		       p.placeod_st,
 		       m.mt_name,
 		       c.cli_name,
-		       mc.mt_ck_no
+		       mc.mt_ck_no,
+		       mc.mc_name
 		  FROM mt_placeod p 
 		  JOIN mt m ON p.mt_cd = m.mt_cd
 		  JOIN cli c ON p.cli_cd = c.cli_cd
 		  JOIN mt_ck mc ON p.mt_placeod_cd = mc.mt_placeod_cd
 	     WHERE p.PLACEOD_ST=4 
-	  ORDER BY p.mt_placeod_cd	        
-	     <!-- 검사 완료 후 where절 상태값을 4에서 5로 바꿔줘야됨. -->
+	  ORDER BY mc.mt_ck_no	        
+
 	</select>
 	
 	<update id="updateMcRes" parameterType="QltyVO">
@@ -35,9 +36,11 @@
 					,mc_avg = #{mcAvg}
 					,mc_res = #{mcRes}
 					,ck_dt = sysdate
+					,ck_chg = '김미영 대리'
 			  WHERE mt_ck_no = #{mtCkNo}
 	</update>
 	
+	<!-- 검사완료 후 placeod_st 값을 4에서 5로 변경 -->
 	<update id="updatePlaceodSt" parameterType="String">
 			UPDATE mt_placeod
                SET PLACEOD_ST = 5
@@ -58,13 +61,16 @@
 		       c.cli_name,
 		       mc.mt_ck_no,
 		       mc.mc_res,
-		       mc.ck_chg
+		       mc.ck_chg,
+		       mc.ck_dt,
+		       mc.mc_name
 		  FROM mt_placeod p 
 		  JOIN mt m ON p.mt_cd = m.mt_cd
 		  JOIN cli c ON p.cli_cd = c.cli_cd
 		  JOIN mt_ck mc ON p.mt_placeod_cd = mc.mt_placeod_cd
 	     WHERE p.PLACEOD_ST=5 
-	  ORDER BY p.mt_placeod_cd
+	  ORDER BY mc.mt_ck_no DESC
 	</select>
+	
 
 </mapper>

@@ -88,7 +88,22 @@
 
 	<script>
 		mtrl_order_qt.addEventListener("change", e=> {
-			console.log("바뀜");
+			if(mtrl_order_clicd.value == "MCLI006") {
+				if(mtrl_order_qt.value < 50) {
+					alert("원두봉투의 발주 최소단위는 50 pcs 입니다.");
+					mtrl_order_qt.value = 50;
+				}
+			} else if(mtrl_order_clicd.value == "MCLI007") {
+				if(mtrl_order_qt.value < 100) {
+					alert("포장박스의 발주 최소단위는 100 box 입니다.");
+					mtrl_order_qt.value = 100;
+				}
+			} else {
+				if(mtrl_order_qt.value < 10) {
+					alert("생두의 발주 최소단위는 10 bag 입니다.");
+					mtrl_order_qt.value = 10;
+				}
+			}
 		})
 	
 		mtrlOrderAddBtn.addEventListener("click", e=> {
@@ -142,15 +157,24 @@
 		   // resizableColumnFit:true,
 		   
 		    columns:[
-		        {title:"분류", field:"mtDiv", width:150, hozAlign:"center"},
+		        {title:"분류", field:"mtDiv", width:130, hozAlign:"center"},
 		        {title:"자재코드", field:"mtCd", width:180, hozAlign:"center"}, 
 		        {title:"자재명", field:"mtName", width:180, hozAlign:"center"},
-		        {title:"단위", field:"unit", width:150, formatter:"money", hozAlign:"center"},
-		        {title:"재고 수량", field:"sumStkQt", width:170, hozAlign:"center"},
-		        {title:"발주 수량", field:"sumPlaceodQt", width:150, hozAlign:"center"},
-		        {title:"안전재고 수량", field:"safeStkQt", width:170, hozAlign:"center"},
-		        {title:"수량 차", field:"qtDifference", width:160, hozAlign:"center"}
-		    ],
+		        {title:"단위", field:"unit", width:130, formatter:"money", hozAlign:"center"},
+		        {title:"차주생산계획 수량", field:"pqtt", width:150, hozAlign:"center"},
+		        {title:"재고 수량", field:"sumStkQt", width:135, hozAlign:"center"},
+		        {title:"발주 수량", field:"sumPlaceodQt", width:135, hozAlign:"center"},
+		        {title:"안전재고 수량", field:"safeStkQt", width:135, hozAlign:"center"},
+		        {title:"수량 차", field:"qtDifference", width:135, hozAlign:"center"}
+		    ],rowFormatter: function(row) {
+		        var data = row.getData();
+		        var qtDifferenceValue = data.qtDifference;
+		        if (qtDifferenceValue > 100) {
+		            row.getElement().style.backgroundColor = "#c8e6c9"; 
+		        } else if (qtDifferenceValue < 20) {
+		            row.getElement().style.backgroundColor = "#ffcdd2"; 
+		        }
+		    }
 		});
 		
 		// 발주 요청목록
@@ -202,7 +226,7 @@
 		listReq();
 		listReq2();
 		
-		// 발주요청 목록 데이터
+		// 자재재고 목록 데이터
 		function listReq() {
 			fetch("/ajax/stkList")
 			.then(res => res.json())
@@ -218,6 +242,22 @@
 		
 		mtrl_order_clicd.addEventListener("change", e=> {
 			mtrlList(mtrl_order_clicd.value);
+			if(mtrl_order_clicd.value == "MCLI006") {
+				if(mtrl_order_qt.value < 50) {
+					alert("원두봉투의 발주 최소단위는 50 pcs 입니다.");
+					mtrl_order_qt.value = 50;
+				}
+			} else if(mtrl_order_clicd.value == "MCLI007") {
+				if(mtrl_order_qt.value < 100) {
+					alert("포장박스의 발주 최소단위는 100 box 입니다.");
+					mtrl_order_qt.value = 100;
+				}
+			} else {
+				if(mtrl_order_qt.value < 10) {
+					alert("생두의 발주 최소단위는 10 bag 입니다.");
+					mtrl_order_qt.value = 10;
+				}
+			}
 		})
 		
 		// 거래처 목록 데이터
@@ -284,7 +324,7 @@
 				.then(res => res.json())
 				.then(res => saveRes(res))
 			} else {
-				alert("값을 모두 입력해주세요.");
+				alert("발주수량을 입력해주세요.");
 			}
 		}
 		

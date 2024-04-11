@@ -44,7 +44,7 @@
                             <div class="mb-3 row col-md-6">
                                 <label for="pdCd" class="col-md-3 col-form-label"></label>
                                 <div class="col-md-9">
-                                    
+
                                 </div>
                             </div>
                             <div class="mb-3 row col-md-6">
@@ -56,10 +56,11 @@
                             <div class="mb-3 row col-md-6">
                                 <label for="html5-search-input" class="col-md-3 col-form-label">제품명</label>
                                 <div class="col-md-9">
-                                    <input class="form-control" type="search" id="pdName" placeholder="입력한 단어가 포함된 제품이 검색됩니다">
+                                    <input class="form-control" type="search" id="pdName"
+                                        placeholder="입력한 단어가 포함된 제품이 검색됩니다">
                                 </div>
                             </div>
-                            
+
 
                             <div class="mb-3 row col-md-6">
                                 <label for="html5-date-input" class="col-md-3 col-form-label">제조일</label>
@@ -89,12 +90,12 @@
                             <div class="mb-3 row">
                                 <label for="html5-search-input" class="col-md-2 col-form-label"></label>
                                 <div class="col-md-10">
-                                  <div class="form-check form-check-inline mt-3">
-                                    <input class="form-check-input" type="checkbox" id="zeroQt" name="odSt">
-                                    <label class="form-check-label" for="inlineCheckbox1">재고 없는 LOT 포함</label>
-                                  </div>
+                                    <div class="form-check form-check-inline mt-3">
+                                        <input class="form-check-input" type="checkbox" id="zeroQt" name="odSt">
+                                        <label class="form-check-label" for="inlineCheckbox1">재고 없는 LOT 포함</label>
+                                    </div>
                                 </div>
-                              </div>
+                            </div>
 
 
                         </div>
@@ -142,11 +143,11 @@
 
 
         <script>
-            let param= {};
+            let param = {};
             getPdStockList();
             getLotStockList(param);
 
-
+            // 제품별 재고 조회
             var pdStockTable = new Tabulator("#pdStockTable", {
                 // layout:"fitColumns",
                 height: "100%",
@@ -166,7 +167,7 @@
                     { title: "월 예상생산량", field: "monthlyPrd", width: 150, hozAlign: "center" }
                 ],
             });
-
+            // LOT별 재고 조회
             var lotStockTable = new Tabulator("#lotStockTable", {
                 // layout:"fitColumns",
                 height: "100%",
@@ -189,24 +190,24 @@
             // 제품별 재고 목록
             function getPdStockList() {
                 fetch("/sales/pdStockList")
-                .then(res => res.json())
-                .then(res => pdStockTable.setData(res))
+                    .then(res => res.json())
+                    .then(res => pdStockTable.setData(res))
             }
             // LOT별 재고 목록
             function getLotStockList(param) {
                 console.log(param);
-                fetch("/sales/lotStockList",{
-                    method : "post",
+                fetch("/sales/lotStockList", {
+                    method: "post",
                     headers: {
-                            "Content-Type": "application/json",
-                        },
-                    body : JSON.stringify(param)
-                    })
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(param)
+                })
                     .then(res => res.json())
-                    .then(res => lotStockTable.setData(res) )
+                    .then(res => lotStockTable.setData(res))
             }
             // 검색 버튼 누르면 조건대로 검색한 주문목록 불러오기
-            searchBtn.addEventListener("click", e => {                
+            searchBtn.addEventListener("click", e => {
 
                 let pdLot = document.getElementById('pdLot').value;
                 let pdCd = document.getElementById('pdCd').value;
@@ -215,7 +216,7 @@
                 let maxPdtDt = document.getElementById('maxPdtDt').value;
                 let minExpDt = document.getElementById('minExpDt').value;
                 let maxExpDt = document.getElementById('maxExpDt').value;
-                let zeroQt =document.getElementById('zeroQt').checked;
+                let zeroQt = document.getElementById('zeroQt').checked;
 
                 param = { pdLot, pdCd, pdName, minPdtDt, maxPdtDt, minExpDt, maxExpDt, zeroQt };
 
@@ -228,8 +229,8 @@
             resetBtn.addEventListener("click", e => {
                 resetSearch();
             })
-            
-            function resetSearch(){
+
+            function resetSearch() {
                 document.getElementById('pdLot').value = null;
                 document.getElementById('pdCd').value = null;
                 document.getElementById('pdName').value = null;
@@ -240,21 +241,21 @@
 
                 //document.getElementById('zeroQt').checked = false;
             }
-
-            pdStockTable.on("rowClick", function(e, row){
+            // 
+            pdStockTable.on("rowClick", function (e, row) {
                 let pdCd = row.getData().pdCd;
                 console.log(pdCd);
-                param = {pdCd};
+                param = { pdCd };
                 console.log(param);
                 getLotStockList(param);
             });
 
 
-            
 
 
 
-            
+
+
         </script>
     </div>
 
