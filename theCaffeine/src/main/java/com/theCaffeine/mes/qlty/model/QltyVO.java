@@ -22,7 +22,7 @@ public class QltyVO {
 	private String mtCk; // 자재 검사 테이블
 	private String mtName; //자재명
 	private String cliName; //거래처명
-	private String ckName; //검사명
+	private String mcName; //검사명:수분검사
 	
 	private Integer mtCkNo; // 자재 검사 번호
 	private Integer firstMc; // 1차 수분검사
@@ -32,7 +32,8 @@ public class QltyVO {
 	private Integer fifthMc; // 5차 수분검사
 	private double mcAvg; // 수분검사 평균
 	private String mcRes; // 수분검사 결과
-	private String ckDt; // 검사일
+	@JsonFormat(pattern="yyyy-MM-dd")
+	private Date ckDt; // 검사일
 	private String ckChg; // 검사담당자
 	
 		
