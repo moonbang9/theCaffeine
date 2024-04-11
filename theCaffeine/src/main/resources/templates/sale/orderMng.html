@@ -507,9 +507,9 @@
             document.getElementById('totalPrice').innerText = info.totalPrice;
       }
 
-      let list= '';
       //모달창에 주문 정보 - 주문 제품 목록 출력 (tr 만들기)
       function getList(list){
+        let pdList= '';
         console.log(list);
         list.forEach(ele => { //제품코드	제품명	수량	단위	단가	합계
           let tr = `<tr >                        
@@ -520,9 +520,9 @@
                       <td>${ele.cost}</td>
                       <td>${ele.detailPrice}</td>
                     </tr>`
-                    list += tr;
+                    pdList += tr;
                   })
-                  odPd.innerHTML(list);
+                  odPd.innerHTML= pdList;
       }
 
     </script>
