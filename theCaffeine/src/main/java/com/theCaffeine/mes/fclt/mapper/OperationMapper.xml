@@ -3,6 +3,21 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.theCaffeine.mes.fclt.mapper.OperationMapper">
 
+
+<sql id="conditionop">
+<where>
+<if test="fcName != null and fcName != '' ">
+lower(fc_name) LIKE '%' || #{fcName} || '%'
+</if>
+<if test="insMf != null and insMf != '' ">
+AND ins_mf = #{insMf}	
+</if>
+<if test="st != null and st != '' ">
+AND st = #{st}
+</if>
+</where>
+</sql>
+
 <!-- 비가동 목록 -->
 <select id="getOprtList" resultType="OperationVO">
 	SELECT  
@@ -21,6 +36,7 @@
                 N.RSN_DESC,
                 N.FC_CD
 	FROM NONOP_MGMT N JOIN FC F ON  N.FC_CD = F.FC_CD
+	<include refid="conditionop"></include>
 </select>
 
 <!--  비가동 단건 조회 -->

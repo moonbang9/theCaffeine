@@ -3,6 +3,21 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.theCaffeine.mes.fclt.mapper.InspectionMapper">
 
+<sql id="conditionins">
+<where>
+<if test="fcName != null and fcName != '' ">
+lower(fc_name) LIKE '%' || #{fcName} || '%'
+</if>
+<if test="cc != null and cc != '' ">
+AND cc = #{cc}
+</if>
+<if test="insDt != null and insDt != '' ">
+AND (ins_dt BETWEEN #{insDt} AND #{insDt})
+</if>
+
+</where>
+</sql>
+
 <!-- 전체 점검 목록 -->
 <select id="getInspList" resultType="InspectionVO">
 
@@ -18,9 +33,10 @@
                FINS. CHG,
                FINS.FC_CD,
                 CASE WHEN F.ST = 0 THEN '가동'
-                                                                        ELSE '비가동'
+                ELSE '비가동'
                 END AS ST
 	FROM FC_INS FINS JOIN FC F ON FINS.FC_CD = F.FC_CD
+	<include refid="conditionins"></include>
 </select>
 
 <!--  단건조회 -->

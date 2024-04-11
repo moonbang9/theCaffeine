@@ -33,8 +33,8 @@ public class InspectionController {
 	}
 
 	// 점검 목록 데이터
-	@GetMapping("/fclt/getinspection")
-	public List<InspectionVO> insptList(InspectionVO vo) {
+	@PostMapping("/fclt/getinspection")
+	public List<InspectionVO> insptList(@RequestBody InspectionVO vo) {
 		return inspService.getInspList(vo);
 	}
 

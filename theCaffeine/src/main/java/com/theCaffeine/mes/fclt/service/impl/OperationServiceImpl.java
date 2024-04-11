@@ -26,8 +26,8 @@ public class OperationServiceImpl implements OperationService{
 	}
 
 	@Override
-	public List<OperationVO> getOprtList() {
-		return oprtMapper.getOprtList();
+	public List<OperationVO> getOprtList(OperationVO vo) {
+		return oprtMapper.getOprtList(vo);
 	}
 
 	@Override
