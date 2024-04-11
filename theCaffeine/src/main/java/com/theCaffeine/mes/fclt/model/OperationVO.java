@@ -20,4 +20,5 @@ public class OperationVO {
 	String rsn;
 	String rsnDesc;
 	String fcCd;
+	String insMf;
 }

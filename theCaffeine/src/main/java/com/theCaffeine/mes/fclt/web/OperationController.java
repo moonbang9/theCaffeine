@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -33,9 +34,9 @@ public class OperationController {
 		}
 		
 		// 비가동 목록 데이터
-		@GetMapping("/fclt/getoperation")
-		public List<OperationVO> oprtList(OperationVO vo) {
-			return oprtService.getOprtList();
+		@PostMapping("/fclt/getoperation")
+		public List<OperationVO> oprtList(@RequestBody OperationVO vo) {
+			return oprtService.getOprtList(vo);
 		}
 		
 		//등록처리

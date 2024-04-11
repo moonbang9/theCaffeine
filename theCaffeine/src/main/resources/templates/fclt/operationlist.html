@@ -15,48 +15,45 @@
 			</div>
 
 			<!-- Vertically Centered Modal -->
-			<div class="row gy-2 gx-3 align-items-center" >
+			<div class="row gy-2 gx-3 align-items-center">
 				<div class="mt-3">
-					<div class="d-flex" >
-						<form action="" name="frmSearch" class="col">
-						
-							<div class="mb-3 row" style="justify-content: center;align-content: center;">
-								<label class="col-sm-2">설비명</label>
+					<div class="d-flex">
+						<form action="" name="frmSearchop" class="col">
+
+							<div class="mb-3 row"
+								style="justify-content: center; align-content: center;">
+								<label class="col-sm-2" for="searchNameop">설비명</label>
 								<div class="col-md-4">
-									<input class="form-control" type="text">
+									<input class="form-control" type="text" name="searchNameop" id="searchNameop">
 								</div>
-								</div>
-								<div class="mb-3 row" style="justify-content: center;align-content: center;">
-								<label class="col-sm-2">공정라인</label>
+							</div>
+							<div class="mb-3 row"
+								style="justify-content: center; align-content: center;">
+								<label class="col-sm-2" for="searchMfop">공정라인</label>
 								<div class="col-md-4">
-									<select class="form-select" id="insertedMf">
-										<option selected>선택</option>
+									<select class="form-select" name="searchMfof" id="searchMfop">
+										<option value="">선택</option>
 										<option value="0">로스팅</option>
 										<option value="1">포장</option>
 									</select>
 								</div>
 							</div>
 
-							<div class="mb-3 row" style="justify-content: center;align-content: center;">
+							<div class="mb-3 row"
+								style="justify-content: center; align-content: center;">
 								<label class="col-sm-2 ">설비상태</label>
 								<div class="col-md-4">
-									<label class="form-check-label" for="defaultRadio1" > 전체
-									</label> <input name="default-radio-1" class="form-check-input"
-										type="radio" value="" id="defaultRadio1" checked=""> 
+									<label class="form-check-label" for="defaultRadio1">전체 </label> 
+										<input class="form-check-input" type="radio" value="" id="defaultRadio1" name="searchStop" checked> 
 										<label class="form-check-label" for="defaultRadio1" style="padding-left: 10px;"> 가동 </label> 
-										<input name="default-radio-1" class="form-check-input" type="radio"
-										value="" id="defaultRadio1"> 
-										<label class="form-check-label" for="defaultRadio2" style="padding-left: 10px;"> 비가동 </label> 
-										<input name="default-radio-1" class="form-check-input" type="radio"
-										value="" id="defaultRadio2">
+										<input class="form-check-input" type="radio" value="0" id="defaultRadio2" name="searchStop"> 
+										<label class="form-check-label" for="defaultRadio2" style="padding-left: 10px;"> 비가동 </label>
+									<input class="form-check-input" type="radio" value="1" id="defaultRadio3" name="searchStop">
 								</div>
 							</div>
 							<div class="d-grid gap-2 d-md-flex justify-content-md-center">
-								<button class="btn btn-secondary" type="button" id="research1"
-									style="margin-top: 12px;">초기화</button>
-								<button class="btn btn-primary" type="button" id="research1"
-									style="margin-top: 12px; margin-right: 5px;">검색</button>
-
+								<button class="btn btn-secondary" type="button" id="resetopBtn" style="margin-top: 12px;">초기화</button>
+								<button class="btn btn-primary" type="button" id="searchopBtn" style="margin-top: 12px; margin-right: 5px;">검색</button>
 							</div>
 						</form>
 
@@ -194,12 +191,12 @@
 	        {title:"담당자", field:"fcChg", width:150, hozAlign:"center"},
 	        {title:"사유", field:"rsn", width:150, hozAlign:"center"},
 	        {title:"사유 상세", field:"rsnDesc", width:160, hozAlign:"center"},
-	        {title:"비가동 종료", field:"nonopFnTime",width:90,formatter: editorIcon, hozAlign:"center",resizable:false, headerSort:false,
+	        {title:"비가동 종료", field:"nonopFnButton",width:90,formatter: editorIcon, hozAlign:"center",resizable:false, headerSort:false,
 	            cellClick:function(e, cell){
 	            	console.log('nonopCd:'+cell._cell.row.data.nonopCd);
 	            	let nonopCd = cell._cell.row.data.nonopCd;
 	        		let param = {nonopCd};
-	        		console.log(param);
+	        		//console.log(param);
 	        		fetch("/fclt/updatefntime",{
 	        			method : "post",
 	        			headers: {
@@ -212,20 +209,22 @@
 	        		
 	        		);
 	        		location.href= "/fclt/operationlist";
+	        		
 	        	}
 	        		
 	        },
+	       
 	    ],
 	});
 	// 비가동 목록 데이터
-	function listReq() {
+	/*  function listReq() {
 		fetch("/fclt/getoperation")
 		.then(res => res.json())
 		.then(res =>{
 			console.log(res)
 			oprttable.setData(res)} )
 		
-	}
+	}  */
 	
 	//클릭 시 단건 데이터 불러오기
 	oprttable.on("rowClick", function(e, row){
@@ -264,7 +263,47 @@
 		fcCd = obj.fcCd;
 	}
 	
-	listReq();
+	// 검색 조건 기준 원자재 목록 데이터
+	searchopBtn.addEventListener("click",function(){
+		const searchNameop= frmSearchop.searchNameop.value;
+		console.log(searchNameop);
+		const searchMfop = frmSearchop.searchMfop.value;
+		console.log(searchMfop);
+		const searchStatusop = document.querySelector('input[name="searchStop"]:checked').value;
+		//const searchStopVal = searchStatusop.value;
+		console.log(searchStatusop);
+		let paramop = {
+				fcName: searchNameop,
+		        // 값이 없으면 undefined
+		        insMf: searchMfop ? searchMfop : '',
+		        st: searchStatusop ? searchStatusop : ''
+		};
+		
+		fetch("/fclt/getoperation",{
+			method:"post",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body:JSON.stringify(paramop)
+		})
+		.then(res => res.json())
+		.then(res =>{
+			console.log(res)
+			oprttable.setData(res);
+	})
+	.catch(err=>{
+		console.log(err);
+	});
+	});
+	
+	//초기화 버튼 값 비워주기 
+	
+	resetopBtn.addEventListener("click",function(){
+		searchNameop.value= '';
+		searchMfop.value ='';
+	});
+	
+	//listReq();
 	
 	//등록창 비워주기 
 	addNonopBtn.addEventListener("click",function(){
