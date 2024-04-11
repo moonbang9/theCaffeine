@@ -35,7 +35,7 @@
  		   		AND d.due_dt <![CDATA[<=]]> #{maxDueDt}		
  			</if> 			
  			<if test="stList != null">
-				AND d.od_detail_st 
+				AND o.od_st 
  				<foreach collection="stList" open="in (" close=")" separator="," item="st">				
  					#{st}
  				</foreach>
@@ -44,30 +44,76 @@
 	</sql>
 	
 	<select id="getOrderList" resultType="OrderMngVO" parameterType="OrderMngVO">
-		select o.OD_NO
-				, o.OD_DT
-				, o.OD_CHG
-				, o.DC_RATE
-				, o.TOTAL_PRICE
-				, o.CLI_CD
+		select de.od_no
+				, o.od_dt
 				, c.cli_name
-				, c.cli_chg
-				, d.od_no
-				, d.od_detailno
-				, p.pd_name
-				, d.due_dt
-				, d.od_detail_st
-				, d.pd_cd
-				, d.detail_price
-		from cli c 
-				JOIN od o 
-					ON c.cli_cd = o.cli_cd
-            	LEFT OUTER JOIN od_detail d
-                	ON o.od_no = d.od_no
-            	JOIN pd p
-                	ON d.pd_cd = p.pd_cd
+				, c.cli_chg 
+				, CASE WHEN (de.cnt > 0) THEN p.pd_name || ' 외 ' || de.cnt || '건'
+             		   ELSE p.pd_name
+             	  END AS pd_name  
+             	, o.total_price
+             	, o.od_chg
+             	, d.due_dt
+             	, CASE (o.od_st) WHEN 1 THEN '주문접수' 
+					             WHEN 2 THEN '생산요청'
+					             WHEN 3 THEN '출고완료'
+					             WHEN 4 THEN '구매확정'
+					             WHEN 9 THEN '반품완료'
+            					 ELSE '반품중'
+            	  END AS od_st
+		from od_detail d 
+		    JOIN (select min(od_detailno) as minDetailNo
+		    			, (count(*)-1) as cnt
+		    			, od_no
+		          from od_detail
+		          group by od_no) de 
+		    ON d.od_detailno = de.minDetailNO
+		    JOIN pd p
+		    ON d.pd_cd = p.pd_cd
+		    JOIN od o
+		    ON o.od_no = de.od_no
+		    JOIN cli c
+		    ON c.cli_cd = o.cli_cd
         <include refid="condition"></include> 
-		ORDER BY d.od_detailno DESC
+		ORDER BY de.od_no DESC
+	</select>
+	
+	<select id="getOdInfo" parameterType="int" resultType="OrderVO">
+		select c.cli_name
+				, o.cli_cd
+				, c.bussno
+				, c.tel
+				, c.addr
+				, c.mail
+				, c.cli_chg
+				, o.od_chg
+				, o.od_dt
+				, d.due_dt
+				, (o.dc_rate*100) || '%' as dc_percent
+				, o.total_price
+		from od o
+		    JOIN cli c
+		    	ON o.cli_cd = c.cli_cd
+		    JOIN (select min(due_dt) due_dt
+		    			, od_no
+				  from od_detail
+				  group by od_no) d
+	    		ON o.od_no = d.od_no
+		where o.od_no = #{odNo}	
+	</select>
+	
+	<select id="getOdPdList" parameterType="int" resultType="ProductVO">
+		select d.pd_cd
+				, p.pd_name
+				, d.qt
+				, p.unit
+				, p.cost
+				, d.detail_price
+		from od_detail d 
+			JOIN pd p
+    			ON d.pd_cd = p.pd_cd
+		where d.od_no = #{odNo}
+		order by od_detailno
 	</select>
 	
 </mapper>
