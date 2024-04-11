@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class MtrlPlanVO {				//생산계획 + 계획상세
 	private String pdtPlanCd;			//생산계획코드
 	private Integer placeodQt; 			//발주 수량
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
 	private Date placeodCompdt;			//발주 완료일
 	private String placeodRequester; 	//발주 요청자
 	private String placeodChg; 			//발주 담당자

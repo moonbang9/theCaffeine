@@ -23,7 +23,7 @@ public class PlanOrderDetailVO {
 	private Integer pdtQt;			//생산 수량
 	private Integer prePdtQt;		//생산 예정수량
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
 	private Date dueDt;				//납기 일
 	private Integer odDetailSt;		//주문상태
 	private Integer totQt;		//주문합계

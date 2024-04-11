@@ -1,17 +1,24 @@
 package com.theCaffeine.mes.prdt.web;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.theCaffeine.mes.prdt.model.FailPlanVO;
+import com.theCaffeine.mes.prdt.model.InstVO;
 import com.theCaffeine.mes.prdt.model.MtrlPlanVO;
 import com.theCaffeine.mes.prdt.model.PlanOrderDetailVO;
 import com.theCaffeine.mes.prdt.model.PlanResistVO;
@@ -50,19 +57,21 @@ public class ProductionController {
 	}
 	
 	//생산 주간 계획 등록 페이지이동
-	@GetMapping("/production/planRegist")
+	/*@GetMapping("/production/planRegist")
 	public ModelAndView planRegist() { 
 		ModelAndView mv = new ModelAndView("prdt/prdtPlanRegist");
 		return mv;
-	}
+	}*/
 	
-	//생산 주간 계획 등록 데이터 포함 이동
-	@GetMapping("/production/planRegist/{pdtPlanCd}")
-	public ModelAndView planRegist(@PathVariable String pdtPlanCd) { 
+	//생산 주간 계획 등록 데이터 포함 이동 //수정
+	@GetMapping(value = "/production/planRegist")
+	public ModelAndView planRegist(String pdtPlanCd) { 
 		ModelAndView mv = new ModelAndView("prdt/prdtPlanRegist");
 		if(pdtPlanCd != null) {
 			List<PlanVO> list = prdtService.getPlanDetailList(pdtPlanCd);
+			PlanVO vo = prdtService.getPlanInfo(pdtPlanCd);
 			mv.addObject("list",list);
+			mv.addObject("vo",vo);
 		}
 		return mv;
 	}
@@ -118,6 +127,23 @@ public class ProductionController {
 		return "ok";
 	}
 	
+	//계획 수정
+	@PostMapping("/ajax/planUpdate")
+	public String planUpdate(@RequestBody PlanResistVO vo) {
+		if(prdtService.planUpdate(vo) > 0) {
+			System.out.println("등록성공");
+		}
+		return "ok";
+	}
+	//계획 삭제
+	@GetMapping("/ajax/planDelete/{pdtPlanCd}")
+	public String planDelete(@PathVariable String pdtPlanCd) {
+		if(prdtService.planDelete(pdtPlanCd) > 0) {
+			System.out.println("등록성공");
+		}
+		return "ok";
+	}
+	
 	//연간 생산 현황 페이지이동
 	@GetMapping("/production/prdtYearState")
 	public ModelAndView prdtYearStateList() { 
@@ -125,14 +151,14 @@ public class ProductionController {
 		return mv;
 	}
 	
-	
-	
 	//생산 지시 관리 목록 페이지이동
 	@GetMapping("/production/prdtInst")
 	public ModelAndView prdtInstList() { 
 		ModelAndView mv = new ModelAndView("prdt/prdtInst");
 		return mv;
 	}
+	
+	
 	
 	//생산 지시 관리 등록 페이지이동
 	@GetMapping("/production/prdtInstRegist")
@@ -155,5 +181,15 @@ public class ProductionController {
 		return mv;
 	}
 	
+	//지시목록 데이터
+	@GetMapping("/ajax/instList")
+	public List<InstVO> instList() {
+		return prdtService.getInstList();
+	}
 	
+	//상세지시목록 데이터
+	@GetMapping("/ajax/instDetailList/{pdtInstNo}")
+	public List<InstVO> instDetailList(@PathVariable Integer pdtInstNo) {
+		return prdtService.getInstDetailList(pdtInstNo);
+	}
 }

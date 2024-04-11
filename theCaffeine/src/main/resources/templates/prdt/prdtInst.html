@@ -8,18 +8,188 @@
 <body>
 <div layout:fragment="content">
 	
-	<h1>생산지시목록</h1>
+	<h1>주간생산 지시관리</h1>
 		<div class="demo-inline-spacing">
-		<button id="saveBtn"
-	        type="button"
-	        class="btn btn-primary">
-	        일정 등록
-	    </button>
-	</div>
-<script>
-	saveBtn.addEventListener("click", e=> {
+		
+		<div class="d-flex mt-5">
+	  		<div class="p-2 flex-grow-1"><h3>생산주간 지시조회</h3></div>
+	  		<div class="p-2"><button type="button" class="btn btn-primary" id="saveBtn1">등록</button></div>
+		</div>
+		<div id="productionPlan-table"></div>
+		<div class="d-flex mt-5">
+	  		<div class="p-2 flex-grow-1"><h3>생산주간 지시상세조회</h3></div>
+		</div>
+		<div id="productionPlan-table2"></div>
+		</div>
+<script th:inline="javascript">
+	$(window).on("load",function(e) {
+		listReq();
+		
+	})
+
+	saveBtn1.addEventListener("click", e=> {
 		location.href='/production/prdtInstRegist'
 	})
+	
+	//수정버튼
+	var editorIcon = function(cell, formatterParams, onRendered) {
+		if(cell._cell.row.data.pdtInstDt < getDateStr(new Date())){
+			return null;	
+		}else{
+  			return "<button class='btn btn-info btn-sm'>수정</button>";
+		}
+	}
+	//삭제버튼
+	var editorIcon2 = function(cell, formatterParams, onRendered) {
+		console.log(cell._cell.row.data.wkPlanSttDt);
+		if(cell._cell.row.data.pdtInstDt <= getDateStr(new Date())){
+			return null;	
+		}else{
+  			return "<button class='btn btn-danger btn-sm'>삭제</button>";
+		}
+	}
+	
+	var table = new Tabulator("#productionPlan-table", {
+    height:"100%",
+    layout:"fitDataFill",
+    columns:[
+        {title:"계획일자", field:"pdtInstDt", hozAlign:"center", width:200},
+        {title:"상품명", field:"insttot", hozAlign:"center", width:500},
+        {title:"총 원두생산 수량(kg)", field:"isum", hozAlign:"center", width:200},
+        {title:"총 예상작업시간(시간)", field:"msum", hozAlign:"center", width:200},
+        {title:"삭제", formatter:editorIcon2, width:90, hozAlign:"center", cellClick:function(e, cell){
+        	let pdtPlanCd = cell._cell.row.data.pdtPlanCd;
+            			console.log(pdtPlanCd)
+        	if(cell._cell.row.data.wkPlanSttDt >= lastWeek(new Date())){
+        		if(confirm("삭제하시겠습니까?")) {
+        			fetch("/ajax/planDelete/"+ pdtPlanCd)
+            		.then(res => {
+            			console.log(res)
+            			if(res.ok){
+            				alert('삭제가 완료되었습니다.')
+            				cell.getRow().delete();
+            			}else{
+            				alert('삭제가 실패하였습니다.')
+            			}
+            		})
+            	}
+        	}
+        }},
+        /*{title:"출고요청", field:"updates",width:90,formatter: editorIcon, hozAlign:"center",resizable:false, headerSort:false,
+            cellClick:function(e, cell){
+            	console.log(cell._cell.row.data.pdtPlanCd);
+            	let pdtPlanCd = cell._cell.row.data.pdtPlanCd;
+            	console.log(cell._cell.row.data.wkPlanSttDt);
+            	
+            	//수정중
+            	if(cell._cell.row.data.wkPlanSttDt >= lastWeek(new Date())){
+            		fetch("/ajax/planDetailList/"+ pdtPlanCd)
+            		.then(res => res.json())
+            		.then(res => {
+            			console.log(res)
+            		})
+        			location.href= "/production/planRegist?pdtPlanCd="+ pdtPlanCd;
+            	}
+            }
+        },
+        {title:"지시확인", formatter:editorIcon2, width:90, hozAlign:"center", cellClick:function(e, cell){
+        	let pdtPlanCd = cell._cell.row.data.pdtPlanCd;
+            			console.log(pdtPlanCd)
+        	if(cell._cell.row.data.wkPlanSttDt >= lastWeek(new Date())){
+        		if(confirm("삭제하시겠습니까?")) {
+        			fetch("/ajax/planDelete/"+ pdtPlanCd)
+            		.then(res => {
+            			console.log(res)
+            			if(res.ok){
+            				alert('삭제가 완료되었습니다.')
+            				cell.getRow().delete();
+            			}else{
+            				alert('삭제가 실패하였습니다.')
+            			}
+            		})
+            	}
+        	}
+        }}*/
+    ],
+});
+	
+	var table2 = new Tabulator("#productionPlan-table2", {
+		height:"100%",
+		layout:"fitDataFill",
+	    columns:[
+	        {title:"생산상품코드", field:"pdCd", hozAlign:"center"},
+	        {title:"상품명", field:"pdName", hozAlign:"center"},
+	        {title:"수량", field:"qt", hozAlign:"center"},
+	        {title:"생산시작시간", field:"pdtSttTime", hozAlign:"center"},
+	        {title:"생산예상종료시간", field:"pdtexptFnTime", hozAlign:"center"},
+	    ],
+	});
+	
+	// 주간 생산계획조회 데이터
+	function listReq() {
+		fetch("/ajax/instList")
+		.then(res => res.json())
+		.then(res => table.setData(res))
+	}
+	
+	// 주간 생산계획 버튼 이벤트
+	table.on("rowClick", function(e, row){
+		let pdtInstNo = row.getData().pdtInstNo;
+		
+		fetch("/ajax/instDetailList/"+ pdtInstNo)
+		.then(res => res.json())
+		.then(res => {
+			table2.setData(res)
+		})
+		
+	});
+	
+	//날짜
+	function getDateStr(myDate){
+		var year = myDate.getFullYear();
+		var month = (myDate.getMonth() + 1);
+		var day = myDate.getDate();
+		
+		month = (month < 10) ? "0" + String(month) : month;
+		day = (day < 10) ? "0" + String(day) : day;
+		
+		return  (year + '-' + month + '-' + day );
+	}
+	
+	//5일전
+	function lastWeek() {
+		  var d = new Date();
+		  var dayOfMonth = d.getDate();
+		  d.setDate(dayOfMonth - 5);
+		  return getDateStr(d);
+	}
+	
+	
+	// 월 주차 판단
+	function weekNumOfMonth(date){
+		let dates = new Date(date)
+		var WEEK_KOR = ["1주차", "2주차", "3주차", "4주차", "5주차"];
+		var THURSDAY_NUM = 4;	// 첫째주의 기준은 목요일(4)이다. 
+		console.log(dates);
+
+		var firstDate = new Date(dates.getFullYear(), dates.getMonth(), 1);
+		var firstDayOfWeek = firstDate.getDay();
+
+		var firstThursday = 1 + THURSDAY_NUM - firstDayOfWeek;	// 첫째주 목요일
+		if(firstThursday <= 0){
+			firstThursday = firstThursday + 7;	// 한주는 7일
+		}
+		var untilDateOfFirstWeek = firstThursday-7+3;	// 월요일기준으로 계산 (월요일부터 한주의 시작)
+		var weekNum = Math.ceil((dates.getDate()-untilDateOfFirstWeek) / 7) - 1;
+
+		if(weekNum < 0){	// 첫째주 이하일 경우 전월 마지막주 계산
+			var lastDateOfMonth = new Date(dates.getFullYear(), dates.getMonth(), 0);
+		 	var result = Util.Date.weekNumOfMonth(lastDateOfMonth);
+		 	return result;
+		}
+
+		return [WEEK_KOR[weekNum], (dates.getMonth()+1)+'월'];
+	}
 </script>
 </div>
 </body>
