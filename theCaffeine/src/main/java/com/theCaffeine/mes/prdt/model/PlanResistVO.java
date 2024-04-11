@@ -15,5 +15,5 @@ import lombok.NoArgsConstructor;
 public class PlanResistVO {
 	private PlanVO planVO;
 	private List<PlanDetailVO> planDetailVO;
-	private List<PlanOrderDetailVO> planOrderDetailVO;
+	//private List<PlanOrderDetailVO> planOrderDetailVO;
 }

@@ -97,8 +97,12 @@
 				<div id="example-table5"></div>
 			</div>
 		</div>
-
-		<script>
+		
+		
+	<script th:inline="javascript">
+		let list = [[${list}]];
+		let vo = [[${vo}]];
+		
 		
 	$(window).on("load",function(e) {
 		detailOrderListReq({});
@@ -108,6 +112,9 @@
 		basicPlanListReq();
 		planConsumReq();
 		successListReq();
+		if(list != null && vo != null){
+			names();
+		}
 	})
 	let noDay = null;
 	let selectOrder = "";
@@ -126,6 +133,7 @@
 		detailOrderListReq(param)
 	})
 	
+	//등록
 	prdtSaveBtn1.addEventListener("click", e=> {
 		console.log(selectOrder)
 		console.log('K'+dayNameing.value.substring(2, 4) + dayNameing.value.substring(5, 7) + dayNameing.value.substring(8, 10))
@@ -133,11 +141,11 @@
 		let planCds = 'K' + dayNameing.value.substring(2, 4) + dayNameing.value.substring(5, 7) + dayNameing.value.substring(8, 10);
 		let params1 = {pdtPlanCd : planCds, wkPlanSttDt : dayNameing.value, odName : naming.value}
 		let params2 = PlanDetailData();
-		let params3 = PlanOrderDetailData();
+		/*let params3 = PlanOrderDetailData();*/
 		
 		let param = {planVO : params1, 
-					planDetailVO : params2,
-					planOrderDetailVO : params3
+					planDetailVO : params2
+					//planOrderDetailVO : params3
 					};
 		
 		
@@ -155,6 +163,39 @@
 				location.href='/production/plan'
 			}else{
 				alert('등록에 실패하였습니다.')
+			}
+		})
+	})
+	
+	//수정
+	prdtModifyBtn1.addEventListener("click", e=> {
+		console.log('K'+dayNameing.value.substring(2, 4) + dayNameing.value.substring(5, 7) + dayNameing.value.substring(8, 10))
+		
+		let planCds = 'K' + dayNameing.value.substring(2, 4) + dayNameing.value.substring(5, 7) + dayNameing.value.substring(8, 10);
+		let params1 = {pdtPlanCd : planCds, wkPlanSttDt : dayNameing.value, odName : naming.value}
+		let params2 = PlanDetailData();
+		/*let params3 = PlanOrderDetailData();*/
+		
+		let param = {planVO : params1, 
+					planDetailVO : params2
+					//planOrderDetailVO : params3
+					};
+		
+		
+		fetch("/ajax/planUpdate",{
+			method : "post",
+			headers: {
+			      "Content-Type": "application/json",
+			    },
+			body : JSON.stringify(param)
+		})
+		.then(res => {
+			console.log(res)
+			if(res.ok==true){
+				alert('수정이 완료되었습니다.')
+				location.href='/production/plan'
+			}else{
+				alert('수정에 실패하였습니다.')
 			}
 		})
 	})
@@ -195,6 +236,34 @@
 		.then(res => res.json())
 		.then(res => {
 			table5.setData(res)
+			
+			console.log(list)
+			console.log(vo)
+			
+			let newArr1 =[]
+			if(list != null){
+				
+			
+			for(let i of list){
+		  		newArr1.push({
+	   				pdCd : i.pdCd,
+	   				pdName : i.pdName,
+	   				addQt : i.qt+"", 
+	   				totQt : i.qt, 
+	   				dueDt : i.dueDt,
+	   				unitQt : i.unitQt
+				});
+	  		}
+			console.log(newArr1)
+			
+			table5.updateData(newArr1)
+			}
+		  	
+			if(vo != null){
+				dayNameing.value = vo.wkPlanSttDt
+				naming.value = vo.odName
+			}
+			
 		})
 	}
 	
@@ -454,6 +523,18 @@
 		return [WEEK_KOR[weekNum], (dates.getMonth()+1)+'월'];
 	}
 	
+	//날짜
+	function getDateStr(myDate){
+		var year = myDate.getFullYear();
+		var month = (myDate.getMonth() + 1);
+		var day = myDate.getDate();
+		
+		month = (month < 10) ? "0" + String(month) : month;
+		day = (day < 10) ? "0" + String(day) : day;
+		
+		return  (year + '-' + month + '-' + day );
+	}
+	
 	//상세계획 데이터 포멧
 	function PlanDetailData() {
 	  let newArr1 = [];
@@ -461,15 +542,33 @@
 	  
 	  let tables = table5.getData();
 	  
-	  for(let i of tables){
-		  newArr1.push({
-	  			pdtPlanCd : planCds,
-    			pdName : i.pdName,
-    			pdCd : i.pdCd,
-    			qt : i.totQt, 
-    			dueDt : i.dueDt
- 			});
+	  if(list != null && vo != null){
+		  for(let i of tables){
+			  for(let j of list){
+				  if(j.pdCd == i.pdCd){
+					  newArr1.push({
+				  			pdtPlanCd : planCds,
+			    			pdName : i.pdName,
+			    			pdCd : i.pdCd,
+			    			qt : i.totQt, 
+			    			dueDt : i.dueDt,
+			    			pdtPlanDetailNo : j.pdtPlanDetailNo
+			 			});  
+				  }
+			  }
+		  }
+	  }else{
+		  for(let i of tables){
+			  newArr1.push({
+		  			pdtPlanCd : planCds,
+	    			pdName : i.pdName,
+	    			pdCd : i.pdCd,
+	    			qt : i.totQt, 
+	    			dueDt : i.dueDt
+	 			});
+		  }
 	  }
+	  
 	  
 	  
 	  /*for(let i of consum){
@@ -508,7 +607,7 @@
 	};
 	
 	//상세주문계획 데이터 포멧
-	function PlanOrderDetailData() {
+	/*function PlanOrderDetailData() {
 		let newArr2 = [];
 		
 		for(let i of selectOrder){
@@ -516,9 +615,16 @@
  				odDetailno : i.odDetailno
    			});
 		}
+	}*/
+	function names(){
+		prdtModalLabel1.style.display = "none";
+		prdtModalLabel2.style.display = "block";
+		prdtSaveBtn1.style.display = "none";
+		prdtModifyBtn1.style.display = "block";
+		dayNameing.readOnly = true;
 	}
-	
 	</script>
+
 	</div>
 </body>
 </html>

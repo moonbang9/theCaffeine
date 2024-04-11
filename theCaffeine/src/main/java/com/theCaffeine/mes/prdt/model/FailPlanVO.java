@@ -19,7 +19,7 @@ public class FailPlanVO {				//실패 수량 파악
 	private Integer failTat; 			//전주 실패 수량
 	private Integer befSuccessTat; 		//전주 생산 수량
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
 	private Date noDate;				//선택안되는 일자
 	private Integer consum; 			//단위 수량
 	private Integer totConsum; 			//제품별 단위 합계 수량

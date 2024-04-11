@@ -43,11 +43,19 @@
 	
 	//수정버튼
 	var editorIcon = function(cell, formatterParams, onRendered) {
-		console.log(cell._cell.row.data.wkPlanSttDt);
 		if(cell._cell.row.data.wkPlanSttDt < lastWeek(new Date())){
 			return null;	
 		}else{
   			return "<button class='btn btn-info btn-sm'>수정</button>";
+		}
+	}
+	//삭제버튼
+	var editorIcon2 = function(cell, formatterParams, onRendered) {
+		console.log(cell._cell.row.data.wkPlanSttDt);
+		if(cell._cell.row.data.wkPlanSttDt < lastWeek(new Date())){
+			return null;	
+		}else{
+  			return "<button class='btn btn-danger btn-sm'>삭제</button>";
 		}
 	}
 	
@@ -55,8 +63,8 @@
     height:"100%",
     layout:"fitDataFill",
     columns:[
-        {title:"계획코드", field:"pdtPlanCd", hozAlign:"center", width:320},
-        {title:"계획기간", field:"wkPlanSttDt", hozAlign:"center", width:320},
+        {title:"계획코드", field:"pdtPlanCd", hozAlign:"center", width:240},
+        {title:"계획기간", field:"wkPlanSttDt", hozAlign:"center", width:310},
         {title:"상품명", field:"plantot", hozAlign:"center", width:320},
         {title:"총 예상 원두생산 수량(kg)", field:"psum", hozAlign:"center", width:320},
         {title:"수정", field:"updates",width:90,formatter: editorIcon, hozAlign:"center",resizable:false, headerSort:false,
@@ -72,29 +80,26 @@
             		.then(res => {
             			console.log(res)
             		})
-            		
-            		
-            		alert("수정창으로 이동");
-        		//location.href= "/production/planRegist/"+ pdtPlanCd;
+        			location.href= "/production/planRegist?pdtPlanCd="+ pdtPlanCd;
             	}
             }
         },
-        {title:"삭제", formatter:"buttonCross", width:80, hozAlign:"center", cellClick:function(e, cell){
-        	//console.log(cell.getRow()._row.data.mtPlaceodCd);
-    		if(confirm("삭제하시겠습니까?")) {
-        		/*const mtPlaceodCd = cell.getRow()._row.data.mtPlaceodCd;
-    			let param = mtPlaceodCd;
-        		fetch("/ajax/deleteMtrlOrder",{
-    				method : "post",
-    				headers: {
-    				      "Content-Type": "application/json",
-    				    },
-    				body : mtPlaceodCd
-    			})
-    			.then(res =>  {
-					alert("삭제가 완료되었습니다.");
-					cell.getRow().delete();
-				})*/
+        {title:"삭제", formatter:editorIcon2, width:90, hozAlign:"center", cellClick:function(e, cell){
+        	let pdtPlanCd = cell._cell.row.data.pdtPlanCd;
+            			console.log(pdtPlanCd)
+        	if(cell._cell.row.data.wkPlanSttDt >= lastWeek(new Date())){
+        		if(confirm("삭제하시겠습니까?")) {
+        			fetch("/ajax/planDelete/"+ pdtPlanCd)
+            		.then(res => {
+            			console.log(res)
+            			if(res.ok){
+            				alert('삭제가 완료되었습니다.')
+            				cell.getRow().delete();
+            			}else{
+            				alert('삭제가 실패하였습니다.')
+            			}
+            		})
+            	}
         	}
         }}
     ],

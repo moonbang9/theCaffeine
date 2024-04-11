@@ -21,11 +21,24 @@
 		order by r.pdt_plan_cd
 	</select>
 	
+	<select id="getPlanInfo" resultType="PlanVO">
+		select 	pdt_plan_cd,
+				wk_plan_stt_dt,
+				od_name
+		from PDTPLAN
+		where pdt_plan_cd = #{pdtPlanCd}
+	</select>
+	
 	<select id="getPlanDetailList" resultType="PlanVO">
-		SELECT 	pd_name,
-        		qt,
-        		due_dt
-		FROM 	PDT_PLAN_DETAIL
+		SELECT 	ppd.pd_name,
+        		ppd.qt,
+        		ppd.due_dt,
+        		ppd.pd_cd,
+        		ppd.pdt_plan_cd,
+        		ppd.pdt_plan_detail_no,
+                p.unit_qt
+		FROM 	PDT_PLAN_DETAIL ppd
+        join pd p on ppd.pd_cd = p.pd_cd
 		WHERE  	pdt_plan_cd = #{pdtPlanCd}
 	</select>
 	
@@ -84,7 +97,6 @@
 		left outer join pd p 
 		on od.pd_cd = p.pd_cd 
 		<where>
-			od.od_detail_st= 1
 			<if test="pdCd != null and pdCd != ''">
 				AND od.pd_cd = #{pdCd}
 			</if>
@@ -178,11 +190,64 @@
 				#{pdCd})
 	</insert>
 	
-	
-	<update id="updatePrdtOdDetailSt" parameterType="PlanOrderDetailVO">
-		UPDATE  od_detail
-		SET     od_detail_st=2
-		WHERE   od_detailno = #{odDetailno}
+	<update id="updatePrdtPlan" parameterType="PlanVO">
+		update PDTPLAN 
+		SET wk_plan_stt_dt=#{wkPlanSttDt}, od_name=#{odName}
+		where pdt_plan_cd = #{pdtPlanCd}
 	</update>
 	
+	<update id="updatePrdtDetailPlan" parameterType="PlanDetailVO">
+		update PDT_PLAN_DETAIL 
+		SET qt = #{qt}, due_dt=#{dueDt}
+		where pdt_plan_detail_no = #{pdtPlanDetailNo}
+	</update>
+	
+	<delete id="planDelete">
+		delete from PDTPLAN where pdt_plan_cd = #{pdtPlanCd}
+	</delete>
+	
+	<delete id="planDetailDelete">
+		delete from PDT_PLAN_DETAIL where pdt_plan_cd = #{pdtPlanCd}
+	</delete>
+	
+	<select id="getInstList" resultType="InstVO">
+	select q.msum, q.isum, q.pdt_inst_no,q.insttot,t.pdt_inst_dt 
+		from(select 	sum(w.m)/60 msum,
+				sum(w.isum) isum,
+				w.pdt_inst_no,
+				case when count(w.pdt_inst_dt)-1 = '0' 
+				then min(pd.pd_name)
+                else min(pd.pd_name) || ' 외 ' || (count(w.pdt_inst_dt)-1) || '개'
+                end as insttot 
+		from (select d.pd_cd, sum(d.qt) isum, p.pdt_inst_dt, round(sum(pdtexpt_fn_time-pdt_stt_time)*24*60,2) m,p.pdt_inst_no
+				from PDT_INST_DETAIL d left outer 
+				join PDT_INST p 
+				on p.pdt_inst_no=d.pdt_inst_no
+				group by d.pd_cd, p.pdt_inst_dt,p.pdt_inst_no
+				order by p.pdt_inst_dt) w 
+		right outer join 	(select DISTINCT p.pdt_inst_no 
+							from PDT_INST p 
+							join PDT_INST_DETAIL pd 
+							on p.pdt_inst_no=pd.pdt_inst_no) e 
+		on w.pdt_inst_no = e.pdt_inst_no
+		join pd pd 
+		on pd.pd_cd=d.w.pd_cd
+		group by w.pdt_inst_no)q 
+	left outer join PDT_INST t 
+	on q.pdt_inst_no = t.pdt_inst_no
+	order by q.pdt_inst_no
+	</select>
+	
+	<select id="getInstDetailList" resultType="InstVO">
+		select 	d.pdt_inst_detail_no,
+				d.pd_cd,d.qt,
+				d.pdt_stt_time,
+				d.pdtexpt_fn_time,
+				d.pdt_inst_no, 
+				d.comp_st,
+				p.pd_name 
+		from PDT_INST_DETAIL d 
+		join pd p on d.pd_cd=p.pd_cd
+		where d.pdt_inst_no = #{pdtInstNo}
+	</select>
 </mapper>
