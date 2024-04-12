@@ -72,5 +72,12 @@
 	  ORDER BY mc.mt_ck_no DESC
 	</select>
 	
+	<!-- 검사완료에서 삭제버튼 클릭시 검사대기 목록으로 이동 -->
+	<delete id="deleteMtrlDoneList" parameterType="String">
+		UPDATE mt_placeod
+               SET PLACEOD_ST = 4
+             WHERE mt_placeod_cd = #{mtPlaceodCd}
+	</delete>
+	
 
 </mapper>

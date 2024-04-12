@@ -12,5 +12,7 @@ public interface QltyMapper {
 	
 	int updateMcRes(QltyVO vo);
 	int updatePlaceodSt(String mtPlaceodCd);
+	
+	int deleteMtrlDoneList(String mtPlaceodCd);
 
 }
