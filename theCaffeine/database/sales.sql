@@ -246,8 +246,9 @@ ORDER BY de.od_no DESC;
 
 /* 주문 상세 조회 */
 select * from od;
-select * from od_detail;
+select * from od_detail order by od_detailno;
 select * from cli;
+select * from pd;
 --거래처명, 거래처코드, 사업자번호, 전화번호, 주소, 이메일, 거래처담당자, 주문담당자, 주문일, 납기일, 할인율, 총금액
 --제품코드	제품명	수량	단위	단가	합계
 select min(due_dt) due_dt, od_no
@@ -263,3 +264,10 @@ from od_detail
 group by od_no) d
     ON o.od_no = d.od_no
 where o.od_no = d.od_no;
+
+-- 주문상품
+select d.pd_cd, p.pd_name, d.qt, p.unit, p.cost, d.detail_price
+from od_detail d JOIN pd p
+    ON d.pd_cd = p.pd_cd
+where d.od_no = 90
+order by od_detailno;
