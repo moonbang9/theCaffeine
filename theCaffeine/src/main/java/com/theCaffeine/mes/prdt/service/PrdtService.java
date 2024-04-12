@@ -27,4 +27,7 @@ public interface PrdtService {
 	int planDelete(String pdtPlanCd); //계획 삭제
 	List<InstVO> getInstList(); //일별 지시조회
 	List<InstVO> getInstDetailList(Integer pdtInstNo); //일별 지시상세조회
+	int instDelete(Integer pdtInstNo); //지시 삭제
+	int instDetailDelete(Integer pdtInstDetailNo); //지시상세 삭제
+	List<PlanVO> getPlanCdList(); // 계획코드 리스트
 }

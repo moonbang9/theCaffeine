@@ -6,7 +6,9 @@
 	<select id="getPlanList" resultType="PlanVO">
 		select w.pdt_plan_cd, w.wk_plan_stt_dt, case when r.cnt = '-1' then null
                                         else r.pd_name || ' 외 ' || r.cnt || '개'
-                                        end as plantot, w.psum from 
+                                        end as plantot, 
+                                        w.psum, 
+                                        w.wk_plan_stt_dt+(select max(leadtm) from mt) wk_plan_stt_dt2 from 
 		(select p.pdt_plan_cd, p.wk_plan_stt_dt, sum(d.qt) as psum from pdt_plan_detail d right outer 
 			join PDTPLAN p 
 			on p.pdt_plan_cd=d.pdt_plan_cd GROUP by p.pdt_plan_cd, p.wk_plan_stt_dt order by p.pdt_plan_cd) w
@@ -240,7 +242,8 @@
 	
 	<select id="getInstDetailList" resultType="InstVO">
 		select 	d.pdt_inst_detail_no,
-				d.pd_cd,d.qt,
+				d.pd_cd,
+				d.qt,
 				d.pdt_stt_time,
 				d.pdtexpt_fn_time,
 				d.pdt_inst_no, 
@@ -249,5 +252,25 @@
 		from PDT_INST_DETAIL d 
 		join pd p on d.pd_cd=p.pd_cd
 		where d.pdt_inst_no = #{pdtInstNo}
+		order by d.pdt_stt_time
+	</select>
+	
+	<delete id="instDelete">
+		delete from pdt_inst where pdt_inst_no = #{pdtInstNo}
+	</delete>
+	
+	<delete id="instDetailDelete">
+		delete from PDT_INST_DETAIL where pdt_inst_no = #{pdtInstNo}
+	</delete>
+	
+	<delete id="instDetailDelete2">
+		delete from PDT_INST_DETAIL where pdt_inst_detail_no = #{pdtInstDetailNo}
+	</delete>
+	
+	<select id="getPlanCdList">
+		select pdt_plan_cd 
+		from PDTPLAN 
+		where wk_plan_stt_dt >= sysdate-(select max(leadtm) from mt)
+		order by pdt_plan_cd
 	</select>
 </mapper>

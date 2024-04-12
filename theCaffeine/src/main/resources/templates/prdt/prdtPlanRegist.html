@@ -201,12 +201,6 @@
 	})
 	
 	
-	function getLists(){
-		//if(${list} != null){
-			//table
-		//}
-	}
-	
 	// 안전재고량 조회 데이터
 	function safeListReq() {
 		fetch("/ajax/planSafeList")
@@ -379,7 +373,6 @@
     paginationSize:8,
     movableColumns:true,
     paginationCounter:"rows",
-    selectableRows:true,
     rowHeader:{resizable: false, frozen: true, hozAlign:"center", formatter: "rowSelection", cssClass:"range-header-col", cellClick:function(e, cell){
         cell.getRow().toggleSelect();
         setResistList()
@@ -389,12 +382,12 @@
       resizable:"header",
     },
     columns:[
-        {title:"제품코드", field:"pdCd", hozAlign:"center", width:200},
-        {title:"단위(1 Box= 3 Bag)", field:"unit", hozAlign:"center", width:200},
-        {title:"수량(Box)", field:"qt", hozAlign:"center", width:200},
+        {title:"제품코드", field:"pdCd", hozAlign:"center", width:330},
+        {title:"단위(1 Box= 3 Bag)", field:"unit", hozAlign:"center", width:330},
+        {title:"수량(Box)", field:"qt", hozAlign:"center", width:330},
         //{title:"생산중인 수량(Box)", field:"pdtQt", hozAlign:"center", width:200},
         //{title:"선택 수량(Box)", field:"prePdtQt", hozAlign:"center", width:200, editor:dateEditor},
-        {title:"납기 일", field:"dueDt", hozAlign:"center", width:200},
+        {title:"납기 일", field:"dueDt", hozAlign:"center", width:330},
     ],
 });
 	

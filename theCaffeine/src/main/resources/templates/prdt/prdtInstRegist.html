@@ -1,26 +1,209 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-  layout:decorate="~{layout/index}">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/index}">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
 <body>
-<div layout:fragment="content">
-	
-	<h1>생산지시등록</h1>
-		<div class="demo-inline-spacing">
-		<button id="saveBtn"
-	        type="button"
-	        class="btn btn-primary">
-	        일정 등록
-	    </button>
+	<div layout:fragment="content">
+
+		<h1>생산지시등록</h1>
+		<div class="card mb-1">
+			<div class="card-body" >
+				<div class="mb-3 row">
+					<label for="" class="col-md-2 col-form-label">계획코드</label>
+					<div class="col">
+						<select class="form-select plans" id="pl">
+							<option class="nulls" value="">선택</option>
+						</select>
+					</div>
+					<label for="mtrl_management_clicd" class="col-md-2 col-form-label">총
+						예상 원두생산 수량(kg)</label>
+					<div class="col">
+						<input class="form-control planTotCnt" type="text" value="" id=""
+							readonly>
+					</div>
+					<label for="mtrl_management_clicd" class="col-md-2 col-form-label">금일 예상 수요량(kg)</label>
+					<div class="col">
+						<input class="form-control daySale" type="text" value="" id="" readonly>
+					</div>
+				</div>
+				<div class="mb-3 row">
+					<label for="mtrl_management_clicd" class="col-md-2 col-form-label">계획기간</label>
+					<div class="col">
+						<input class="form-control planDay" type="text" value="" id="" readonly>
+					</div>
+					<label for="mtrl_management_clicd" class="col-md-2 col-form-label" >상품명</label>
+					<div class="col">
+						<input class="form-control planName" type="text" value="" id=""
+							readonly>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+		<div style="margin-bottom: 20px;">
+			<div>
+				<div id="productionInst-table1"></div>
+			</div>
+		</div>
+		<h3></h3>
+		<div class="mb-3 row">
+	  		<div class="p-2 col"><h3>시간대별 생산지시 등록</h3></div>
+	  		<div class="p-2 col">
+	  			<label for="" class="col-md-5 col-form-label"style="float: right; text-align: right;">지시일자</label>
+			</div>
+	  			<div class="p-2 col">	
+					<select class="form-select planDay2 pl2">
+						<option value="">선택</option>
+					</select>
+			</div>
+		</div>
+		<div id="productionPlan-table2"></div>
+		<div class="d-grid gap-2 d-md-flex justify-content-md-end">
+			<button class="btn btn-secondary" type="button" id="addBtn" style="margin-top: 12px;">추가</button>
+			<button class="btn btn-primary" type="button" id="resistBtn" style="margin-top: 12px;">등록</button>
+			<button class="btn btn-danger" type="button" id="delBtn" style="margin-top: 12px; margin-right: 5px;">삭제</button>
+		</div>
+		<script th:inline="javascript">
+		
+		$(window).on("load",function(e) {
+			planCdList()
+		})
+		let planCds = document.querySelector('.plans');
+		let daySale = document.querySelector('.daySale');
+		let planDay = document.querySelector('.planDay');
+		let planName = document.querySelector('.planName');
+		let planTotCnt = document.querySelector('.planTotCnt');
+		let pl = document.querySelector('#pl');
+		let pl2 = document.querySelector('.pl2');
+		let planDay2 = document.querySelector('.planDay2');
+		let diff = ''
+		
+		planCds.addEventListener("change", e=> {
+			planList()
+			planDetailList()
+			if(planCds.value == ""){
+				daySale.value = ''
+				planDay.value = ''
+				planName.value = ''
+				planTotCnt.value = ''
+			}
+		})
+		
+		//지시일자 등록
+		function planDateList(wkPlanSttDt) {
+			for(let i=0;i<=diff;i++){
+				let newsDate = new Date(wkPlanSttDt);
+				newsDate.setDate(newsDate.getDate() + i);
+				let option = document.createElement('option');
+				option.setAttribute('value', getDateStr(newsDate));
+				option.innerHTML = getDateStr(newsDate);
+				planDay2.append(option)
+			}
+		}
+		
+		
+		// 계획코드 리스트
+		function planCdList() {
+			fetch("/ajax/planCdList")
+			.then(res => res.json())
+			.then(res => {
+				if(res != null){
+					for(let i of res){
+						let option = document.createElement('option');
+						option.setAttribute('value', i.pdtPlanCd);
+						option.innerHTML = i.pdtPlanCd;
+						planCds.append(option)
+					}
+				}else{
+					let option = document.createElement('option');
+					option.setAttribute('value', null);
+					option.innerHTML = '계획없음';
+					planCds.append(option)
+				}
+			})
+		}
+		
+		
+		//계획코드별 데이터
+		function planList() {
+			fetch("/ajax/planList")
+			.then(res => res.json())
+			.then(res => {
+				console.log(res)
+				for(let i of res){
+					if(i.pdtPlanCd == planCds.value){
+						const oldDate = new Date(i.wkPlanSttDt2);
+						const newDate = new Date(i.wkPlanSttDt);
+						diff = Math.abs(newDate.getTime() - oldDate.getTime());
+						diff = Math.ceil(diff / (1000 * 60 * 60 * 24));
+						daySale.value = i.psum / diff
+						planDay.value = `${i.wkPlanSttDt}~${i.wkPlanSttDt2}`
+						planName.value = i.plantot
+						planTotCnt.value = i.psum
+						
+						planDateList(i.wkPlanSttDt)
+					}
+				}
+			})
+			
+		}
+		
+		var table1 = new Tabulator("#productionInst-table1", {
+			height:"100%",
+			layout:"fitDataFill",
+		    columns:[
+		        {title:"상품명", field:"pdName", hozAlign:"center", width:440},
+		        {title:"총 예상 생산 수량(kg)", field:"qt", hozAlign:"center", width:430},
+		        {title:"납기 일자", field:"dueDt", hozAlign:"center", width:440},
+		    ],
+		});
+		// 계획상세 리스트
+		function planDetailList() {
+			fetch("/ajax/planDetailList/"+ planCds.value)
+			.then(res => res.json())
+			.then(res => {
+				table1.setData(res)
+			})
+		}
+		
+		var table2 = new Tabulator("#productionPlan-table2", {
+			height:"100%",
+			layout:"fitDataFill",
+		    columns:[
+		        {title:"제품코드", field:"name", width:200, editor:"input"},
+		        {title:"상품명(자동으로 나와야함)", field:"progress", width:300, hozAlign:"right", sorter:"number", editor:"input"},
+		        {title:"수량", field:"gender", editor:"input", width:100},
+		        {title:"생산시작시간", field:"rating", hozAlign:"center", width:240, editor:"input"},
+		        {title:"생산예상종료시간", field:"col", editor:"input", width:240},
+		        {title:"수정여부", field:"dob", hozAlign:"center", sorter:"date", editor:"input", width:100},
+		    ],
+		});
+		
+		//행 추가
+		document.getElementById("addBtn").addEventListener("click", function(){
+		    table.addRow({});
+		});
+		
+		//날짜
+		function getDateStr(myDate){
+			var year = myDate.getFullYear();
+			var month = (myDate.getMonth() + 1);
+			var day = myDate.getDate();
+			
+			month = (month < 10) ? "0" + String(month) : month;
+			day = (day < 10) ? "0" + String(day) : day;
+			
+			return  (year + '-' + month + '-' + day );
+		}
+		
+			/*saveBtn.addEventListener("click", e=> {
+				location.href='/production/prdtInstRegist'
+			})*/
+		</script>
 	</div>
-<script>
-	saveBtn.addEventListener("click", e=> {
-		location.href='/production/prdtInstRegist'
-	})
-</script>
-</div>
 </body>
 </html>
