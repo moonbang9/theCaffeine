@@ -179,6 +179,9 @@
 		
 		// 발주 요청목록
 		var table2 = new Tabulator("#mtrl_order_request_list", {
+			placeholder:function(){
+		        return this.getHeaderFilters().length ? "No Matching Data" : "ㅋㅋㅋ";
+		    },
 		   height:"100%",
 		   selectableRows:true,
 		   pagination:"local",

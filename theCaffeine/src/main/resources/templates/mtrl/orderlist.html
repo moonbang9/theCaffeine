@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/index}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>orderlist</title>
+</head>
+
+<body>
+    <div layout:fragment="content">
+    	<h1 class="mt-4 mb-4">자재 발주 조회</h1>
+            <div class="divider text-start">
+				<div class="divider-text ">발주 검색</div>
+			</div>
+			<!-- Vertically Centered Modal -->
+			<div class="row gy-2 gx-3 align-items-center">
+				<div class="mt-3">
+					<div class="d-flex">
+						<form action="" name="frmSearch" class="col">
+							<div class="mb-3 row"
+								style="justify-content: center; align-content: center;">
+								<label class="col-sm-1" for="cli_code">거래처코드</label>
+								<div class="col-md-3">
+									<input class="form-control" type="text" name="searchName" id="cli_code">
+								</div>
+								<div class="col-md-1">
+								</div>
+								<label class="col-sm-1" for="cli_name">거래처명</label>
+								<div class="col-md-3">
+									<input class="form-control" type="text" name="searchName" id="cli_name">
+								</div>
+							</div>
+							<div class="mb-3 row"
+								style="justify-content: center; align-content: center;">
+								<label class="col-sm-1" for="mtrl_code">자재코드</label>
+								<div class="col-md-3">
+									<input class="form-control" type="text" name="searchName" id="mtrl_code">
+								</div>
+								<div class="col-md-1">
+								</div>
+								<label class="col-sm-1" for="mtrl_name">자재명</label>
+								<div class="col-md-3">
+									<input class="form-control" type="text" name="searchName" id="mtrl_name">
+								</div>
+							</div>
+							<div class="mb-3 row" style="justify-content: center;align-content: center;">
+								<label class="col-sm-1">발주일자</label>
+								<div class="col-sm-6 input-group" style="width: 940px;" >
+									<input class="form-control" type="date" id="searchDate1" name="searchDate1">
+									<span class="input-group-text">~</span>
+									<input class="form-control" type="date" id="searchDate2" name="searchDate2">
+								</div>
+							</div>
+							
+			              <div class="mb-3 row" style="justify-content: center;align-content: center;">
+			                <label for="html5-search-input" class="col-sm-1 mt-2">발주상태</label>
+			                <div class="col-md-8">
+			                  <div class="form-check form-check-inline mt-2">
+			                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="2" name="odSt">
+			                    <label class="form-check-label" for="inlineCheckbox1">발주완료</label>
+			                  </div>
+			                  <div class="form-check form-check-inline mt-2">
+			                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="3" name="odSt">
+			                    <label class="form-check-label" for="inlineCheckbox2">입고대기</label>
+			                  </div>
+			                  <div class="form-check form-check-inline mt-2">
+			                    <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="4" name="odSt">
+			                    <label class="form-check-label" for="inlineCheckbox3">검사요청</label>
+			                  </div>
+			                  <div class="form-check form-check-inline mt-2">
+			                    <input class="form-check-input" type="checkbox" id="inlineCheckbox4" value="5" name="odSt">
+			                    <label class="form-check-label" for="inlineCheckbox4">검사완료</label>
+			                  </div>
+			                  <div class="form-check form-check-inline mt-2">
+			                    <input class="form-check-input" type="checkbox" id="inlineCheckbox5" value="6" name="odSt">
+			                    <label class="form-check-label" for="inlineCheckbox5">입고완료</label>
+			                  </div>
+			                  <div class="form-check form-check-inline mt-2">
+			                    <input class="form-check-input" type="checkbox" id="inlineCheckbox6" value="7" name="odSt">
+			                    <label class="form-check-label" for="inlineCheckbox6">반품처리</label>
+			                  </div>
+			                </div>
+			              </div>
+							<div class="d-grid gap-2 d-md-flex justify-content-md-center">
+								<button class="btn btn-secondary" type="button" id="resetBtn" style="margin-top: 12px;">초기화</button>
+								<button class="btn btn-primary" type="button" id="searchBtn" style="margin-top: 12px; margin-right: 5px;">검색</button>
+							</div>
+						</form>
+					</div>
+					
+					<div class="divider text-start">
+						<div class="divider-text "></div>
+					</div>
+
+			    <!-- Large Modal -->
+			    <div class="modal fade" id="mtrlPlaceodModal" tabindex="-1" aria-hidden="true">
+			      <div class="modal-dialog modal-lg" role="document">
+			        <div class="modal-content">
+			          <div class="modal-header">
+			            <h5 class="modal-title" id="exampleModalLabel3">주문 정보</h5>
+			            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			          </div>
+			          <div class="modal-body">
+			            <!-- 거래처 선택 -->
+			            <div class="card-body">
+			              
+			              <div class="mb-3 row">
+			                <label for="html5-url-input" class="col-md-2 col-form-label">거래처명</label>
+			                <div class="col-md-10">
+			                  <p class="mb-0" id="cliName"></p>
+			                </div>
+			              </div>
+			
+			              <div class="mb-3 row">
+			                <label for="html5-url-input" class="col-md-2 col-form-label">거래처코드</label>
+			                <div class="col-md-10">
+			                  <p class="mb-0" id="cliCd"></p>
+			                </div>
+			              </div>
+			
+			              <div class="mb-3 row">
+			                <label for="html5-url-input" class="col-md-2 col-form-label">사업자번호</label>
+			                <div class="col-md-10">
+			                  <p class="mb-0" id="bussno"></p>
+			                </div>
+			              </div>
+			
+			              <div class="mb-3 row">
+			                <label for="html5-tel-input" class="col-md-2 col-form-label">전화번호</label>
+			                <div class="col-md-10">
+			                  <p class="mb-0" id="tel"></p>
+			                </div>
+			              </div>
+			
+			              <div class="mb-3 row">
+			                <label for="html5-tel-input" class="col-md-2 col-form-label">주소</label>
+			                <div class="col-md-10">
+			                  <p class="mb-0" id="addr"></p>
+			                </div>
+			              </div>
+			
+			              <div class="mb-3 row">
+			                <label for="html5-tel-input" class="col-md-2 col-form-label">이메일</label>
+			                <div class="col-md-10">
+			                  <p class="mb-0" id="mail"></p>
+			                </div>
+			              </div>
+			
+			              <div class="mb-3 row">
+			                <label for="html5-tel-input" class="col-md-2 col-form-label">거래처
+			                  담당자</label>
+			                <div class="col-md-10">
+			                  <p class="mb-0" id="cliChg"></p>
+			                </div>
+			              </div>
+			            </div>
+			            <hr class="m-0">
+			            <!-- 주문정보 -->
+			            <div class="card-body">
+			              <div class="mb-3 row">
+			                <label for="html5-tel-input" class="col-md-2 col-form-label">주문
+			                  담당자</label>
+			                <div class="col-md-10">
+			                  <p class="mb-0" id="odChg"></p>
+			                </div>
+			              </div>
+			              <div class="mb-3 row">
+			                <label for="html5-time-input" class="col-md-2 col-form-label">주문일</label>
+			                <div class="col-md-10">
+			                  <p class="mb-0" id="odDt"></p>
+			                </div>
+			              </div>
+			              <div class="mb-3 row">
+			                <label for="html5-color-input" class="col-md-2 col-form-label">납기일</label>
+			                <div class="col-md-10">
+			                  <p class="mb-0" id="dueDt"></p>
+			                </div>
+			              </div>
+			            </div>
+			          </div>
+			          <div class="modal-footer">
+			            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+			              닫기
+			            </button>
+			          </div>
+			        </div>
+			      </div>
+			    </div>
+
+				<div id="mtrl_order_list">
+				 	
+				</div>
+
+
+               
+
+ 
+               </div>
+            </div>
+
+        <script>
+        
+        // 초기화 버튼 이벤트
+        resetBtn.addEventListener("click",function(){
+        	cli_code.value = '';
+        	cli_name.value = '';
+        	mtrl_code.value = '';
+			mtrl_name.value ='';
+			searchDate1.value = '';
+			searchDate2.value = '';
+			let odSt = document.querySelectorAll('input[name="odSt"]:checked');
+			for(st of odSt) {
+				st.checked = false;
+			}
+		});
+       
+        // 발주일자 검색 입력값 자동 수정
+        searchDate1.addEventListener("change",function(){
+        	let dateDifference = null;
+        	if(searchDate2.value != "") {
+        		dateDifference = searchDate1.value <= searchDate2.value;
+        	}
+        	if(dateDifference == false) {
+        		searchDate1.value = searchDate2.value;
+        	}
+        })
+        searchDate2.addEventListener("change",function(){
+        	let dateDifference = searchDate1.value <= searchDate2.value;
+        	if(dateDifference == false) {
+        		searchDate2.value = searchDate1.value;
+        	}
+        })
+        
+     	// 자재발주 목록
+		var table = new Tabulator("#mtrl_order_list", {
+		    height:"100%",
+		    pagination:"local",
+		    paginationSize:6,
+		    paginationSizeSelector:[3, 6, 8, 10],
+		    movableColumns:true,
+		    paginationCounter:"rows",
+		    rowHeader:{formatter:"rownum", headerSort:false, width:50, hozAlign:"center", resizable:false, frozen:true},
+		    columns:[
+		        {title:"거래처코드", field:"cliCd", width:140, hozAlign:"center"},
+		        {title:"거래처명", field:"cliName", width:230, hozAlign:"center"},
+		        {title:"자재코드", field:"mtCd", width:130, hozAlign:"center"}, 
+		        {title:"자재명", field:"mtName", width:200, hozAlign:"center"}, 
+		        {title:"발주완료일", field:"placeodCompdt", width:180, hozAlign:"center"},
+		        {title:"담당자", field:"placeodChg", width:180, hozAlign:"center"},
+		        {title:"상태", field:"st", width:170, hozAlign:"center"},
+		        {title:"발주서", field:"placeodInfo", width:100, hozAlign:"center"},
+		    ],
+		});
+        
+        let cliCode = '';
+        let cliName = '';
+        let mtrlCode = '';
+        let mtrlName ='';
+        let placeodCompdt1 = '';
+        let placeodCompdt2 = '';
+        let stList = null;
+        
+        param = { cliCode, cliName, mtrlCode, mtrlName, placeodCompdt1, placeodCompdt2, stList };
+	     
+		listReq(param);
+ 
+     	// 자재발주 목록 데이터
+		function listReq(param) {
+			fetch("/ajax/orderSearchList",{
+				method:"post",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body:JSON.stringify(param)
+			})
+			.then(res => res.json())
+			.then(res => table.setData(res))
+		}
+
+        // 검색 버튼 누르면 조건대로 검색한 주문목록 불러오기
+        searchBtn.addEventListener("click", e => {  
+        	checkList();
+        	
+        	let cliCd = cli_code.value;
+            let cliName = cli_name.value;
+            let mtCd = mtrl_code.value;
+            let mtName = mtrl_name.value;
+            let placeodCompdt1 = searchDate1.value;
+            let placeodCompdt2 = searchDate2.value;
+            
+            if (stList.length == 0) {
+                stList = null;
+            }   
+            param = { cliCd, cliName, mtCd, mtName, placeodCompdt1, placeodCompdt2, stList };
+            listReq(param);
+        })
+        
+        
+   
+	  // 조건검색 : 체크된 주문상태만 배열에 담기
+      function checkList() {
+        // 주문상태 배열 초기화
+        stList = [];
+
+        // Name이 odSt인 속성 취득
+        const odSt = document.getElementsByName("odSt");
+        console.log(odSt);
+        // 취득한 속성 만큼 루프
+        for (let i = 0; i < odSt.length; i++) {
+          // 속성중에 체크 된 항목이 있을 경우
+          if (odSt[i].checked == true) {
+            stList.push(odSt[i].value);
+          }
+        }
+        console.log(stList);
+      }
+
+      table.on("rowClick", function(e, row){
+  		let mtPlaceodCd = row.getData().mtPlaceodCd;
+  		console.log(mtPlaceodCd);
+  		fetch("/ajax/mtrlPlaceodInfo/"+ mtPlaceodCd)
+	  		.then(res => res.json())
+	  		.then(res => {
+	  			console.log(res);
+	  			const myModal = new bootstrap.Modal('#mtrlPlaceodModal', {
+	  	             keyboard: false
+	  	        })
+	  	        const modalToggle = document.getElementById('mtrlPlaceodModal');
+	  	        myModal.show(modalToggle);
+	  			//getInfo(res);
+  			})
+  		});
+		
+      	function getInfo(obj){
+	  		mtrl_management_clicd.value = obj.cliCd;
+	  		mtrl_management_cd.value = obj.mtCd;
+	  		mtrl_management_div.value = obj.mtDiv;
+	  		mtrl_management_name.value = obj.mtName;
+	  		mtrl_management_cost.value = obj.cost;
+	  		mtrl_management_unit.value = obj.unit;
+	  		mtrl_management_expdt.value = obj.expDt;
+	  		mtrl_management_leadtm.value = obj.leadtm;
+	  		mtrl_management_safestkrate.value = obj.safeStkRate;
+  		}
+		
+		
+
+            
+        </script>
+    </div>
+
+
+</body>
+
+</html>

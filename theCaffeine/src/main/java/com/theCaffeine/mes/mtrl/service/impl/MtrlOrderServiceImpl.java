@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.theCaffeine.mes.mtrl.mapper.MtrlOrderMapper;
+import com.theCaffeine.mes.mtrl.model.MtrlOrderListVO;
 import com.theCaffeine.mes.mtrl.model.MtrlOrderVO;
 import com.theCaffeine.mes.mtrl.model.MtrlStkListVO;
 import com.theCaffeine.mes.mtrl.service.MtrlOrderService;
@@ -71,6 +72,16 @@ public class MtrlOrderServiceImpl implements MtrlOrderService{
 	@Override
 	public List<MtrlStkListVO> getMtrlStkList() {
 		return mtrlOrderMapper.getMtrlStkList();
+	}
+
+	@Override
+	public List<MtrlOrderListVO> getMtrlOrderSearchList(MtrlOrderListVO vo) {
+		return mtrlOrderMapper.getMtrlOrderSearchList(vo);
+	}
+
+	@Override
+	public MtrlOrderListVO getMtrlPlaceodInfo(String mtPlaceodCd) {
+		return mtrlOrderMapper.getMtrlPlaceodInfo(mtPlaceodCd);
 	}
 	
 }

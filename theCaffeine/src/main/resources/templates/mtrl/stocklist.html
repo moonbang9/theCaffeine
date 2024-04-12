@@ -41,9 +41,9 @@
 									<label class="form-check-label" for="mtrl_div">&nbsp&nbsp&nbsp전체 </label> 
 									<input class="form-check-input" type="radio" value="" id="mtrl_div" name="searchSt" checked> 
 									<label class="form-check-label" for="mtrl_div1" style="padding-left: 10px;">&nbsp&nbsp&nbsp&nbsp원자재 </label> 
-									<input class="form-check-input" type="radio" value="0" id="mtrl_div1" name="searchSt"> 
+									<input class="form-check-input" type="radio" value="원자재" id="mtrl_div1" name="searchSt"> 
 									<label class="form-check-label" for="mtrl_div2" style="padding-left: 10px;">&nbsp&nbsp&nbsp&nbsp부자재 </label>
-									<input class="form-check-input" type="radio" value="1" id="mtrl_div2" name="searchSt">
+									<input class="form-check-input" type="radio" value="부자재" id="mtrl_div2" name="searchSt">
 								</div>
 							</div>
 							<div class="d-grid gap-2 d-md-flex justify-content-md-center">
@@ -57,15 +57,26 @@
 						<div class="divider-text "></div>
 					</div>
 
-                <!-- 자재 재고 목록 -->
-                <div id="mtStockList" class="mb-3">
+			<div class="d-flex align-items-start bd-highlight mb-3">
+				<div class="col-md-6">
+					<div class="d-flex mt-2" style="margin-bottom: 10px;">
+						<div class="p-2 flex-grow-1"><span style="font-size: 24px;">자재 목록</span><span class="dayy" style="font-size: 18px;"></span></div>
+					</div>
+					 <!-- 자재 재고 목록 -->
+	                <div id="mtStockList" class="mb-3"></div>
+				</div>
+				<div class="col-md-6" style="display:none"  id="rotList">
+					<div class="d-flex mt-2" style="margin-bottom: 10px;">
+	  					<div class="p-2 flex-grow-1"><span style="font-size: 24px;">ROT별 자재 목록</span></div>
+					</div>
+	               	<!-- ROT별 재고 목록 -->
+	                <div id="lotStockList" class="mb-3"></div>
+				</div>
+			</div>
 
-                </div>
+               
 
-                <!-- ROT별 재고 목록 -->
-                <div id="lotStockList" class="mb-3">
-
-                </div>
+ 
                </div>
             </div>
 
@@ -80,32 +91,43 @@
      // 자재 재고 목록
 		var table = new Tabulator("#mtStockList", {
 		    height:"100%",
-		   
 		    pagination:"local",
 		    paginationSize:6,
 		    paginationSizeSelector:[3, 6, 8, 10],
 		    movableColumns:true,
 		    paginationCounter:"rows",
-		    rowHeader:{formatter:"rownum", headerSort:false, width:70, hozAlign:"center", resizable:false, frozen:true},
+		    rowHeader:{formatter:"rownum", headerSort:false, width:50, hozAlign:"center", resizable:false, frozen:true},
 		    columns:[
-		        {title:"분류", field:"mtDiv", width:130, hozAlign:"center"},
-		        {title:"자재코드", field:"mtCd", width:180, hozAlign:"center"}, 
-		        {title:"자재명", field:"mtName", width:180, hozAlign:"center"},
-		        {title:"재고 수량", field:"sumStkQt", width:135, hozAlign:"center"},
-		        {title:"단위", field:"unit", width:130, formatter:"money", hozAlign:"center"},
+		        {title:"분류", field:"mtDiv", width:100, hozAlign:"center"},
+		        {title:"자재코드", field:"mtCd", width:140, hozAlign:"center"}, 
+		        {title:"자재명", field:"mtName", width:169, hozAlign:"center"},
+		        {title:"수량", field:"sumStkQt", width:100, hozAlign:"center", formatterParams:{
+		            decimal:",",
+		            thousand:",",
+		            symbolAfter:"p",
+		            negativeSign:true,
+		            precision:false,
+		        }},
+		        {title:"단위", field:"unit", width:130, hozAlign:"center"},
 		    ],
 		});
 
 	     // ROT별 재고 목록
 		var table2 = new Tabulator("#lotStockList", {
 		    height:"100%",
-		    rowHeader:{formatter:"rownum", headerSort:false, width:70, hozAlign:"center", resizable:false, frozen:true},
+		    rowHeader:{formatter:"rownum", headerSort:false, width:50, hozAlign:"center", resizable:false, frozen:true},
 		    columns:[
-		        {title:"ROT코드", field:"mtLot", width:130, hozAlign:"center"},
-		        {title:"자재코드", field:"mtCd", width:180, hozAlign:"center"}, 
-		        {title:"재고량", field:"stkQt", width:130, formatter:"money", hozAlign:"center"},
-		        {title:"입고일", field:"strCompdt", width:150, hozAlign:"center"},
-		        {title:"유통기한", field:"expDt", width:130, hozAlign:"center"}
+		        {title:"ROT코드", field:"mtLot", width:140, hozAlign:"center"},
+		        {title:"자재코드", field:"mtCd", width:129, hozAlign:"center"}, 
+		        {title:"수량", field:"stkQt", width:100, formatter:"money", hozAlign:"center", formatterParams:{
+		            decimal:",",
+		            thousand:",",
+		            symbolAfter:"p",
+		            negativeSign:true,
+		            precision:false,
+		        }},
+		        {title:"입고일", field:"strCompdt", width:135, hozAlign:"center"},
+		        {title:"유통기한", field:"expDt", width:135, hozAlign:"center"}
 		    ],
 		});
 
@@ -118,13 +140,11 @@
 		listReq(param);
 		
 		table.on("rowClick", function(e, row){
-			console.log(row.getElement());
-			//row.getElement().tabulator-selected = false;
 			let mtCd = row.getData().mtCd;
-			//row.getElement().style.backgroundColor = "#c8e6c9"; 
 			fetch("/ajax/lotStockList/" + mtCd)
 			.then(res => res.json())
 			.then(res => table2.setData(res))
+			rotList.style.display = "block";
 		});
 		
 
@@ -151,6 +171,7 @@
             param = { mtCd, mtName, mtDiv };
 			console.log(param);
             listReq(param);
+            rotList.style.display = "none";
         })
             
         </script>

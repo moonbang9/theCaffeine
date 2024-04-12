@@ -21,7 +21,7 @@ public class MtrlStoringController {
 	
 	// 자재입고관리 페이지이동
 	@GetMapping("/material/storing")
-	public ModelAndView list() { 
+	public ModelAndView moveStoring() { 
 		ModelAndView mv = new ModelAndView("mtrl/storing");
 		return mv;
 	}

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.theCaffeine.mes.mtrl.model.MtrlOrderListVO;
 import com.theCaffeine.mes.mtrl.model.MtrlOrderVO;
 import com.theCaffeine.mes.mtrl.model.MtrlStkListVO;
 
@@ -22,4 +23,7 @@ public interface MtrlOrderMapper {
 	int updateMtrlOrder3(String mtPlaceodCd);
 	
 	List<MtrlStkListVO> getMtrlStkList(); 
+	
+	List<MtrlOrderListVO> getMtrlOrderSearchList(MtrlOrderListVO vo);
+	MtrlOrderListVO getMtrlPlaceodInfo(String mtPlaceodCd);
 }

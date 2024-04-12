@@ -19,7 +19,7 @@ public class MtrlQualityController {
 	
 	// 자재검사관리 페이지이동
 	@GetMapping("/material/quality")
-	public ModelAndView list() { 
+	public ModelAndView moveQuality() { 
 		ModelAndView mv = new ModelAndView("mtrl/quality");
 		return mv;
 	}
