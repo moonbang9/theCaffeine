@@ -35,14 +35,16 @@
 						, od_chg
 						, dc_rate
 						, total_price
-						, cli_cd )
+						, cli_cd
+						, od_st )
 		values 
 				(od_seq.nextval
 				, #{odDt}
 				, #{odChg}
 				, #{dcRate}
 				, #{totalPrice}
-				, #{cliCd} )	
+				, #{cliCd}
+				, #{odSt} )	
 	</insert>
 	
 	
@@ -54,8 +56,7 @@
 								, detail_price
 								, od_no
 								, pd_cd
-								, due_dt
-								, od_detail_st )
+								, due_dt )
 		values 
 				( od_detail_seq.nextval
 					, #{qt}
@@ -63,8 +64,7 @@
 					, #{detailPrice}
 					, od_seq.currval
 					, #{pdCd}
-					, #{dueDt}
-					, #{odDetailSt}	)
+					, #{dueDt} )
 	</insert>
 	
 

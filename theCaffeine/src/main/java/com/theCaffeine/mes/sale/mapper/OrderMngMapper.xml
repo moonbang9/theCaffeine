@@ -45,22 +45,28 @@
 	
 	<select id="getOrderList" resultType="OrderMngVO" parameterType="OrderMngVO">
 		select de.od_no
-				, o.od_dt
+				, o.cli_cd
 				, c.cli_name
 				, c.cli_chg 
+				, d.od_detailno
+             	, d.pd_cd
+				, p.pd_name
 				, CASE WHEN (de.cnt > 0) THEN p.pd_name || ' 외 ' || de.cnt || '건'
              		   ELSE p.pd_name
-             	  END AS pd_name  
-             	, o.total_price
+             	  END AS pd  
              	, o.od_chg
+				, o.od_dt
              	, d.due_dt
+             	, o.dc_rate
+             	, o.total_price
+             	, o.od_st 
              	, CASE (o.od_st) WHEN 1 THEN '주문접수' 
 					             WHEN 2 THEN '생산요청'
 					             WHEN 3 THEN '출고완료'
 					             WHEN 4 THEN '구매확정'
 					             WHEN 9 THEN '반품완료'
             					 ELSE '반품중'
-            	  END AS od_st
+            	  END AS st
 		from od_detail d 
 		    JOIN (select min(od_detailno) as minDetailNo
 		    			, (count(*)-1) as cnt

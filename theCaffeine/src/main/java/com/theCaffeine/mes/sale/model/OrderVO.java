@@ -18,6 +18,7 @@ public class OrderVO {
 	private float dcRate;
 	private int totalPrice;
 	private String cliCd;
+	private int odSt;
 	
 	private String cliName;
 	private String bussno;

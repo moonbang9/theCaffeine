@@ -18,6 +18,5 @@ public class OrderDetailVO {
 	private String pdCd;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date dueDt;
-	private int odDetailSt;
 	
 }
