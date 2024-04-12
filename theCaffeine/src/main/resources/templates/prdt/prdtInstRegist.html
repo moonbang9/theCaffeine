@@ -19,8 +19,8 @@
 							<option class="nulls" value="">선택</option>
 						</select>
 					</div>
-					<label for="mtrl_management_clicd" class="col-md-2 col-form-label">총
-						예상 원두생산 수량(kg)</label>
+					<label for="mtrl_management_clicd" class="col-md-2 col-form-label">
+					주간 총 예상 원두생산 수량(kg)</label>
 					<div class="col">
 						<input class="form-control planTotCnt" type="text" value="" id=""
 							readonly>
@@ -67,10 +67,12 @@
 			<button class="btn btn-primary" type="button" id="resistBtn" style="margin-top: 12px;">등록</button>
 			<button class="btn btn-danger" type="button" id="delBtn" style="margin-top: 12px; margin-right: 5px;">삭제</button>
 		</div>
+		<script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js"></script>
 		<script th:inline="javascript">
 		
 		$(window).on("load",function(e) {
 			planCdList()
+			basicPlanListReq()
 		})
 		let planCds = document.querySelector('.plans');
 		let daySale = document.querySelector('.daySale');
@@ -81,8 +83,16 @@
 		let pl2 = document.querySelector('.pl2');
 		let planDay2 = document.querySelector('.planDay2');
 		let diff = ''
+		let pdCds = []
+		let pdNames = []
+		let unitQts = []
 		
 		planCds.addEventListener("change", e=> {
+			
+			//요소제거
+			for(let i=pl2.children.length; i>1; i--){
+				pl2.removeChild(pl2.lastElementChild)
+			}
 			planList()
 			planDetailList()
 			if(planCds.value == ""){
@@ -100,6 +110,7 @@
 				newsDate.setDate(newsDate.getDate() + i);
 				let option = document.createElement('option');
 				option.setAttribute('value', getDateStr(newsDate));
+				option.setAttribute('class', 'planDate');
 				option.innerHTML = getDateStr(newsDate);
 				planDay2.append(option)
 			}
@@ -161,31 +172,124 @@
 		        {title:"납기 일자", field:"dueDt", hozAlign:"center", width:440},
 		    ],
 		});
+		
 		// 계획상세 리스트
 		function planDetailList() {
 			fetch("/ajax/planDetailList/"+ planCds.value)
 			.then(res => res.json())
 			.then(res => {
 				table1.setData(res)
+				console.log(res)
+				/*for(let i of res){
+					pdCds.push(i.pdCd)
+				}*/
 			})
+		}
+		
+		//코드 정보들
+		function basicPlanListReq() {
+			fetch("/ajax/basicPlan")
+			.then(res => res.json())
+			.then(res => {
+				console.log(res)
+				for(let i of res){
+					pdCds.push(i.pdCd)
+					pdNames.push({"pdCd" : i.pdCd,"pdName" : i.pdName})
+					unitQts.push({"pdCd" : i.pdCd,"unitQt" : i.unitQt})
+				}
+			})
+		}
+		
+		var dateEditor5 = function(cell, onRendered, success, cancel, editorParams){
+
+		    var data = cell.getRow().getData();
+		    
+		    var editor2 = document.createElement("input");
+		    editor2.setAttribute("type", "number");
+		    editor2.style.padding = "3px";
+		    editor2.style.width = "100%";
+		    editor2.style.boxSizing = "border-box";
+		    editor2.value = data.qt;
+		    let tot = 0;
+		    editor2.addEventListener("change", e=> {
+		    	
+		    	if(e.target.value == null || e.target.value < 0){
+		    		editor2.value = 0;
+		    		successFunc()
+		    	}else{
+		    		data.qt = Number(e.target.value);
+		    		if(data.pdCd == null){
+		    			data.qt = 0;
+		    		}else{
+		    			for(let i of unitQts){
+			    			if(i.pdCd == data.pdCd){
+			    				if(Number(e.target.value) % (Number(i.unitQt)) != 0){
+			        				data.qt = (Math.round((Number(data.qt) / Number(i.unitQt))) * Number(i.unitQt));
+			        			}
+			    				if((data.qt) % (Number(i.unitQt)*2) != 0){
+			    	    			data.qt += Number(i.unitQt);
+			    	    		}
+			    			}
+			    		}
+		    		}
+		    		editor2.value = data.qt;
+		    	    successFunc()
+		    	}
+		    })
+		    function successFunc(){
+		        success(editor2.value);
+		    }
+			return editor2;
 		}
 		
 		var table2 = new Tabulator("#productionPlan-table2", {
 			height:"100%",
 			layout:"fitDataFill",
+			index:"pdCd",
 		    columns:[
-		        {title:"제품코드", field:"name", width:200, editor:"input"},
-		        {title:"상품명(자동으로 나와야함)", field:"progress", width:300, hozAlign:"right", sorter:"number", editor:"input"},
-		        {title:"수량", field:"gender", editor:"input", width:100},
-		        {title:"생산시작시간", field:"rating", hozAlign:"center", width:240, editor:"input"},
-		        {title:"생산예상종료시간", field:"col", editor:"input", width:240},
-		        {title:"수정여부", field:"dob", hozAlign:"center", sorter:"date", editor:"input", width:100},
+		    	{title:"제품코드", field:"pdCd", hozAlign:"center", width:200, editor:"list", 
+		    		editorParams:{values: pdCds, freetext:false},
+		    		cellEdited: function(cell) {
+		    			console.log(cell._cell.row.data)
+		    			for(let i of pdNames){
+		    				if(i.pdCd == cell._cell.row.data.pdCd){
+		    					console.log(i)
+		    					table2.updateData([i])
+		    				}
+		    			}
+		    			
+					}},
+		        {title:"상품명", field:"pdName", width:300, hozAlign:"center"},
+		        {title:"수량", field:"qt", hozAlign:"center", editor:dateEditor5, validator:["min:0", "numeric"], width:100},
+		        {title:"생산시작시간", field:"pdtSttTime", width:240, editor:"datetime", editorParams:{
+		            format:"yyyy-MM-dd hh:mm:ss",
+		            verticalNavigation:"table",
+		            elementAttributes:{
+		                title:"slide bar to choose option",
+		            },
+		            min:planDay2.value,
+		            //max:"02/12/2022",
+		        }},
+		        {title:"생산예상종료시간", field:"pdtexptFnTime", width:240, editor:"datetime", editorParams:{
+		            format:"yyyy-MM-dd hh:mm:ss",
+		            min:planDay2.value,
+		            verticalNavigation:"table",
+		            elementAttributes:{
+		                title:"slide bar to choose option",
+		            },
+		            //max:"02/12/2022",
+		        }},
+		        {title:"수정가능여부", field:"dob", hozAlign:"center", width:150},
 		    ],
 		});
 		
 		//행 추가
 		document.getElementById("addBtn").addEventListener("click", function(){
-		    table.addRow({});
+			if(planCds.value == "" || planDay2.value == ""){
+				alert('지시일자가 선택되지 않았습니다. \n일자 선택후 다시 이용해 주세요.')
+			}else{
+			}
+		    	table2.addRow({});
 		});
 		
 		//날짜
@@ -199,6 +303,8 @@
 			
 			return  (year + '-' + month + '-' + day );
 		}
+		
+		
 		
 			/*saveBtn.addEventListener("click", e=> {
 				location.href='/production/prdtInstRegist'
