@@ -1,6 +1,5 @@
 package com.theCaffeine.mes.sale.web;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,10 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.theCaffeine.mes.sale.model.InsertOrderVO;
 import com.theCaffeine.mes.sale.model.OrderMngVO;
-import com.theCaffeine.mes.sale.model.OrderVO;
-import com.theCaffeine.mes.sale.model.ProductVO;
 import com.theCaffeine.mes.sale.service.OrderMngService;
 
 @RequestMapping("/sales")

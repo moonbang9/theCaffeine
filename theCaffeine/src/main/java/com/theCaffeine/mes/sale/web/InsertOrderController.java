@@ -37,7 +37,7 @@ public class InsertOrderController {
 	// 주문 등록 페이지이동
 	@GetMapping("/insertOrderPage")
 	public ModelAndView insertOrderPage() { 
-		ModelAndView mv = new ModelAndView("sale/insertOrderPage");
+		ModelAndView mv = new ModelAndView("sale/insertOrder");
 		return mv;
 	}
 	

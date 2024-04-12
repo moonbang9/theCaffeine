@@ -35,8 +35,12 @@ public class OrderMngVO {
 	private int totalPrice;
 	
 	private String pdCd;
+	
 	private String pdName;
-	private String odSt;
+	private String pd;
+	
+	private int odSt;
+	private String st;
 	
 	int cnt;
 	int detailPrice;
