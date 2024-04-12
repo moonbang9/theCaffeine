@@ -202,9 +202,6 @@ from od_detail d
     ON c.cli_cd = o.cli_cd
 ORDER BY de.od_no DESC;
 
-
-
-
 select de.od_no, o.od_dt, c.cli_name, c.cli_chg ,
         CASE WHEN (de.cnt > 0) THEN p.pd_name || ' 외 ' || de.cnt || '건'
              ELSE p.pd_name
@@ -250,7 +247,7 @@ select de.od_no, o.od_dt, c.cli_name, c.cli_chg ,
         CASE WHEN (de.cnt > 0) THEN p.pd_name || ' 외 ' || de.cnt || '건'
              ELSE p.pd_name
              END AS pdName  ,
-        o.total_price, o.od_chg, d.due_dt,
+        o.total_price, o.od_chg, d.due_dt, o.od_st,
         CASE (o.od_st)
             WHEN 1 THEN '주문접수' 
             WHEN 2 THEN '생산요청'
@@ -329,15 +326,61 @@ WHERE d.pd_cd LIKE '%01%'
     AND o.od_st = '1'
 ORDER BY de.od_no DESC;
 
-(select * 
+
+
+select dn.od_detailno, dn.pd_cd, dn.od_no
 from od_detail dn JOIN (
 select pd_cd, pd_name
 from pd
-where pd_name like '%오리진%') pn
-ON dn.pd_cd = pn.pd_cd) order by od_detailno;
+where pd_name like '%프리미엄%') pn
+ON dn.pd_cd = pn.pd_cd;
+
+select de.od_no, o.od_dt, c.cli_name, c.cli_chg ,
+        CASE WHEN (de.cnt > 0) THEN p.pd_name || ' 외 ' || de.cnt || '건'
+             ELSE p.pd_name
+             END AS pdName  ,
+        o.total_price, o.od_chg, d.due_dt, o.od_st,
+        CASE (o.od_st)
+            WHEN 1 THEN '주문접수' 
+            WHEN 2 THEN '생산요청'
+            WHEN 3 THEN '출고완료'
+            WHEN 4 THEN '구매확정'
+            WHEN 9 THEN '반품완료'
+            ELSE '반품중'
+            END AS odSt
+from od_detail d 
+    JOIN 
+    
+    (select dn.od_detailno, dn.pd_cd, dn.od_no
+from od_detail dn JOIN (
+select pd_cd, pd_name
+from pd
+where pd_name like '%프리미엄%') pn
+ON dn.pd_cd = pn.pd_cd) de 
+            
+            
+            
+    ON d.od_detailno = de.od_detailno
+    JOIN pd p
+    ON d.pd_cd = p.pd_cd
+    JOIN od o
+    ON o.od_no = de.od_no
+    JOIN cli c
+    ON c.cli_cd = o.cli_cd
+    
+
+ORDER BY de.od_no DESC;
+
 
 select * from od_detail;
 select * from od;
+select * from pd;
+
+
+
+
+
+
 
 
 
