@@ -34,6 +34,11 @@ public class QltyServiceImpl implements QltyService{
 		return qltyMapper.getMtrlDoneList(vo);
 	}
 
+	@Override
+	public int deleteMtrlDoneList(String mtPlaceodCd) {
+		return qltyMapper.deleteMtrlDoneList(mtPlaceodCd);
+	}
+
 
 
 }

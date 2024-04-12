@@ -10,25 +10,53 @@
 <body>
 	<div layout:fragment="content">
 		<h1>공정 검사</h1>
-	<div id="QualityStandard">
+	<div id="QualityStandard"></div>
+<div class="demo-inline-spacing mt-3">
+			<div class="list-group list-group-horizontal-md text-md-center">
 
-	<div id="example-table">
-	</div>
-	</div>
+				<a class="list-group-item list-group-item-action active"
+					id="home-list-item" data-bs-toggle="list" href="#horizontal-home">검사대기</a>
 
+				<a class="list-group-item list-group-item-action"
+					id="profile-list-item" data-bs-toggle="list"
+					href="#horizontal-profile">검사완료</a>
+			</div>
+			<button id="print-table">인쇄</button>
+			<button id="download-pdf">PDF 다운로드</button>
+		</div>
+		<div class="tab-content px-0 mt-0">
+			<div class="tab-pane fade show active" id="horizontal-home">
+				<div id="waiting-table"></div>
+			</div>
+
+			<div class="tab-pane fade" id="horizontal-profile">
+				<div id="done-table"></div>
+			</div>
+		</div>
+		
+		
+	<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.20/jspdf.plugin.autotable.min.js"></script>
+	
 
 	<script>
-	var table = new Tabulator("#QualityStandard", {
-	    height:"311px",
-	    layout:"fitColumns",
-	    resizableColumnFit:true,
-	    columns:[
-	        {title:"카테고리", field:"name", width:200, resizable:true},
-	        {title:"품질검사명", field:"progress", resizable:true},
-	        {title:"통과기준", field:"gender", resizable:true}, 
-	        {title:"입력가능값", field:"rating", resizable:true}
-	    ],
-	});
+	
+	//인쇄 버튼
+    document.getElementById("print-table").addEventListener("click",
+      function () {
+        table1.print(false, true);
+      });
+
+    //pdf 다운로드 버튼
+    document.getElementById("download-pdf").addEventListener("click", function () {
+      table1.download("pdf", "data.pdf", {
+        orientation: "portrait", // 페이지 방향을 세로로 설정
+        title: "Example Report", // 보고서 제목 설정
+      });
+    });
+    
 	</script>
 	</div>
 </body>

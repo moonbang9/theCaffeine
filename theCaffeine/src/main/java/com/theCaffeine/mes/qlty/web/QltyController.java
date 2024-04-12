@@ -14,8 +14,9 @@ import com.theCaffeine.mes.qlty.service.QltyService;
 
 @RestController
 public class QltyController {
-	
-	@Autowired QltyService qltyService;
+
+	@Autowired
+	QltyService qltyService;
 
 	// 자재검사 페이지이동
 	@GetMapping("/quality/material")
@@ -23,25 +24,31 @@ public class QltyController {
 		ModelAndView mv = new ModelAndView("qlty/material");
 		return mv;
 	}
-	
-	// 자재검사대기 목록 
+
+	// 자재검사대기 목록
 	@GetMapping("/ajax/mtrlCheckList")
-	public List<QltyVO> qltyList(QltyVO vo){
+	public List<QltyVO> qltyList(QltyVO vo) {
 		return qltyService.getMtrlCheckList(vo);
 	}
-	
+
 	// 자재검사결과 등록
 	@PostMapping("/ajax/updateMcRes")
 	public int updateMcRes(@RequestBody QltyVO vo) {
-		//qltyService.updateMcRes(vo);
+		// qltyService.updateMcRes(vo);
 		return qltyService.updateMcRes(vo);
 	}
-	// 자재검사완료 목록 
+
+	// 자재검사완료 목록
 	@GetMapping("/ajax/mtrlDoneList")
-	public List<QltyVO> qltyDoneList(QltyVO vo){
+	public List<QltyVO> qltyDoneList(QltyVO vo) {
 		return qltyService.getMtrlDoneList(vo);
 	}
 
+	// 자재검사완료목록 삭제(DB삭제는 아니고 검사대기 목록으로 이동)
+	@PostMapping("/ajax/deleteMtrlDoneList")
+	public int deleteMcRes(@RequestBody String mtPlaceodCd) {
+		return qltyService.deleteMtrlDoneList(mtPlaceodCd);
+	}
 
 	// 공정검사 페이지이동
 	@GetMapping("/quality/process")

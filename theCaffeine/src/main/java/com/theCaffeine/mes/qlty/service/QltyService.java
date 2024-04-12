@@ -11,6 +11,7 @@ public interface QltyService {
 	List<QltyVO> getMtrlCheckList(QltyVO vo);
 	List<QltyVO> getMtrlDoneList(QltyVO vo);
 	int updateMcRes(QltyVO vo);
+	int deleteMtrlDoneList(String mtPlaceodCd);
 	
 
 }
