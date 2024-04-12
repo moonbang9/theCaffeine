@@ -21,7 +21,7 @@ public class MtrlManagementController {
 	
 	// 자재관리 페이지이동
 	@GetMapping("/material/management")
-	public ModelAndView list() { 
+	public ModelAndView moveMtrl() { 
 		ModelAndView mv = new ModelAndView("mtrl/management");
 		return mv;
 	}

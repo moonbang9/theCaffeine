@@ -191,4 +191,80 @@
 	</update>
 	
 
+	<sql id="condition">
+		<where>
+ 			<if test="cliCd != null and cliCd != '' ">
+	 		 	AND c.cli_cd like '%' || #{cliCd} || '%' 			
+ 			</if>
+ 			<if test="cliName != null and cliName != '' ">
+ 		   		AND c.cli_name like '%' || #{cliName} || '%'			
+ 			</if>
+ 			<if test="mtCd != null and mtCd != '' ">
+ 		   		AND m.mt_cd like '%' || #{mtCd} || '%'		
+ 			</if>
+ 			<if test="mtName != null and mtName != '' ">
+ 		   		AND m.mt_name like '%' || #{mtName} || '%'		
+ 			</if>
+ 			<if test="placeodCompdt1 != null">
+ 		   		AND mp.placeod_compdt >= #{placeodCompdt1} 			
+ 			</if>
+ 			<if test="placeodCompdt2 != null">
+ 		   		AND mp.placeod_compdt <![CDATA[<=]]> #{placeodCompdt2}			
+ 			</if>			
+ 			<if test="stList != null">
+				AND mp.placeod_st 
+ 				<foreach collection="stList" open="in (" close=")" separator="," item="st">				
+ 					#{st}
+ 				</foreach>
+ 			</if>
+ 		</where>
+	</sql>
+	
+	<select id="getMtrlOrderSearchList" resultType="MtrlOrderListVO"> 
+		SELECT 	c.cli_cd
+				,c.cli_name
+				,m.mt_cd
+				,m.mt_name
+				,mp.placeod_compdt
+				,mp.placeod_chg
+				,mp.mt_placeod_cd
+				,CASE mp.placeod_st WHEN 2 THEN '발주완료' 
+                                    WHEN 3 THEN '입고대기' 
+                                    WHEN 4 THEN '검사요청' 
+                                    WHEN 5 THEN '검사완료' 
+                                    WHEN 6 THEN '입고완료' 
+                                    WHEN 7 THEN '반품처리' 
+                 END AS st
+		FROM 	mt_placeod mp
+		JOIN 	mt m
+		ON 		mp.mt_cd = m.mt_cd
+		JOIN 	cli c
+		ON 		m.cli_cd = c.cli_cd
+		<include refid="condition"></include>
+		ORDER BY placeod_compdt DESC
+	</select>
+	
+	<select id="getMtrlPlaceodInfo" parameterType="String" resultType="MtrlOrderListVO">
+		SELECT  c.cli_cd
+		        ,c.cli_name
+		        ,c.bussno
+		        ,c.tel
+		        ,c.addr
+		        ,c.mail
+		        ,c.cli_chg
+		        ,mp.placeod_compdt
+		        ,m.mt_cd
+		        ,m.mt_name
+		        ,mp.placeod_qt
+		        ,m.unit
+		        ,m.cost
+		        ,(mp.placeod_qt * m.cost) as placeod_cost
+		        ,mp.placeod_chg
+		FROM    mt_placeod mp
+		JOIN    cli c
+		ON      mp.cli_cd = c.cli_cd
+		JOIN    mt m
+		ON      mp.mt_cd = m.mt_cd
+		WHERE   mt_placeod_cd = #{mtPlaceodCd}
+	</select>
 </mapper>

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.theCaffeine.mes.mtrl.model.MtrlOrderListVO;
 import com.theCaffeine.mes.mtrl.model.MtrlOrderVO;
 import com.theCaffeine.mes.mtrl.model.MtrlStkListVO;
 import com.theCaffeine.mes.mtrl.service.MtrlOrderService;
@@ -22,7 +23,7 @@ public class MtrlOrderController {
 	
 	// 자재발주 페이지이동
 	@GetMapping("/material/order")
-	public ModelAndView list() { 
+	public ModelAndView moveOrder() { 
 		ModelAndView mv = new ModelAndView("mtrl/order");
 		return mv;
 	}
@@ -72,5 +73,27 @@ public class MtrlOrderController {
 	public List<MtrlOrderVO> getMtrlCliList() {
 		return mtrlOrderService.getMtrlCliList();
 	}
-		
+	
+	
+	
+	//자재 발주 조회 페이지//////////////////////////////////////////////////////////
+	
+	// 자재발주조회 페이지이동
+	@GetMapping("/material/orderlist")
+	public ModelAndView moveOrderList() { 
+		ModelAndView mv = new ModelAndView("mtrl/orderlist");
+		return mv;
+	}
+	
+	// 자재발주 목록 데이터
+	@PostMapping("/ajax/orderSearchList")
+	public List<MtrlOrderListVO> getMtrlOrderSearchList(@RequestBody MtrlOrderListVO vo) {
+		return mtrlOrderService.getMtrlOrderSearchList(vo);
+	}	
+	
+	// 자재발주 상세조회
+	@GetMapping("/ajax/mtrlPlaceodInfo/{mtPlaceodCd}")
+	public MtrlOrderListVO getMtrlPlaceodInfo(@PathVariable String mtPlaceodCd) {
+		return mtrlOrderService.getMtrlPlaceodInfo(mtPlaceodCd);
+	}	
 }

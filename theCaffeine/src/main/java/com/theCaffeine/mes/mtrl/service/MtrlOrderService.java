@@ -2,6 +2,7 @@ package com.theCaffeine.mes.mtrl.service;
 
 import java.util.List;
 
+import com.theCaffeine.mes.mtrl.model.MtrlOrderListVO;
 import com.theCaffeine.mes.mtrl.model.MtrlOrderVO;
 import com.theCaffeine.mes.mtrl.model.MtrlStkListVO;
 
@@ -17,4 +18,7 @@ public interface MtrlOrderService {
 	int insertMtrlQuality(MtrlOrderVO vo);
 	
 	List<MtrlStkListVO> getMtrlStkList();
+	
+	List<MtrlOrderListVO> getMtrlOrderSearchList(MtrlOrderListVO vo);
+	MtrlOrderListVO getMtrlPlaceodInfo(String mtPlaceodCd);
 }

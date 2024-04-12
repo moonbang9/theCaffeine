@@ -97,7 +97,7 @@
 				m.mt_cd LIKE '%' || #{mtCd} || '%'
 			</if>
 			<if test="mtName != null and mtName != '' ">
-				AND m.mt_name = #{mtName}	
+				AND m.mt_name LIKE '%' || #{mtName} || '%'	
 			</if>
 			<if test="mtDiv != null and mtDiv != '' ">
 				AND m.mt_div = #{mtDiv}
