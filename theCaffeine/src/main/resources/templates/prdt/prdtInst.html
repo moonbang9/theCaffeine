@@ -194,6 +194,9 @@
 		
 		month = (month < 10) ? "0" + String(month) : month;
 		day = (day < 10) ? "0" + String(day) : day;
+		hur = (hur < 10) ? "0" + String(hur) : hur;
+		min = (min < 10) ? "0" + String(min) : min;
+		sec = (sec < 10) ? "0" + String(sec) : sec;
 		
 		return  (year + '-' + month + '-' + day + " " + hur + ":" + min + ":" + sec);
 	}
