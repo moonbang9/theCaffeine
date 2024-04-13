@@ -96,4 +96,11 @@ public class MtrlOrderController {
 	public MtrlOrderListVO getMtrlPlaceodInfo(@PathVariable String mtPlaceodCd) {
 		return mtrlOrderService.getMtrlPlaceodInfo(mtPlaceodCd);
 	}	
+	
+	// 자재발주서 페이지이동
+	@GetMapping("/material/orderForm")
+	public ModelAndView moveOrderList1() { 
+		ModelAndView mv = new ModelAndView("mtrl/orderForm");
+		return mv;
+	}
 }

@@ -83,7 +83,7 @@
 			                </div>
 			              </div>
 							<div class="d-grid gap-2 d-md-flex justify-content-md-center">
-								<button class="btn btn-secondary" type="button" id="resetBtn" style="margin-top: 12px;">초기화</button>
+								<button class="btn btn-secondary" type="reset" id="resetBtn" style="margin-top: 12px;">초기화</button>
 								<button class="btn btn-primary" type="button" id="searchBtn" style="margin-top: 12px; margin-right: 5px;">검색</button>
 							</div>
 						</form>
@@ -95,90 +95,112 @@
 
 			    <!-- Large Modal -->
 			    <div class="modal fade" id="mtrlPlaceodModal" tabindex="-1" aria-hidden="true">
-			      <div class="modal-dialog modal-lg" role="document">
+			      <div class="modal-dialog modal-dialog-scrollable" role="document">
 			        <div class="modal-content">
 			          <div class="modal-header">
-			            <h5 class="modal-title" id="exampleModalLabel3">주문 정보</h5>
+			            <h3 class="modal-title" id="exampleModalLabel3">&nbsp&nbsp발주 상세 정보</h3>
 			            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			          </div>
 			          <div class="modal-body">
-			            <!-- 거래처 선택 -->
+			          <hr class="m-0">
+			            <!-- 거래처 정보 -->
 			            <div class="card-body">
-			              
-			              <div class="mb-3 row">
-			                <label for="html5-url-input" class="col-md-2 col-form-label">거래처명</label>
-			                <div class="col-md-10">
-			                  <p class="mb-0" id="cliName"></p>
+			            <div class="mb-4"><h4 class="mb-3">&nbsp&nbsp거래처 정보</h4></div>
+			              <div class="mb-2 row">
+			                <label for="html5-url-input" class="col-md-3 col-form-label"><span style="font-size: 16px;">거래처 코드</span></label>
+			                <div class="col-md-9">
+			                  <p class="mt-2" id="cliCd"></p>
+			                </div>
+			                
+			              </div>
+							<div class="mb-2 row">
+			                <label for="html5-url-input" class="col-md-3 col-form-label"><span style="font-size: 16px;">거래처 명</span></label>
+			                <div class="col-md-9">
+			                  <p class="mt-2" id="cliName1"></p>
 			                </div>
 			              </div>
 			
-			              <div class="mb-3 row">
-			                <label for="html5-url-input" class="col-md-2 col-form-label">거래처코드</label>
-			                <div class="col-md-10">
-			                  <p class="mb-0" id="cliCd"></p>
+			              <div class="mb-2 row">
+			                <label for="html5-url-input" class="col-md-3 col-form-label"><span style="font-size: 16px;">사업자 번호</span></label>
+			                <div class="col-md-9">
+			                  <p class="mt-2" id="bussno"></p>
 			                </div>
 			              </div>
 			
-			              <div class="mb-3 row">
-			                <label for="html5-url-input" class="col-md-2 col-form-label">사업자번호</label>
-			                <div class="col-md-10">
-			                  <p class="mb-0" id="bussno"></p>
+			              <div class="mb-2 row">
+			                <label for="html5-tel-input" class="col-md-3 col-form-label"><span style="font-size: 16px;">연락처</span></label>
+			                <div class="col-md-9">
+			                  <p class="mt-2" id="tel"></p>
 			                </div>
 			              </div>
 			
-			              <div class="mb-3 row">
-			                <label for="html5-tel-input" class="col-md-2 col-form-label">전화번호</label>
-			                <div class="col-md-10">
-			                  <p class="mb-0" id="tel"></p>
+			              <div class="mb-2 row">
+			                <label for="html5-tel-input" class="col-md-3 col-form-label"><span style="font-size: 16px;">주소</span></label>
+			                <div class="col-md-9">
+			                  <p class="mt-2" id="addr"></p>
 			                </div>
 			              </div>
 			
-			              <div class="mb-3 row">
-			                <label for="html5-tel-input" class="col-md-2 col-form-label">주소</label>
-			                <div class="col-md-10">
-			                  <p class="mb-0" id="addr"></p>
+			              <div class="mb-2 row">
+			                <label for="html5-tel-input" class="col-md-3 col-form-label"><span style="font-size: 16px;">이메일</span></label>
+			                <div class="col-md-9">
+			                  <p class="mt-2" id="mail"></p>
 			                </div>
 			              </div>
 			
-			              <div class="mb-3 row">
-			                <label for="html5-tel-input" class="col-md-2 col-form-label">이메일</label>
-			                <div class="col-md-10">
-			                  <p class="mb-0" id="mail"></p>
-			                </div>
-			              </div>
-			
-			              <div class="mb-3 row">
-			                <label for="html5-tel-input" class="col-md-2 col-form-label">거래처
-			                  담당자</label>
-			                <div class="col-md-10">
-			                  <p class="mb-0" id="cliChg"></p>
+			              <div class="row">
+			                <label for="html5-tel-input" class="col-md-3 col-form-label"><span style="font-size: 16px;">담당자</span></label>
+			                <div class="col-md-9">
+			                  <p class="mt-2" id="cliChg"></p>
 			                </div>
 			              </div>
 			            </div>
+			            
 			            <hr class="m-0">
-			            <!-- 주문정보 -->
+			            
+			            <!-- 발주 정보 -->
 			            <div class="card-body">
-			              <div class="mb-3 row">
-			                <label for="html5-tel-input" class="col-md-2 col-form-label">주문
-			                  담당자</label>
-			                <div class="col-md-10">
-			                  <p class="mb-0" id="odChg"></p>
+			            <div class="mb-4"><h4 class="mb-3">&nbsp&nbsp발주 정보</h4></div>
+			              <div class="mb-2 row">
+			                <label for="html5-tel-input" class="col-md-3 col-form-label"><span style="font-size: 16px;">자재 코드</span></label>
+			                <div class="col-md-9">
+			                  <p class="mt-2" id="mtCd"></p>
 			                </div>
 			              </div>
-			              <div class="mb-3 row">
-			                <label for="html5-time-input" class="col-md-2 col-form-label">주문일</label>
-			                <div class="col-md-10">
-			                  <p class="mb-0" id="odDt"></p>
+			              <div class="mb-2 row">
+			                <label for="html5-time-input" class="col-md-3 col-form-label"><span style="font-size: 16px;">자재 명</span></label>
+			                <div class="col-md-9">
+			                  <p class="mt-2" id="mtName"></p>
 			                </div>
 			              </div>
-			              <div class="mb-3 row">
-			                <label for="html5-color-input" class="col-md-2 col-form-label">납기일</label>
-			                <div class="col-md-10">
-			                  <p class="mb-0" id="dueDt"></p>
+			              <div class="mb-2 row">
+			                <label for="html5-color-input" class="col-md-3 col-form-label"><span style="font-size: 16px;">자재 단가</span></label>
+			                <div class="col-md-9">
+			                  <p class="mt-2" id="cost"></p>
+			                </div>
+			              </div>
+			              <div class="mb-2 row">
+			                <label for="html5-color-input" class="col-md-3 col-form-label"><span style="font-size: 16px;">발주 수량</span></label>
+			                <div class="col-md-9">
+			                  <p class="mt-2" id="placeodQt"></p>
+			                </div>
+			              </div>
+			              <div class="mb-2 row">
+			                <label for="html5-color-input" class="col-md-3 col-form-label"><span style="font-size: 16px;">발주 금액</span></label>
+			                <div class="col-md-9">
+			                  <p class="mt-2" id="placeodCost"></p>
+			                </div>
+			              </div>
+			              <div class="row">
+			                <label for="html5-color-input" class="col-md-3 col-form-label"><span style="font-size: 16px;">담당자</span></label>
+			                <div class="col-md-9">
+			                  <p class="mt-2" id="placeodChg"></p>
 			                </div>
 			              </div>
 			            </div>
+			            
 			          </div>
+			          
 			          <div class="modal-footer">
 			            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
 			              닫기
@@ -191,29 +213,20 @@
 				<div id="mtrl_order_list">
 				 	
 				</div>
-
-
-               
-
- 
                </div>
             </div>
 
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.20/jspdf.plugin.autotable.min.js"></script>
+
         <script>
         
-        // 초기화 버튼 이벤트
-        resetBtn.addEventListener("click",function(){
-        	cli_code.value = '';
-        	cli_name.value = '';
-        	mtrl_code.value = '';
-			mtrl_name.value ='';
-			searchDate1.value = '';
-			searchDate2.value = '';
-			let odSt = document.querySelectorAll('input[name="odSt"]:checked');
-			for(st of odSt) {
-				st.checked = false;
-			}
-		});
+    	// PDF버튼
+    	var editorIcon = function(cell, formatterParams, onRendered) {
+      		return "<button class='btn btn-info btn-sm'>발주서</button>";
+    	}
        
         // 발주일자 검색 입력값 자동 수정
         searchDate1.addEventListener("change",function(){
@@ -243,15 +256,35 @@
 		    rowHeader:{formatter:"rownum", headerSort:false, width:50, hozAlign:"center", resizable:false, frozen:true},
 		    columns:[
 		        {title:"거래처코드", field:"cliCd", width:140, hozAlign:"center"},
-		        {title:"거래처명", field:"cliName", width:230, hozAlign:"center"},
+		        {title:"거래처명", field:"cliName", width:240, hozAlign:"center"},
 		        {title:"자재코드", field:"mtCd", width:130, hozAlign:"center"}, 
-		        {title:"자재명", field:"mtName", width:200, hozAlign:"center"}, 
+		        {title:"자재명", field:"mtName", width:210, hozAlign:"center"}, 
 		        {title:"발주완료일", field:"placeodCompdt", width:180, hozAlign:"center"},
 		        {title:"담당자", field:"placeodChg", width:180, hozAlign:"center"},
 		        {title:"상태", field:"st", width:170, hozAlign:"center"},
-		        {title:"발주서", field:"placeodInfo", width:100, hozAlign:"center"},
+		        {title:"", field:"placeodInfo", width:80, formatter: editorIcon, hozAlign:"center",
+		            cellClick:function(e, cell){
+		            	console.log(cell);
+		            	console.log(cell._cell);
+		            	console.log(cell._cell.row.data);
+		            	cell._cell.download("pdf", "data.pdf", {
+		            		  autoTable: function(doc) {
+		            		    doc.addFileToVFS("yourFont.ttf", "AAEAAAAUAQA..."); // your font in binary format as second parameter
+		            		    doc.addFont("yourFont.ttf", "yourFont", "normal"); 
+		            		    doc.setFont("yourFont");
+		            		    return {
+		            		      styles: {
+		            		        font: "yourFont",
+		            		        fontStyle: "normal"
+		            		      }
+		            		    };
+		            		  }
+		            		});
+		            }
+		        }
 		    ],
 		});
+        
         
         let cliCode = '';
         let cliName = '';
@@ -278,6 +311,8 @@
 			.then(res => table.setData(res))
 		}
 
+		console.log(table);
+     	
         // 검색 버튼 누르면 조건대로 검색한 주문목록 불러오기
         searchBtn.addEventListener("click", e => {  
         	checkList();
@@ -318,33 +353,37 @@
 
       table.on("rowClick", function(e, row){
   		let mtPlaceodCd = row.getData().mtPlaceodCd;
-  		console.log(mtPlaceodCd);
   		fetch("/ajax/mtrlPlaceodInfo/"+ mtPlaceodCd)
 	  		.then(res => res.json())
 	  		.then(res => {
-	  			console.log(res);
 	  			const myModal = new bootstrap.Modal('#mtrlPlaceodModal', {
 	  	             keyboard: false
 	  	        })
 	  	        const modalToggle = document.getElementById('mtrlPlaceodModal');
 	  	        myModal.show(modalToggle);
-	  			//getInfo(res);
+	  			getInfo(res);
   			})
   		});
 		
       	function getInfo(obj){
-	  		mtrl_management_clicd.value = obj.cliCd;
-	  		mtrl_management_cd.value = obj.mtCd;
-	  		mtrl_management_div.value = obj.mtDiv;
-	  		mtrl_management_name.value = obj.mtName;
-	  		mtrl_management_cost.value = obj.cost;
-	  		mtrl_management_unit.value = obj.unit;
-	  		mtrl_management_expdt.value = obj.expDt;
-	  		mtrl_management_leadtm.value = obj.leadtm;
-	  		mtrl_management_safestkrate.value = obj.safeStkRate;
+      		cliCd.innerText = obj.cliCd;
+      		cliName1.innerText = obj.cliName;
+      		bussno.innerText = obj.bussno;
+      		tel.innerText = obj.tel;
+      		addr.innerText = obj.addr;
+      		mail.innerText = obj.mail;
+      		cliChg.innerText = obj.cliChg;
+      		
+      		mtCd.innerText = obj.mtCd;
+      		mtName.innerText = obj.mtName;
+      		cost.innerText = parseInt(obj.cost).toLocaleString() + "\t원";
+      		placeodQt.innerText = obj.placeodQt + "\t" + obj.unit;
+      		placeodCost.innerText = parseInt(obj.placeodCost).toLocaleString() + "\t원";
+      		placeodChg.innerText = obj.placeodChg;
+
   		}
 		
-		
+      
 
             
         </script>
