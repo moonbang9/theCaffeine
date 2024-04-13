@@ -411,3 +411,11 @@ from od_detail d JOIN pd p
     ON d.pd_cd = p.pd_cd
 where d.od_no = 90
 order by od_detailno;
+
+select * from od;
+select * from od_detail;
+-- 1:주문접수 2:출고중(처리취소 가능) 3:출고완료(처리취소 불가능)
+ALTER TABLE od_detail ADD send_st NUMBER(10, 0) DEFAULT 1 NOT NULL;
+COMMENT ON COLUMN od_detail.send_st IS '제품 출고 상태';
+
+
