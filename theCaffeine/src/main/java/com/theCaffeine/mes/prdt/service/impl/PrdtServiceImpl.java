@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.theCaffeine.mes.prdt.mapper.PrdtMapper;
 import com.theCaffeine.mes.prdt.model.FailPlanVO;
+import com.theCaffeine.mes.prdt.model.InstResistVO;
 import com.theCaffeine.mes.prdt.model.InstVO;
 import com.theCaffeine.mes.prdt.model.MtrlPlanVO;
 import com.theCaffeine.mes.prdt.model.PlanDetailVO;
@@ -140,7 +141,8 @@ public class PrdtServiceImpl implements PrdtService{
 		// TODO Auto-generated method stub
 		return prdtMapper.getInstDetailList(pdtInstNo);
 	}
-
+	
+	@Transactional
 	@Override
 	public int instDelete(Integer pdtInstNo) {
 		prdtMapper.instDelete(pdtInstNo);
@@ -158,6 +160,21 @@ public class PrdtServiceImpl implements PrdtService{
 	public List<PlanVO> getPlanCdList() {
 		// TODO Auto-generated method stub
 		return prdtMapper.getPlanCdList();
+	}
+
+	@Transactional
+	@Override
+	public int instResist(InstResistVO vo) {
+		prdtMapper.insertPrdtInst(vo.getInstVO());
+		
+		if(vo.getInstDetailVO() != null) {
+			for(InstVO i : vo.getInstDetailVO()) {
+				if(i.getQt() != 0) {
+					prdtMapper.insertPrdtInstDetail(i);
+				}
+			}
+		}
+		return 1;
 	}
 	
 }
