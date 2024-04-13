@@ -89,9 +89,9 @@
 	<script>
 		mtrl_order_qt.addEventListener("change", e=> {
 			if(mtrl_order_clicd.value == "MCLI006") {
-				if(mtrl_order_qt.value < 50) {
-					alert("원두봉투의 발주 최소단위는 50 pcs 입니다.");
-					mtrl_order_qt.value = 50;
+				if(mtrl_order_qt.value < 100) {
+					alert("원두봉투의 발주 최소단위는 100 pcs 입니다.");
+					mtrl_order_qt.value = 100;
 				}
 			} else if(mtrl_order_clicd.value == "MCLI007") {
 				if(mtrl_order_qt.value < 100) {

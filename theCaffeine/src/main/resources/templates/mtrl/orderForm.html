@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<style>
+    body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        background-color: #FAFAFA;
+        font: 12pt "Tahoma";
+    }
+    * {
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+    }
+    .page {
+    	text-align: center;
+        width: 210mm;
+        min-height: 297mm;
+        padding: 20mm;
+        margin: 10mm auto;
+        border: 1px #D3D3D3 solid;
+        border-radius: 5px;
+        background: white;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+    .subpage {
+    	text-align: center;
+        border: 1px black solid;
+        height: 170mm;
+    }
+    
+    @page {
+        size: A4;
+        margin: 0;
+    }
+    @media print {
+        html, body {
+            width: 210mm;
+            height: 297mm;        
+        }
+        .page {
+            margin: 0;
+            border: initial;
+            border-radius: initial;
+            width: initial;
+            min-height: initial;
+            box-shadow: initial;
+            background: initial;
+            page-break-after: always;
+        }
+    }
+
+</style>
+<body>
+	<div class="page">
+		<h1>자 재 발 주 서</h1>
+	 	<div class="subpage">
+	 		<table>
+	 			<tr>
+                    <th>거래처</th>
+                </tr>
+	 		</table>
+	 	</div>
+		<p style="margin-top: 20px;">위와 같은 내용으로 발주합니다.</p>
+		<p style="margin-top: 60px;">2024-04-13</p>
+		<p style="margin-top: 80px;">(주) THE CAFFEINE</p>
+	</div>
+</body>
+
+<script>
+	window.print();
+</script>
+
+</html>
