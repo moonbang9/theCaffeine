@@ -130,7 +130,7 @@
 				from PDT_INST_DETAIL pid 
 				join PDT_INST pi 
 				on pid.pdt_inst_no = pi.pdt_inst_no 
-				where pid.comp_st = 4 and pi.pdt_plan_cd = (select max(pdt_plan_cd) 
+				where pid.comp_st = 5 and pi.pdt_plan_cd = (select max(pdt_plan_cd) 
 															from PDTPLAN 
 														<![CDATA[	where wk_plan_stt_dt < (select max(wk_plan_stt_dt) 
 																					from PDTPLAN 
@@ -152,7 +152,7 @@
                                     <![CDATA[   where wk_plan_stt_dt < (select max(wk_plan_stt_dt) 
 								  										from PDTPLAN 
 								  										where wk_plan_stt_dt <= sysdate))) w ]]>
-						on q.pdt_inst_no=w.pdt_inst_no where q.comp_st=3) r 
+						on q.pdt_inst_no=w.pdt_inst_no where q.comp_st=4) r 
 		on p.pd_cd=r.pd_cd 
 		group by p.pd_cd
 	</select>

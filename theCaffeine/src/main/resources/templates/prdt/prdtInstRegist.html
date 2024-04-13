@@ -87,6 +87,15 @@
 		let pdNames = []
 		let unitQts = []
 		
+		resistBtn.addEventListener("click", e=> {
+			console.log(planCds.value)
+			console.log(planDay2.value)
+			console.log(planCds.value)
+			let params1 = {pdtPlanCd : planCds.value, pdtInstDt : planDay2.value}
+			let params2 = InstDetailData();
+			//location.href='/production/prdtInstRegist'
+		})
+		
 		planCds.addEventListener("change", e=> {
 			
 			//요소제거
@@ -245,41 +254,100 @@
 		var table2 = new Tabulator("#productionPlan-table2", {
 			height:"100%",
 			layout:"fitDataFill",
-			index:"pdCd",
+			index:"rownum",
 		    columns:[
+		    	{field:"rownum", width:50, hozAlign:"center", formatter:"rownum", resizable:false, frozen:true, headerSort:false},
 		    	{title:"제품코드", field:"pdCd", hozAlign:"center", width:200, editor:"list", 
 		    		editorParams:{values: pdCds, freetext:false},
 		    		cellEdited: function(cell) {
 		    			console.log(cell._cell.row.data)
 		    			for(let i of pdNames){
 		    				if(i.pdCd == cell._cell.row.data.pdCd){
-		    					console.log(i)
+		    					i.rownum = cell._cell.row.data.rownum
 		    					table2.updateData([i])
 		    				}
 		    			}
-		    			
-					}},
+					},
+				},
 		        {title:"상품명", field:"pdName", width:300, hozAlign:"center"},
-		        {title:"수량", field:"qt", hozAlign:"center", editor:dateEditor5, validator:["min:0", "numeric"], width:100},
-		        {title:"생산시작시간", field:"pdtSttTime", width:240, editor:"datetime", editorParams:{
-		            format:"yyyy-MM-dd hh:mm:ss",
+		        {title:"수량", field:"qt", hozAlign:"center", editor:dateEditor5, validator:["min:0", "numeric"], width:100,
+		        	cellEdited: function(cell) {
+		    			let tables = table2.getData();
+		    			for(let i of tables){
+		    				if(cell._cell.row.data.rownum == i.rownum && cell._cell.row.data.pdtSttTime != ""){
+		    					let date1 = new Date(2020, 6, 1, cell._cell.row.data.pdtSttTime.substring(0,2), cell._cell.row.data.pdtSttTime.substring(3,5), cell._cell.row.data.pdtSttTime.substring(6,8));
+		    					let date2 = new Date(2020, 6, 2, 0, 0, 0)
+		    					if(cell._cell.row.data.qt == null){
+		    						cell._cell.row.data.qt = 0
+		    					}
+		    					let addMit = (cell._cell.row.data.qt/24) * 30
+		    					date1.setMinutes(date1.getMinutes() + addMit)
+		    					if(date2 < date1){
+		    						i.pdtSttTime = null;
+		    						i.pdtexptFnTime = null;
+		    						alert('해당 날짜를 초과하는 시간입니다.')
+		    					}else{
+		    						i.pdtexptFnTime = getDateStr2(date1).substring(11,20)
+		    					}
+			    			}
+		    			}
+		    			console.log(tables)
+		    			table2.updateData(tables)
+					},},
+		        {title:"생산시작시간", field:"pdtSttTime", width:240, editor:"time", editorParams:{
+		            format:"HH:mm:ss",
 		            verticalNavigation:"table",
 		            elementAttributes:{
 		                title:"slide bar to choose option",
 		            },
-		            min:planDay2.value,
-		            //max:"02/12/2022",
-		        }},
-		        {title:"생산예상종료시간", field:"pdtexptFnTime", width:240, editor:"datetime", editorParams:{
-		            format:"yyyy-MM-dd hh:mm:ss",
-		            min:planDay2.value,
-		            verticalNavigation:"table",
-		            elementAttributes:{
-		                title:"slide bar to choose option",
-		            },
-		            //max:"02/12/2022",
-		        }},
-		        {title:"수정가능여부", field:"dob", hozAlign:"center", width:150},
+		        },
+		        cellEdited: function(cell) {
+	    			//console.log(cell._cell.row.data.pdtSttTime)
+	    			let tables = table2.getData();
+	    			for(let i of tables){
+	    				if(cell._cell.row.data.rownum == i.rownum && cell._cell.row.data.pdtSttTime != ""){
+	    					let date1 = new Date(2020, 6, 1, cell._cell.row.data.pdtSttTime.substring(0,2), cell._cell.row.data.pdtSttTime.substring(3,5), cell._cell.row.data.pdtSttTime.substring(6,8));
+	    					let date2 = new Date(2020, 6, 2, 0, 0, 0)
+	    					if(cell._cell.row.data.qt == null){
+	    						cell._cell.row.data.qt = 0
+	    					}
+	    					let addMit = (cell._cell.row.data.qt/24) * 30
+	    					date1.setMinutes(date1.getMinutes() + addMit)
+	    					if(date2 < date1){
+	    						i.pdtSttTime = null;
+	    						i.pdtexptFnTime = null;
+	    						alert('해당 날짜를 초과하는 시간입니다.')
+	    					}else{
+	    						//console.log(getDateStr2(date1).substring(11,20))
+	    						i.pdtexptFnTime = getDateStr2(date1).substring(11,20)
+	    					}
+		    			}
+	    			}
+	    			console.log(tables)
+	    			table2.updateData(tables)
+				},
+		        },
+		        {title:"생산예상종료시간", field:"pdtexptFnTime", width:240},
+		        {title:"수정가능여부", field:"compSt", hozAlign:"center", width:150},
+		        {title:"삭제", formatter:"buttonCross", width:80, hozAlign:"center", cellClick:function(e, cell){
+		    			if(table2.getDataCount() != 0){
+		    				//console.log(table2.getDataCount())
+		    				//console.log(cell._cell.row.data.rownum)
+							let tables = table2.getData();
+							let count = 1;
+							let tables2 = []
+							for(let i of tables){
+								//console.log(i.rownum)
+								if(cell._cell.row.data.rownum != i.rownum){
+									i.rownum = count;
+									count++;
+									tables2.push(i)
+								}
+							}
+							table2.setData(tables2)
+						}
+						//cell.getRow().delete();
+		        }}
 		    ],
 		});
 		
@@ -288,9 +356,25 @@
 			if(planCds.value == "" || planDay2.value == ""){
 				alert('지시일자가 선택되지 않았습니다. \n일자 선택후 다시 이용해 주세요.')
 			}else{
+				console.log(table2.getDataCount())
+				console.log(table2.getData())
+				
+				if(table2.getDataCount() != 0){
+					let tables = table2.getData();
+					let count = 1;
+					for(let i of tables){
+						i.rownum = count;
+						count++;
+					}
+					console.log(tables)
+					table2.updateData(tables)
+				}
+				
+				
+		    	table2.addRow({"compSt" : "O", "rownum": table2.getDataCount() + 1});
 			}
-		    	table2.addRow({});
 		});
+		
 		
 		//날짜
 		function getDateStr(myDate){
@@ -304,11 +388,43 @@
 			return  (year + '-' + month + '-' + day );
 		}
 		
+		//초단위 날짜
+		function getDateStr2(myDate){
+			var year = myDate.getFullYear();
+			var month = (myDate.getMonth() + 1);
+			var day = myDate.getDate();
+			var hur = myDate.getHours();
+			var min = myDate.getMinutes();
+			var sec = myDate.getSeconds();
+			
+			month = (month < 10) ? "0" + String(month) : month;
+			day = (day < 10) ? "0" + String(day) : day;
+			hur = (hur < 10) ? "0" + String(hur) : hur;
+			min = (min < 10) ? "0" + String(min) : min;
+			sec = (sec < 10) ? "0" + String(sec) : sec;
+			
+			return  (year + '-' + month + '-' + day + " " + hur + ":" + min + ":" + sec);
+		}
 		
+		//지시상세 데이터 포멧
+		function InstDetailData() {
+		  let newArr1 = [];
+		  
+		  let tables = table2.getData();
+		  
+			  for(let i of tables){
+					if(j.pdCd == i.pdCd){
+						  newArr1.push({
+				    			pdCd : i.pdCd,
+				    			qt : i.totQt, 
+					  			pdtSttTime : planCds.value,
+				    			pdtexptFnTime : i.pdName,
+				    			compSt : 1
+				 			});  
+					  }
+			  }
+		}
 		
-			/*saveBtn.addEventListener("click", e=> {
-				location.href='/production/prdtInstRegist'
-			})*/
 		</script>
 	</div>
 </body>
