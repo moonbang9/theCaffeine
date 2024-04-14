@@ -30,7 +30,7 @@ public class InstVO {
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
 	private Date pdtexptFnTime; 		//생산예상 종료 시간
-	private String compSt; 				//완료 상태
+	private Integer compSt; 				//완료 상태
 	private Double msum; 				//총 예상 작업시간
 	private Integer isum; 				//총 생산수량
 	private String insttot; 			//지시 총 상품명 (외 몇개)

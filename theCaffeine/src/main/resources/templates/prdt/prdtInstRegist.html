@@ -65,7 +65,7 @@
 		<div class="d-grid gap-2 d-md-flex justify-content-md-end">
 			<button class="btn btn-secondary" type="button" id="addBtn" style="margin-top: 12px;">추가</button>
 			<button class="btn btn-primary" type="button" id="resistBtn" style="margin-top: 12px;">등록</button>
-			<button class="btn btn-danger" type="button" id="delBtn" style="margin-top: 12px; margin-right: 5px;">삭제</button>
+			<button class="btn btn-danger" type="button" id="delBtn" style="margin-top: 12px; margin-right: 5px; display: none;">수정</button>
 		</div>
 		<script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js"></script>
 		<script th:inline="javascript">
@@ -91,10 +91,10 @@
 		let instLists =[] 
 		
 		resistBtn.addEventListener("click", e=> {
-			let params1 = {pdtPlanCd : planCdsVal, planCds.value : planDay2.value}
+			let params1 = {pdtPlanCd : planCds.value, pdtInstDt : planDay2.value}
 			let params2 = InstDetailData();
-			let param = {InstVO : params1, 
-					InstDetailVO : params2
+			let param = {instVO : params1, 
+					instDetailVO : params2
 					};
 			console.log(params1)
 			console.log(params2)
@@ -454,7 +454,6 @@
 		function InstDetailData() {
 		  let newArr1 = [];
 		  let tables = table2.getData();
-		  console.log(planDay2Val)
 			  for(let i of tables){
 				  newArr1.push({
 		    			pdCd : i.pdCd,

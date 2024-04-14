@@ -195,12 +195,15 @@ public class ProductionController {
 	}
 	
 	//지시상세선택 삭제
-	@GetMapping("/ajax/instDetailDel2/{pdtInstDetailNo}")
-	public String instDetailDelete(@PathVariable Integer pdtInstDetailNo) {
-		if(prdtService.instDetailDelete(pdtInstDetailNo) > 0) {
-			System.out.println("삭제성공");
+	@PostMapping("/ajax/instDetailDel2")
+	public Map<String, Object> instDetailDelete(@RequestBody InstResistVO vo) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		if(prdtService.instDetailDelete(vo) > 0) {
+			map.put("response", "ok");
+		}else {
+			map.put("response", "no");
 		}
-		return "ok";
+		return map;
 	}
 	
 	//계획코드 리스트
@@ -212,6 +215,7 @@ public class ProductionController {
 	//지시 등록
 	@PostMapping("/ajax/instResist")
 	public Map<String, Object> instResist(@RequestBody InstResistVO vo) {
+		System.out.println(vo);
 		Map<String, Object> map = new HashMap<String, Object>();
 		if(prdtService.instResist(vo) > 0) {
 			map.put("response", "ok");
