@@ -1,70 +1,14 @@
 <!DOCTYPE html>
-
-<!-- =========================================================
-* Sneat - Bootstrap 5 HTML Admin Template - Pro | v1.0.0
-==============================================================
-
-* Product Page: https://themeselection.com/products/sneat-bootstrap-html-admin-template/
-* Created by: ThemeSelection
-* License: You must have a valid license purchased in order to legally use the theme for your project.
-* Copyright ThemeSelection (https://themeselection.com)
-
-=========================================================
- -->
-<!-- beautify ignore:start -->
-<html
-  lang="en"
-  class="light-style customizer-hide"
-  dir="ltr"
-  data-theme="theme-default"
-  data-assets-path="../assets/"
-  data-template="vertical-menu-template-free"
->
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
-    />
-
-    <title>Register Basic - Pages | Sneat - Bootstrap 5 HTML Admin Template - Pro</title>
-
-    <meta name="description" content="" />
-
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="/assets/img/favicon/favicon.ico" />
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
-      rel="stylesheet"
-    />
-
-    <!-- Icons. Uncomment required icon fonts -->
-    <link rel="stylesheet" href="/assets/vendor/fonts/boxicons.css" />
-
-    <!-- Core CSS -->
-    <link rel="stylesheet" href="/assets/vendor/css/core.css" class="template-customizer-core-css" />
-    <link rel="stylesheet" href="/assets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
-    <link rel="stylesheet" href="/assets/css/demo.css" />
-
-    <!-- Vendors CSS -->
-    <link rel="stylesheet" href="/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
-
-    <!-- Page CSS -->
-    <!-- Page -->
-    <link rel="stylesheet" href="/assets/vendor/css/pages/page-auth.css" />
-    <!-- Helpers -->
-    <script src="/assets/vendor/js/helpers.js"></script>
-
-    <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
-    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
-    <script src="/assets/js/config.js"></script>
-  </head>
-
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/member}">
+<head>
+<meta charset="UTF-8">
+<title>register</title>
+</head>
   <body>
+  <div layout:fragment="subscribe">
+                
     <!-- Content -->
 
     <div class="container-xxl">
@@ -88,20 +32,20 @@
                   <input
                     type="text"
                     class="form-control"
-                    id="username"
-                    name="username"
+                    id="userid"
+                    name="userid"
                     placeholder="아이디"
                     autofocus
                   />
                 </div>
                 <div class="mb-3 form-password-toggle">
-                  <label class="form-label" for="password">비밀번호*</label>
+                  <label class="form-label" for="userpw">비밀번호*</label>
                   <div class="input-group input-group-merge">
                     <input
                       type="password"
-                      id="password"
+                      id="userpw"
                       class="form-control"
-                      name="password"
+                      name="userpw"
                       placeholder="비밀번호"
                       aria-describedby="password"
                     />
@@ -110,9 +54,9 @@
                   <div class="input-group input-group-merge">
                 <input
                       type="password"
-                      id="password"
+                      id="checkpw"
                       class="form-control"
-                      name="password"
+                      name="checkpw"
                       placeholder="비밀번호 확인"
                       aria-describedby="password"
                     />
@@ -123,27 +67,26 @@
                   <br>
                   <p><small>▷기업정보</small></p>
                 <div class="mb-2">
-                  <label for="email" class="form-label">사업자 등록번호</label>
+                  <label for="bussNo" class="form-label">사업자 등록번호*</label>
+                  <div class="input-group">
+			        <input type="text" class="form-control" id="bussNo" name="bussNo" placeholder="-없이 숫자만 입력" />
+			        <button type="button" class="btn btn-primary" style="border-radius: 5px;" id="checkBussNo">인증</button>
+			    </div>
                   <br>
-                  <input type="text" class="form-control"  id="email" name="email" placeholder="-없이 숫자만 입력"  />
-                  <button type="button" style="display: inline-block; border-radius: 5px;">인증</button>
-                  <br>
-                  <label for="email" class="form-label">사업자 명</label>
-                  <input type="text" class="form-control" id="email" name="email" placeholder="기업명 입력"  />
+                  <label for="bussName" class="form-label">사업자 명*</label>
+                  <input type="text" class="form-control" id="bussName" name="bussName" placeholder="기업명 입력"  />
+                  <label for="level" class="form-label">대표자</label>
+                  <input type="text" class="form-control" id="ceo" name="ceo" placeholder="대표자명 입력"  />
                   </div>
                   <div class="mb-2">
                     <br>
                   <p><small>▷담당자 정보</small></p>
-                  <label for="name" class="form-label">이름*</label>
-                  <input type="text" class="form-control" id="name" name="name" placeholder="이름 입력"  />
+                  <label for="chgname" class="form-label">이름*</label>
+                  <input type="text" class="form-control" id="chgname" name="chgname" placeholder="이름 입력"  />
                   <label for="email" class="form-label">이메일*</label>
                   <input type="text" class="form-control" id="email" name="email" placeholder="이메일 주소 입력"  />
-                  <label for="level" class="form-label">직급</label>
-                  <input type="text" class="form-control" id="level" name="level" placeholder="직급 입력"  />
-                  <label for="department" class="form-label">부서</label>
-                  <input type="text" class="form-control" id="depart" name="depart" placeholder="부서 입력"  />
-                  <label for="tel" class="form-label">전화번호</label>
-                  <input type="tel" class="form-control" id="tel" name="tel" placeholder="-없이 숫자만 입력"  />
+                  
+                  
 
                 </div>
                 <button class="btn btn-primary d-grid w-100">회원가입</button>
@@ -155,29 +98,80 @@
           <!-- Register Card -->
         </div>
       </div>
-    </div>
 
+    </div>
+<script>
+
+document.getElementById('checkBussNo').addEventListener("click", function() {
+    checkBusinessNumber();
+});
+		//사업자번호 인증 api
+        function checkBusinessNumber() {
+            var bussNumber = document.getElementById('bussNo').value; // 사업자 번호 확인
+            fetch('https://www.data.go.kr/data/15081808/openapi.do?businessNumber=' + bussNumber)
+                .then(function (res) {
+                    if (!res.ok) {
+                        throw new Error('인증 실패');
+                    }
+                    return res.json();
+                })
+                .then(function (data) {
+                    console.log(data);
+                    alert('인증되었습니다!');
+                })
+                .catch(function (error) {
+                    console.error('error:', error);
+                });
+        }
+
+        function validateAndRegister() {
+            var id = document.getElementById('userid').value;
+            var pw = document.getElementById('userpw').value;
+            var bussno = document.getElementById('bussNo').value;
+            var enterName = document.getElementById('bussName').value;
+            var chg = document.getElementById('chgname').value;
+            var mail = document.getElementById('email').value;
+           	var ceo = document.getElementById('ceo').value;
+           
+
+            if (!userid || !userpw || !checkpw || !bussNo || !bussName || !chgname || !email ) {
+                alert("필수 값을 입력해주세요");
+                return;
+            }
+
+            if (userpw !== checkpw) {
+                alert("패스워드가 일치하지 않습니다");
+                return;
+            }
+          
+            	const form = {
+                        id: document.getElementById('userid').value,
+                        pw: document.getElementById('userpw').value,
+                        bussno: document.getElementById('bussNo').value,
+                        entername: document.getElementById('bussName').value,
+                        chg: document.getElementById('chgname').value,
+                        mail: document.getElementById('email').value,
+                        ceo: document.getElementById('ceo').value
+                    };
+
+                    fetch('/memb/insert', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(form)
+                    })
+                    .then(res => res.json())
+					.then(res => saveRes(res))
+        }
+         // 등록 응답
+        	function saveRes(res) {
+        		alert("회원가입이 완료되었습니다.");
+        		location.href= "/memb/login"
+        	}
+    </script>
+    </div>
     <!-- / Content -->
 
-
-    <!-- Core JS -->
-    <!-- build:js assets/vendor/js/core.js -->
-    <script src="/assets/vendor/libs/jquery/jquery.js"></script>
-    <script src="/assets/vendor/libs/popper/popper.js"></script>
-    <script src="/assets/vendor/js/bootstrap.js"></script>
-    <script src="/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
-
-    <script src="/assets/vendor/js/menu.js"></script>
-    <!-- endbuild -->
-
-    <!-- Vendors JS -->
-
-    <!-- Main JS -->
-    <script src="/assets/js/main.js"></script>
-
-    <!-- Page JS -->
-
-    <!-- Place this tag in your head or just before your close body tag. -->
-    <script async defer src="https://buttons.github.io/buttons.js"></script>
   </body>
 </html>
