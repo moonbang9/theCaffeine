@@ -73,6 +73,8 @@
 		$(window).on("load",function(e) {
 			planCdList()
 			basicPlanListReq()
+			instListReq()
+			addRows()
 		})
 		let planCds = document.querySelector('.plans');
 		let daySale = document.querySelector('.daySale');
@@ -86,14 +88,39 @@
 		let pdCds = []
 		let pdNames = []
 		let unitQts = []
+		let instLists =[] 
 		
 		resistBtn.addEventListener("click", e=> {
-			console.log(planCds.value)
-			console.log(planDay2.value)
-			console.log(planCds.value)
-			let params1 = {pdtPlanCd : planCds.value, pdtInstDt : planDay2.value}
+			let params1 = {pdtPlanCd : planCdsVal, planCds.value : planDay2.value}
 			let params2 = InstDetailData();
-			//location.href='/production/prdtInstRegist'
+			let param = {InstVO : params1, 
+					InstDetailVO : params2
+					};
+			console.log(params1)
+			console.log(params2)
+			if(planDay2.value != ""){
+				fetch("/ajax/instResist",{
+					method : "post",
+					headers: {
+					      "Content-Type": "application/json",
+					    },
+					body : JSON.stringify(param)
+				})
+				.then(res => res.json())
+				.then(res => {
+					if(res.response == 'ok'){
+						alert('등록이 완료되었습니다.')
+						location.href='/production/prdtInst'
+					}else{
+						alert('등록에 실패하였습니다.')
+					}
+				})
+			}else{
+				alert('지시일 등록후 다시 등록해주세요.')
+			}
+			
+			
+			
 		})
 		
 		planCds.addEventListener("change", e=> {
@@ -115,13 +142,22 @@
 		//지시일자 등록
 		function planDateList(wkPlanSttDt) {
 			for(let i=0;i<=diff;i++){
+				
+				let tf = true;
 				let newsDate = new Date(wkPlanSttDt);
 				newsDate.setDate(newsDate.getDate() + i);
-				let option = document.createElement('option');
-				option.setAttribute('value', getDateStr(newsDate));
-				option.setAttribute('class', 'planDate');
-				option.innerHTML = getDateStr(newsDate);
-				planDay2.append(option)
+				for(let j of instLists){
+					if(j.pdtInstDt == getDateStr(newsDate)){
+						tf = false;
+					}
+				}
+				if(tf){
+					let option = document.createElement('option');
+					option.setAttribute('value', getDateStr(newsDate));
+					option.setAttribute('class', 'planDate');
+					option.innerHTML = getDateStr(newsDate);
+					planDay2.append(option)
+				}
 			}
 		}
 		
@@ -184,15 +220,18 @@
 		
 		// 계획상세 리스트
 		function planDetailList() {
-			fetch("/ajax/planDetailList/"+ planCds.value)
-			.then(res => res.json())
-			.then(res => {
-				table1.setData(res)
-				console.log(res)
-				/*for(let i of res){
-					pdCds.push(i.pdCd)
-				}*/
-			})
+			if(planCds.value != ""){
+				fetch("/ajax/planDetailList/"+ planCds.value)
+				.then(res => res.json())
+				.then(res => {
+					table1.setData(res)
+					console.log(res)
+					/*for(let i of res){
+						pdCds.push(i.pdCd)
+					}*/
+				})
+			}
+			
 		}
 		
 		//코드 정보들
@@ -200,7 +239,6 @@
 			fetch("/ajax/basicPlan")
 			.then(res => res.json())
 			.then(res => {
-				console.log(res)
 				for(let i of res){
 					pdCds.push(i.pdCd)
 					pdNames.push({"pdCd" : i.pdCd,"pdName" : i.pdName})
@@ -274,7 +312,7 @@
 		        	cellEdited: function(cell) {
 		    			let tables = table2.getData();
 		    			for(let i of tables){
-		    				if(cell._cell.row.data.rownum == i.rownum && cell._cell.row.data.pdtSttTime != ""){
+		    				if(cell._cell.row.data.rownum == i.rownum && cell._cell.row.data.pdtSttTime != "" && cell._cell.row.data.pdtSttTime != undefined){
 		    					let date1 = new Date(2020, 6, 1, cell._cell.row.data.pdtSttTime.substring(0,2), cell._cell.row.data.pdtSttTime.substring(3,5), cell._cell.row.data.pdtSttTime.substring(6,8));
 		    					let date2 = new Date(2020, 6, 2, 0, 0, 0)
 		    					if(cell._cell.row.data.qt == null){
@@ -294,7 +332,7 @@
 		    			console.log(tables)
 		    			table2.updateData(tables)
 					},},
-		        {title:"생산시작시간", field:"pdtSttTime", width:240, editor:"time", editorParams:{
+		        {title:"생산시작시간", field:"pdtSttTime", hozAlign:"center", width:240, editor:"time", editorParams:{
 		            format:"HH:mm:ss",
 		            verticalNavigation:"table",
 		            elementAttributes:{
@@ -327,7 +365,7 @@
 	    			table2.updateData(tables)
 				},
 		        },
-		        {title:"생산예상종료시간", field:"pdtexptFnTime", width:240},
+		        {title:"생산예상종료시간", field:"pdtexptFnTime", width:240, hozAlign:"center"},
 		        {title:"수정가능여부", field:"compSt", hozAlign:"center", width:150},
 		        {title:"삭제", formatter:"buttonCross", width:80, hozAlign:"center", cellClick:function(e, cell){
 		    			if(table2.getDataCount() != 0){
@@ -352,29 +390,35 @@
 		});
 		
 		//행 추가
-		document.getElementById("addBtn").addEventListener("click", function(){
-			if(planCds.value == "" || planDay2.value == ""){
-				alert('지시일자가 선택되지 않았습니다. \n일자 선택후 다시 이용해 주세요.')
-			}else{
-				console.log(table2.getDataCount())
-				console.log(table2.getData())
-				
-				if(table2.getDataCount() != 0){
-					let tables = table2.getData();
-					let count = 1;
-					for(let i of tables){
-						i.rownum = count;
-						count++;
-					}
-					console.log(tables)
-					table2.updateData(tables)
-				}
-				
-				
-		    	table2.addRow({"compSt" : "O", "rownum": table2.getDataCount() + 1});
-			}
-		});
+		document.getElementById("addBtn").addEventListener("click", function (){
+			addRows()
+			});
 		
+		function addRows(){
+			//console.log(table2.getDataCount())
+			//console.log(table2.getData())
+			
+			if(table2.getDataCount() != 0){
+				let tables = table2.getData();
+				let count = 1;
+				for(let i of tables){
+					i.rownum = count;
+					count++;
+				}
+				console.log(tables)
+				table2.updateData(tables)
+			}
+			
+	    	table2.addRow({"compSt" : "O", "rownum": table2.getDataCount() + 1});
+		}
+		
+		
+		// 주간 생산계획조회 데이터
+		function instListReq() {
+			fetch("/ajax/instList")
+			.then(res => res.json())
+			.then(res => instLists = res)
+		}
 		
 		//날짜
 		function getDateStr(myDate){
@@ -409,20 +453,19 @@
 		//지시상세 데이터 포멧
 		function InstDetailData() {
 		  let newArr1 = [];
-		  
 		  let tables = table2.getData();
-		  
+		  console.log(planDay2Val)
 			  for(let i of tables){
-					if(j.pdCd == i.pdCd){
-						  newArr1.push({
-				    			pdCd : i.pdCd,
-				    			qt : i.totQt, 
-					  			pdtSttTime : planCds.value,
-				    			pdtexptFnTime : i.pdName,
-				    			compSt : 1
-				 			});  
-					  }
+				  newArr1.push({
+		    			pdCd : i.pdCd,
+		    			qt : Number(i.qt), 
+			  			pdtSttTime : planDay2.value + " " + i.pdtSttTime,
+		    			pdtexptFnTime : planDay2.value + " " + i.pdtexptFnTime,
+		    			compSt : 1,
+		    			pdtInstDt : planDay2.value
+		 			});  
 			  }
+			  return newArr1;
 		}
 		
 		</script>

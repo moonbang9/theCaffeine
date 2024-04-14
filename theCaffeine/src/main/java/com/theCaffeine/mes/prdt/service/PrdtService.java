@@ -3,6 +3,7 @@ package com.theCaffeine.mes.prdt.service;
 import java.util.List;
 
 import com.theCaffeine.mes.prdt.model.FailPlanVO;
+import com.theCaffeine.mes.prdt.model.InstResistVO;
 import com.theCaffeine.mes.prdt.model.InstVO;
 import com.theCaffeine.mes.prdt.model.MtrlPlanVO;
 import com.theCaffeine.mes.prdt.model.PlanOrderDetailVO;
@@ -23,11 +24,12 @@ public interface PrdtService {
 	List<PlanVO> getBasicPlanList(); //주간계획등록 기본 양식
 	List<FailPlanVO> getPlanConsum(); // box -> kg 단위변경 
 	int planResist(PlanResistVO vo); //계획 등록
-	int planUpdate(PlanResistVO vo); //계획 등록
+	int planUpdate(PlanResistVO vo); //계획 수정
 	int planDelete(String pdtPlanCd); //계획 삭제
 	List<InstVO> getInstList(); //일별 지시조회
 	List<InstVO> getInstDetailList(Integer pdtInstNo); //일별 지시상세조회
 	int instDelete(Integer pdtInstNo); //지시 삭제
 	int instDetailDelete(Integer pdtInstDetailNo); //지시상세 삭제
 	List<PlanVO> getPlanCdList(); // 계획코드 리스트
+	int instResist(InstResistVO vo); //지시 등록
 }

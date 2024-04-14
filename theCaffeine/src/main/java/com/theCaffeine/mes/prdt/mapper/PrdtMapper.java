@@ -39,4 +39,6 @@ public interface PrdtMapper {
 	int instDetailDelete(Integer pdtInstNo); //지시상세 삭제
 	int instDetailDelete2(Integer pdtInstDetailNo); //지시상세 디테일 삭제
 	List<PlanVO> getPlanCdList(); // 계획코드 리스트
+	int insertPrdtInst(InstVO vo); //지시 등록
+	int insertPrdtInstDetail(InstVO vo); //지시상세 등록
 }

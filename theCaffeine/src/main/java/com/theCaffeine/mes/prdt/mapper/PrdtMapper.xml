@@ -270,7 +270,29 @@
 	<select id="getPlanCdList">
 		select pdt_plan_cd 
 		from PDTPLAN 
-		where wk_plan_stt_dt >= sysdate-(select max(leadtm) from mt)
+		<![CDATA[where wk_plan_stt_dt >= sysdate-(select max(leadtm) from mt)]]>
 		order by pdt_plan_cd
 	</select>
+	
+	<insert id="insertPrdtInst" parameterType="InstVO">
+		insert into PDT_INST(PDT_INST_NO, PDT_INST_DT, PDT_PLAN_CD) 
+		VALUES 	(PDT_INST_SEQ.nextval,
+				#{pdtInstDt},
+				#{pdtPlanCd})
+	</insert>
+	
+	<insert id="insertPrdtInstDetail" parameterType="InstVO">
+		<selectKey keyProperty="pdtInstNo" order="BEFORE" resultType="int">
+			select pdt_inst_no from PDT_INST where pdt_inst_dt = #{}
+		</selectKey>
+	
+		insert into PDT_INST(PDT_INST_DETAIL_NO, PDT_INST_NO, PD_CD, QT, PDT_STT_TIME, PDTEXPT_FN_TIME, COMP_ST) 
+		VALUES 	(PDT_PLAN_DETAIL_SEQ.nextval,
+				#{pdtInstNo},
+				#{pdCd},
+				#{qt},
+				#{pdtSttTime},
+				#{pdtexptFnTime},
+				#{compSt})
+	</insert>
 </mapper>

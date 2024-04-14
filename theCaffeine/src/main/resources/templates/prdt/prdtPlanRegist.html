@@ -444,25 +444,42 @@
 			//console.log(res)
 			let tot = 0;
 			let tables = table5.getData()
+			
 			for(let i of tables){
 				let sum1 =0;
 				let date1 = null;
-				for(let j of selectOrder){
-					if(i.pdCd == j.pdCd){
-						sum1 += Number(j.qt);
-						if(date1 == null || i.dueDt > j.dueDt){
-							date1 = j.dueDt;
+				if(list != null && vo != null){
+					for(let e of list){
+						if(i.pdCd == e.pdCd){
+							date1 = e.dueDt;
+						}
+						for(let f of selectOrder){
+							if(i.pdCd == e.pdCd && e.pdCd == f.pdCd && f.pdCd == i.pdCd){
+								sum1 += Number(f.qt);
+								if(e.dueDt < f.dueDt){
+									date1 = f.dueDt;
+								}
+							}
+						}
+					}
+				}else{
+					for(let j of selectOrder){
+						if(i.pdCd == j.pdCd){
+							sum1 += Number(j.qt);
+							if(date1 == null || i.dueDt > j.dueDt){
+								date1 = j.dueDt;
+							}
 						}
 					}
 				}
-				i.qt = sum1 * Number(i.unitQt);	
 				i.dueDt = date1;
+				i.qt = sum1 * Number(i.unitQt);	
 				if(((Number(i.qt)) + (Number(i.addQt))) % (Number(i.unitQt)*2) != 0){
-					i.addQt += Number(i.unitQt);
+					i.addQt = Number(i.addQt) + Number(i.unitQt);
 				}
 			}
+			table5.updateData(tables)
 			
-			table5.setData(tables)
 			//전체수량변경
 			for(let i of tables){
 				tot += Number(i.qt) + Number(i.addQt);

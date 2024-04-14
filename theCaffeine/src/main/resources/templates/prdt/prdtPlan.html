@@ -75,11 +75,11 @@
             	
             	//수정중
             	if(cell._cell.row.data.wkPlanSttDt >= lastWeek(new Date())){
-            		fetch("/ajax/planDetailList/"+ pdtPlanCd)
+            		/*fetch("/ajax/planDetailList/"+ pdtPlanCd)
             		.then(res => res.json())
             		.then(res => {
             			console.log(res)
-            		})
+            		})*/
         			location.href= "/production/planRegist?pdtPlanCd="+ pdtPlanCd;
             	}
             }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.theCaffeine.mes.prdt.model.FailPlanVO;
+import com.theCaffeine.mes.prdt.model.InstResistVO;
 import com.theCaffeine.mes.prdt.model.InstVO;
 import com.theCaffeine.mes.prdt.model.MtrlPlanVO;
 import com.theCaffeine.mes.prdt.model.PlanOrderDetailVO;
@@ -53,13 +54,6 @@ public class ProductionController {
 	public List<MtrlPlanVO> getQnttMtrlList(@PathVariable String pdtPlanCd) {
 		return prdtService.getQnttMtrlList(pdtPlanCd);
 	}
-	
-	//생산 주간 계획 등록 페이지이동
-	/*@GetMapping("/production/planRegist")
-	public ModelAndView planRegist() { 
-		ModelAndView mv = new ModelAndView("prdt/prdtPlanRegist");
-		return mv;
-	}*/
 	
 	//생산 주간 계획 등록 데이터 포함 이동 //수정
 	@GetMapping(value = "/production/planRegist")
@@ -213,5 +207,17 @@ public class ProductionController {
 	@GetMapping("/ajax/planCdList")
 	public List<PlanVO> planCdList() {
 		return prdtService.getPlanCdList();
+	}
+	
+	//지시 등록
+	@PostMapping("/ajax/instResist")
+	public Map<String, Object> instResist(@RequestBody InstResistVO vo) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		if(prdtService.instResist(vo) > 0) {
+			map.put("response", "ok");
+		}else {
+			map.put("response", "no");
+		}
+		return map;
 	}
 }
