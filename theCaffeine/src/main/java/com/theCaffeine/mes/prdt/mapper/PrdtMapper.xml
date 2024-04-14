@@ -283,7 +283,7 @@
 	
 	<insert id="insertPrdtInstDetail" parameterType="InstVO">
 		<selectKey keyProperty="pdtInstNo" order="BEFORE" resultType="int">
-			select pdt_inst_no from PDT_INST where pdt_inst_dt = #{}
+			select pdt_inst_no from PDT_INST where pdt_inst_dt = #{pdtInstDt}
 		</selectKey>
 	
 		insert into PDT_INST(PDT_INST_DETAIL_NO, PDT_INST_NO, PD_CD, QT, PDT_STT_TIME, PDTEXPT_FN_TIME, COMP_ST) 
