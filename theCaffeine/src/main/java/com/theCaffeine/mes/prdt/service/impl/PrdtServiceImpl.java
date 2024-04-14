@@ -151,9 +151,14 @@ public class PrdtServiceImpl implements PrdtService{
 	}
 
 	@Override
-	public int instDetailDelete(Integer pdtInstDetailNo) {
+	public int instDetailDelete(InstResistVO vo) {
 		// TODO Auto-generated method stub
-		return prdtMapper.instDetailDelete2(pdtInstDetailNo);
+		if(vo.getInstDetailVO() != null) {
+			for(InstVO i : vo.getInstDetailVO()) {
+				prdtMapper.instDetailDelete2(i.getPdtInstDetailNo());
+			}
+		}
+		return 1;
 	}
 
 	@Override

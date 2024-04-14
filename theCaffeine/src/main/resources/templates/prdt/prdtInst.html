@@ -39,15 +39,24 @@
 		let selectOrder = table2.getSelectedData();
 		console.log(selectOrder)
 		if(selectOrder != []){
-			for(let i of selectOrder){
-				fetch("/ajax/instDetailDel2/"+ i.pdtInstDetailNo)
+			let param = { instDetailVO : selectOrder};
+				fetch("/ajax/instDetailDel2",{
+					method : "post",
+					headers: {
+					      "Content-Type": "application/json",
+					    },
+					body : JSON.stringify(param)
+				})
+				.then(res => res.json())
 				.then(res => {
-					console.log(res)
-					if(res.ok){
+					if(res.response == 'ok'){
 						alert('삭제가 완료되었습니다.')
+						//수정필요
+						location.href='/production/prdtInst'
+					}else{
+						alert('삭제에 실패하였습니다.')
 					}
 				})
-			}
 		}
 	})
 	
@@ -87,6 +96,7 @@
             			if(res.ok){
             				alert('삭제가 완료되었습니다.')
             				cell.getRow().delete();
+            				location.href='/production/prdtInst'
             			}else{
             				alert('삭제가 실패하였습니다.')
             			}
@@ -110,25 +120,7 @@
         			location.href= "/production/planRegist?pdtPlanCd="+ pdtPlanCd;
             	}
             }
-        },
-        {title:"지시확인", formatter:editorIcon2, width:90, hozAlign:"center", cellClick:function(e, cell){
-        	let pdtPlanCd = cell._cell.row.data.pdtPlanCd;
-            			console.log(pdtPlanCd)
-        	if(cell._cell.row.data.wkPlanSttDt >= lastWeek(new Date())){
-        		if(confirm("삭제하시겠습니까?")) {
-        			fetch("/ajax/planDelete/"+ pdtPlanCd)
-            		.then(res => {
-            			console.log(res)
-            			if(res.ok){
-            				alert('삭제가 완료되었습니다.')
-            				cell.getRow().delete();
-            			}else{
-            				alert('삭제가 실패하였습니다.')
-            			}
-            		})
-            	}
-        	}
-        }}*/
+        },*/
     ],
 });
 	

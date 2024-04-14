@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InstResistVO {
-	private InstVO InstVO;
-	private List<InstVO> InstDetailVO;
+	private InstVO instVO;
+	private List<InstVO> instDetailVO;
 }
