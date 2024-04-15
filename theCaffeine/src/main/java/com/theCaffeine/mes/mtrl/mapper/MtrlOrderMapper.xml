@@ -248,7 +248,7 @@
 		        ,c.addr
 		        ,c.mail
 		        ,c.cli_chg
-		        ,TO_CHAR(mp.placeod_compdt, 'YYYY-MM-DD') as placeod_compdt
+		        ,mp.placeod_compdt
 		        ,m.mt_cd
 		        ,m.mt_name
 		        ,mp.placeod_qt
