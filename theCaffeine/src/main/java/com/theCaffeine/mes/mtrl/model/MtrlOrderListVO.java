@@ -16,7 +16,7 @@ public class MtrlOrderListVO {
 	private String mtCd;
 	private String mtName;
 	@JsonFormat(pattern = "yyyy-MM-dd")
-	private String placeodCompdt;
+	private Date placeodCompdt;
 	private int placeodSt;
 	private String placeodChg;
 	private String st;

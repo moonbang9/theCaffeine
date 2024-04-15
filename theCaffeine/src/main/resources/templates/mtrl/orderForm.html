@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <title>자재 발주서</title>
@@ -85,7 +85,7 @@
                     <td>이메일</td>
                     <td>[[${info.mail}]]</td>	
                     <td>납기일자</td>
-                    <td>[[${info.dueDt}]]</td>
+                    <td id="dueDt11">[[${info.dueDt}]]</td>
                 </tr>
 	 		</table>
 	 		<table class="table table-bordered" style="vertical-align: middle;">
@@ -105,8 +105,8 @@
 	                    <td>[[${info.mtName}]]</td>
 	                    <td>[[${info.unit}]]</td>
 	                    <td>[[${info.placeodQt}]]</td>
-	                    <td>[[${info.cost}]]</td>
-	                    <td>[[${info.placeodCost}]]</td>
+	                    <td id="cost11">[[${info.cost}]]</td>
+	                    <td id="placeodCost11">[[${info.placeodCost}]]</td>
 	                </tr>
 	                <tr>
 	                	<td>2</td>
@@ -184,12 +184,36 @@
 	 		</table>
 	 	</div>
 		<p style="margin-top: 20px;">위와 같은 내용으로 발주합니다.</p>
-		<p style="margin-top: 70px;">[[${info.placeodCompdt}]]</p>
+		<p style="margin-top: 70px;" id = "placeodCompdt11">[[${info.placeodCompdt}]]</p>
 		<p style="margin-top: 80px; font-weight: bold;">(주) THE CAFFEINE</p>
 	</div>
 </body>
 
-<script>
+<script th:inline="javascript">
+let dueDt = [[${info.dueDt}]];
+let placeodCompdt = [[${info.placeodCompdt}]];
+let cost = [[${info.cost}]];
+let placeodCost = [[${info.placeodCost}]];
+
+dueDt11.innerText = getDateStr(dueDt);
+placeodCompdt11.innerText = getDateStr(placeodCompdt);
+cost11.innerText = cost.toLocaleString();
+placeodCost11.innerText = placeodCost.toLocaleString();
+
+function getDateStr(myDate){
+	var date = new Date(myDate);
+	var year = date.getFullYear();
+	var month = (date.getMonth() + 1);
+	var day = date.getDate();
+	
+	month = (month < 10) ? "0" + String(month) : month;
+	day = (day < 10) ? "0" + String(day) : day;
+	
+	return  (year + '-' + month + '-' + day );
+}
+	
+	
+	
 	
 	window.print();
 </script>

@@ -282,6 +282,17 @@
 		    ],
 		});
         
+        function getDateStr(myDate){
+        	var year = myDate.getFullYear();
+        	var month = (myDate.getMonth() + 1);
+        	var day = myDate.getDate();
+        	
+        	month = (month < 10) ? "0" + String(month) : month;
+        	day = (day < 10) ? "0" + String(day) : day;
+        	
+        	return  (year + '-' + month + '-' + day );
+        }
+        
         function moveOrderForm(mtPlaceodCd) {
     		location.href= "/material/orderForm/"+ mtPlaceodCd;
     	}
