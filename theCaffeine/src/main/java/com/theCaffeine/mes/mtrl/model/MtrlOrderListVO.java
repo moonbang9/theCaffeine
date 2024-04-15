@@ -15,6 +15,7 @@ public class MtrlOrderListVO {
 	private String cliName;
 	private String mtCd;
 	private String mtName;
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private String placeodCompdt;
 	private int placeodSt;
 	private String placeodChg;
@@ -34,5 +35,6 @@ public class MtrlOrderListVO {
 	private String unit;
 	private int cost;
 	private int placeodCost;
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private String dueDt;
 }
