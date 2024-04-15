@@ -14,5 +14,7 @@ public interface QltyMapper {
 	int updatePlaceodSt(String mtPlaceodCd);
 	
 	int deleteMtrlDoneList(String mtPlaceodCd);
+	
+	
 
 }

@@ -20,9 +20,12 @@
                     <form action="" name="frmSearch" class="col">
                         <div class="mb-3 row" style="justify-content: left; align-content: center; padding-left: 70px;">
                             <label class="col-sm-1" for="cli_code">검사명</label>
-                            <div class="col-md-3">
-                                <input class="form-control" type="text" name="searchName" id="cli_code">
-                            </div>
+                            <select class="form-select" name="searchMf" id="searchMf" style="width: 400px;">
+										<option value="">선택</option>
+										<option value="0">수분검사</option>
+										<option value="1">색도검사</option>
+										<option value="2">질소충전검사</option>
+									</select>
                         </div>
 
                         <div class="mb-3 row" style="justify-content: left; align-content: center; padding-left: 70px;">
