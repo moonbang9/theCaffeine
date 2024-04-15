@@ -78,14 +78,10 @@
 				, l.qt
 				, l.pdt_dt
 				, l.exp_dt
-		FROM pd_stk l 
-			JOIN ( select pd_name
-							, pd_cd
-				   from pd
-					) p
-			ON l.pd_cd = p.pd_cd
+		 FROM pd_stk l  JOIN pd p
+		                  ON l.pd_cd = p.pd_cd
     	<include refid="condition"></include>
-		ORDER BY l.pdt_dt DESC
+		ORDER BY l.pd_lot DESC
 	</select>
 
 </mapper>

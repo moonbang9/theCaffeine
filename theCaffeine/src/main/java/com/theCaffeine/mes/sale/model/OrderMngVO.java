@@ -19,10 +19,10 @@ public class OrderMngVO {
 	private int odNo;
 	private int odDetailNo;
 	
-	
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date odDt;
-	
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date dueDt;
 	
@@ -60,4 +60,12 @@ public class OrderMngVO {
 	Date maxDueDt;
 	//주문상태 조건검색
 	List<String> stList;
+	
+	
+	
+	//미출고, 출고 목록
+	private String no;
+	private int qt;
+	private int sendOdSt;
+	private String sendStName;
 }

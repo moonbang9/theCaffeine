@@ -60,13 +60,7 @@
              	, o.dc_rate
              	, o.total_price
              	, o.od_st 
-             	, CASE (o.od_st) WHEN 1 THEN '주문접수' 
-					             WHEN 2 THEN '생산요청'
-					             WHEN 3 THEN '출고완료'
-					             WHEN 4 THEN '구매확정'
-					             WHEN 9 THEN '반품완료'
-            					 ELSE '반품중'
-            	  END AS st
+             	, FIND_CODE_NAME ('od_st', o.od_st)	AS st
 		from od_detail d 
 		    JOIN (select min(od_detailno) as minDetailNo
 		    			, (count(*)-1) as cnt
