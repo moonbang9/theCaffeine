@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.theCaffeine.mes.sale.mapper.SendOrderMapper">
+	<sql id="condition">
+ 			<if test="cliName != null and cliName != '' ">
+ 		   		AND c.cli_name like '%' || #{cliName} || '%'		
+ 			</if>
+ 			
+ 			<if test="odChg != null and odChg != '' ">
+ 		   		AND o.od_chg like '%' || #{odChg} || '%'	
+ 			</if>
+ 			<if test="minOdDt != null">
+ 		   		AND o.od_dt >= #{minOdDt} 			
+ 			</if>
+ 			<if test="maxOdDt != null">
+ 		   		AND o.od_dt <![CDATA[<=]]> #{maxOdDt}			
+ 			</if>
+ 			<if test="minDueDt != null">
+ 		   		AND d.due_dt >= #{minDueDt}		
+			</if>
+ 			<if test="maxDueDt != null ">
+ 		   		AND d.due_dt <![CDATA[<=]]> #{maxDueDt}		
+ 			</if> 	
+	</sql>
+	
+	<select id="notSendList" resultType="OrderMngVO">
+		SELECT LPAD(o.od_no, 5,0)||'-'||LPAD(d.od_detailno, 6, 0) as "no"
+				, o.od_no
+				, d.od_detailno
+				, o.od_dt
+				, c.cli_name
+				, o.od_chg
+				, p.pd_name
+				, d.qt
+				, d.due_dt
+				, d.send_od_st
+		FROM od o 
+		    JOIN od_detail d
+		        ON o.od_no = d.od_no
+		    JOIN cli c
+		        ON c.cli_cd = o.cli_cd
+		    JOIN pd p
+		        ON p.pd_cd = d.pd_cd
+		WHERE d.send_od_st = 1    
+				<include refid="condition"></include>     
+		ORDER BY o.od_no ASC, d.od_detailno DESC	
+	</select>
+	
+	<select id="sentList" resultType="OrderMngVO">
+		SELECT LPAD(o.od_no, 5,0)||'-'||LPAD(d.od_detailno, 6, 0) as "no"
+				, o.od_dt
+				, c.cli_name
+				, o.od_chg
+				, p.pd_name
+				, d.qt
+				, d.due_dt
+				, d.send_od_st
+				, FIND_CODE_NAME ('od_st', d.send_od_st)	AS send_st_name
+		FROM od o 
+		    JOIN od_detail d
+		        ON o.od_no = d.od_no
+		    JOIN cli c
+		        ON c.cli_cd = o.cli_cd
+		    JOIN pd p
+		        ON p.pd_cd = d.pd_cd
+		WHERE d.send_od_st = 2 
+		   OR d.send_od_st = 3  
+		   <include refid="condition"></include> 
+		ORDER BY o.od_no ASC, d.od_detailno DESC
+	</select>
+
+</mapper>

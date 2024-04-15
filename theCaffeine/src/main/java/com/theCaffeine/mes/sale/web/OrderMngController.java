@@ -20,22 +20,23 @@ import com.theCaffeine.mes.sale.service.OrderMngService;
 @RestController
 public class OrderMngController {
 
-	@Autowired OrderMngService orderMngService;
-	
+	@Autowired
+	OrderMngService orderMngService;
+
 	// 주문 조회 페이지이동
-		@GetMapping("/orderMng")
-		public ModelAndView orderList() { 
-			ModelAndView mv = new ModelAndView("sale/orderMng");
-			return mv;
-		}
-		
+	@GetMapping("/orderMng")
+	public ModelAndView orderList() {
+		ModelAndView mv = new ModelAndView("sale/orderMng");
+		return mv;
+	}
+
 	// 다중 조건 주문 검색
-		@PostMapping("/ajax/orderMng")
-		public List<OrderMngVO> getOrderList(@RequestBody OrderMngVO vo) {
-			System.out.println("브이오다"+ vo);
-			return orderMngService.getOrderList(vo);
-		}
-		
+	@PostMapping("/ajax/orderMng")
+	public List<OrderMngVO> getOrderList(@RequestBody OrderMngVO vo) {
+		System.out.println("브이오다" + vo);
+		return orderMngService.getOrderList(vo);
+	}
+
 	// 주문 상세 정보 VO이용
 //		@GetMapping("/ajax/odInfo")
 //		public InsertOrderVO getOdInfo(@RequestParam int odNo) {			
@@ -45,11 +46,11 @@ public class OrderMngController {
 //			return vo;
 //		}
 	// 주문 상세 정보 map 이용
-		@GetMapping("/ajax/odInfo")
-		public Map<String, Object> getOdInfo(@RequestParam int odNo) {	
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("odInfo", orderMngService.getOdInfo(odNo));
-			map.put("odPdList", orderMngService.getOdPdList(odNo));
-			return map;
-		}
+	@GetMapping("/ajax/odInfo")
+	public Map<String, Object> getOdInfo(@RequestParam int odNo) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("odInfo", orderMngService.getOdInfo(odNo));
+		map.put("odPdList", orderMngService.getOdPdList(odNo));
+		return map;
+	}
 }

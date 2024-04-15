@@ -419,3 +419,198 @@ ALTER TABLE od_detail ADD send_st NUMBER(10, 0) DEFAULT 1 NOT NULL;
 COMMENT ON COLUMN od_detail.send_st IS '제품 출고 상태';
 
 
+
+
+/* 출고 미처리, 처리 목록 */
+-- 조건 : 거래처코드, 거래처명, 주문일, 납기일, 주문담당자명
+-- 주문번호+주문상세번호(자릿수 맞추기), 주문일, 거래처명, 제품명, 수량, 납기일, 상세출고상태
+select LPAD(o.od_no, 5,0)||'-'||LPAD(d.od_detailno, 6, 0) as "no", o.od_dt, c.cli_name, p.pd_name, d.qt, d.due_dt
+from od o 
+    JOIN od_detail d
+        ON o.od_no = d.od_no
+    JOIN cli c
+        ON c.cli_cd = o.cli_cd
+    JOIN pd p
+        ON p.pd_cd = d.pd_cd
+WHERE d.SEND_OD_ST = 1        
+    AND p.pd_name LIKE '%커피%'
+ORDER BY o.od_no ASC, d.od_detailno DESC;
+
+
+
+
+
+        
+/* 공통코드 테이블 이용 함수 만들기~~~        
+        공통 코드	주 코드 번호	코드 명	코드 설명	
+공통 상세 코드  	세부 코드 번호	주 코드 번호	세부 코드 명	세부 코드 설명*/
+
+
+select * from com_cd;
+
+insert into com_cd (wk_cd_no, cd_name)
+values( 'od_st', '주문상태');
+
+insert into com_detail_cd (wk_cd_no, detail_cd_no, detail_cd_name )
+values( 'od_st', 1, '주문접수');
+insert into com_detail_cd (wk_cd_no, detail_cd_no, detail_cd_name )
+values( 'od_st', 2, '출고중');
+insert into com_detail_cd (wk_cd_no, detail_cd_no, detail_cd_name )
+values( 'od_st', 3, '출고완료');
+insert into com_detail_cd (wk_cd_no, detail_cd_no, detail_cd_name )
+values( 'od_st', 4, '구매확정');
+insert into com_detail_cd (wk_cd_no, detail_cd_no, detail_cd_name )
+values( 'od_st', 5, '반품접수');
+insert into com_detail_cd (wk_cd_no, detail_cd_no, detail_cd_name )
+values( 'od_st', 6, '제품회수중');
+insert into com_detail_cd (wk_cd_no, detail_cd_no, detail_cd_name )
+values( 'od_st', 7, '제품회수완료');
+insert into com_detail_cd (wk_cd_no, detail_cd_no, detail_cd_name )
+values( 'od_st', 8, '반품거부');
+insert into com_detail_cd (wk_cd_no, detail_cd_no, detail_cd_name )
+values( 'od_st', 9, '반품완료');
+
+select * from com_cd;
+select * from com_detail_cd;
+
+create or replace FUNCTION FIND_CODE_NAME 
+(
+  P_WK_CD_NO IN VARCHAR2 
+, P_DETAIL_CD_NO IN NUMBER 
+) RETURN VARCHAR2 AS 
+v_detail_de_name VARCHAR2(100);
+BEGIN
+  select detail_cd_name 
+    into v_detail_de_name
+  from com_detail_cd
+  where wk_cd_no = p_wk_cd_no
+    and detail_cd_no = p_detail_cd_no;
+  RETURN v_detail_de_name;
+END FIND_CODE_NAME;
+/
+
+
+
+
+/* 재품재고 테이블 데이터 생성 */
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs ('PCB01-240408-0001', 'box', 2, '24/04/08','24/05/08','PCB01',13);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs ('PCB01-240408-0002', 'box', 2, '24/04/08','24/05/08','PCB01',14);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PBR01-240408-0001', 'box', 2, '24/04/08','24/05/08','PBR01',15);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PBR01-240408-0002', 'box', 2, '24/04/08','24/05/08','PBR01',16);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PBR01-240408-0003', 'box', 2, '24/04/08','24/05/08','PBR01',17);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PET01-240409-0001', 'box', 2, '24/04/09','24/05/09','PET01',18);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PET01-240409-0002', 'box', 2, '24/04/09','24/05/09','PET01',19);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PET01-240409-0003', 'box', 2, '24/04/09','24/05/09','PET01',20);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PET01-240410-0004', 'box', 2, '24/04/10','24/05/10','PET01',21);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PET01-240410-0005', 'box', 2, '24/04/10','24/05/10','PET01',22);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PCT01-240410-0001', 'box', 2, '24/04/10','24/05/10','PCT01',23);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PCT01-240410-0002', 'box', 2, '24/04/10','24/05/10','PCT01',24);
+
+
+
+/*  출고처리 프로시저 + 주석 */
+
+
+
+--CREATE PROC [dbo].[spam_LoginProcess]
+/*
+////////////////////////////////////////////////////////////////////////
+//
+// 프로시져명 : 관리자모드 로그인 처리
+// 작 성 자 : 홍길동(kildong@naver.com)
+// 작 성 일 : 2016-01-17 PM 05:30
+// 최종수정자 :
+// 수 정 일 :
+// 파 일 명 :
+// 사 용 예 : EXEC [dbo].[spam_LoginProcess] 'Test01', 'abc123!', '162.17.8.15', @v_RetVal OUTPUT
+// N O T E :
+//
+////////////////////////////////////////////////////////////////////////
+*/
+--(
+--@v_AdminId VARCHAR(32), -- 관리자모드 로그인 아이디
+--@v_PassWd VARCHAR(15), -- 관리자모드 로그인 패스워드
+--@v_LoginIp VARCHAR(15), -- 관리자 접속 IP
+--@v_RetVal INT OUTPUT, -- 처리코드(0/1/3/99 : 정상/존재X/계정만료/DB 오류)
+--)
+
+select * from od; --o
+select * from od_detail; --d
+select * from pd_stk; --t
+select * from send; --s
+select * from pd_stk where (exp_dt - sysdate) >= 30;
+
+
+
+CREATE OR REPLACE PROCEDURE send_order(
+    p_od_no IN od.od_no%TYPE,
+    p_od_detailno IN OUT od_detail.od_detailno%TYPE,
+    p_qt IN od_detail.qt%TYPE,
+    p_pd_cd IN od_detail.pd_cd%TYPE
+    )
+IS
+    CURSOR lot_cursor 
+        IS SELECT qt
+            FROM pd_stk
+            WHERE pd_cd = p_pd_cd
+                AND qt>0
+                AND (exp_dt - sysdate) >= 30
+            ORDER BY pd_lot;
+            
+    v_lot_count od_detail.qt%TYPE; --상품 해당 lot 전체수량
+    
+    v_new_lot_qt pd_stk.qt%TYPE; --lot갱신수량
+    v_new_od_qt od_detail.qt$TYPE; --
+   
+   shortage EXCEPTION; 
+    
+BEGIN
+    SELECT count(qt) as qt 
+    INTO v_lot_count
+    FROM pd_stk 
+    WHERE pd_cd = p_pd_cd;
+    
+    IF p_qt > v_lot_count THEN 
+        RAISE shortage;
+    ELSE  
+        v_new_od_qt := p_qt;
+        FOR cur IN lot_cursor  LOOP
+            --EXIT WHEN
+            IF cur.qt <= v_new_od_qt THEN
+                v_new_od_qt := v_new_od_qt - cur.qt;
+            ELSE                
+                v_new_lot_qt := cur.qt - v_new_od_qt;
+                v_new_od_qt := 0;
+                
+                UPDATE pd_stk
+                SET qt = v_new_lot_qt
+                WHERE CURRENT OF lot_cursor;
+                DBMS_OUTPUT.PUT_LINE('수정 성공');
+            END IF;
+    END IF;
+    
+EXCEPTION 
+    WHEN shortage THEN 
+        DBMS_OUTPUT.PUT_LINE('재고가 부족합니다');
+
+END;
+/
+
+EXECUTE yedam_emp(100);
+
+
+
+-- 생산계획상세
+select * from pdt_inst_detail;

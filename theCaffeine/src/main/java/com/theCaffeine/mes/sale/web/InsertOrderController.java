@@ -18,6 +18,11 @@ import com.theCaffeine.mes.sale.model.OrderVO;
 import com.theCaffeine.mes.sale.model.ProductVO;
 import com.theCaffeine.mes.sale.service.InsertOrderService;
 
+/**
+ * 주문 등록 페이지
+ * @author 신혜원2
+ *
+ */
 @RequestMapping("/sales")
 @RestController
 public class InsertOrderController {
@@ -41,19 +46,22 @@ public class InsertOrderController {
 		return mv;
 	}
 	
+	// 거래처 검색
 	@GetMapping("/searchCliList")
 	public List<ClientVO> searchCliList(String searchCli){
 		return insertOrderService.getClientList(searchCli);
 	}
 	
+	// 선택할 제품 목록
 	@GetMapping("/productList")
 	public List<ProductVO> productList(){
 		return insertOrderService.productList();
 	}
 	
+	// 주문 등록
 	@PostMapping("/ajax/insertOrder")
 	public String insertOrder(@RequestBody InsertOrderVO insertOrderVO) {
-		insertOrderService.insertOrder(insertOrderVO.getOrderVO(), insertOrderVO.getOrderDetailVO());
-		return "ok";
+		int insertOk = insertOrderService.insertOrder(insertOrderVO.getOrderVO(), insertOrderVO.getOrderDetailVO());
+		return insertOk==1 ? "ok" : "fail";
 	}
 }

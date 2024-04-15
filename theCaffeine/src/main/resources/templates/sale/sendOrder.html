@@ -10,9 +10,6 @@
 <body>
   <div layout:fragment="content">
 
-
-
-
     <!-- Content wrapper -->
     <div class="content-wrapper">
       <!-- Content -->
@@ -44,15 +41,7 @@
                   <div class="card-body">
                     <div class="row">
 
-                      <div class="mb-3 row col-md-6">
-                        <label for="html5-search-input" class="col-md-3 col-form-label">거래처 코드</label>
-                        <div class="col-md-9">
-                          <input class="form-control" type="search" id="nCliCd" placeholder="거래처 코드">
-                        </div>
-                      </div>
-                      <div class="mb-3 row col-md-6">
-
-                      </div>
+                      
                       <div class="mb-3 row col-md-6">
                         <label for="html5-search-input" class="col-md-3 col-form-label">거래처명</label>
                         <div class="col-md-9">
@@ -212,10 +201,10 @@
     <script>
       //sendSearch.addEventListener("submit", onSendSubmit);
 
-      let nSendCondition = { sendStList : 1 }
-      let sendCondition = { sendSt : [2, 3] }
-      getOdList(nSendCondition);
-      getOdList(sendCondition);
+      let nSendCondition = { }
+      let sendCondition = { }
+      getNotSendList(nSendCondition);
+      getSentList(sendCondition);
 
       // 미처리된 출고목록 조건검색
       nSendSearch.onsubmit = async (e) => {
@@ -223,19 +212,17 @@
         console.log('미처리 조건검색')
         //let param = new FormData(document.sendSearch);        
 
-        const cliCd = nSendSearch.nCliCd.value;
         const cliName = nSendSearch.nCliName.value;
         const minOdDt = nSendSearch.nMinOdDt.value;
         const maxOdDt = nSendSearch.nMaxOdDt.value;
         const minDueDt = nSendSearch.nMinDueDt.value;
         const maxDueDt = nSendSearch.nMaxDueDt.value;
         const odChg = nSendSearch.nOdChg.value;
-        const sendStList = [1]
 
-        let condition = { cliCd, cliName, minOdDt, maxOdDt, minDueDt, maxDueDt, odChg, sendStList };
+        let condition = { cliName, minOdDt, maxOdDt, minDueDt, maxDueDt, odChg };
         console.log(condition);
         
-        getOdList(condition);
+        getNotSendList(condition);
       }
 
       // 처리된 출고목록 조건검색
@@ -245,30 +232,40 @@
 
         //let param = new FormData(document.sendSearch);        
 
-        const cliCd = sendSearch.sCliCd.value;
         const cliName = sendSearch.sCliName.value;
         const minOdDt = sendSearch.sMinOdDt.value;
         const maxOdDt = sendSearch.sMaxOdDt.value;
         const minDueDt = sendSearch.sMinDueDt.value;
         const maxDueDt = sendSearch.sMaxDueDt.value;
         const odChg = sendSearch.sOdChg.value;
-        const sendStList = [ 2,3 ];
 
-        let condition = { cliCd, cliName, minOdDt, maxOdDt, minDueDt, maxDueDt, odChg, sendStList };
+        let condition = { cliName, minOdDt, maxOdDt, minDueDt, maxDueDt, odChg };
         console.log(condition);
         
-        getOdList(condition);
+        getSentList(condition);
       }
 
-      // 출고/미출고 주문(제품별)목록 불러오기
-      function getOdList(condition){
+      // 미출고 주문(제품별) 목록 불러오기
+      async function getNotSendList(condition){
         let param = condition;
-        axios.post("/sales/ajax/sendSearch", param )
-             .then(res=> console.log(res))
+        await axios.post("/sales/ajax/notSendList", param )
+                   .then(res=> {
+                      console.log(res);
+                      notSendTable.setData(res.data);
+                    })
+      }
+      // 출고 주문(제품별) 목록 불러오기
+      async function getSentList(condition){
+        let param = condition;
+        await axios.post("/sales/ajax/sentList", param )
+                   .then(res=> {
+                      console.log(res);
+                      sendTable.setData(res.data);
+                    })
       }
 
 
-      var table = new Tabulator("#notSendTable", {
+      var notSendTable = new Tabulator("#notSendTable", {
         layout: "fitColumns",
         height: "100%",
         //responsiveLayout: "hide",
@@ -276,21 +273,18 @@
         resizableColumnFit: true,
         layout: "fitColumns",
         columns: [ //주문일, 거래처, 제품명, 주문금액(부분합), 납기일, 상태, 인쇄
-          { title: "주문번호", field: "odNo", width: 70, hozAlign: "center" },
+          { title: "주문번호", field: "no", width: 70, hozAlign: "center" },
+          { title: "담당자", field: "odChg", width: 80, hozAlign: "center" },
           { title: "주문일", field: "odDt", width: 90, hozAlign: "center" },
           { title: "거래처", field: "cliName", width: 120, hozAlign: "center" },
-          { title: "거래처 담당자", field: "cliChg", width: 100, hozAlign: "center" },
-          { title: "제품", field: "pd", width: 400, hozAlign: "center" },
-          { title: "할인율", field: "dcRate", width: 50, hozAlign: "center" },
-          { title: "총 금액", field: "totalPrice", width: 90, hozAlign: "center" },
-          { title: "주문 담당자", field: "odChg", width: 80, hozAlign: "center" },
+          { title: "제품", field: "pdName", width: 400, hozAlign: "center" },
+          { title: "수량", field: "qt", width: 50, hozAlign: "center" },
           { title: "납기일", field: "dueDt", width: 90, hozAlign: "center" },
-          { title: "주문상태", field: "st", width: 100, hozAlign: "center" },
           // { title: "인쇄", field: "week", width: 160, hozAlign: "center" }
         ],
       });
 
-      var table = new Tabulator("#sendTable", {
+      var sendTable = new Tabulator("#sendTable", {
         layout: "fitColumns",
         height: "100%",
         //responsiveLayout: "hide",
@@ -298,16 +292,14 @@
         resizableColumnFit: true,
         layout: "fitColumns",
         columns: [ //주문일, 거래처, 제품명, 주문금액(부분합), 납기일, 상태, 인쇄
-          { title: "주문번호", field: "odNo", width: 70, hozAlign: "center" },
+        { title: "주문번호", field: "no", width: 70, hozAlign: "center" },
+          { title: "담당자", field: "odChg", width: 80, hozAlign: "center" },
           { title: "주문일", field: "odDt", width: 90, hozAlign: "center" },
           { title: "거래처", field: "cliName", width: 120, hozAlign: "center" },
-          { title: "거래처 담당자", field: "cliChg", width: 100, hozAlign: "center" },
-          { title: "제품", field: "pd", width: 400, hozAlign: "center" },
-          { title: "할인율", field: "dcRate", width: 50, hozAlign: "center" },
-          { title: "총 금액", field: "totalPrice", width: 90, hozAlign: "center" },
-          { title: "주문 담당자", field: "odChg", width: 80, hozAlign: "center" },
+          { title: "제품", field: "pdName", width: 400, hozAlign: "center" },
+          { title: "수량", field: "qt", width: 50, hozAlign: "center" },
           { title: "납기일", field: "dueDt", width: 90, hozAlign: "center" },
-          { title: "주문상태", field: "st", width: 100, hozAlign: "center" },
+          { title: "주문상태", field: "sentStName", width: 100, hozAlign: "center" },
           // { title: "인쇄", field: "week", width: 160, hozAlign: "center" }
         ],
       });
