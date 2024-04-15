@@ -11,8 +11,8 @@ lower(fc_name) LIKE '%' || #{fcName} || '%'
 <if test="cc != null and cc != '' ">
 AND cc = #{cc}
 </if>
-<if test="insDt != null and insDt != '' ">
-AND (ins_dt BETWEEN #{insDt} AND #{insDt})
+<if test="insDt != null and indDt2 != null">
+AND (ins_dt BETWEEN #{insDt} AND #{insDt2})
 </if>
 
 </where>

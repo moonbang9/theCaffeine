@@ -21,6 +21,14 @@
 	FROM ENTER
 </select>
 
+<!-- 아이디체크 조회 -->
+<select id="idChk" parameterType="string" resultType="string">
+
+ SELECT  	ID
+	FROM ENTER
+    WHERE ID= #{id}
+</select>
+
 
 <!-- 단건 조회 -->
 <select id="getEnterInfo" parameterType="string" resultType="EnterpriseVO">

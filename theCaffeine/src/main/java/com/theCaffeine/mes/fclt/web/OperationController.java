@@ -1,7 +1,5 @@
 package com.theCaffeine.mes.fclt.web;
 
-
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,59 +18,61 @@ import com.theCaffeine.mes.fclt.service.OperationService;
 
 @RestController
 public class OperationController {
-	@Autowired OperationService oprtService;
+	
+	@Autowired
+	OperationService oprtService;
+	
 	@Autowired
 	FcltService fcltService;
 
 	// 비가동 페이지이동
-		@GetMapping("/fclt/operationlist")
-		public ModelAndView facility(FcltVO vo) { 
-			ModelAndView mv = new ModelAndView("fclt/operationlist");
-			mv.addObject("nonopFcltNames",fcltService.getNonopFcltList(vo));
-			mv.addObject("OperatingFcltNames",fcltService.getFcltList(vo));
-			return mv;
-		}
-		
-		// 비가동 목록 데이터
-		@PostMapping("/fclt/getoperation")
-		public List<OperationVO> oprtList(@RequestBody OperationVO vo) {
-			return oprtService.getOprtList(vo);
-		}
-		
-		//등록처리
-		@PostMapping("/fclt/insertoprt") //요청 url -> empMng.html 에 등록
-		public OperationVO insert(@RequestBody OperationVO vo) {
-			oprtService.insertOprt(vo);
-			return vo;
-		}
-		//단건조회 
-		@GetMapping("/fclt/operationlist/{nonopCd}") //요청 url -> empMng.html 에 등록
-		public OperationVO info(@PathVariable String nonopCd) {
-			return oprtService.getOprtInfo(nonopCd);
-		}
-		
-		// 비가동 수정
-		@PostMapping("/fclt/updateoprt")
-		public OperationVO updateOprt(@RequestBody OperationVO vo) {
-			oprtService.updateOprt(vo);
-			System.out.println(vo);
-			return vo;
-		}	
-		// 비가동 종료 시간 수정
-				@PostMapping("/fclt/updatefntime")
-				public OperationVO updatefntime(@RequestBody OperationVO vo) {
-					oprtService.updateFnTime(vo);
-					System.out.println(vo);
-					return vo;
-				}	
-		 
-		 //비가동 삭제
-		 @GetMapping("/fclt/deleteoprt") // <!-- localhost:8091/delete?employeeId=100&name=xxx -->
-		 public String delete(String nonopCd) {
-			 oprtService.deleteOprt(nonopCd);
-			 System.out.println(nonopCd);
-			 return "operationlist"; 
-		 }
-		 
-		 
+	@GetMapping("/fclt/operationlist")
+	public ModelAndView facility(FcltVO vo) {
+		ModelAndView mv = new ModelAndView("fclt/operationlist");
+		mv.addObject("nonopFcltNames", fcltService.getNonopFcltList(vo));
+		mv.addObject("OperatingFcltNames", fcltService.getFcltList(vo));
+		return mv;
+	}
+
+	// 비가동 목록 데이터
+	@PostMapping("/fclt/getoperation")
+	public List<OperationVO> oprtList(@RequestBody OperationVO vo) {
+		return oprtService.getOprtList(vo);
+	}
+
+	// 등록처리
+	@PostMapping("/fclt/insertoprt") // 요청 url -> empMng.html 에 등록
+	public OperationVO insert(@RequestBody OperationVO vo) {
+		oprtService.insertOprt(vo);
+		return vo;
+	}
+
+	// 단건조회
+	@GetMapping("/fclt/operationlist/{nonopCd}") // 요청 url -> empMng.html 에 등록
+	public OperationVO info(@PathVariable String nonopCd) {
+		return oprtService.getOprtInfo(nonopCd);
+	}
+
+	// 비가동 수정
+	@PostMapping("/fclt/updateoprt")
+	public OperationVO updateOprt(@RequestBody OperationVO vo) {
+		oprtService.updateOprt(vo);
+		System.out.println(vo);
+		return vo;
+	}
+
+	// 비가동 종료 시간 수정
+	@PostMapping("/fclt/updatefntime")
+	public OperationVO updatefntime(@RequestBody OperationVO vo) {
+		oprtService.updateFnTime(vo);
+		System.out.println(vo);
+		return vo;
+	}
+
+	// 비가동 삭제
+	@GetMapping("/fclt/deleteoprt") // <!-- localhost:8091/delete?employeeId=100&name=xxx -->
+	public int delete(String nonopCd) {
+		return oprtService.deleteOprt(nonopCd);
+	}
+
 }

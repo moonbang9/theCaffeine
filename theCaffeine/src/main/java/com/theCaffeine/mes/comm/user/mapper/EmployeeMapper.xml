@@ -35,6 +35,14 @@
     WHERE EMP_NO= #{empNo}
 </select>
 
+<!-- 아이디체크 조회 -->
+<select id="idChk" parameterType="string" resultType="string">
+
+ SELECT  	ID
+	FROM EMP
+    WHERE EMP_NO= #{id}
+</select>
+
 <!--  기업 회원 등록 -->
 	<insert id="insertEmp" parameterType="EmployeeVO">
 		INSERT INTO EMP

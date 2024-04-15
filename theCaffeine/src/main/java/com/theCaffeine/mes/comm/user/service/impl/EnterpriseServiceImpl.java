@@ -36,5 +36,10 @@ public class EnterpriseServiceImpl implements EnterpriseService {
 	public int updateEnter(EnterpriseVO vo) {
 		return enterMapper.updateEnter(vo);
 	}
+
+	@Override
+	public String idChk(String id) {
+		return enterMapper.idChk(id);
+	}
 	
 }
