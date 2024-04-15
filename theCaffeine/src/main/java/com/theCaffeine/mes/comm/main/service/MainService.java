@@ -1,12 +1,9 @@
-package com.theCaffeine.mes.comm.main.mapper;
+package com.theCaffeine.mes.comm.main.service;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Mapper;
-
 import com.theCaffeine.mes.comm.main.model.CodeDetailVO;
 
-@Mapper
-public interface MainMapper {
+public interface MainService {
 	List<CodeDetailVO> getCodeDetailList(String wkCdNo);
 }

@@ -26,4 +26,6 @@ public interface MtrlOrderMapper {
 	
 	List<MtrlOrderListVO> getMtrlOrderSearchList(MtrlOrderListVO vo);
 	MtrlOrderListVO getMtrlPlaceodInfo(String mtPlaceodCd);
+	
+	
 }
