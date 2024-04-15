@@ -58,7 +58,8 @@
 	                ENTER_NAME,
 	                CHG,
 	                MAIL,
-	                CEO
+	                CEO,
+	                AUTH_NO
 	               
 					)
 		    VALUES  (
@@ -70,6 +71,7 @@
 		    		,#{chg}
 		    		,#{mail}
 		    		,#{ceo}
+		    		,#{authNo}
 		    		)
 	</insert>
 
