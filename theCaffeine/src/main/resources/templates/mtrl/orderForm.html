@@ -32,7 +32,7 @@
     }
     .subpage {
     	text-align: center;
-        height: 150mm;
+        height: 155mm;
     }
     
     @page {
@@ -65,35 +65,127 @@
 	 	<div class="subpage">
 	 		<table class="table table-bordered" style="vertical-align: middle;">
                 <tr>
-                    <td rowspan="3" align = "center" bgcolor="skyblue">거래처</td>
-                    <td>담당자</td>
-                    <td colspan="4">김길동 과장</td>
+                    <td rowspan="4" class="table-secondary" align="center" bgcolor="skyblue" >발주처</td>
+                    <td>회사명</td>
+                    <td>[[${info.cliName}]]</td>
+                    <td>사업자등록번호</td>
+                    <td>[[${info.bussno}]]</td>
                 </tr>
                 <tr>
-                    <td>연락처</td>
-                    <td colspan="4">010-3333-3333</td>	
+                	<td>주소</td>
+                    <td colspan="4">[[${info.addr}]]</td>
                 </tr>
                 <tr>
-                    <td>메일</td>
-                    <td colspan="4">dkepdjen@nejekd.com</td>	
+                	<td>담당자</td>
+                    <td>[[${info.cliChg}]]</td>
+					<td>연락처</td>
+                    <td>[[${info.tel}]]</td>	
                 </tr>
                 <tr>
+                    <td>이메일</td>
+                    <td>[[${info.mail}]]</td>	
                     <td>납기일자</td>
-                    <td colspan="2">2024-04-13</td>
-                    <td>발주일자</td>
-                    <td colspan="2">2024-04-13</td>
-                </tr>
-                <tr>
-                    <td>자재코드</td>
-                    <td colspan="2">MET01</td>
-                    <td>자재명</td>
-                    <td colspan="2">에티오피아 생두</td>
+                    <td>[[${info.dueDt}]]</td>
                 </tr>
 	 		</table>
+	 		<table class="table table-bordered" style="vertical-align: middle;">
+	 			<thead>
+		 			<tr class="table-secondary">
+	                    <th>No</th>
+	                    <th>자재명</th>
+	                    <th>단위</th> 
+	                    <th>수량</th>
+	                    <th>단가</th>
+	                    <th>금액</th>
+	                </tr>
+                </thead>
+                <tbody>
+	                <tr>
+	                	<td>1</td>
+	                    <td>[[${info.mtName}]]</td>
+	                    <td>[[${info.unit}]]</td>
+	                    <td>[[${info.placeodQt}]]</td>
+	                    <td>[[${info.cost}]]</td>
+	                    <td>[[${info.placeodCost}]]</td>
+	                </tr>
+	                <tr>
+	                	<td>2</td>
+	                    <td></td>
+	                    <td></td>
+	                    <td></td>
+	                    <td></td>
+	                    <td></td>
+	                </tr>
+	                <tr>
+	                	<td>3</td>
+	                    <td></td>
+	                    <td></td>
+	                    <td></td>
+	                    <td></td>
+	                    <td></td>
+	                </tr>
+	                <tr>
+	                	<td>4</td>
+	                    <td></td>
+	                    <td></td>
+	                    <td></td>
+	                    <td></td>
+	                    <td></td>
+	                </tr>
+	                <tr>
+	                	<td>5</td>
+	                    <td></td>
+	                    <td></td>
+	                    <td></td>
+	                    <td></td>
+	                    <td></td>
+	                </tr>
+	                <tr>
+	                	<td>6</td>
+	                    <td></td>
+	                    <td></td>
+	                    <td></td>
+	                    <td></td>
+	                    <td></td>
+	                </tr>
+	                <tr>
+	                	<td>7</td>
+	                    <td></td>
+	                    <td></td>
+	                    <td></td>
+	                    <td></td>
+	                    <td></td>
+	                </tr>
+	                <tr>
+	                	<td>8</td>
+	                    <td></td>
+	                    <td></td>
+	                    <td></td>
+	                    <td></td>
+	                    <td></td>
+	                </tr>
+	                <tr>
+	                	<td>9</td>
+	                    <td></td>
+	                    <td></td>
+	                    <td></td>
+	                    <td></td>
+	                    <td></td>
+	                </tr>
+	                <tr>
+	                	<td>10</td>
+	                    <td></td>
+	                    <td></td>
+	                    <td></td>
+	                    <td></td>
+	                    <td></td>
+	                </tr>
+                </tbody>
+	 		</table>
 	 	</div>
-		<p style="margin-top: 30px;">위와 같은 내용으로 발주합니다.</p>
-		<p style="margin-top: 70px;">2024-04-13</p>
-		<p style="margin-top: 90px;">(주) THE CAFFEINE</p>
+		<p style="margin-top: 20px;">위와 같은 내용으로 발주합니다.</p>
+		<p style="margin-top: 70px;">[[${info.placeodCompdt}]]</p>
+		<p style="margin-top: 80px; font-weight: bold;">(주) THE CAFFEINE</p>
 	</div>
 </body>
 

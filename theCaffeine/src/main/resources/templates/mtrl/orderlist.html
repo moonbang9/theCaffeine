@@ -55,31 +55,8 @@
 							
 			              <div class="mb-3 row" style="justify-content: center;align-content: center;">
 			                <label for="html5-search-input" class="col-sm-1 mt-2">발주상태</label>
-			                <div class="col-md-8">
-			                  <div class="form-check form-check-inline mt-2">
-			                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="2" name="odSt">
-			                    <label class="form-check-label" for="inlineCheckbox1">발주완료</label>
-			                  </div>
-			                  <div class="form-check form-check-inline mt-2">
-			                    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="3" name="odSt">
-			                    <label class="form-check-label" for="inlineCheckbox2">입고대기</label>
-			                  </div>
-			                  <div class="form-check form-check-inline mt-2">
-			                    <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="4" name="odSt">
-			                    <label class="form-check-label" for="inlineCheckbox3">검사요청</label>
-			                  </div>
-			                  <div class="form-check form-check-inline mt-2">
-			                    <input class="form-check-input" type="checkbox" id="inlineCheckbox4" value="5" name="odSt">
-			                    <label class="form-check-label" for="inlineCheckbox4">검사완료</label>
-			                  </div>
-			                  <div class="form-check form-check-inline mt-2">
-			                    <input class="form-check-input" type="checkbox" id="inlineCheckbox5" value="6" name="odSt">
-			                    <label class="form-check-label" for="inlineCheckbox5">입고완료</label>
-			                  </div>
-			                  <div class="form-check form-check-inline mt-2">
-			                    <input class="form-check-input" type="checkbox" id="inlineCheckbox6" value="7" name="odSt">
-			                    <label class="form-check-label" for="inlineCheckbox6">반품처리</label>
-			                  </div>
+			                <div class="col-md-8" id=checkBoxList>
+			                  
 			                </div>
 			              </div>
 							<div class="d-grid gap-2 d-md-flex justify-content-md-center">
@@ -222,6 +199,39 @@
 			src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.20/jspdf.plugin.autotable.min.js"></script>
 
         <script>
+       
+        checkListReq(1);
+ 
+    	// 리스트 요청
+    	function checkListReq(p) {
+    		let wkCdNo = "placeod_st";
+    		fetch("/ajax/codeDetailList/" + wkCdNo)
+    		.then(res => res.json())
+    		.then(res => listRes(res))
+    	}
+    	// 공통코드 데이터 리스트
+    	function listRes(res) {
+    		checkBoxList.innerHTML = '';
+    		// 목록출력
+    		for( obj of res ) {
+    			if(obj.detailCdNo == 1){
+    				continue;
+    			} else {
+	    			checkBoxList.innerHTML += makeCheck(obj);
+    			}
+    		}
+
+    	}
+        
+    	function makeCheck(obj) {
+    		let newTag = `
+    			<div class="form-check form-check-inline mt-2">
+                <input class="form-check-input" type="checkbox" id="inlineCheckbox${obj.detailCdNo}" value="${obj.detailCdNo}" name="odSt">
+                <label class="form-check-label" for="inlineCheckbox${obj.detailCdNo}">${obj.detailCdName}</label>
+              	</div>
+    			`
+    		return newTag;
+    	}
         
     	// PDF버튼
     	var editorIcon = function(cell, formatterParams, onRendered) {
@@ -264,27 +274,17 @@
 		        {title:"상태", field:"st", width:170, hozAlign:"center"},
 		        {title:"", field:"placeodInfo", width:80, formatter: editorIcon, hozAlign:"center",
 		            cellClick:function(e, cell){
-		            	console.log(cell);
-		            	console.log(cell._cell);
-		            	console.log(cell._cell.row.data);
-		            	cell._cell.download("pdf", "data.pdf", {
-		            		  autoTable: function(doc) {
-		            		    doc.addFileToVFS("yourFont.ttf", "AAEAAAAUAQA..."); // your font in binary format as second parameter
-		            		    doc.addFont("yourFont.ttf", "yourFont", "normal"); 
-		            		    doc.setFont("yourFont");
-		            		    return {
-		            		      styles: {
-		            		        font: "yourFont",
-		            		        fontStyle: "normal"
-		            		      }
-		            		    };
-		            		  }
-		            		});
+		            	e.stopPropagation();
+		            	let mtPlaceodCd = cell._cell.row.data.mtPlaceodCd;
+		            	moveOrderForm(mtPlaceodCd);
 		            }
 		        }
 		    ],
 		});
         
+        function moveOrderForm(mtPlaceodCd) {
+    		location.href= "/material/orderForm/"+ mtPlaceodCd;
+    	}
         
         let cliCode = '';
         let cliName = '';
@@ -310,8 +310,6 @@
 			.then(res => res.json())
 			.then(res => table.setData(res))
 		}
-
-		console.log(table);
      	
         // 검색 버튼 누르면 조건대로 검색한 주문목록 불러오기
         searchBtn.addEventListener("click", e => {  
@@ -337,10 +335,8 @@
       function checkList() {
         // 주문상태 배열 초기화
         stList = [];
-
         // Name이 odSt인 속성 취득
         const odSt = document.getElementsByName("odSt");
-        console.log(odSt);
         // 취득한 속성 만큼 루프
         for (let i = 0; i < odSt.length; i++) {
           // 속성중에 체크 된 항목이 있을 경우
@@ -348,7 +344,6 @@
             stList.push(odSt[i].value);
           }
         }
-        console.log(stList);
       }
 
       table.on("rowClick", function(e, row){
