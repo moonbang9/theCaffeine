@@ -2,7 +2,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>자재 발주서</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </head>
 <style>
     body {
@@ -30,8 +32,7 @@
     }
     .subpage {
     	text-align: center;
-        border: 1px black solid;
-        height: 170mm;
+        height: 150mm;
     }
     
     @page {
@@ -58,17 +59,41 @@
 </style>
 <body>
 	<div class="page">
+        <div class="mt-4 mb-5">
 		<h1>자 재 발 주 서</h1>
+        </div>
 	 	<div class="subpage">
-	 		<table>
-	 			<tr>
-                    <th>거래처</th>
+	 		<table class="table table-bordered" style="vertical-align: middle;">
+                <tr>
+                    <td rowspan="3" align = "center" bgcolor="skyblue">거래처</td>
+                    <td>담당자</td>
+                    <td colspan="4">김길동 과장</td>
+                </tr>
+                <tr>
+                    <td>연락처</td>
+                    <td colspan="4">010-3333-3333</td>	
+                </tr>
+                <tr>
+                    <td>메일</td>
+                    <td colspan="4">dkepdjen@nejekd.com</td>	
+                </tr>
+                <tr>
+                    <td>납기일자</td>
+                    <td colspan="2">2024-04-13</td>
+                    <td>발주일자</td>
+                    <td colspan="2">2024-04-13</td>
+                </tr>
+                <tr>
+                    <td>자재코드</td>
+                    <td colspan="2">MET01</td>
+                    <td>자재명</td>
+                    <td colspan="2">에티오피아 생두</td>
                 </tr>
 	 		</table>
 	 	</div>
-		<p style="margin-top: 20px;">위와 같은 내용으로 발주합니다.</p>
-		<p style="margin-top: 60px;">2024-04-13</p>
-		<p style="margin-top: 80px;">(주) THE CAFFEINE</p>
+		<p style="margin-top: 30px;">위와 같은 내용으로 발주합니다.</p>
+		<p style="margin-top: 70px;">2024-04-13</p>
+		<p style="margin-top: 90px;">(주) THE CAFFEINE</p>
 	</div>
 </body>
 

@@ -70,6 +70,8 @@ public class QltyController {
 		ModelAndView mv = new ModelAndView("qlty/lookup");
 		return mv;
 	}
+	
+	//
 
 	// 검사기준관리 페이지이동
 	@GetMapping("/quality/standard")
@@ -77,5 +79,5 @@ public class QltyController {
 		ModelAndView mv = new ModelAndView("qlty/standard");
 		return mv;
 	}
-
+	
 }
