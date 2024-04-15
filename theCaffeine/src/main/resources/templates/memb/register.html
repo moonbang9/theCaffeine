@@ -25,7 +25,7 @@
                 </a>
               </div>
               <!-- /Logo -->
-              <form id="formAuthentication" class="mb-3" action="index.html" method="POST">
+              <form id="formAuthentication" class="mb-3" action="/memb/insert" method="POST">
                 <div class="mb-3">
                   <label for="userid" class="form-label">아이디*</label>
                   <input
@@ -37,7 +37,6 @@
                     autofocus
                     onblur="idChk()"
                   />
-                  <button type="button" class="btn btn-primary" style="border-radius: 5px;" onclick="checkId()">중복검사</button>
                   <div class="idchck"></div>
                 </div>
                 <div class="mb-3 form-password-toggle">
@@ -119,8 +118,8 @@ let filev;
 //아이디 체크 
  function idChk() {
 	idAccep = false;
-	id = userid.value;
-	let idStat;
+	 idv = formAuthentication.userid.value;
+	let idStat = '';
 	if (idv == '') {
 		idStat = `<p><small>아이디를 입력해주세요</p>`;
 	} else if (!(/^[a-z0-9]{6,20}$/.test(idv))) {
@@ -129,20 +128,20 @@ let filev;
 		idv = formAuthentication.userid.value;
 		console.log(idv);
 		fetch("/memb/idchk/"+idv)
-			//.then(res => res.json())
-			.then(res => {
-				console.log(res)
-				if (res.id != null || res.id == idv) {
+			.then(res => res.text())
+			.then(data => {
+				console.log(data.id)
+				if (data.id != null || data.id == idv) {
 					idStat = `<p>사용할 수 없는 아이디입니다. 다른 아이디를 입력해주세요<p>`
 				} else {
 					idStat = `<p>사용가능한 아이디입니다</p>`;
 					idAccep = true;
-				}
-			})
-			.catch(err => console.log(err));
-
-	}
-	document.getElementsByClassName('idchck')[0].innerHTML = idStat;
+				 }
+                document.getElementsByClassName('idchck')[0].innerHTML = idStat; 
+            })
+            .catch(err => console.log(err));
+    }
+    document.getElementsByClassName('idchck')[0].innerHTML = idStat; 
 }
 function pwCheck() {
 	pwv = userpw.value;
@@ -162,6 +161,7 @@ function pwCheck() {
 	}
 	document.getElementsByClassName('pwchkstr')[0].innerHTML = statPw;
 	document.getElementsByClassName('pwchkchkstr')[0].innerHTML = statPwChk;
+	
 }
 function mailCheck() {
 	mailv = email.value;
@@ -280,6 +280,8 @@ function checkId(){
 			return;
 		};
 		//회원가입 폼 등록
+		
+		
         function register() {
             var id = document.getElementById('userid').value;
             var pw = document.getElementById('userpw').value;
@@ -288,7 +290,8 @@ function checkId(){
             var chg = document.getElementById('chgname').value;
             var mail = document.getElementById('email').value;
            	var ceo = document.getElementById('ceo').value;
-                 	const form = {id,pw,bussno,enterName,chg,mail,ceo};
+           	var authNo = 9;
+                 	const form = {id,pw,bussno,enterName,chg,mail,ceo,authNo};
                     fetch('/memb/insert', {
                         method: 'POST',
                         headers: {
