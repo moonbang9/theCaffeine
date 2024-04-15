@@ -5,15 +5,15 @@
 
 <sql id="condition">
 <where>
-<if test="fcName != null and fcName != '' ">
-lower(fc_name) LIKE '%' || #{fcName} || '%'
-</if>
-<if test="insMf != null and insMf != '' ">
-AND ins_mf = #{insMf}	
-</if>
-<if test="st != null and st != '' ">
-AND st = #{st}
-</if>
+	<if test="fcName != null and fcName != '' ">
+	lower(fc_name) LIKE '%' || #{fcName} || '%'
+	</if>
+	<if test="insMf != null and insMf != '' ">
+	AND ins_mf = #{insMf}	
+	</if>
+	<if test="st != null and st != '' ">
+	AND st = #{st}
+	</if>
 </where>
 </sql>
 
@@ -33,10 +33,10 @@ AND st = #{st}
 				INS_CYCLE,
 				LAST_INS_DT,
 				CASE WHEN LAST_INS_DT IS NULL THEN STR_DT+INS_CYCLE  
-                ELSE LAST_INS_DT+INS_CYCLE
-                END AS NEXT_INS_DT,
-				OUTPUT,
-				DUR_TIME
+                     ELSE LAST_INS_DT+INS_CYCLE
+                     END AS NEXT_INS_DT,
+				OUTPUT
+
 	FROM FC
 	<include refid="condition"></include>
 </select>
@@ -48,19 +48,18 @@ AND st = #{st}
                         FC_NAME,
                         CASE WHEN ST = 0 THEN '가동'
                                                         ELSE '비가동'
-                        END AS ST,
+                             END AS ST,
                         CASE WHEN INS_MF = 0 THEN '로스팅'
                                                                 ELSE '포장'
-                        END AS INS_MF,
+                             END AS INS_MF,
                         MNF_COM,
                         STR_DT,
                         INS_CYCLE,
                         LAST_INS_DT,
-                       CASE WHEN LAST_INS_DT IS NULL THEN STR_DT+INS_CYCLE  
-		                ELSE LAST_INS_DT+INS_CYCLE
-		                END AS NEXT_INS_DT,
-                        OUTPUT,
-                        DUR_TIME
+                        CASE WHEN LAST_INS_DT IS NULL THEN STR_DT+INS_CYCLE  
+		                     ELSE LAST_INS_DT+INS_CYCLE
+		                     END AS NEXT_INS_DT,
+                        OUTPUT
 	FROM FC
     WHERE st = 1
 </select>
@@ -83,8 +82,7 @@ AND st = #{st}
                        CASE WHEN LAST_INS_DT IS NULL THEN STR_DT+INS_CYCLE  
 		                ELSE LAST_INS_DT+INS_CYCLE
 		                END AS NEXT_INS_DT,
-                        OUTPUT,
-                        DUR_TIME
+                        OUTPUT
 	FROM FC
     WHERE st = 0
 </select>
@@ -109,7 +107,6 @@ AND st = #{st}
 					,STR_DT
 					,INS_CYCLE
 					,OUTPUT
-					,DUR_TIME
 					)
 		    VALUES  (
 		    		  SEQ_FCLT.nextval 
@@ -120,7 +117,6 @@ AND st = #{st}
 		    		,#{strDt}
 		    		,#{insCycle}
 		    		,#{output}
-		    		,#{durTime}
 		    		)
 	</insert>
 
@@ -141,8 +137,7 @@ AND st = #{st}
 					MNF_COM=#{mnfCom},
 					STR_DT=#{strDt},
 					INS_CYCLE=#{insCycle},
-					OUTPUT=#{output},
-					DUR_TIME=#{durTime}
+					OUTPUT=#{output}
 	
 	WHERE fc_cd = #{fcCd}
 </update>

@@ -34,7 +34,7 @@
 								<div class="mb-3 row" style="justify-content: center;align-content: center;">
 								<label class="col-sm-2">점검일자</label>
 								<div class="col-sm-6 input-group" style="width: 370px;" >
-									<input class="form-control" type="date" id="searchDate1" name="searchDate1">
+									<input class="form-control" type="date" id="searchDate" name="searchDate">
 									<span class="input-group-text">-</span>
 									<input class="form-control" type="date" id="searchDate2" name="searchDate2">
 								</div>
@@ -248,15 +248,15 @@
 	searchinsBtn.addEventListener("click",function(){
 				const searchNameins= frmSearchins.searchNameins.value;
 				console.log(searchNameins);
-				const searchDate1 = frmSearchins.searchDate1.value;
+				const searchDate = frmSearchins.searchDate.value;
 				const searchDate2 = frmSearchins.searchDate2.value;
-				console.log(searchDate1+searchDate2);
+				console.log(searchDate,searchDate2);
 				const searchCcins = document.querySelector('input[name="searchinsCc"]:checked');
 				const searchCcValins = searchCcins.value;
 				console.log(searchCcValins);
 				let paramins = {
 						fcName: searchNameins,
-						insDt1: searchDate1 ? searchDate1 : '',
+						insDt: searchDate ? searchDate : '',
 						insDt2: searchDate2 ? searchDate2 : '',
 				        // 값이 없으면 undefined
 				        cc: searchCcValins ? searchCcValins : ''

@@ -2,8 +2,11 @@ package com.theCaffeine.mes.comm.user.web;
 
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,7 +14,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.theCaffeine.mes.comm.user.model.EnterpriseVO;
 import com.theCaffeine.mes.comm.user.service.EnterpriseService;
-import com.theCaffeine.mes.fclt.model.FcltVO;
+
+
+
 
 
 @RestController
@@ -33,11 +38,23 @@ public class EnterpriseController {
 				ModelAndView mv = new ModelAndView("memb/register");
 				return mv;
 			}
+			
+			// 회원 목록 데이터
+			@PostMapping("/memb/getenterprise")
+			public List<EnterpriseVO> enterList(@RequestBody EnterpriseVO vo) {
+				return enterService.getEnterpriseList(vo);
+			}
 		//회원가입 등록 처리 
 			@PostMapping("/memb/insert") //요청 url -> empMng.html 에 등록
 			public EnterpriseVO insert(@RequestBody EnterpriseVO vo) {
 				enterService.insertEnter(vo);
 				return vo;
+			}
+			// 아이디조회
+			@GetMapping("/memb/idchk/{id}")
+			public String idCheck(@PathVariable String id) {
+				System.out.println(enterService.idChk(id));
+				return enterService.idChk(id);
 			}
 		//아이디 찾기 이동
 			@GetMapping("/memb/findid")
