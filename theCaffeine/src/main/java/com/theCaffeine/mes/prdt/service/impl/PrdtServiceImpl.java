@@ -125,9 +125,9 @@ public class PrdtServiceImpl implements PrdtService{
 	@Override
 	public int planDelete(String pdtPlanCd) {
 		// TODO Auto-generated method stub
-		prdtMapper.planDelete(pdtPlanCd);
+		prdtMapper.planDetailDelete(pdtPlanCd);
 		
-		return prdtMapper.planDetailDelete(pdtPlanCd);
+		return prdtMapper.planDelete(pdtPlanCd);
 	}
 
 	@Override
@@ -145,11 +145,12 @@ public class PrdtServiceImpl implements PrdtService{
 	@Transactional
 	@Override
 	public int instDelete(Integer pdtInstNo) {
-		prdtMapper.instDelete(pdtInstNo);
+		prdtMapper.instDetailDelete(pdtInstNo);
 		
-		return prdtMapper.instDetailDelete(pdtInstNo);
+		return prdtMapper.instDelete(pdtInstNo);
 	}
-
+	
+	@Transactional
 	@Override
 	public int instDetailDelete(InstResistVO vo) {
 		// TODO Auto-generated method stub

@@ -130,7 +130,7 @@
 				from PDT_INST_DETAIL pid 
 				join PDT_INST pi 
 				on pid.pdt_inst_no = pi.pdt_inst_no 
-				where pid.comp_st = 5 and pi.pdt_plan_cd = (select max(pdt_plan_cd) 
+				where pid.comp_st = 6 and pi.pdt_plan_cd = (select max(pdt_plan_cd) 
 															from PDTPLAN 
 														<![CDATA[	where wk_plan_stt_dt < (select max(wk_plan_stt_dt) 
 																					from PDTPLAN 
@@ -152,7 +152,7 @@
                                     <![CDATA[   where wk_plan_stt_dt < (select max(wk_plan_stt_dt) 
 								  										from PDTPLAN 
 								  										where wk_plan_stt_dt <= sysdate))) w ]]>
-						on q.pdt_inst_no=w.pdt_inst_no where q.comp_st=4) r 
+						on q.pdt_inst_no=w.pdt_inst_no where q.comp_st=5) r 
 		on p.pd_cd=r.pd_cd 
 		group by p.pd_cd
 	</select>
@@ -237,7 +237,7 @@
 		group by w.pdt_inst_no)q 
 	left outer join PDT_INST t 
 	on q.pdt_inst_no = t.pdt_inst_no
-	order by q.pdt_inst_no
+	order by t.pdt_inst_dt
 	</select>
 	
 	<select id="getInstDetailList" resultType="InstVO">
@@ -283,7 +283,7 @@
 	
 	<insert id="insertPrdtInstDetail" parameterType="InstVO">
 		<selectKey keyProperty="pdtInstNo" order="BEFORE" resultType="int">
-			select min(pdt_inst_no) from PDT_INST where pdt_inst_dt = #{pdtInstDt}
+			select max(pdt_inst_no) from PDT_INST
 		</selectKey>
 	
 		insert into PDT_INST_DETAIL(PDT_INST_DETAIL_NO, PDT_INST_NO, PD_CD, QT, PDT_STT_TIME, PDTEXPT_FN_TIME, COMP_ST) 
