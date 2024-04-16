@@ -1,100 +1,106 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.theCaffeine.mes.comm.user.mapper.EnterpriseMapper">
+<mapper
+	namespace="com.theCaffeine.mes.comm.user.mapper.EnterpriseMapper">
 
 
 
-<!-- 전체 기업 목록 -->
-<select id="getEnterpriseList" resultType="EnterpriseVO">
+	<!-- 전체 기업 목록 -->
+	<select id="getEnterpriseList" resultType="EnterpriseVO">
 
-	SELECT  ENTER_CD,
-                ID,
-                PW,
-                BUSSNO,
-                ENTER_NAME,
-                CHG,
-                MAIL,
-                CEO,
-                AUTH_NO,
-                ST
-	FROM ENTER
-</select>
+		SELECT ENTER_CD,
+		ID,
+		PW,
+		BUSSNO,
+		ENTER_NAME,
+		CHG,
+		MAIL,
+		CEO,
+		AUTH_NO,
+		ST
+		FROM ENTER
+	</select>
 
-<!-- 아이디체크 조회 -->
-<select id="idChk" parameterType="string" resultType="string">
+	<!-- 아이디체크 조회 -->
+	<select id="idChk" parameterType="string" resultType="string">
 
- SELECT  	ID
-	FROM ENTER
-    WHERE ID= #{id}
-</select>
+		SELECT ID
+		FROM ENTER
+		WHERE ID= #{id}
+	</select>
 
 
-<!-- 단건 조회 -->
-<select id="getEnterInfo" parameterType="string" resultType="EnterpriseVO">
+	<!-- 단건 조회 -->
+	<select id="getEnterInfo" parameterType="string"
+		resultType="EnterpriseVO">
+SELECT
+		e.ENTER_CD,
+		e.ID,
+		'{noop}' || e.pw as pw,
+		e.BUSSNO,
+		e.ENTER_NAME,
+		e.CHG,
+		e.MAIL,
+		e.CEO,
+		e.AUTH_NO,
+		'ROLE_' || upper(a.auth_Name) as AUTH_NAME,
+		e.ST
+		FROM
+		ENTER e
+		JOIN
+		AUTH a ON e.AUTH_NO = a.auth_No
+		WHERE
+		e.ID =#{ID}
+	</select>
 
- SELECT  ENTER_CD,
-                ID,
-                '{noop}' ||pw as pw,
-                BUSSNO,
-                ENTER_NAME,
-                CHG,
-                MAIL,
-                CEO,
-                AUTH_NO,
-                'ROLE_' ||upper(AUTH_NO) as AUTH_NO,
-                ST
-	FROM ENTER
-    WHERE ID= #{ID}
-</select>
-
-<!--  기업 회원 등록 -->
+	<!-- 기업 회원 등록 -->
 	<insert id="insertEnter" parameterType="EnterpriseVO">
 		INSERT INTO ENTER
-					(
-					ENTER_CD,
-	                ID,
-	                PW,
-	                BUSSNO,
-	                ENTER_NAME,
-	                CHG,
-	                MAIL,
-	                CEO,
-	                AUTH_NO
-	               
-					)
-		    VALUES  (
-		    		  SEQ_ENTER.nextval 
-		    		,#{id}
-		    		,#{pw}
-		    		,#{bussno}
-		    		,#{enterName}
-		    		,#{chg}
-		    		,#{mail}
-		    		,#{ceo}
-		    		,#{authNo}
-		    		)
+		(
+		ENTER_CD,
+		ID,
+		PW,
+		BUSSNO,
+		ENTER_NAME,
+		CHG,
+		MAIL,
+		CEO,
+		AUTH_NO
+
+		)
+		VALUES (
+		SEQ_ENTER.nextval
+		,#{id}
+		,#{pw}
+		,#{bussno}
+		,#{enterName}
+		,#{chg}
+		,#{mail}
+		,#{ceo}
+		,#{authNo}
+		)
 	</insert>
 
-<!-- 기업 삭제 -->
+	<!-- 기업 삭제 -->
 
-<delete id="deleteEnter" parameterType="String">
-	DELETE FROM ENTER
-	where ENTER_CD = #{enterCd}
-</delete>
+	<delete id="deleteEnter" parameterType="String">
+		DELETE FROM ENTER
+		where ENTER_CD = #{enterCd}
+	</delete>
 
-<!-- 기업 정보 수정 -->
-<update id="updateEnter" parameterType="EnterpriseVO">
-	UPDATE ENTER
-	SET
-					PW=#{pw},
-	                BUSSNO=#{bussno},
-	                ENTER_NAME=#{enterName},
-	                CHG=#{chg},
-	                MAIL=#{mail},
-	                CEO=#{ceo}
-	
-	WHERE ENTER_CD = #{enterCd}
-</update>
+	<!-- 기업 정보 수정 -->
+	<update id="updateEnter" parameterType="EnterpriseVO">
+		UPDATE ENTER
+		SET
+		PW=#{pw},
+		BUSSNO=#{bussno},
+		ENTER_NAME=#{enterName},
+		CHG=#{chg},
+		MAIL=#{mail},
+		CEO=#{ceo}
+
+		WHERE ENTER_CD = #{enterCd}
+	</update>
 
 </mapper>

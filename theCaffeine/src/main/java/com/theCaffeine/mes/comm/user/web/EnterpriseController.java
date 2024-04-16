@@ -96,5 +96,11 @@ public class EnterpriseController {
 						ModelAndView mv = new ModelAndView("memb/addmembers");
 						return mv;
 					}
+					//정기구독 페이지
+					@GetMapping("/memb/monthly")
+					public ModelAndView monthlypay() { 
+						ModelAndView mv = new ModelAndView("memb/pricing");
+						return mv;
+					}
 		 
 }

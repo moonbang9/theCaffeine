@@ -2,6 +2,7 @@ package com.theCaffeine.mes.scrt;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -23,9 +24,9 @@ public class CustomUserDetails implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		List<SimpleGrantedAuthority> authlist = new ArrayList<>();
-		authlist.add(new SimpleGrantedAuthority(enterVO.getAuthNo()));
-		return authlist;
+		String role = "ROLE_" + enterVO.getAuthName().toUpperCase();
+		System.out.println(role);
+        return Collections.singleton(new SimpleGrantedAuthority(role));
 	}
 
 	@Override

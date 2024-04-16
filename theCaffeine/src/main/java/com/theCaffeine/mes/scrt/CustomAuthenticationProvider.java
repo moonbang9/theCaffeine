@@ -1,5 +1,7 @@
 package com.theCaffeine.mes.scrt;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -9,6 +11,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 public class CustomAuthenticationProvider implements AuthenticationProvider{
+	 private static final Logger logger = LoggerFactory.getLogger(CustomAuthenticationProvider.class);
 	@Autowired
 	private UserDetailsService userDetailsService;
 	@Override
