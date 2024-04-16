@@ -50,13 +50,7 @@ public class QltyController {
 		return qltyService.deleteMtrlDoneList(mtPlaceodCd);
 	}
 
-	// 공정검사 페이지이동
-	@GetMapping("/quality/process")
-	public ModelAndView process() {
-		ModelAndView mv = new ModelAndView("qlty/process");
-		return mv;
-	}
-
+	
 	// 포장검사 페이지이동
 	@GetMapping("/quality/packaging")
 	public ModelAndView packaging() {
@@ -69,9 +63,7 @@ public class QltyController {
 	public ModelAndView lookup() {
 		ModelAndView mv = new ModelAndView("qlty/lookup");
 		return mv;
-	}
-	
-	//
+	}	
 
 	// 검사기준관리 페이지이동
 	@GetMapping("/quality/standard")

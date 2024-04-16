@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.theCaffeine.mes.qlty.mapper.ProcessMapper">
+
+<select id="getProcessCheckList" parameterType="ProcessVO">
+	SELECT mf_ck_no,
+	       cc_name,
+	       ck_st,
+           pd_name,
+	       pdt_qt,
+	       rt_dt,
+	       rt_chg,
+	       pdt_inst_detail_no
+	  FROM mf_ck
+	 WHERE ck_st=0
+	  
+	<!-- SELECT f.mf_ck_no,
+		   f.cc_name,
+		   f.ck_st,
+		   f.pdt_pt,
+		   f.rt_dt,
+		   f.rt_chg,
+		   f.pdt_inst_detail_no
+      FROM mf_ck f
+      JOIN pdt_hist h ON f.pdt_inst_detail_no = h.pdt_inst_detail_no
+     WHERE mf_qual_st = 0 -->    
+</select>
+
+<update id="updateMfckRes" parameterType="ProcessVO">
+	     UPDATE mf_ck
+	        SET first_cc = #{firstCc}
+				,second_cc = #{secondCc}
+				,third_cc = #{thirdCc}
+				,fourth_cc = #{fourthCc}
+				,fifth_cc = #{fifthCc}
+				,cc_avg = #{ccAvg}
+				,mfck_res = #{mfckRes}
+				,ck_dt = sysdate
+				,ck_chg = '최수영 대리'
+		  WHERE mf_ck_no = #{mfCkNo}
+	</update>
+	
+	<!-- 검사완료 후 ck_st 값을 0에서 1로 변경 -->
+	<update id="updateCkSt" parameterType="int">
+	    UPDATE mf_ck
+           SET ck_st = 1
+         WHERE mf_ck_no = #{mfCkNo}
+	</update>
+
+
+	<select id="getProcessDoneList" parameterType="ProcessVO">
+	    SELECT mf_ck_no,
+		       cc_name,
+		       ck_st,
+	           pd_name,
+		       pdt_qt,
+		       rt_dt,
+		       rt_chg,
+		       mfck_res,
+		       ck_dt,
+		       ck_chg,
+		       pdt_inst_detail_no
+		  FROM mf_ck
+		 WHERE ck_st=1
+	</select>
+
+	<!-- 검사완료에서 삭제버튼 클릭시 검사대기 목록으로 이동 -->
+	<delete id="deleteProcessDoneList" parameterType="String">
+		UPDATE mf_ck
+           SET ck_st = 0
+         WHERE mf_ck_no = #{mfCkNo}
+	</delete>
+
+
+</mapper>
