@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.theCaffeine.mes.sale.mapper.SendOrderMapper;
+import com.theCaffeine.mes.sale.model.OrderDetailVO;
 import com.theCaffeine.mes.sale.model.OrderMngVO;
 import com.theCaffeine.mes.sale.service.SendOrderService;
 
@@ -24,6 +25,12 @@ public class SendOrderServiceImpl implements SendOrderService {
 	@Override
 	public List<OrderMngVO> sentList(OrderMngVO vo) {
 		return sendOrderMapper.sentList(vo);
+	}
+
+	@Override
+	public int sendOrder(OrderDetailVO vo) {
+		
+		return 0;
 	}
 
 }
