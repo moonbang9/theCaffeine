@@ -3,13 +3,17 @@ package com.theCaffeine.mes.comm.user.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.theCaffeine.mes.comm.user.mapper.EnterpriseMapper;
 import com.theCaffeine.mes.comm.user.model.EnterpriseVO;
 import com.theCaffeine.mes.comm.user.service.EnterpriseService;
+import com.theCaffeine.mes.scrt.CustomUserDetails;
 @Service
-public class EnterpriseServiceImpl implements EnterpriseService {
+public class EnterpriseServiceImpl implements EnterpriseService,UserDetailsService {
 
 	@Autowired EnterpriseMapper enterMapper;
 	@Override
@@ -40,6 +44,22 @@ public class EnterpriseServiceImpl implements EnterpriseService {
 	@Override
 	public String idChk(String id) {
 		return enterMapper.idChk(id);
+	}
+
+	
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		EnterpriseVO enterVO = enterMapper.getEnterInfo(username);
+		if(enterVO == null) {
+			throw new UsernameNotFoundException("id not found");
+		}
+		return new CustomUserDetails(enterVO);
+	}
+
+	@Override
+	public CustomUserDetails loginChk(String id) {
+		return null;
 	}
 	
 }

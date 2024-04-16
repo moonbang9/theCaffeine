@@ -14,6 +14,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.theCaffeine.mes.comm.user.model.EnterpriseVO;
 import com.theCaffeine.mes.comm.user.service.EnterpriseService;
+import com.theCaffeine.mes.fclt.model.FcltVO;
+import com.theCaffeine.mes.scrt.CustomUserDetails;
 
 
 
@@ -31,7 +33,7 @@ public class EnterpriseController {
 				return mv;
 			}
 			
-			
+		
 		//회원가입 페이지 이동
 			@GetMapping("/memb/register")
 			public ModelAndView register() { 

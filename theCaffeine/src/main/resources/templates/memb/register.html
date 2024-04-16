@@ -25,7 +25,7 @@
                 </a>
               </div>
               <!-- /Logo -->
-              <form id="formAuthentication" class="mb-3" action="/memb/insert" method="POST">
+             
                 <div class="mb-3">
                   <label for="userid" class="form-label">아이디*</label>
                   <input
@@ -73,12 +73,14 @@
                 <div class="mb-2">
                   <label for="bussNo" class="form-label">사업자 등록번호*</label>
                   <div class="input-group">
-			        <input type="text" class="form-control" id="bussNo" name="bussNo" placeholder="-없이 숫자만 입력" maxlength="10"/>
+			        <input type="text" class="form-control" id="bussNo" name="bussNo" placeholder="-없이 숫자만 입력" maxlength="10" onblur="bussCheck()"/>
 			        <button type="button" class="btn btn-primary" style="border-radius: 5px;" id="checkBussNo">인증</button>
 			    </div>
+			    <div class="bnochkstr"></div>
                   <br>
                   <label for="bussName" class="form-label">사업자 명*</label>
-                  <input type="text" class="form-control" id="bussName" name="bussName" placeholder="기업명 입력"  />
+                  <input type="text" class="form-control" id="bussName" name="bussName" placeholder="기업명 입력" onblur="bnameCheck()" />
+                  <div class="bnamechkstr"></div>
                   <label for="ceo" class="form-label">대표자</label>
                   <input type="text" class="form-control" id="ceo" name="ceo" placeholder="대표자명 입력"  />
                   </div>
@@ -86,18 +88,20 @@
                     <br>
                   <p><small>▷담당자 정보</small></p>
                   <label for="chgname" class="form-label">이름*</label>
-                  <input type="text" class="form-control" id="chgname" name="chgname" placeholder="이름 입력"  />
+                  <input type="text" class="form-control" id="chgname" name="chgname" placeholder="이름 입력" onblur="chgCheck()" />
+                  <div class="chgchkstr"></div>
                   <label for="email" class="form-label">이메일*</label>
                   <input type="text" class="form-control" id="email" name="email" placeholder="이메일 주소 입력" onblur="mailCheck()" />
 					<div class="mailchkstr"></div>
                 </div>
                 <button class="btn btn-primary d-grid w-100" onclick="chkAccount()">회원가입</button>
-              </form>  
+          
             </div>
           </div>
           <!-- Register Card -->
           <script>
 
+          //사업자 번호 확인
 checkBussNo.addEventListener("click", function() {
     checkBusinessNumber();
 });
@@ -106,35 +110,40 @@ checkBussNo.addEventListener("click", function() {
 let idAccep = false;
 let pwAccep = false;
 let mailAccep = false;
+let bussnoAccep = false;
+let bussnameAccep = false;
+let chgAccep = false;
 
 // 변수 담기
 let idv;
 let pwv;
 let pwChkv;
 let mailv;
-let phonev;
-let filev;
+let bussnov;
+let bussnamev;
+let chgv;
+
 
 //아이디 체크 
  function idChk() {
 	idAccep = false;
-	 idv = formAuthentication.userid.value;
+	 idv = userid.value;
 	let idStat = '';
 	if (idv == '') {
 		idStat = `<p><small>아이디를 입력해주세요</p>`;
 	} else if (!(/^[a-z0-9]{6,20}$/.test(idv))) {
 		idStat = `<p>영문 소문자, 숫자조합 6~20자로 입력해주세요</p>`;
 	} else {
-		idv = formAuthentication.userid.value;
+		idv = userid.value;
 		console.log(idv);
 		fetch("/memb/idchk/"+idv)
 			.then(res => res.text())
 			.then(data => {
-				console.log(data.id)
-				if (data.id != null || data.id == idv) {
-					idStat = `<p>사용할 수 없는 아이디입니다. 다른 아이디를 입력해주세요<p>`
+				console.log(data) //undefined
+				if (data != "" ) {
+					idStat = `<p><small>사용할 수 없는 아이디입니다. 다른 아이디를 입력해주세요<p>`
 				} else {
-					idStat = `<p>사용가능한 아이디입니다</p>`;
+					idStat = `<p><small>사용가능한 아이디입니다</p>`;
 					idAccep = true;
 				 }
                 document.getElementsByClassName('idchck')[0].innerHTML = idStat; 
@@ -158,6 +167,8 @@ function pwCheck() {
 		pwAccep = true;
 	} else if (pwChkv != '') {
 		statPwChk = `<p><small>비밀번호가 일치하지 않습니다</p>`;
+		document.getElementById('checkpw').value = '';
+		
 	}
 	document.getElementsByClassName('pwchkstr')[0].innerHTML = statPw;
 	document.getElementsByClassName('pwchkchkstr')[0].innerHTML = statPwChk;
@@ -168,29 +179,54 @@ function mailCheck() {
 	let statMail = ``;
 	mailAccep = false;
 	if (mailv == '') {
-		statMail = `<p>이메일을 입력해주세요</p>`;
+		statMail = `<p><small>이메일을 입력해주세요</p>`;
 	} else if (!(/^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i.test(mailv))) {
-		statMail = `<p>이메일 형식이 맞지 않습니다.</p>`;
+		statMail = `<p><small>이메일 형식이 맞지 않습니다.</p>`;
 	} else {
 		mailAccep = true;
 	}
 	document.getElementsByClassName('mailchkstr')[0].innerHTML = statMail;
 }
-/* function phoneCheck() {
-	phonev = phone.value;
-	let statphone = ``;
-	phoneAccep = false;
-	if (phonev == '') {
-		statphone = `<p>휴대전화번호를 입력해주세요</p>`;
-	} else if (!(/^(01[016789]{1})-?[0-9]{3,4}-?[0-9]{4}$/.test(phonev))) {
-		statphone = `<p>휴대전화번호 형식이 맞지 않습니다.</p>`;
-	} else if (!SMSAccep) {
-		statphone = `<p>인증 필요</p>`;
-		phoneAccep = true;
+  function bussCheck() {
+	 bussnov = bussNo.value;
+	let statbussno = ``;
+	bussnoAccep = false;
+	if (bussnov == '') {
+		statbussno = `<p>사업자번호를 입력해주세요</p>`;
+	}else if(!(/^[0-9]{10}$/.test(bussnov))){
+		statbussno = `<p><small>유효한 사업자번호가 아닙니다</p>`;
+	}else{
+		bussnoAccep = true;
 	}
-	document.getElementsByClassName('phonechkstr')[0].innerHTML = statphone;
-} */
-
+	document.getElementsByClassName('bnochkstr')[0].innerHTML = statbussno;
+}  
+  
+  function bnameCheck() {
+	  bussnamev = bussName.value;
+		let statbussname = ``;
+		bussnameAccep = false;
+		if (bussnamev == '') {
+			statbussname = `<p>사업자명을 입력해주세요</p>`;
+		}else if(!(/^[ㄱ-ㅎ가-힣a-zA-Z0-9]+$/.test(bussnamev))){
+			statbussname = `<p><small>유효한 사업자명이 아닙니다</p>`;
+		}else{
+			bussnameAccep = true;
+		}
+		document.getElementsByClassName('chgchkstr')[0].innerHTML = statbussname;
+	}  
+  function chgCheck() {
+	  chgv = chgname.value;
+		let statchgname = ``;
+		chgAccep = false;
+		if (chgv == '') {
+			statchgname = `<p>담당자명을 입력해주세요</p>`;
+		}else if(!(/^[ㄱ-ㅎ가-힣a-zA-Z0-9]+$/.test(chgv))){
+			statchgname = `<p><small>유효한 이름이 아닙니다</p>`;
+		}else{
+			chgAccep = true;
+		}
+		document.getElementsByClassName('bnamechkstr')[0].innerHTML = statchgname;
+	}  
 
 function chkAccount() {
 	// 유효성검사
@@ -213,29 +249,41 @@ function chkAccount() {
 		alert("비밀번호가 올바르지 않습니다. 다시 확인해주세요.");
 		return;
 	}
+	if (bussnov == '') {
+		alert("사업자번호를 입력해주세요");
+		return;
+	}else if (!bussnoAccep) {
+		alert("올바른 형식의 사업자번호를 입력해주세요");
+		return;
+	}
+	if (bussName == '') {
+		alert("대표의 성함을 입력해주세요");
+		return;
+	}
+	else if (!bussnameAccep) {
+		alert("올바른 형식의 사업자명을 입력해주세요");
+		return;
+	}
+	if (chgname == '') {
+		alert("담당자 성함을 입력해주세요");
+		return;
+	}
+	else if (!chgAccep) {
+		alert("올바른 형식의 담당자명을 입력해주세요");
+		return;
+	}
 	if (mailv == '') {
 		alert("이메일을 입력해주세요");
 		return;
-	} else if (!mailAccep) {
+	}else if (!mailAccep) {
 		alert("이메일 형식이 올바르지 않습니다. 다시 확인해주세요.");
 		return;
 	}
+	
 	register();
 }
 
-function checkId(){
-	var id= document.getElementById('userid').value;
-	console.log("입력한 id"+id);
-		fetch("/memb/idchk/"+ id)
-  		//.then(res => res.json())
-  		.then(res => {
-  			if(res == id){
-  				console.log(res)
-  				alert("이미 사용 중인 아이디입니다")
-  			}else if(res.id ==null){
-  			checkids(res)}
-  		})
-}
+
 		//사업자번호 인증 api
         function checkBusinessNumber() {
         	 var bussNumber = document.getElementById('bussNo').value; // 사업자 번호 확인
