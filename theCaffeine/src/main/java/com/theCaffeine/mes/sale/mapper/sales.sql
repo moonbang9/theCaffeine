@@ -576,3 +576,84 @@ insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no)
 VALUEs('PCT01-240416-0001', 'box', 2, '24/04/10','25/05/10','PCT01',23);
 insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
 VALUEs('PCT01-240416-0002', 'box', 2, '24/04/10','25/05/10','PCT01',24);
+
+
+
+
+
+
+
+
+/*  주문조회 최~~~~~~~종  */
+select * from pd ORDER BY pd_name;
+select * from cli;
+select * from od;
+select count(*), pd_cd from od_detail group by pd_cd; --PCB01 콜롬비아
+
+
+
+select de.od_no, o.od_dt, c.cli_name, c.cli_chg ,
+        CASE WHEN (de.cnt > 0) THEN p.pd_name || ' 외 ' || de.cnt || '건'
+             ELSE p.pd_name
+             END AS pdName  ,
+        o.total_price, o.od_chg, d.due_dt, o.od_st,
+        CASE (o.od_st)
+            WHEN 1 THEN '주문접수' 
+            WHEN 2 THEN '생산요청'
+            WHEN 3 THEN '출고완료'
+            WHEN 4 THEN '구매확정'
+            WHEN 9 THEN '반품완료'
+            ELSE '반품중'
+            END AS odSt
+from od_detail d 
+    JOIN (select min(od_detailno) as minDetailNo, (count(*)-1) as cnt, od_no
+            from od_detail
+            group by od_no) de 
+    ON d.od_detailno = de.minDetailNO
+    JOIN pd p
+    ON d.pd_cd = p.pd_cd
+    JOIN od o
+    ON o.od_no = de.od_no
+    JOIN cli c
+    ON c.cli_cd = o.cli_cd
+    
+WHERE d.pd_cd LIKE '%01%'
+    AND p.pd_name LIKE '%%'
+    AND o.cli_cd LIKE '%%'
+    AND c.cli_name LIKE '%%'
+    AND c.cli_chg LIKE '%%'
+    AND o.od_chg LIKE '%%'
+    AND o.od_dt >= '2023-01-01'
+    AND o.od_dt <= '2025-01-01'
+    AND d.due_dt >= '2023-01-01'
+    AND d.due_dt <= '2025-01-01'
+    AND o.od_st = '1'
+ORDER BY de.od_no DESC;
+
+
+select d.od_no, d.od_detailno, p.pd_name
+from od_detail d
+    JOIN pd p 
+        ON d.pd_cd = p.pd_cd
+WHERE pd_name LIKE '%콜롬비아%';
+
+
+-- 주문조회 조건검색 condition 하나 더 만들면 됨!
+select min(od_detailno) as minDetailNo, (count(*)-1) as cnt, od_no
+            from (select d.od_no, d.od_detailno, p.pd_name
+                    from od_detail d
+                        JOIN pd p 
+                            ON d.pd_cd = p.pd_cd
+                    WHERE 
+                        pd_cd LIKE '%%' 
+                        AND pd_name LIKE '%콜롬비아%'                    
+                    )
+            group by od_no;
+
+
+
+
+/*  재고 조회   */
+
+
+/* 폐기 - 불량유형: 파손, 스크래치,... */
