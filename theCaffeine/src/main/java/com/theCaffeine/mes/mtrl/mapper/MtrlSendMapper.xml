@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.theCaffeine.mes.mtrl.mapper.MtrlSendMapper">
+
+	<select id="getMtrlSendList" resultType="MtrlSendVO">
+		-- 금일 생산지시 현황
+		with pd as (SELECT  pd.pd_cd
+		                    ,b.mt_cd
+		                    ,CASE WHEN b.unit = 'Bag' THEN SUM(b.consum) / 15
+		                          WHEN b.unit = 'Box' THEN (SELECT  SUM(mt_qt) * 2
+		                                                    FROM    (SELECT SUM(b.consum) as mt_qt
+		                                                                    ,b.unit
+		                                                            FROM    pdt_inst_detail pd
+		                                                            JOIN    bom b
+		                                                            ON      b.pd_cd = pd.pd_cd
+		                                                            WHERE   pdt_inst_no = (SELECT  DISTINCT pdt_inst_no
+		                                                                                     FROM  pdt_inst_detail
+		                                                                                    WHERE  TO_CHAR(PDT_STT_TIME, 'yyyy-MM-dd') = TO_CHAR(sysdate, 'yyyy-MM-dd')) and unit = 'Box'
+		                                                            GROUP BY b.unit))
+		                          WHEN b.unit = 'pcs' THEN SUM(b.consum) * 2
+		                    END as mt_qt
+		                    ,b.unit
+		            FROM    pdt_inst_detail pd
+		            JOIN    bom b
+		            ON      b.pd_cd = pd.pd_cd
+		            WHERE   pdt_inst_no = (SELECT  DISTINCT pdt_inst_no
+		                                     FROM  pdt_inst_detail
+		                                    WHERE  TO_CHAR(PDT_STT_TIME, 'yyyy-MM-dd') = TO_CHAR(sysdate, 'yyyy-MM-dd'))
+		                    AND comp_st = 1
+		            GROUP BY pd.pd_cd, b.mt_cd, b.unit)
+		            ,
+		
+		-- 자재별 재고 수량 합            
+		msq as (SELECT  mt_cd
+		                ,SUM(stk_qt) as sum_stk_qt
+		        FROM    mt_stk
+		        GROUP BY mt_cd)
+		
+		SELECT  DISTINCT 
+		        m.mt_cd
+		        ,m.mt_div
+		        ,m.mt_name
+		        ,pd.mt_qt
+		        ,pd.unit
+		        ,msq.sum_stk_qt
+		        ,msq.sum_stk_qt - pd.mt_qt as re_stk_qt
+		FROM    mt m
+		JOIN    pd
+		ON      m.mt_cd = pd.mt_cd
+		JOIN    mt_stk ms
+		ON      m.mt_cd = ms.mt_cd
+		JOIN    msq
+		ON      msq.mt_cd = m.mt_cd
+		ORDER BY mt_div DESC
+	</select>
+
+	<select id="insertMtrlSend" statementType="CALLABLE" parameterType="MtrlSendVO">
+        CALL mt_sending(
+                #{mtCd, mode=IN, jdbcType=VARCHAR},
+                #{mtQt, mode=IN, jdbcType=INTEGER},
+                #{sendChg, mode=IN, jdbcType=VARCHAR})
+    </select>
+
+</mapper>
