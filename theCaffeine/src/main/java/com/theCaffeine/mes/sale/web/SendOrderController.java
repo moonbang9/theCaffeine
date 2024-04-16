@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.theCaffeine.mes.sale.model.OrderDetailVO;
 import com.theCaffeine.mes.sale.model.OrderMngVO;
 import com.theCaffeine.mes.sale.service.SendOrderService;
 
@@ -42,5 +43,14 @@ public class SendOrderController {
 	public List<OrderMngVO> sentList(@RequestBody OrderMngVO vo){
 		System.out.println("출고 처리된 목록 조건" + vo);
 		return sendOrderService.sentList(vo);
+	}
+	// 출고 처리
+	@PostMapping("/ajax/sendOrder")
+	public OrderDetailVO sendOrder(@RequestBody OrderDetailVO vo) {
+		System.out.println(vo);
+		OrderDetailVO resultvo = sendOrderService.sendOrder(vo);
+		System.out.println(resultvo);
+		return resultvo;
+		//return sendOrderService.sendOrder(vo);
 	}
 }

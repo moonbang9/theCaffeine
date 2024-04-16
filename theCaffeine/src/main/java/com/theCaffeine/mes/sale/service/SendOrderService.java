@@ -13,5 +13,5 @@ public interface SendOrderService {
 	List<OrderMngVO> sentList(OrderMngVO vo);
 	
 	//출고 처리
-	int sendOrder(OrderDetailVO vo);
+	OrderDetailVO sendOrder(OrderDetailVO vo);
 }

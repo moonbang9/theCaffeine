@@ -28,9 +28,10 @@ public class SendOrderServiceImpl implements SendOrderService {
 	}
 
 	@Override
-	public int sendOrder(OrderDetailVO vo) {
-		
-		return 0;
+	public OrderDetailVO sendOrder(OrderDetailVO vo) {
+		return sendOrderMapper.sendOrder(vo);
 	}
+
+	
 
 }
