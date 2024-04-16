@@ -95,6 +95,14 @@ where d.od_no= 87;
 select * from pd;
 select * from pd_stk;
 
+-- 생산계획코드, 주간계획시작일, 계획명
+select * from pdtplan;
+-- 생산계획상세번호, 생산계획코드, 제품명, 수량, 납기일, 제품코드
+select * from pdt_plan_detail;
+
+select wk_plan_stt_dt, NEXT_DAY(wk_plan_stt_dt+21, '토')
+from pdtplan;
+
 --p, c, t, n
 select p.pd_cd, p.pd_name, p.unit, c.curStk, t.threeWnotSend, n.notSend,
 trunc((p.safe_stk_qt/21)*30.5, 0)as monthlyPrd, trunc((p.safe_stk_qt/3), 0)as weeklyPrd,
@@ -144,6 +152,10 @@ select count(*) as threeWnotSend, pd_cd
 from od_detail
 where od_detail_st<3 and (sysdate-due_dt) <21
 group by pd_cd;
+
+
+
+
 
 
 
@@ -554,6 +566,9 @@ select * from pd_stk where (exp_dt - sysdate) >= 30;
 
 
 
+
+
+
 CREATE OR REPLACE PROCEDURE send_order(
     p_od_no IN od.od_no%TYPE,
     p_od_detailno IN OUT od_detail.od_detailno%TYPE,
@@ -561,18 +576,22 @@ CREATE OR REPLACE PROCEDURE send_order(
     p_pd_cd IN od_detail.pd_cd%TYPE
     )
 IS
-    CURSOR lot_cursor 
+    v_lot_count pd_stk.qt%TYPE; --상품 해당 lot 전체수량
+    
+    v_new_lot_qt pd_stk.qt%TYPE; --lot갱신수량
+    v_new_od_qt od_detail.qt%TYPE;
+    
+    v_cursor lot_cursor%ROWTYPE;
+
+    CURSOR lot_cursor (v_pd_cd od_detail.pd_cd%TYPE)
         IS SELECT qt
             FROM pd_stk
-            WHERE pd_cd = p_pd_cd
+            WHERE pd_cd = v_pd_cd
                 AND qt>0
                 AND (exp_dt - sysdate) >= 30
             ORDER BY pd_lot;
             
-    v_lot_count od_detail.qt%TYPE; --상품 해당 lot 전체수량
     
-    v_new_lot_qt pd_stk.qt%TYPE; --lot갱신수량
-    v_new_od_qt od_detail.qt$TYPE; --
    
    shortage EXCEPTION; 
     
@@ -586,7 +605,7 @@ BEGIN
         RAISE shortage;
     ELSE  
         v_new_od_qt := p_qt;
-        FOR cur IN lot_cursor  LOOP
+        FOR v_cursor IN lot_cursor  LOOP
             --EXIT WHEN
             IF cur.qt <= v_new_od_qt THEN
                 v_new_od_qt := v_new_od_qt - cur.qt;
@@ -599,14 +618,18 @@ BEGIN
                 WHERE CURRENT OF lot_cursor;
                 DBMS_OUTPUT.PUT_LINE('수정 성공');
             END IF;
+        END LOOP;
     END IF;
     
 EXCEPTION 
     WHEN shortage THEN 
         DBMS_OUTPUT.PUT_LINE('재고가 부족합니다');
-
+    WHEN OTHERS THEN
+        ROLLBACK;
+         DBMS_OUTPUT.PUT_LINE('재고가 부족합니다');
 END;
 /
+
 
 EXECUTE yedam_emp(100);
 
