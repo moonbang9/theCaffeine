@@ -390,12 +390,6 @@ select * from pd;
 
 
 
-
-
-
-
-
-
 /* 주문 상세 조회 */
 select * from od;
 select * from od_detail order by od_detailno;
@@ -532,108 +526,53 @@ VALUEs('PCT01-240410-0002', 'box', 2, '24/04/10','24/05/10','PCT01',24);
 
 
 
-/*  출고처리 프로시저 + 주석 */
 
 
-
---CREATE PROC [dbo].[spam_LoginProcess]
-/*
-////////////////////////////////////////////////////////////////////////
-//
-// 프로시져명 : 관리자모드 로그인 처리
-// 작 성 자 : 홍길동(kildong@naver.com)
-// 작 성 일 : 2016-01-17 PM 05:30
-// 최종수정자 :
-// 수 정 일 :
-// 파 일 명 :
-// 사 용 예 : EXEC [dbo].[spam_LoginProcess] 'Test01', 'abc123!', '162.17.8.15', @v_RetVal OUTPUT
-// N O T E :
-//
-////////////////////////////////////////////////////////////////////////
-*/
---(
---@v_AdminId VARCHAR(32), -- 관리자모드 로그인 아이디
---@v_PassWd VARCHAR(15), -- 관리자모드 로그인 패스워드
---@v_LoginIp VARCHAR(15), -- 관리자 접속 IP
---@v_RetVal INT OUTPUT, -- 처리코드(0/1/3/99 : 정상/존재X/계정만료/DB 오류)
---)
-
-select * from od; --o
-select * from od_detail; --d
-select * from pd_stk; --t
-select * from send; --s
+select * from od order by od_no DESC; --o
+select * from od_detail order by od_no DESC; --d
+select * from pd_stk order by pd_lot; --t
 select * from pd_stk where (exp_dt - sysdate) >= 30;
+select * from send; --s
 
+insert into send
+(send_no, qt, send_dt, od_no, pd_lot)
+--values ( send_seq.nextval, 1  ,sysdate, p_od_no, p_pd_lot);
+values ( send_seq.nextval, 100 ,sysdate, 181, 'PBR01-240408-0001');
 
+update od_detail set send_od_st = 3 where od_detailno = 161;
+update od set od_st = 3 where od_no = p_od_no;
 
-
-
-
-CREATE OR REPLACE PROCEDURE send_order(
-    p_od_no IN od.od_no%TYPE,
-    p_od_detailno IN OUT od_detail.od_detailno%TYPE,
-    p_qt IN od_detail.qt%TYPE,
-    p_pd_cd IN od_detail.pd_cd%TYPE
-    )
-IS
-    v_lot_count pd_stk.qt%TYPE; --상품 해당 lot 전체수량
-    
-    v_new_lot_qt pd_stk.qt%TYPE; --lot갱신수량
-    v_new_od_qt od_detail.qt%TYPE;
-    
-    v_cursor lot_cursor%ROWTYPE;
-
-    CURSOR lot_cursor (v_pd_cd od_detail.pd_cd%TYPE)
-        IS SELECT qt
-            FROM pd_stk
-            WHERE pd_cd = v_pd_cd
-                AND qt>0
-                AND (exp_dt - sysdate) >= 30
-            ORDER BY pd_lot;
-            
-    
-   
-   shortage EXCEPTION; 
-    
-BEGIN
-    SELECT count(qt) as qt 
-    INTO v_lot_count
-    FROM pd_stk 
-    WHERE pd_cd = p_pd_cd;
-    
-    IF p_qt > v_lot_count THEN 
-        RAISE shortage;
-    ELSE  
-        v_new_od_qt := p_qt;
-        FOR v_cursor IN lot_cursor  LOOP
-            --EXIT WHEN
-            IF cur.qt <= v_new_od_qt THEN
-                v_new_od_qt := v_new_od_qt - cur.qt;
-            ELSE                
-                v_new_lot_qt := cur.qt - v_new_od_qt;
-                v_new_od_qt := 0;
-                
-                UPDATE pd_stk
-                SET qt = v_new_lot_qt
-                WHERE CURRENT OF lot_cursor;
-                DBMS_OUTPUT.PUT_LINE('수정 성공');
-            END IF;
-        END LOOP;
-    END IF;
-    
-EXCEPTION 
-    WHEN shortage THEN 
-        DBMS_OUTPUT.PUT_LINE('재고가 부족합니다');
-    WHEN OTHERS THEN
-        ROLLBACK;
-         DBMS_OUTPUT.PUT_LINE('재고가 부족합니다');
-END;
-/
-
-
-EXECUTE yedam_emp(100);
+SET SERVEROUTPUT ON;
 
 
 
 -- 생산계획상세
 select * from pdt_inst_detail;
+
+
+
+/* 재품재고 테이블 데이터 생성 */
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs ('PCB01-240416-0001', 'box', 2, '24/04/08','25/05/08','PCB01',13);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs ('PCB01-240416-0002', 'box', 2, '24/04/08','25/05/08','PCB01',14);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PBR01-240416-0001', 'box', 2, '24/04/08','25/05/08','PBR01',15);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PBR01-240416-0002', 'box', 2, '24/04/08','25/05/08','PBR01',16);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PBR01-240416-0003', 'box', 2, '24/04/08','25/05/08','PBR01',17);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PET01-240416-0001', 'box', 2, '24/04/09','25/05/09','PET01',18);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PET01-240416-0002', 'box', 2, '24/04/09','25/05/09','PET01',19);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PET01-240416-0003', 'box', 2, '24/04/09','25/05/09','PET01',20);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PET01-240416-0004', 'box', 2, '24/04/10','25/05/10','PET01',21);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PET01-240416-0005', 'box', 2, '24/04/10','25/05/10','PET01',22);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PCT01-240416-0001', 'box', 2, '24/04/10','25/05/10','PCT01',23);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PCT01-240416-0002', 'box', 2, '24/04/10','25/05/10','PCT01',24);

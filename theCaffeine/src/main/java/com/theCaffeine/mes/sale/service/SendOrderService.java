@@ -2,6 +2,7 @@ package com.theCaffeine.mes.sale.service;
 
 import java.util.List;
 
+import com.theCaffeine.mes.sale.model.OrderDetailVO;
 import com.theCaffeine.mes.sale.model.OrderMngVO;
 
 public interface SendOrderService {
@@ -10,4 +11,7 @@ public interface SendOrderService {
 	List<OrderMngVO> notSendList(OrderMngVO vo);
 	//출고된 목록(출고중, 출고완료) 조회
 	List<OrderMngVO> sentList(OrderMngVO vo);
+	
+	//출고 처리
+	int sendOrder(OrderDetailVO vo);
 }

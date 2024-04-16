@@ -69,5 +69,13 @@
 		   <include refid="condition"></include> 
 		ORDER BY o.od_no ASC, d.od_detailno DESC
 	</select>
+	<insert id="sendOrder" statementType="CALLABLE" parameterType="OrderDetailVO">
+		CALL SEND_ORDER (
+						#{odNo, mode=IN, jdbcType=INTEGER},
+						#{odDetailNo, mode=INOUT, jdbcType=INTEGER},
+						#{qt, mode=IN, jdbcType=INTEGER},
+						#{pdCd, mode=IN, jdbcType=VARCHAR}
+						)
+	</insert>
 
 </mapper>
