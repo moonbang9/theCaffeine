@@ -247,7 +247,7 @@
 			})
 		}
 		
-		var dateEditor5 = function(cell, onRendered, success, cancel, editorParams){
+		/*var dateEditor5 = function(cell, onRendered, success, cancel, editorParams){
 
 		    var data = cell.getRow().getData();
 		    
@@ -287,7 +287,7 @@
 		        success(editor2.value);
 		    }
 			return editor2;
-		}
+		}*/
 		
 		var table2 = new Tabulator("#productionPlan-table2", {
 			height:"100%",
@@ -308,7 +308,8 @@
 					},
 				},
 		        {title:"상품명", field:"pdName", width:300, hozAlign:"center"},
-		        {title:"수량", field:"qt", hozAlign:"center", editor:dateEditor5, validator:["min:0", "numeric"], width:100,
+		        {title:"수량", field:"qt", hozAlign:"center", validator:["min:0", "numeric"], width:100, 
+		        	/*editor:dateEditor5,
 		        	cellEdited: function(cell) {
 		    			let tables = table2.getData();
 		    			for(let i of tables){
@@ -331,7 +332,7 @@
 		    			}
 		    			console.log(tables)
 		    			table2.updateData(tables)
-					},},
+					},*/},
 		        {title:"생산시작시간", field:"pdtSttTime", hozAlign:"center", width:240, editor:"time", editorParams:{
 		            format:"HH:mm:ss",
 		            verticalNavigation:"table",
@@ -409,7 +410,7 @@
 				table2.updateData(tables)
 			}
 			
-	    	table2.addRow({"compSt" : "O", "rownum": table2.getDataCount() + 1});
+	    	table2.addRow({"compSt" : "O", "rownum": table2.getDataCount() + 1,"qt" : 24});
 		}
 		
 		
