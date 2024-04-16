@@ -35,16 +35,17 @@
 
  SELECT  ENTER_CD,
                 ID,
-                PW,
+                '{noop}' ||pw as pw,
                 BUSSNO,
                 ENTER_NAME,
                 CHG,
                 MAIL,
                 CEO,
                 AUTH_NO,
+                'ROLE_' ||upper(AUTH_NO) as AUTH_NO,
                 ST
 	FROM ENTER
-    WHERE ENTER_CD= #{enterCd}
+    WHERE ID= #{ID}
 </select>
 
 <!--  기업 회원 등록 -->
