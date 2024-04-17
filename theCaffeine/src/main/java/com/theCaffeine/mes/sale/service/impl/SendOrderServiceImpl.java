@@ -29,8 +29,9 @@ public class SendOrderServiceImpl implements SendOrderService {
 
 	@Override
 	public int sendOrder(OrderDetailVO vo) {
-		
-		return 0;
+		sendOrderMapper.sendOrder(vo);
+		// call by value vs call by reference 구분하기!
+		return vo.getResult();
 	}
 
 }
