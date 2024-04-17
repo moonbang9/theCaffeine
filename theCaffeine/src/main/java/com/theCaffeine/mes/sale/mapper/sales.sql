@@ -576,3 +576,218 @@ insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no)
 VALUEs('PCT01-240416-0001', 'box', 2, '24/04/10','25/05/10','PCT01',23);
 insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
 VALUEs('PCT01-240416-0002', 'box', 2, '24/04/10','25/05/10','PCT01',24);
+
+
+select * from pd_stk;
+
+
+
+
+
+/*  주문조회 최~~~~~~~종  */
+select * from pd ORDER BY pd_name;
+select * from cli;
+select * from od;
+select * from od_detail;
+select count(*), pd_cd from od_detail group by pd_cd; --PCB01 콜롬비아
+
+
+
+select de.od_no, o.od_dt, c.cli_name, c.cli_chg ,
+        CASE WHEN (de.cnt > 0) THEN p.pd_name || ' 외 ' || de.cnt || '건'
+             ELSE p.pd_name
+             END AS pdName  ,
+        o.total_price, o.od_chg, d.due_dt, o.od_st,
+        CASE (o.od_st)
+            WHEN 1 THEN '주문접수' 
+            WHEN 2 THEN '생산요청'
+            WHEN 3 THEN '출고완료'
+            WHEN 4 THEN '구매확정'
+            WHEN 9 THEN '반품완료'
+            ELSE '반품중'
+            END AS odSt
+from od_detail d 
+    JOIN (select min(od_detailno) as minDetailNo, (count(*)-1) as cnt, od_no
+            from od_detail
+            group by od_no) de 
+    ON d.od_detailno = de.minDetailNO
+    JOIN pd p
+    ON d.pd_cd = p.pd_cd
+    JOIN od o
+    ON o.od_no = de.od_no
+    JOIN cli c
+    ON c.cli_cd = o.cli_cd
+    
+WHERE d.pd_cd LIKE '%01%'
+    AND p.pd_name LIKE '%%'
+    AND o.cli_cd LIKE '%%'
+    AND c.cli_name LIKE '%%'
+    AND c.cli_chg LIKE '%%'
+    AND o.od_chg LIKE '%%'
+    AND o.od_dt >= '2023-01-01'
+    AND o.od_dt <= '2025-01-01'
+    AND d.due_dt >= '2023-01-01'
+    AND d.due_dt <= '2025-01-01'
+    AND o.od_st = '1'
+ORDER BY de.od_no DESC;
+
+
+select d.od_no, d.od_detailno, p.pd_name
+from od_detail d
+    JOIN pd p 
+        ON d.pd_cd = p.pd_cd
+WHERE 
+p.pd_name LIKE '%콜롬비아%'
+--d.pd_cd LIKE '%PCB01%'
+;
+
+-- 주문조회 조건검색 condition 하나 더 만들면 됨!
+select min(od_detailno) as minDetailNo, (count(*)-1) as cnt, od_no
+            from (select d.od_no, d.od_detailno, p.pd_name, d.pd_cd
+                    from od_detail d
+                        JOIN pd p 
+                            ON d.pd_cd = p.pd_cd
+                    WHERE 
+                        d.pd_cd LIKE '%PCB01%' 
+                        AND p.pd_name LIKE '%%'                    
+                    )
+            group by od_no;
+
+
+
+
+
+select de.od_no
+				, o.cli_cd
+				, c.cli_name
+				, c.cli_chg 
+				, d.od_detailno
+             	, d.pd_cd
+				, p.pd_name
+				, CASE WHEN (de.cnt > 0) THEN p.pd_name || ' 외 ' || de.cnt || '건'
+             		   ELSE p.pd_name
+             	  END AS pd  
+             	, o.od_chg
+				, o.od_dt
+             	, d.due_dt
+             	, o.dc_rate
+             	, o.total_price
+             	, o.od_st 
+             	, FIND_CODE_NAME ('od_st', o.od_st)	AS st
+		from od_detail d 
+		    JOIN  (select min(dcnt.od_detailno) as minDetailNo
+		          			, (count(*)-1) as cnt
+		          			, dcnt.od_no
+            		from od_detail dcnt JOIN(         --상세 181번 요주의 번호....
+                                            ) dpd
+                                        ON dcnt.od_detailno = dpd.od_detailno
+                    group by dcnt.od_no
+                    order by dcnt.od_no) de
+		          
+		    ON d.od_detailno = de.minDetailNo
+		    JOIN pd p
+		    ON d.pd_cd = p.pd_cd
+		    JOIN od o
+		    ON o.od_no = de.od_no
+		    JOIN cli c
+		    ON c.cli_cd = o.cli_cd
+         
+		ORDER BY de.od_no DESC;
+
+
+
+-- with로 정리
+with dpd as ( select d.od_no
+                    , d.od_detailno
+                    , p.pd_name
+                    , d.pd_cd
+                from od_detail d
+                JOIN pd p 
+                  ON d.pd_cd = p.pd_cd
+                  where p.pd_name LIKE '%%'
+            ),
+de as (select min(dcnt.od_detailno) as minDetailNo
+		          			, (count(*)-1) as cnt
+		          			, dcnt.od_no
+            		from od_detail dcnt JOIN dpd
+                                            ON dcnt.od_no = dpd.od_no
+            	group by dcnt.od_no
+                order by dcnt.od_no)
+
+
+select de.od_no
+				, o.cli_cd
+				, c.cli_name
+				, c.cli_chg 
+				, d.od_detailno
+             	, d.pd_cd
+				, p.pd_name
+				, CASE WHEN (de.cnt > 0) THEN p.pd_name || ' 외 ' || de.cnt || '건'
+             		   ELSE p.pd_name
+             	  END AS pd  
+             	, o.od_chg
+				, o.od_dt
+             	, d.due_dt
+             	, o.dc_rate
+             	, o.total_price
+             	, o.od_st 
+             	, FIND_CODE_NAME ('od_st', o.od_st)	AS st
+		from od_detail d 
+		    JOIN   de
+		          
+		    ON d.od_detailno = de.minDetailNo
+		    JOIN pd p
+		    ON d.pd_cd = p.pd_cd
+		    JOIN od o
+		    ON o.od_no = de.od_no
+		    JOIN cli c
+		    ON c.cli_cd = o.cli_cd
+      --where c.cli_name LIKE '%콩%'
+		ORDER BY de.od_no DESC;
+        
+--재수정
+
+
+
+
+select d.od_no, d.od_detailno, d.pd_cd
+from od_detail d LEFT OUTER JOIN (
+                                                select  d.od_no                                                    
+                                                    , p.pd_name
+                                                    --, d.pd_cd
+                                                from od_detail d
+                                                JOIN pd p 
+                                                  ON d.pd_cd = p.pd_cd
+--                                               WHERE 
+--                                                    --d.pd_cd LIKE '%PCB01%' 
+--                                                    --AND 
+--                                                    p.pd_name LIKE '%브라질%'
+                         ) x
+ON d.od_no = x.od_no
+order by od_detailno;
+        
+
+
+/*  재고 조회   */
+
+-- 226/ 231,232,233 / 3,3,3 / PCT01, PET01, PCB01
+select * from od;
+select * from od_detail 
+--where od_no = 226
+--where pd_cd = 'PPR01'
+;
+select * from send;
+select * from pd_stk;
+
+/* 폐기 - 불량유형: 파손, 스크래치,... */
+
+
+
+SELECT NVL( (SELECT SUM(qt) as qt
+                   FROM pd_stk 
+                  WHERE pd_cd = 'PCT01'
+                  GROUP BY pd_cd )
+                  , 0) as qt
+   -- INTO v_lot_sum
+    FROM pd_stk
+    WHERE rownum = 1; 

@@ -17,7 +17,7 @@ public class OrderMngVO {
 	//제품코드, 거래처담당자명, 주문담당자
 	
 	private int odNo;
-	private int odDetailNo;
+	private int odDetailno;
 	
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@JsonFormat(pattern = "yyyy-MM-dd")

@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 public class OrderDetailVO {
 	
-	private int odDetailNo;
+	private int odDetailno;
 	private int qt;
 	private int cost;
 	private int detailPrice;
@@ -18,5 +18,7 @@ public class OrderDetailVO {
 	private String pdCd;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date dueDt;
+	
+	private int result;
 	
 }

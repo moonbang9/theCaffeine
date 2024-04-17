@@ -31,6 +31,7 @@
 				, o.od_dt
 				, c.cli_name
 				, o.od_chg
+				, p.pd_cd
 				, p.pd_name
 				, d.qt
 				, d.due_dt
@@ -44,7 +45,8 @@
 		        ON p.pd_cd = d.pd_cd
 		WHERE d.send_od_st = 1    
 				<include refid="condition"></include>     
-		ORDER BY o.od_no ASC, d.od_detailno DESC	
+		ORDER BY d.due_dt ASC
+				, d.od_detailno ASC	
 	</select>
 	
 	<select id="sentList" resultType="OrderMngVO">
@@ -52,11 +54,12 @@
 				, o.od_dt
 				, c.cli_name
 				, o.od_chg
+				, p.pd_cd
 				, p.pd_name
 				, d.qt
 				, d.due_dt
 				, d.send_od_st
-				, FIND_CODE_NAME ('od_st', d.send_od_st)	AS send_st_name
+				, FIND_CODE_NAME ('od_st', d.send_od_st) AS send_st_name
 		FROM od o 
 		    JOIN od_detail d
 		        ON o.od_no = d.od_no
@@ -67,14 +70,16 @@
 		WHERE d.send_od_st = 2 
 		   OR d.send_od_st = 3  
 		   <include refid="condition"></include> 
-		ORDER BY o.od_no ASC, d.od_detailno DESC
+		ORDER BY d.due_dt DESC
+				, d.od_detailno ASC
 	</select>
 	<insert id="sendOrder" statementType="CALLABLE" parameterType="OrderDetailVO">
 		CALL SEND_ORDER (
 						#{odNo, mode=IN, jdbcType=INTEGER},
-						#{odDetailNo, mode=INOUT, jdbcType=INTEGER},
+						#{odDetailno, mode=INOUT, jdbcType=INTEGER},
 						#{qt, mode=IN, jdbcType=INTEGER},
-						#{pdCd, mode=IN, jdbcType=VARCHAR}
+						#{pdCd, mode=IN, jdbcType=VARCHAR},
+						#{result, mode=OUT, jdbcType=INTEGER}
 						)
 	</insert>
 
