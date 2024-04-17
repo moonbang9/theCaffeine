@@ -49,14 +49,7 @@ public class QltyController {
 	public int deleteMcRes(@RequestBody String mtPlaceodCd) {
 		return qltyService.deleteMtrlDoneList(mtPlaceodCd);
 	}
-
 	
-	// 포장검사 페이지이동
-	@GetMapping("/quality/packaging")
-	public ModelAndView packaging() {
-		ModelAndView mv = new ModelAndView("qlty/packaging");
-		return mv;
-	}
 
 	// 검사조회 페이지이동
 	@GetMapping("/quality/lookup")

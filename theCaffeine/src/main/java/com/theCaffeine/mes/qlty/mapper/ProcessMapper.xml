@@ -14,6 +14,7 @@
 	       pdt_inst_detail_no
 	  FROM mf_ck
 	 WHERE ck_st=0
+  ORDER BY mf_ck_no
 	  
 	<!-- SELECT f.mf_ck_no,
 		   f.cc_name,
@@ -63,6 +64,7 @@
 		       pdt_inst_detail_no
 		  FROM mf_ck
 		 WHERE ck_st=1
+	  ORDER BY mf_ck_no DESC
 	</select>
 
 	<!-- 검사완료에서 삭제버튼 클릭시 검사대기 목록으로 이동 -->
@@ -71,6 +73,20 @@
            SET ck_st = 0
          WHERE mf_ck_no = #{mfCkNo}
 	</delete>
-
+	
+	
+	<!-- 공정 검사 성공시 -->
+	<update id="updateSuccessHistProcess" parameterType="int">
+		update pdt_hist
+		set mf_qual_st=1
+		where pdt_inst_detail_no = #{pdtInstDetailNo}
+	</update>
+	
+	<!-- 공정 검사,포장 검사 실패시 -->
+	<update id="updateFailInstProcess" parameterType="int">
+		update pdt_inst_detail
+		set comp_st=6
+		where pdt_inst_detail_no = #{pdtInstDetailNo}
+	</update>
 
 </mapper>
