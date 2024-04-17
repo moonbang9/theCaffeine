@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.theCaffeine.mes.comm.user.mapper.EnterpriseMapper;
@@ -16,6 +17,7 @@ import com.theCaffeine.mes.scrt.CustomUserDetails;
 public class EnterpriseServiceImpl implements EnterpriseService,UserDetailsService {
 
 	@Autowired EnterpriseMapper enterMapper;
+
 	@Override
 	public List<EnterpriseVO> getEnterpriseList(EnterpriseVO vo) {
 		return enterMapper.getEnterpriseList(vo);

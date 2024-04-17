@@ -27,11 +27,8 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler{
 		List<String> roleNames = new ArrayList<>();
 		// Collection<Authority> ==> List<String>
 		auth.getAuthorities().forEach(authority -> { roleNames.add(authority.getAuthority()); });
-		
-		if (roleNames.contains("ROLE_ADMIN")) {
-            response.sendRedirect("/memb/pricing");
-        } else if (roleNames.contains("ROLE_FCLT")) {
-            response.sendRedirect("/fclf/facilitylist");
+		if (roleNames.contains("ROLE_REGISTER")) {
+            response.sendRedirect("/");
         } else {
             response.sendRedirect("/");
         }

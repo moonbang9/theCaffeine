@@ -1,13 +1,12 @@
 package com.theCaffeine.mes.scrt;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
 
 import com.theCaffeine.mes.comm.user.model.EnterpriseVO;
 
@@ -24,14 +23,12 @@ public class CustomUserDetails implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		String role = "ROLE_" + enterVO.getAuthName().toUpperCase();
-		System.out.println(role);
-        return Collections.singleton(new SimpleGrantedAuthority(role));
+        return Collections.singleton(new SimpleGrantedAuthority(enterVO.getAuthName()));
 	}
 
 	@Override
 	public String getPassword() {
-		return "{noop}" + enterVO.getPw();
+		return enterVO.getPw();
 	}
 
 	@Override

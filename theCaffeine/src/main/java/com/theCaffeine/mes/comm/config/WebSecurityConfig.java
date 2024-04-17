@@ -30,15 +30,16 @@ public class WebSecurityConfig {
 		return new CustomLoginSuccessHandler();
 	}
 	
+	
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
 			.authorizeHttpRequests((requests) -> requests
-				.antMatchers("/").permitAll()
+				.antMatchers("/","/memb/register" ,"/memb/login","/assets/**","/fonts/**","/js/**","/scss/**").permitAll()
 //				.antMatchers("/login").permitAll()
 //				.antMatchers("/memb/monthly").hasAnyRole("ADMIN")
 //				.antMatchers("/userslist").hasAnyRole("PER00001")
-//				.anyRequest().authenticated()
+				.anyRequest().authenticated()
 			)
 			// 람다식
 //			.formLogin((form) -> form
@@ -48,12 +49,12 @@ public class WebSecurityConfig {
 			.formLogin().loginPage("/memb/login")
 						.loginProcessingUrl("/memb/userlogin")
 						.successHandler(successHandler())
-						.defaultSuccessUrl("/", true) 
+//						.defaultSuccessUrl("/", true) //로그인 하면 무조건 메인 페이지로  
 						.permitAll()
 			.and()
 //			.logout((logout) -> logout.permitAll())
-			.logout().logoutSuccessUrl("/logout")
-					 .permitAll()
+			.logout().logoutSuccessUrl("/memb/login")
+			 .permitAll()
 			.and()
 //			.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
 			.exceptionHandling( handler -> handler.accessDeniedHandler(accessDeniedHandler()) )

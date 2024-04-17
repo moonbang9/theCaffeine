@@ -5,6 +5,7 @@ package com.theCaffeine.mes.comm.user.web;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -87,6 +88,12 @@ public class EnterpriseController {
 					@GetMapping("/memb/myinfo")
 					public ModelAndView myInfo() { 
 						ModelAndView mv = new ModelAndView("memb/myinfo");
+						return mv;
+					}
+		//구독 결제 페이지
+					@GetMapping("/memb/pricing")
+					public ModelAndView pricing() { 
+						ModelAndView mv = new ModelAndView("memb/pricing");
 						return mv;
 					}
 					

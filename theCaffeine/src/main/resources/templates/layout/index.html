@@ -19,7 +19,9 @@
   data-theme="theme-default"
   data-assets-path="/assets/"
   data-template="vertical-menu-template-free"
+  xmlns:th="http://www.thymeleaf.org"
   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
 >
   <head>
   	
@@ -354,8 +356,10 @@
                             </div>
                           </div>
                           <div class="flex-grow-1">
-                            <span class="fw-semibold d-block">기업이름</span>
-                            <small class="text-muted">권한레벨</small>
+                          
+                          
+                            <span class="fw-semibold d-block" sec:authentication="name">아이디</span>
+                            <small class="text-muted" sec:authentication="authorities">권한레벨</small>
                           </div>
                         </div>
                       </a>
@@ -373,10 +377,11 @@
                       <div class="dropdown-divider"></div>
                     </li>
                     <li>
-                      <a class="dropdown-item" href="auth-login-basic.html">
+                     
                         <i class="bx bx-power-off me-2"></i>
-                        <span class="align-middle">로그아웃</span>
-                      </a>
+                        <a class="align-middle" sec:authorize="isAnonymous()" href="/memb/login">로그인</a>
+                        <a class="align-middle" sec:authorize="isAuthenticated()" href="/logout">로그아웃</a>
+                     
                     </li>
                   </ul>
                 </li>
