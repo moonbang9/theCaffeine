@@ -44,8 +44,8 @@ public class ProcessController {
 	
 	// 자재검사완료목록 삭제(DB삭제는 아니고 검사대기 목록으로 이동)
 	@PostMapping("/ajax/deleteProcessDoneList")
-	public int deleteMfckRes(@RequestBody Integer ckSt) {
-		return processService.deleteProcessDoneList(ckSt);
+	public int deleteMfckRes(@RequestBody int mfCkNo) {
+		return processService.deleteProcessDoneList(mfCkNo);
 	}
 
 }

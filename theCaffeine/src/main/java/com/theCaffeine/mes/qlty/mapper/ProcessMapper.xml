@@ -66,7 +66,7 @@
 	</select>
 
 	<!-- 검사완료에서 삭제버튼 클릭시 검사대기 목록으로 이동 -->
-	<delete id="deleteProcessDoneList" parameterType="String">
+	<delete id="deleteProcessDoneList" parameterType="int">
 		UPDATE mf_ck
            SET ck_st = 0
          WHERE mf_ck_no = #{mfCkNo}

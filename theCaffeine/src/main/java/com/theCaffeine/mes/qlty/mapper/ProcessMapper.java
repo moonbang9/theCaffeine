@@ -15,7 +15,7 @@ public interface ProcessMapper {
 	int updateMfckRes (ProcessVO vo);
 	int updateCkSt (Integer ckSt);
 	
-	int deleteProcessDoneList(Integer ckSt);
+	int deleteProcessDoneList(Integer mfCkNo);
 	
 
 }

@@ -35,8 +35,8 @@ public class ProcessServiceImpl implements ProcessService{
 	}
 
 	@Override
-	public int deleteProcessDoneList(Integer ckSt) {
-		return processMapper.deleteProcessDoneList(ckSt);
+	public int deleteProcessDoneList(int mfCkNo) {
+		return processMapper.deleteProcessDoneList(mfCkNo);
 	}
 
 
