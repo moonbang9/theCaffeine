@@ -8,18 +8,221 @@
 <body>
 <div layout:fragment="content">
 	
-	<h1>생산내역조회</h1>
+	<h1>생산 지시내역현황</h1>
 		<div class="demo-inline-spacing">
-		<button id="saveBtn"
-	        type="button"
-	        class="btn btn-primary">
-	        일정 등록
-	    </button>
-	</div>
-<script>
-	saveBtn.addEventListener("click", e=> {
-		location.href='/production/planRegist'
+		
+		<div class="d-flex mt-5">
+	  		<div class="p-2 flex-grow-1"><h3>생산 지시조회</h3></div>
+		</div>
+		<div id="productionPlan-table"></div>
+		<div class="d-flex mt-5">
+	  		<div class="p-2 flex-grow-1"><h3>생산지시상세 및 금일 생산 현황</h3></div>
+		</div>
+		<div id="productionPlan-table2"></div>
+		</div>
+		<div class="d-flex mt-5">
+		<div id="productionPlan-table3"></div>
+		</div>
+		<div class="d-flex mt-5">
+	  		<div class="p-2 flex-grow-1"><h3>생산지시상세 진행현황</h3></div>
+		</div>
+		<div id="productionPlan-table4"></div>
+<script th:inline="javascript">
+	let dates = '';
+	$(window).on("load",function(e) {
+		listReq();
+		
 	})
+	
+	
+	//수정버튼
+	var editorIcon = function(cell, formatterParams, onRendered) {
+		if(cell._cell.row.data.pdtInstDt < getDateStr(new Date())){
+			return null;	
+		}else{
+  			return "<button class='btn btn-info btn-sm'>수정</button>";
+		}
+	}
+	
+	
+	var table = new Tabulator("#productionPlan-table", {
+    height:"100%",
+    layout:"fitDataFill",
+    columns:[
+        {title:"계획일자", field:"pdtInstDt", hozAlign:"center", width:220},
+        {title:"상품명", field:"insttot", hozAlign:"center", width:400},
+        {title:"총 원두생산 수량(kg)", field:"isum", hozAlign:"center", width:400},
+        {title:"총 예상작업시간(시간)", field:"msum", hozAlign:"center", width:350},
+    ],
+});
+	
+	var table2 = new Tabulator("#productionPlan-table2", {
+		height:"100%",
+		layout:"fitDataFill",
+	    columnDefaults:{
+	        headerSort:false,
+	        resizable:"header",
+	    },
+	    columns:[
+	        {title:"생산상품코드", field:"pdCd", hozAlign:"center", width:200},
+	        {title:"상품명", field:"pdName", hozAlign:"center", width:320},
+	        {title:"수량", field:"qt", hozAlign:"center", width:200},
+	        {title:"생산시작시간", field:"pdtSttTime", hozAlign:"center", width:320},
+	        {title:"생산예상종료시간", field:"pdtexptFnTime", hozAlign:"center", width:320},
+	    ],
+	});
+	
+	var table3 = new Tabulator("#productionPlan-table3", {
+		height:"100%",
+		layout:"fitDataFill",
+	    columnDefaults:{
+	        headerSort:false,
+	        resizable:"header",
+	    },
+	    columns:[
+	        {title:"생산상품코드", field:"pdCd", hozAlign:"center", width:330},
+	        {title:"생산 목표량", field:"pdtTargetQt", hozAlign:"center", width:350},
+	        {title:"생산 현황", field:"pdtNowQt", hozAlign:"center", width:350},
+	        {title:"남은 목표량", field:"pdtRemainQt", hozAlign:"center", width:350},
+	    ],
+	});
+	
+	var table4 = new Tabulator("#productionPlan-table4", {
+		height:"100%",
+		layout:"fitDataFill",
+	    columnDefaults:{
+	        headerSort:false,
+	        resizable:"header",
+	    },
+	    columns:[
+	        {title:"생산상품코드", field:"pdCd", hozAlign:"center", width:150},
+	        {title:"생산시작시간", field:"pdtSttTime", hozAlign:"center", width:230},
+	        {title:"예열 및 대기", field:"mfCd", hozAlign:"center", width:100},
+	        {title:"투입", field:"qt", hozAlign:"center", width:100},
+	        {title:"1차크랙", field:"pdtSttTime1", hozAlign:"center", width:100},
+	        {title:"2차크랙", field:"pdtexptFnTime2", hozAlign:"center", width:100},
+	        {title:"배출", field:"pdtexptFnTime3", hozAlign:"center", width:100},
+	        {title:"공정검사", field:"pdtexptFnTime4", hozAlign:"center", width:100},
+	        {title:"냉각", field:"pdtexptFnTime5", hozAlign:"center", width:100},
+	        {title:"봉지포장", field:"pdtexptFnTime6", hozAlign:"center", width:100},
+	        {title:"포장검사", field:"pdtexptFnTime7", hozAlign:"center", width:100},
+	        {title:"입고", field:"pdtexptFnTime8", hozAlign:"center", width:100},
+	    ],
+	});
+	
+	// 주간 생산계획조회 데이터
+	function listReq() {
+		fetch("/ajax/instList")
+		.then(res => res.json())
+		.then(res => table.setData(res))
+	}
+	
+	// 생산상세지시 진행현황 데이터
+	function targetListReq(res) {
+		
+		fetch("/ajax/instDetailLists/"+ pdtInstNo)
+		.then(res => res.json())
+		.then(res => {
+			table4.setData(res)
+		})
+	}
+	
+	// 주간 생산계획 버튼 이벤트
+	table.on("rowClick", function(e, row){
+		let pdtInstNo = row.getData().pdtInstNo;
+		let param = {"pdtDt" : row.getData().pdtInstDt}
+		
+		fetch("/ajax/todayProductList",{
+					method : "post",
+					headers: {
+					      "Content-Type": "application/json",
+					    },
+					body : JSON.stringify(param)
+				})
+				.then(res => res.json())
+				.then(res => table3.setData(res))
+		
+		fetch("/ajax/instDetailList/"+ pdtInstNo)
+		.then(res => res.json())
+		.then(res => {
+			table2.setData(res)
+			dates = e.target.parentElement.firstElementChild.innerText
+			//targetListReq(res);
+		})
+		
+		
+		
+		
+	});
+	
+	//날짜
+	function getDateStr(myDate){
+		var year = myDate.getFullYear();
+		var month = (myDate.getMonth() + 1);
+		var day = myDate.getDate();
+		
+		month = (month < 10) ? "0" + String(month) : month;
+		day = (day < 10) ? "0" + String(day) : day;
+		
+		return  (year + '-' + month + '-' + day );
+	}
+	
+	//초단위 날짜
+	function getDateStr2(myDate){
+		var year = myDate.getFullYear();
+		var month = (myDate.getMonth() + 1);
+		var day = myDate.getDate();
+		var hur = myDate.getHours();
+		var min = myDate.getMinutes();
+		var sec = myDate.getSeconds();
+		
+		month = (month < 10) ? "0" + String(month) : month;
+		day = (day < 10) ? "0" + String(day) : day;
+		hur = (hur < 10) ? "0" + String(hur) : hur;
+		min = (min < 10) ? "0" + String(min) : min;
+		sec = (sec < 10) ? "0" + String(sec) : sec;
+		
+		return  (year + '-' + month + '-' + day + " " + hur + ":" + min + ":" + sec);
+	}
+	
+	//5일전
+	function lastWeek() {
+		  var d = new Date();
+		  var dayOfMonth = d.getDate();
+		  d.setDate(dayOfMonth - 5);
+		  return getDateStr(d);
+	}
+	
+	
+	// 월 주차 판단
+	function weekNumOfMonth(date){
+		let dates = new Date(date)
+		var WEEK_KOR = ["1주차", "2주차", "3주차", "4주차", "5주차"];
+		var THURSDAY_NUM = 4;	// 첫째주의 기준은 목요일(4)이다. 
+		console.log(dates);
+
+		var firstDate = new Date(dates.getFullYear(), dates.getMonth(), 1);
+		var firstDayOfWeek = firstDate.getDay();
+
+		var firstThursday = 1 + THURSDAY_NUM - firstDayOfWeek;	// 첫째주 목요일
+		if(firstThursday <= 0){
+			firstThursday = firstThursday + 7;	// 한주는 7일
+		}
+		var untilDateOfFirstWeek = firstThursday-7+3;	// 월요일기준으로 계산 (월요일부터 한주의 시작)
+		var weekNum = Math.ceil((dates.getDate()-untilDateOfFirstWeek) / 7) - 1;
+
+		if(weekNum < 0){	// 첫째주 이하일 경우 전월 마지막주 계산
+			var lastDateOfMonth = new Date(dates.getFullYear(), dates.getMonth(), 0);
+		 	var result = Util.Date.weekNumOfMonth(lastDateOfMonth);
+		 	return result;
+		}
+
+		return [WEEK_KOR[weekNum], (dates.getMonth()+1)+'월'];
+	}
+	
+	
+	
+	
 </script>
 </div>
 </body>

@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.theCaffeine.mes.mtrl.model.MtrlSendVO;
 import com.theCaffeine.mes.prdt.mapper.PrdtMapper;
 import com.theCaffeine.mes.prdt.model.FailPlanVO;
+import com.theCaffeine.mes.prdt.model.HistVO;
 import com.theCaffeine.mes.prdt.model.InstResistVO;
 import com.theCaffeine.mes.prdt.model.InstVO;
 import com.theCaffeine.mes.prdt.model.MtrlPlanVO;
@@ -150,6 +152,7 @@ public class PrdtServiceImpl implements PrdtService{
 		return prdtMapper.instDelete(pdtInstNo);
 	}
 	
+	//지시상세 선택삭제
 	@Transactional
 	@Override
 	public int instDetailDelete(InstResistVO vo) {
@@ -157,8 +160,10 @@ public class PrdtServiceImpl implements PrdtService{
 		if(vo.getInstDetailVO() != null) {
 			for(InstVO i : vo.getInstDetailVO()) {
 				prdtMapper.instDetailDelete2(i.getPdtInstDetailNo());
+				prdtMapper.updateMtSend(i.getPdtInstDetailNo());
 			}
 		}
+		
 		return 1;
 	}
 
@@ -181,6 +186,12 @@ public class PrdtServiceImpl implements PrdtService{
 			}
 		}
 		return 1;
+	}
+
+	@Override
+	public List<HistVO> getTodayProduct(HistVO vo) {
+		// TODO Auto-generated method stub
+		return prdtMapper.getTodayProduct(vo);
 	}
 	
 }

@@ -295,4 +295,27 @@
 				#{pdtexptFnTime},
 				#{compSt})
 	</insert>
+	
+	<select id="updateMtSend" statementType="CALLABLE" parameterType="int">
+		CALL PRDT_MT_RESEND(#{pdtInstDetailNo, mode=IN, jdbcType=INTEGER})
+	</select>
+	
+	<select id="getTodayProduct" resultType="HistVO" parameterType="HistVO">
+		select d.pd_cd, nvl(c.pdt_target_qt,0) pdt_target_qt, nvl(d.pdt_now_qt,0) pdt_now_qt, nvl((c.pdt_target_qt-d.pdt_now_qt),0) pdt_remain_qt 
+		from (select pd_cd,sum(qt) pdt_target_qt 
+				from pdt_inst_detail 
+				where pdt_stt_time between #{pdtDt} and #{pdtDt}+1 group by pd_cd) c 
+                
+		right outer join (select b.pd_cd, nvl(a.w,0) pdt_now_qt 
+							from (select pd_cd,sum(qt) w 
+									from pdt_inst_detail 
+									where pdt_stt_time between CASE WHEN #{pdtDt} > trunc(sysdate,'dd') THEN #{pdtDt}+1
+															   ELSE #{pdtDt} 
+															   END 
+															   and CASE WHEN #{pdtDt} = trunc(sysdate,'dd') THEN sysdate
+                                                                                                                      ELSE #{pdtDt}+1
+                                                                                                                      END group by pd_cd) a 
+        					right outer join pd b on a.pd_cd = b.pd_cd) d 
+		on c.pd_cd = d.pd_cd
+	</select>
 </mapper>

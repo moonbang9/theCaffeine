@@ -1,5 +1,6 @@
 package com.theCaffeine.mes.prdt.web;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.theCaffeine.mes.prdt.model.FailPlanVO;
+import com.theCaffeine.mes.prdt.model.HistVO;
 import com.theCaffeine.mes.prdt.model.InstResistVO;
 import com.theCaffeine.mes.prdt.model.InstVO;
 import com.theCaffeine.mes.prdt.model.MtrlPlanVO;
@@ -224,4 +226,11 @@ public class ProductionController {
 		}
 		return map;
 	}
+	
+	//금일 지시목표 리스트
+	@PostMapping("/ajax/todayProductList")
+	public List<HistVO> todayProductList(@RequestBody HistVO vo) {
+		return prdtService.getTodayProduct(vo);
+	}
+	
 }
