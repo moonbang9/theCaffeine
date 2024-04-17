@@ -16,7 +16,8 @@
 		                                                            ON      b.pd_cd = pd.pd_cd
 		                                                            WHERE   pdt_inst_no = (SELECT  DISTINCT pdt_inst_no
 		                                                                                     FROM  pdt_inst_detail
-		                                                                                    WHERE  TO_CHAR(PDT_STT_TIME, 'yyyy-MM-dd') = TO_CHAR(sysdate, 'yyyy-MM-dd')) and unit = 'Box'
+		                                                                                    WHERE  TO_CHAR(PDT_STT_TIME, 'yyyy-MM-dd') = TO_CHAR(sysdate, 'yyyy-MM-dd')) AND unit = 'Box'
+                                                                                            AND comp_st = 1
 		                                                            GROUP BY b.unit))
 		                          WHEN b.unit = 'pcs' THEN SUM(b.consum) * 2
 		                    END as mt_qt
