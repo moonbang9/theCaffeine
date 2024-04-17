@@ -33,12 +33,15 @@ public class ProcessServiceImpl implements ProcessService{
 		processMapper.updateMfckRes(vo);
 		return processMapper.updateCkSt(vo.getMfCkNo());
 	}
-
+	
+	@Transactional
 	@Override
-	public int deleteProcessDoneList(int mfCkNo) {
-		return processMapper.deleteProcessDoneList(mfCkNo);
+	public int deleteProcessDoneList(ProcessVO vo) {
+			processMapper.updateSuccessHistProcess(vo.getPdtInstDetailNo());
+		
+		return processMapper.deleteProcessDoneList(vo.getMfCkNo());
 	}
-
+	
 
 
 }

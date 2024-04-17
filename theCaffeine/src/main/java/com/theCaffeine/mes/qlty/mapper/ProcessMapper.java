@@ -16,6 +16,9 @@ public interface ProcessMapper {
 	int updateCkSt (Integer ckSt);
 	
 	int deleteProcessDoneList(Integer mfCkNo);
-	
+	//검사 성공
+	int updateSuccessHistProcess(Integer pdtInstDetailNo);
+	//검사 실패
+	int updateFailInstProcess(Integer pdtInstDetailNo);
 
 }
