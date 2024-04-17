@@ -9,7 +9,9 @@
 
 <body>
     <div layout:fragment="content">
-    	<h1 class="mt-4 mb-4">자재 재고 조회</h1>
+    	<div class="mt-3 mb-3">
+    		<h3 class="fw-bold py-3"><span class="text-muted fw-light">자재 관리 /</span> 자재 재고 조회</h3>
+		</div>
                 <div class="divider text-start">
 				<div class="divider-text ">자재 검색</div>
 			</div>
@@ -60,14 +62,14 @@
 			<div class="d-flex align-items-start bd-highlight mb-3">
 				<div class="col-md-6">
 					<div class="d-flex mt-2" style="margin-bottom: 10px;">
-						<div class="p-2 flex-grow-1"><span style="font-size: 24px;">자재 목록</span><span class="dayy" style="font-size: 18px;"></span></div>
+						<div class="p-2 flex-grow-1"><span style="font-size: 22px;">자재 목록</span><span class="dayy" style="font-size: 18px;"></span></div>
 					</div>
 					 <!-- 자재 재고 목록 -->
 	                <div id="mtStockList" class="mb-3"></div>
 				</div>
 				<div class="col-md-6" style="display:none"  id="rotList">
 					<div class="d-flex mt-2" style="margin-bottom: 10px;">
-	  					<div class="p-2 flex-grow-1"><span style="font-size: 24px;">ROT별 자재 목록</span></div>
+	  					<div class="p-2 flex-grow-1"><span style="font-size: 22px;">ROT별 자재 목록</span></div>
 					</div>
 	               	<!-- ROT별 재고 목록 -->
 	                <div id="lotStockList" class="mb-3"></div>
