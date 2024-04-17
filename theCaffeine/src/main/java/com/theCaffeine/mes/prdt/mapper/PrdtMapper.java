@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.theCaffeine.mes.mtrl.model.MtrlSendVO;
 import com.theCaffeine.mes.prdt.model.FailPlanVO;
+import com.theCaffeine.mes.prdt.model.HistVO;
 import com.theCaffeine.mes.prdt.model.InstVO;
 import com.theCaffeine.mes.prdt.model.MtrlPlanVO;
 import com.theCaffeine.mes.prdt.model.PlanDetailVO;
@@ -41,4 +43,6 @@ public interface PrdtMapper {
 	List<PlanVO> getPlanCdList(); // 계획코드 리스트
 	int insertPrdtInst(InstVO vo); //지시 등록
 	int insertPrdtInstDetail(InstVO vo); //지시상세 등록
+	String updateMtSend(Integer pdtInstDetailNo); // 반납자재 수정
+	List<HistVO> getTodayProduct(HistVO vo); //금일 생산지시 목표량
 }

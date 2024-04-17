@@ -1,8 +1,10 @@
 package com.theCaffeine.mes.prdt.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.theCaffeine.mes.prdt.model.FailPlanVO;
+import com.theCaffeine.mes.prdt.model.HistVO;
 import com.theCaffeine.mes.prdt.model.InstResistVO;
 import com.theCaffeine.mes.prdt.model.InstVO;
 import com.theCaffeine.mes.prdt.model.MtrlPlanVO;
@@ -32,4 +34,5 @@ public interface PrdtService {
 	int instDetailDelete(InstResistVO vo); //지시상세 삭제
 	List<PlanVO> getPlanCdList(); // 계획코드 리스트
 	int instResist(InstResistVO vo); //지시 등록
+	List<HistVO> getTodayProduct(HistVO vo); //금일 생산지시 목표량
 }
