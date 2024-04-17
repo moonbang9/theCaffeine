@@ -168,16 +168,16 @@
         field: "ckDt"
       }, {
         title: "삭제", formatter: "buttonCross", width: 80, hozAlign: "center", cellClick: function (e, cell) {
-          console.log(cell.getRow()._row.data.mtPlaceodCd);
+          console.log(cell.getRow()._row.data.mfCkNo);
           if (confirm("삭제하시겠습니까?")) {
-            const mtPlaceodCd = cell.getRow()._row.data.mtPlaceodCd;
-            let param = mtPlaceodCd;
+            const mfCkNo = cell.getRow()._row.data.mfCkNo;
+            let param = mfCkNo;
             fetch("/ajax/deleteProcessDoneList", {
               method: "post",
               headers: {
                 "Content-Type": "application/json",
               },
-              body: mtPlaceodCd
+              body: mfCkNo
             })
               .then(res => {
                 alert("삭제가 완료되었습니다.");
