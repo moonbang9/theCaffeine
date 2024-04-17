@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/index}">
+<head>
+<meta charset="UTF-8">
+<title>order</title>
+</head>
+<body>
+<div layout:fragment="content">
+	<div class="mt-3 mb-3">
+    	<h3 class="fw-bold py-3"><span class="text-muted fw-light">자재 관리 /</span> 자재 발주 관리</h3>
+    </div>
+	
+	<div class="modal fade" id="largeModal" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel1" style="display:block">자재 발주 추가</h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+              <div class="card mb-4">
+              <div class="card-body">
+              	<div class="mb-3 row">
+                  <label for="mtrl_order_clicd" class="col-md-2 col-form-label">거래처</label>
+                  <div class="col-md-10">
+                   <select id="mtrl_order_clicd" class="form-select">
+
+                   </select>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label for="mtrl_order_mtcd" class="col-md-2 col-form-label">자재</label>
+                  <div class="col-md-10">
+                    <select id="mtrl_order_mtcd" class="form-select">
+						<option value="MET01">에티오피아 생두</option>
+                   </select>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label for="mtrl_order_qt" class="col-md-2 col-form-label">발주 수량</label>
+                  <div class="col-md-10">
+ 					<input class="form-control" type="text" onKeyup="this.value=this.value.replace(/[^-0-9]/g,'');" value="" id="mtrl_order_qt">
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label for="mtrl_order_req" class="col-md-2 col-form-label">발주 요청자</label>
+                  <div class="col-md-10">
+                    <input class="form-control" type="text" value="청길동 과장" id="mtrl_order_req" readonly>
+                  </div>
+                </div>
+              </div>
+            </div>
+           </div>
+           <div class="modal-footer">
+             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+               닫기
+             </button>
+             <button style="display:block" type="button" class="btn btn-primary" id="mtrlSaveBtn1">추가</button>
+           </div>
+         </div>
+       </div>
+     </div>
+	
+	
+	<div class="col">
+		<div class="mb-4 mt-3"></div>
+		<h4 class="mb-4">자재 재고 목록</h4>
+
+		<div id="mtrl_stock_list" class="mb-5">
+		
+		</div>
+	</div>
+	<div class="d-flex mt-5">
+	  <div class="p-2 flex-grow-1"><h4>발주요청 자재 목록</h4></div>
+	  <div class="p-2"><button type="button" class="btn btn-warning" data-bs-toggle="modal"
+			        data-bs-target="#largeModal" id="mtrlOrderAddBtn">추가</button></div>
+	  <div class="p-2"><button type="button" class="btn btn-primary" id="mtrlOrderBtn">발주 처리</button></div>
+	</div>
+	<div id="mtrl_order_request_list">
+	 	
+	</div>
+	
+
+
+
+	<script>
+		//삭제버튼
+		var editorIcon = function(cell, formatterParams, onRendered) {
+	  		return "<button class='btn btn-danger btn-sm'>삭제</button>";
+		}
+	
+		mtrl_order_qt.addEventListener("change", e=> {
+			if(mtrl_order_clicd.value == "MCLI006") {
+				if(mtrl_order_qt.value < 100) {
+					alert("원두봉투의 발주 최소단위는 100 pcs 입니다.");
+					mtrl_order_qt.value = 100;
+				}
+			} else if(mtrl_order_clicd.value == "MCLI007") {
+				if(mtrl_order_qt.value < 100) {
+					alert("포장박스의 발주 최소단위는 100 box 입니다.");
+					mtrl_order_qt.value = 100;
+				}
+			} else {
+				if(mtrl_order_qt.value < 10) {
+					alert("생두의 발주 최소단위는 10 bag 입니다.");
+					mtrl_order_qt.value = 10;
+				}
+			}
+		})
+	
+		mtrlOrderAddBtn.addEventListener("click", e=> {
+			getCliName();
+		})
+	
+		let selectOrder = "";
+		
+		mtrlOrderBtn.addEventListener("click", e=> {
+			if(selectOrder == "") {
+				alert("선택된 자재가 없습니다.")
+			} else {
+				console.log(selectOrder);
+				modReq(selectOrder);
+			}
+		})
+		
+		// 발주처리
+		function modReq(selectOrder) {
+			for(order of selectOrder) {
+				const placeodSt= order.placeodSt;
+				const placeodChg = order.placeodChg;
+				const mtPlaceodCd = order.mtPlaceodCd;
+				const placeodQt = order.placeodQt;
+				const leadtm = order.leadtm;
+				let param = {placeodSt, placeodChg, mtPlaceodCd, placeodQt, leadtm};
+				fetch("/ajax/updateMtrlOrder",{
+					method : "post",
+					headers: {
+					      "Content-Type": "application/json",
+					    },
+					body : JSON.stringify(param)
+				})
+				.then(res => res.json())
+				.then(res => console.log(res))
+			}
+			modRes();
+		}
+	
+		// 발주처리 응답
+		function modRes() {
+			alert("발주가 완료되었습니다!");
+			location.href= "/material/order"
+		}
+		
+		// 자재 재고 목록
+		var table = new Tabulator("#mtrl_stock_list", {
+		    height:"100%",
+		    rowHeader:{formatter:"rownum", headerSort:false, width:70, hozAlign:"center", resizable:false, frozen:true},
+		    pagination:"local",
+		    paginationSize:6,
+		    paginationSizeSelector:[3, 6, 8, 10],
+		    paginationCounter:"rows",
+		    columns:[
+		        {title:"분류", field:"mtDiv", width:130, hozAlign:"center"},
+		        {title:"자재코드", field:"mtCd", width:180, hozAlign:"center"}, 
+		        {title:"자재명", field:"mtName", width:180, hozAlign:"center"},
+		        {title:"단위", field:"unit", width:130, formatter:"money", hozAlign:"center"},
+		        {title:"차주생산계획 수량", field:"pqtt", width:150, hozAlign:"center"},
+		        {title:"재고 수량", field:"sumStkQt", width:135, hozAlign:"center"},
+		        {title:"발주 수량", field:"sumPlaceodQt", width:135, hozAlign:"center"},
+		        {title:"안전재고 수량", field:"safeStkQt", width:135, hozAlign:"center"},
+		        {title:"수량 차", field:"qtDifference", width:135, hozAlign:"center"}
+		    ],rowFormatter: function(row) {
+		        var data = row.getData();
+		        var qtDifferenceValue = data.qtDifference;
+		        if (qtDifferenceValue > 100) {
+		            row.getElement().style.backgroundColor = "#c8e6c9"; 
+		        } else if (qtDifferenceValue < 20) {
+		            row.getElement().style.backgroundColor = "#ffcdd2"; 
+		        }
+		    }
+		});
+		
+		// 발주 요청목록
+		var table2 = new Tabulator("#mtrl_order_request_list", {
+			placeholder:function(){
+		        return this.getHeaderFilters().length ? "No Matching Data" : "ㅋㅋㅋ";
+		    },
+		   height:"100%",
+		   selectableRows:true,
+		   pagination:"local",
+		    paginationSize:6,
+		    paginationSizeSelector:[3, 6, 8, 10],
+		    movableColumns:true,
+		    paginationCounter:"rows",
+		    rowHeader:{vertAlign:"middle", headerSort:false, resizable: false, frozen:true, headerHozAlign:"center", hozAlign:"center", formatter:"rowSelection", titleFormatter:"rowSelection", cellClick:function(e, cell){
+		        cell.getRow().toggleSelect();
+		      }},
+		    columns:[
+		        {title:"분류", field:"mtDiv", width:169, hozAlign:"center", vertAlign:"middle"},
+		        {title:"자재코드", field:"mtCd", width:200, hozAlign:"center", vertAlign:"middle"}, 
+		        {title:"자재명", field:"mtName", width:240, hozAlign:"center", vertAlign:"middle"},
+		        {title:"거래처", field:"cliName", width:290, hozAlign:"center", vertAlign:"middle"},
+		        {title:"수량", field:"placeodQt", width:170, hozAlign:"center", editor:"input", vertAlign:"middle"},
+		        {title:"단위", field:"unit", width:170, hozAlign:"center", vertAlign:"middle"},
+		        {title:"삭제", formatter:editorIcon, width:100, hozAlign:"center", cellClick:function(e, cell){
+		        	console.log(cell.getRow()._row.data.mtPlaceodCd);
+		    		if(confirm("삭제하시겠습니까?")) {
+		        		const mtPlaceodCd = cell.getRow()._row.data.mtPlaceodCd;
+		    			let param = mtPlaceodCd;
+		        		fetch("/ajax/deleteMtrlOrder",{
+		    				method : "post",
+		    				headers: {
+		    				      "Content-Type": "application/json",
+		    				    },
+		    				body : mtPlaceodCd
+		    			})
+		    			.then(res =>  {
+							alert("삭제가 완료되었습니다.");
+							cell.getRow().delete();
+						})
+		        	}
+		        }}
+		    ],
+		});
+	
+		table2.on("rowSelectionChanged", function(data, rows, selected, deselected){
+			selectOrder = data;
+		});
+		
+		listReq();
+		listReq2();
+		
+		// 자재재고 목록 데이터
+		function listReq() {
+			fetch("/ajax/stkList")
+			.then(res => res.json())
+			.then(res => table.setData(res))
+		}
+		
+		// 발주요청 목록 데이터
+		function listReq2() {
+			fetch("/ajax/orderList")
+			.then(res => res.json())
+			.then(res => table2.setData(res))
+		}
+		
+		mtrl_order_clicd.addEventListener("change", e=> {
+			mtrlList(mtrl_order_clicd.value);
+			if(mtrl_order_clicd.value == "MCLI006") {
+				if(mtrl_order_qt.value < 50) {
+					alert("원두봉투의 발주 최소단위는 50 pcs 입니다.");
+					mtrl_order_qt.value = 50;
+				}
+			} else if(mtrl_order_clicd.value == "MCLI007") {
+				if(mtrl_order_qt.value < 100) {
+					alert("포장박스의 발주 최소단위는 100 box 입니다.");
+					mtrl_order_qt.value = 100;
+				}
+			} else {
+				if(mtrl_order_qt.value < 10) {
+					alert("생두의 발주 최소단위는 10 bag 입니다.");
+					mtrl_order_qt.value = 10;
+				}
+			}
+		})
+		
+		// 거래처 목록 데이터
+		function getCliName() {
+			fetch("/ajax/mtrlCliList")
+			.then(res => res.json())
+			.then(res => {
+				mtrl_order_clicd.innerHTML = '';
+				for( obj of res ) {
+					mtrl_order_clicd.innerHTML += makeOption2(obj);
+				}
+			})
+		}
+	
+		// option생성
+		function makeOption2(obj) {
+			let newTag = `
+				<option value=${obj.cliCd}>${obj.cliName}</option>
+			`
+			return newTag;
+		}
+		
+		
+		// 거래처별 자재목록 데이터
+		function mtrlList(cliCd) {
+			fetch("/ajax/cliMtrlList/" + cliCd)
+			.then(res => res.json())
+			.then(res => {
+				mtrl_order_mtcd.innerHTML = '';
+				for( obj of res ) {
+					mtrl_order_mtcd.innerHTML += makeOption(obj);
+				}
+			})
+		}
+		
+		// option생성
+		function makeOption(obj) {
+			let newTag = `
+				<option value=${obj.mtCd}>${obj.mtName}</option>
+			`
+			return newTag;
+		}
+		
+		mtrlSaveBtn1.addEventListener("click", e=> {
+			saveReq();
+		})
+
+		// 추가 요청
+		function saveReq() {
+			const cliCd= mtrl_order_clicd.value;
+			const mtCd = mtrl_order_mtcd.value;
+			const placeodQt = mtrl_order_qt.value;
+			const placeodRequester = mtrl_order_req.value;
+			if(cliCd != "" && mtCd != "" && placeodQt != "" && placeodRequester != ""){
+				let param = {cliCd, mtCd, placeodQt, placeodRequester};
+				console.log(param);
+				fetch("/ajax/mtrlOrder",{
+					method : "post",
+					headers: {
+					      "Content-Type": "application/json",
+					    },
+					body : JSON.stringify(param)
+				})
+				.then(res => res.json())
+				.then(res => saveRes(res))
+			} else {
+				alert("발주수량을 입력해주세요.");
+			}
+		}
+		
+		// 등록 응답
+		function saveRes(res) {
+			alert("추가되었습니다!");
+			location.href= "/material/order"
+		}
+	</script>
+</div>
+</body>
+</html>

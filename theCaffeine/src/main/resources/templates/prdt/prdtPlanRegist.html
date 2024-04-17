@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/index}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div layout:fragment="content">
+
+		<h1>주간생산 계획등록</h1>
+		<div class="divider text-start">
+			<div class="divider-text "></div>
+		</div>
+		<div class="demo-inline-spacing" style="margin-bottom: 50px;">
+			<div class="d-flex justify-content-evenly" style="height: 250px;">
+				<div>
+					<h5 style="margin-bottom: 45px;">완재품 재고 조회</h5>
+					<div id="example-table3"></div>
+				</div>
+				<div>
+					<h5 style="margin-bottom: 45px;">전 주 생산실패목록</h5>
+					<div id="example-table2"></div>
+				</div>
+				<div>
+					<h5 style="margin-bottom: 45px;">주문량별 수요예측치</h5>
+					<div id="example-table4"></div>
+				</div>
+			</div>
+		</div>
+		<div style="margin-bottom: 20px;">
+			<div>
+			<div class="d-flex mt-5">
+				<div class="p-2 flex-grow-1"><h5>상세주문 조회</h5></div>
+				<div class="p-1" style="width: 320px;">
+					<button class="btn btn-primary" type="button" id="research1"
+						style="float: right; margin-top: 12px;">검색</button>
+					<form action="" name="frmSearch"
+						class="">
+						<div style="margin-top: 0; padding-right: 0;">
+							<label class="col-sm-2 col-form-label">제품코드</label> <input
+								class="codes" type="text" style="width: 150px; height: 30px;">
+						</div>
+						<div style="margin-top: 0; padding-right: 0;">
+							<label class="col-sm-2 col-form-label">납기일</label> <input
+								class="dates" type="date" style="width: 150px;">
+						</div>
+					</form>
+				</div>
+			</div>
+				<div id="example-table1"></div>
+			</div>
+		</div>
+		<div class="divider text-start">
+			<div class="divider-text "></div>
+		</div>
+		<div class="d-flex mt-5">
+			<div class="p-2 flex-grow-1">
+				<h3 id="prdtModalLabel1" style="display:block">생산주간 계획등록</h3>
+				<h3 id="prdtModalLabel2" style="display:none">생산주간 계획수정</h3>
+			</div>
+			<div class="p-2" style="display: none;">
+				<button type="button" id="" class="btn btn-warning">자동계산</button>
+			</div>
+			<div class="p-2" >
+				<button type="button" id="prdtSaveBtn1" class="btn btn-info" style="display:block">등록</button>
+				<button type="button" id="prdtModifyBtn1" class="btn btn-info" style="display:none">수정</button>
+			</div>
+		</div>
+		<div class="card mb-4">
+			<div class="card-body">
+				<div class="mb-3 row">
+					<label for="mtrl_management_clicd" class="col-md-2 col-form-label">주간계획시작일자</label>
+					<div class="col-md-10">
+						<input class="form-control notDay" type="date" value="" id="" min="">
+					</div>
+				</div>
+				<div class="mb-3 row">
+					<label for="mtrl_management_clicd" class="col-md-2 col-form-label">주간계획명</label>
+					<div class="col-md-10">
+						<input class="form-control naming" type="text" value="" id="">
+					</div>
+				</div>
+				<div class="mb-3 row">
+					<label for="mtrl_management_name" class="col-md-2 col-form-label">총
+						예상 원두생산 수량(kg)</label>
+					<div class="col-md-10">
+						<input class="form-control totConsum" type="text" value=""
+							id="" readonly>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div style="margin-bottom: 20px;">
+			<div>
+				<div id="example-table5"></div>
+			</div>
+		</div>
+		
+		
+	<script th:inline="javascript">
+		let list = [[${list}]];
+		let vo = [[${vo}]];
+		
+		
+	$(window).on("load",function(e) {
+		detailOrderListReq({});
+		safeListReq();
+		failListReq();
+		noDateReq();
+		basicPlanListReq();
+		planConsumReq();
+		successListReq();
+		if(list != null && vo != null){
+			names();
+		}
+	})
+	let noDay = null;
+	let selectOrder = "";
+	let consum = "";
+	let dayNameing = document.querySelector('.notDay');
+	let naming = document.querySelector('.naming');
+	let totConsums = document.querySelector(".totConsum");
+	
+	research1.addEventListener("click", e=> {
+		console.log(e.target.nextElementSibling.childNodes[1].childNodes[3].value)
+		console.log(e.target.nextElementSibling.childNodes[3].childNodes[3].value)
+		const pdCd= e.target.nextElementSibling.childNodes[1].childNodes[3].value;
+		const dueDt = e.target.nextElementSibling.childNodes[3].childNodes[3].value;
+		let param = {pdCd, dueDt};
+		console.log(param)
+		detailOrderListReq(param)
+	})
+	
+	//등록
+	prdtSaveBtn1.addEventListener("click", e=> {
+		console.log(selectOrder)
+		console.log('K'+dayNameing.value.substring(2, 4) + dayNameing.value.substring(5, 7) + dayNameing.value.substring(8, 10))
+		
+		let planCds = 'K' + dayNameing.value.substring(2, 4) + dayNameing.value.substring(5, 7) + dayNameing.value.substring(8, 10);
+		let params1 = {pdtPlanCd : planCds, wkPlanSttDt : dayNameing.value, odName : naming.value}
+		let params2 = PlanDetailData();
+		/*let params3 = PlanOrderDetailData();*/
+		
+		let param = {planVO : params1, 
+					planDetailVO : params2
+					//planOrderDetailVO : params3
+					};
+		
+		
+		fetch("/ajax/planResist",{
+			method : "post",
+			headers: {
+			      "Content-Type": "application/json",
+			    },
+			body : JSON.stringify(param)
+		})
+		.then(res => {
+			console.log(res)
+			if(res.ok==true){
+				alert('등록이 완료되었습니다.')
+				location.href='/production/plan'
+			}else{
+				alert('등록에 실패하였습니다.')
+			}
+		})
+	})
+	
+	//수정
+	prdtModifyBtn1.addEventListener("click", e=> {
+		console.log('K'+dayNameing.value.substring(2, 4) + dayNameing.value.substring(5, 7) + dayNameing.value.substring(8, 10))
+		
+		let planCds = 'K' + dayNameing.value.substring(2, 4) + dayNameing.value.substring(5, 7) + dayNameing.value.substring(8, 10);
+		let params1 = {pdtPlanCd : planCds, wkPlanSttDt : dayNameing.value, odName : naming.value}
+		let params2 = PlanDetailData();
+		/*let params3 = PlanOrderDetailData();*/
+		
+		let param = {planVO : params1, 
+					planDetailVO : params2
+					//planOrderDetailVO : params3
+					};
+		
+		
+		fetch("/ajax/planUpdate",{
+			method : "post",
+			headers: {
+			      "Content-Type": "application/json",
+			    },
+			body : JSON.stringify(param)
+		})
+		.then(res => {
+			console.log(res)
+			if(res.ok==true){
+				alert('수정이 완료되었습니다.')
+				location.href='/production/plan'
+			}else{
+				alert('수정에 실패하였습니다.')
+			}
+		})
+	})
+	
+	
+	// 안전재고량 조회 데이터
+	function safeListReq() {
+		fetch("/ajax/planSafeList")
+		.then(res => res.json())
+		.then(res => table3.setData(res))
+	}
+	
+	// 전주 실패수량 조회 데이터
+	function failListReq() {
+		fetch("/ajax/failProdList")
+		.then(res => res.json())
+		.then(res => 
+			table2.setData(res))
+	}
+	
+	// 전주 생산수량 조회 데이터
+	function successListReq() {
+		fetch("/ajax/successProdList")
+		.then(res => res.json())
+		.then(res => 
+			table4.setData(res))
+	}
+	
+	// 주간계획등록 기본 양식 데이터
+	function basicPlanListReq() {
+		fetch("/ajax/basicPlan")
+		.then(res => res.json())
+		.then(res => {
+			table5.setData(res)
+			
+			console.log(list)
+			console.log(vo)
+			
+			let newArr1 =[]
+			if(list != null){
+				
+			
+			for(let i of list){
+		  		newArr1.push({
+	   				pdCd : i.pdCd,
+	   				pdName : i.pdName,
+	   				addQt : i.qt+"", 
+	   				totQt : i.qt, 
+	   				dueDt : i.dueDt,
+	   				unitQt : i.unitQt
+				});
+	  		}
+			console.log(newArr1)
+			
+			table5.updateData(newArr1)
+			}
+		  	
+			if(vo != null){
+				dayNameing.value = vo.wkPlanSttDt
+				naming.value = vo.odName
+			}
+			
+		})
+	}
+	
+	// 선택안되는 일자
+	function noDateReq() {
+		fetch("/ajax/noDate")
+		.then(res => res.json())
+		.then(res => {
+			document.querySelector('.notDay').min = res.noDate
+		})
+	}
+	
+	// box -> kg 단위변경
+	function planConsumReq() {
+		fetch("/ajax/planConsum")
+		.then(res => res.json())
+		.then(res => consum = res)
+	}
+	
+	
+	dayNameing.addEventListener("change", e => {
+		naming.value = weekNumOfMonth(dayNameing.value)[1] + " " + weekNumOfMonth(dayNameing.value)[0] + " 생산계획"
+	});
+	
+	
+	function detailOrderListReq(param) {
+		fetch("/ajax/planOrderDetail",{
+			method : "post",
+			headers: {
+			      "Content-Type": "application/json",
+			    },
+			body : JSON.stringify(param)
+		})
+		.then(res => res.json())
+		.then(res => table1.setData(res))
+	}
+	
+	
+	var dateEditor = function(cell, onRendered, success, cancel, editorParams){
+
+	    var data = cell.getRow().getData();
+	    
+	    var editor = document.createElement("input");
+	    editor.setAttribute("type", "number");
+	    editor.style.padding = "3px";
+	    editor.style.width = "100%";
+	    editor.style.boxSizing = "border-box";
+	    editor.value = data.prePdtQt;
+	    editor.addEventListener("change", e=> {
+	    	if((data.qt-data.pdtQt) < e.target.value){
+				editor.value = data.qt-data.pdtQt;
+				successFunc()
+			}else if(e.target.value < 0){
+				editor.value = 0;
+				successFunc()
+			}else{
+	    		console.log(e.target.value)
+				editor.value = e.target.value;
+	    		successFunc()
+			}
+	    })
+	    function successFunc(){
+	        success(editor.value);
+	        setResistList()
+	    }
+	    
+		return editor;
+	}
+	
+	var dateEditor5 = function(cell, onRendered, success, cancel, editorParams){
+
+	    var data = cell.getRow().getData();
+	    
+	    var editor2 = document.createElement("input");
+	    editor2.setAttribute("type", "number");
+	    editor2.style.padding = "3px";
+	    editor2.style.width = "100%";
+	    editor2.style.boxSizing = "border-box";
+	    editor2.value = data.addQt;
+	    let tot = 0;
+	    editor2.addEventListener("change", e=> {
+	    	
+	    	if(e.target.value == null || e.target.value < 0){
+	    		editor2.value = 0;
+	    		data.totQt = data.qt;
+	    		successFunc()
+	    	}else{
+	    		data.addQt = Number(e.target.value);
+	    		if(Number(e.target.value) % Number(data.unitQt) != 0){
+	        		data.addQt = (Math.round((Number(data.addQt) / Number(data.unitQt))) * Number(data.unitQt));
+	        	}
+	    		if((data.qt + data.addQt) % (Number(data.unitQt)*2) != 0){
+	    			data.addQt += Number(data.unitQt);
+	    		}
+	    		data.totQt = data.qt + data.addQt;
+	    		editor2.value = data.addQt;
+	    	    successFunc()
+	    	}
+	    })
+	    function successFunc(){
+	        success(editor2.value);
+	    }
+		return editor2;
+	}
+	
+	
+	
+	var table1 = new Tabulator("#example-table1", {
+    height:"100%",
+	layout:"fitDataFill",
+	selectableRows:true,
+    pagination:"local",
+    paginationSize:8,
+    movableColumns:true,
+    paginationCounter:"rows",
+    rowHeader:{resizable: false, frozen: true, hozAlign:"center", formatter: "rowSelection", cssClass:"range-header-col", cellClick:function(e, cell){
+        cell.getRow().toggleSelect();
+        setResistList()
+    }},
+    columnDefaults:{
+      headerSort:false,
+      resizable:"header",
+    },
+    columns:[
+        {title:"제품코드", field:"pdCd", hozAlign:"center", width:330},
+        {title:"단위(1 Box= 3 Bag)", field:"unit", hozAlign:"center", width:330},
+        {title:"수량(Box)", field:"qt", hozAlign:"center", width:330},
+        //{title:"생산중인 수량(Box)", field:"pdtQt", hozAlign:"center", width:200},
+        //{title:"선택 수량(Box)", field:"prePdtQt", hozAlign:"center", width:200, editor:dateEditor},
+        {title:"납기 일", field:"dueDt", hozAlign:"center", width:330},
+    ],
+});
+	
+	var table2 = new Tabulator("#example-table2", {
+    height:"180px",
+    layout:"fitDataTable",
+    columns:[
+        {title:"상품코드", field:"pdCd", hozAlign:"center"},
+        {title:"전 주 실패량(kg)", field:"failTat", hozAlign:"center"},
+    ],
+});
+	var table3 = new Tabulator("#example-table3", {
+	height:"180px",
+	layout:"fitDataTable",
+    columns:[
+        {title:"제품코드", field:"pdCd", hozAlign:"center", width:120},
+        {title:"단위", field:"unit", hozAlign:"center", width:100},
+        {title:"현재 재고 수량", field:"nowStk", hozAlign:"center", width:160},
+        {title:"안전 재고 수량", field:"safeStk", hozAlign:"center", width:160},
+        {title:"재고 수량차", field:"msStk", hozAlign:"center", width:150},
+    	],
+	});
+	var table4 = new Tabulator("#example-table4", {
+	    height:"180px",
+	    columns:[
+	    	{title:"상품코드", field:"pdCd", hozAlign:"center"},
+	        {title:"전 주 생산량(kg)", field:"befSuccessTat", hozAlign:"center"},
+	    ],
+	});
+	
+	var table5 = new Tabulator("#example-table5", {
+	    height:"180px",
+	    layout:"fitColumns",
+	    reactiveData:true,
+	    columnDefaults:{
+	        headerSort:false,
+	        resizable:"header",
+	      },
+	    index:"pdCd",
+	    columns:[
+	        {title:"제품코드", field:"pdCd", validator:"required", hozAlign:"center"},
+	        {title:"단위무게(kg)", field:"unitQt", hozAlign:"center"},
+	        {title:"주문수량(kg)", field:"qt", hozAlign:"center", validator:["min:0", "numeric"]},
+	        {title:"추가수량(kg)", field:"addQt", hozAlign:"center", editor:dateEditor5,  validator:["min:0", "numeric"]},
+	        {title:"수량합계(kg)", field:"totQt", hozAlign:"center", validator:["min:0", "numeric"]},
+	        {title:"최소 납기일", field:"dueDt", hozAlign:"center"},
+	    ],
+	});
+	
+	//저장될 데이터 이동
+	function setResistList(){
+		console.log(selectOrder)
+		
+			//console.log(res)
+			let tot = 0;
+			let tables = table5.getData()
+			
+			for(let i of tables){
+				let sum1 =0;
+				let date1 = null;
+				if(list != null && vo != null){
+					for(let e of list){
+						if(i.pdCd == e.pdCd){
+							date1 = e.dueDt;
+						}
+						for(let f of selectOrder){
+							if(i.pdCd == e.pdCd && e.pdCd == f.pdCd && f.pdCd == i.pdCd){
+								sum1 += Number(f.qt);
+								if(e.dueDt < f.dueDt){
+									date1 = f.dueDt;
+								}
+							}
+						}
+					}
+				}else{
+					for(let j of selectOrder){
+						if(i.pdCd == j.pdCd){
+							sum1 += Number(j.qt);
+							if(date1 == null || i.dueDt > j.dueDt){
+								date1 = j.dueDt;
+							}
+						}
+					}
+				}
+				i.dueDt = date1;
+				i.qt = sum1 * Number(i.unitQt);	
+				if(((Number(i.qt)) + (Number(i.addQt))) % (Number(i.unitQt)*2) != 0){
+					i.addQt = Number(i.addQt) + Number(i.unitQt);
+				}
+			}
+			table5.updateData(tables)
+			
+			//전체수량변경
+			for(let i of tables){
+				tot += Number(i.qt) + Number(i.addQt);
+				i.totQt = Number(i.qt) + Number(i.addQt);
+			}
+			table5.updateData(tables)
+			totConsums.value = tot
+		
+	}
+	
+	table1.on("rowSelectionChanged", function(data, rows, selected, deselected){
+		selectOrder = data;
+		setResistList();
+	});
+	
+	table5.on("dataChanged", function(data){
+		
+        let w = 0;
+        for(let i of data){
+        	/*if(Number(i.addQt) % Number(i.unitQt) != 0){
+        		i.addQt = (Math.round((Number(i.addQt) / Number(i.unitQt))) * Number(i.unitQt));
+        	}*/
+        	w += Number(i.qt) + Number(i.addQt);
+        }
+        totConsums.value = w + "";
+	});
+	
+	// 월 주차 판단
+	function weekNumOfMonth(date){
+		let dates = new Date(date)
+		var WEEK_KOR = ["1주차", "2주차", "3주차", "4주차", "5주차"];
+		var THURSDAY_NUM = 4;	// 첫째주의 기준은 목요일(4)이다. 
+		console.log(dates);
+
+		var firstDate = new Date(dates.getFullYear(), dates.getMonth(), 1);
+		var firstDayOfWeek = firstDate.getDay();
+
+		var firstThursday = 1 + THURSDAY_NUM - firstDayOfWeek;	// 첫째주 목요일
+		if(firstThursday <= 0){
+			firstThursday = firstThursday + 7;	// 한주는 7일
+		}
+		var untilDateOfFirstWeek = firstThursday-7+3;	// 월요일기준으로 계산 (월요일부터 한주의 시작)
+		var weekNum = Math.ceil((dates.getDate()-untilDateOfFirstWeek) / 7) - 1;
+
+		if(weekNum < 0){	// 첫째주 이하일 경우 전월 마지막주 계산
+			var lastDateOfMonth = new Date(dates.getFullYear(), dates.getMonth(), 0);
+		 	var result = Util.Date.weekNumOfMonth(lastDateOfMonth);
+		 	return result;
+		}
+
+		return [WEEK_KOR[weekNum], (dates.getMonth()+1)+'월'];
+	}
+	
+	//날짜
+	function getDateStr(myDate){
+		var year = myDate.getFullYear();
+		var month = (myDate.getMonth() + 1);
+		var day = myDate.getDate();
+		
+		month = (month < 10) ? "0" + String(month) : month;
+		day = (day < 10) ? "0" + String(day) : day;
+		
+		return  (year + '-' + month + '-' + day );
+	}
+	
+	//상세계획 데이터 포멧
+	function PlanDetailData() {
+	  let newArr1 = [];
+	  let planCds = 'K' + dayNameing.value.substring(2, 4) + dayNameing.value.substring(5, 7) + dayNameing.value.substring(8, 10);
+	  
+	  let tables = table5.getData();
+	  
+	  if(list != null && vo != null){
+		  for(let i of tables){
+			  for(let j of list){
+				  if(j.pdCd == i.pdCd){
+					  newArr1.push({
+				  			pdtPlanCd : planCds,
+			    			pdName : i.pdName,
+			    			pdCd : i.pdCd,
+			    			qt : i.totQt, 
+			    			dueDt : i.dueDt,
+			    			pdtPlanDetailNo : j.pdtPlanDetailNo
+			 			});  
+				  }
+			  }
+		  }
+	  }else{
+		  for(let i of tables){
+			  newArr1.push({
+		  			pdtPlanCd : planCds,
+	    			pdName : i.pdName,
+	    			pdCd : i.pdCd,
+	    			qt : i.totQt, 
+	    			dueDt : i.dueDt
+	 			});
+		  }
+	  }
+	  
+	  
+	  
+	  /*for(let i of consum){
+		  if(i.totConsum == null){
+			  i.totConsum = 0;
+		  }
+	  }*/
+	  
+	  //수정필요
+	  /*for(let i of selectOrder){
+		  for(let j of basicPlans){
+			  if(j.pdCd == i.pdCd){
+	      			
+			  		newArr1.push({
+			  			pdtPlanCd : planCds,
+	          			pdName : j.pdName,
+	          			pdCd : i.pdCd,
+	          			qt : totConsums.value, 
+	          			dueDt : i.dueDt
+	       			});
+			  }
+		  }
+	  }*/
+	  
+	  /*for(let j of basicPlans){
+   		newArr1.push({
+   			pdtPlanCd : planCds,
+       		pdName : j.pdName,
+       		pdCd : j.pdCd,
+       		qt : j.addQt,  
+       		dueDt : null 
+    	});
+	  }*/
+	 
+	  return newArr1;
+	};
+	
+	//상세주문계획 데이터 포멧
+	/*function PlanOrderDetailData() {
+		let newArr2 = [];
+		
+		for(let i of selectOrder){
+			newArr2.push({
+ 				odDetailno : i.odDetailno
+   			});
+		}
+	}*/
+	function names(){
+		prdtModalLabel1.style.display = "none";
+		prdtModalLabel2.style.display = "block";
+		prdtSaveBtn1.style.display = "none";
+		prdtModifyBtn1.style.display = "block";
+		dayNameing.readOnly = true;
+	}
+	</script>
+
+	</div>
+</body>
+</html>

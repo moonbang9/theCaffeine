@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.theCaffeine.mes.fclt.mapper.InspectionMapper">
+
+<sql id="conditionins">
+<where>
+<if test="fcName != null and fcName != '' ">
+lower(fc_name) LIKE '%' || #{fcName} || '%'
+</if>
+<if test="cc != null and cc != '' ">
+AND cc = #{cc}
+</if>
+<if test="insDt != null and indDt2 != null">
+AND (ins_dt BETWEEN #{insDt} AND #{insDt2})
+</if>
+
+</where>
+</sql>
+
+<!-- 전체 점검 목록 -->
+<select id="getInspList" resultType="InspectionVO">
+
+	SELECT   FINS.INS_CD,
+                F.FC_NAME,
+                FINS.INS_DT,
+                CASE WHEN  FINS.INS_CAT = 0 THEN '정기'
+                              WHEN  FINS.INS_CAT = 1 THEN '수기'
+                                            ELSE '기타'
+                END AS INS_CAT ,
+               FINS.INS_CONT,
+                FINS.CC,
+               FINS. CHG,
+               FINS.FC_CD,
+                CASE WHEN F.ST = 0 THEN '가동'
+                ELSE '비가동'
+                END AS ST
+	FROM FC_INS FINS JOIN FC F ON FINS.FC_CD = F.FC_CD
+	<include refid="conditionins"></include>
+</select>
+
+<!--  단건조회 -->
+<select id="getInspInfo" parameterType="string" resultType="InspectionVO">
+	SELECT   FINS.INS_CD,
+                F.FC_NAME,
+                FINS.INS_DT,
+                FINS.INS_CAT,
+               FINS.INS_CONT,
+                FINS.CC,
+               FINS. CHG,
+               FINS.FC_CD
+	FROM FC_INS FINS JOIN FC F ON FINS.FC_CD = F.FC_CD
+	where FINS.ins_cd = #{insCd}	
+</select>
+
+
+<!--  점검 등록 -->
+	<insert id="insertInspection" parameterType="InspectionVO">
+		INSERT INTO FC_INS
+					(
+					INS_CD,
+					INS_DT,
+					INS_CAT,
+					INS_CONT,
+					CC,
+					CHG,
+					FC_CD
+
+					)
+		    VALUES  (
+		    		  SEQ_FCINSP.nextval 
+		    		,#{insDt}
+		    		,#{insCat}
+		    		,#{insCont}
+		    		,#{cc}
+		    		,#{chg}
+		    		,#{fcCd}
+		    		)
+	</insert>
+
+<!-- 점검 삭제 -->
+
+<delete id="deleteInspection" parameterType="String">
+	DELETE FROM fc_ins
+	where ins_cd = #{insCd}
+</delete>
+
+<!-- 점검 내용 수정 -->
+<update id="updateInspection" parameterType="InspectionVO">
+	UPDATE FC_INS
+			SET
+					INS_CONT =#{insCont} ,
+					CC = #{cc},
+					CHG =#{chg}
+	WHERE ins_cd = #{insCd} and fc_cd=#{fcCd}
+</update>
+
+</mapper>

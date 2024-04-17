@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/index}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<div layout:fragment="content">
+	<h1>연간 생산 현황</h1>
+	<h5>(계획량 / 실제 생산량)</h5>
+	<div class="demo-inline-spacing">
+		<button id="download-xlsx">Excel</button>
+	</div>
+	<div id="example-table"></div>
+<script>
+	//연간 생산 데이터
+	let tableData = [
+	    {month:1, name1:"5/5", name2:"12/1", name3:"12/1", name4:"12/1", name5:"12/1", total:"100", significant:"없음"},
+	    {month:2, name1:"5/5", name2:"1/1", name3:"12/1", name4:"12/1", name5:"12/1", total:"100", significant:"없음"},
+	    {month:3, name1:"5/5", name2:"42/1", name3:"12/1", name4:"12/1", name5:"12/1", total:"100", significant:"없음"},
+	    {month:4, name1:"5/5", name2:"125/1", name3:"12/1", name4:"12/1", name5:"12/1", total:"100", significant:"없음"},
+	    {month:5, name1:"5/5", name2:"16/1", name3:"12/1", name4:"12/1", name5:"12/1", total:"100", significant:"없음"},
+	    {month:6, name1:"5/5", name2:"16/1", name3:"12/1", name4:"12/1", name5:"12/1", total:"100", significant:"없음"},
+	    {month:7, name1:"5/5", name2:"16/1", name3:"12/1", name4:"12/1", name5:"12/1", total:"100", significant:"없음"},
+	    {month:8, name1:"5/5", name2:"16/1", name3:"12/1", name4:"12/1", name5:"12/1", total:"100", significant:"없음"},
+	    {month:9, name1:"5/5", name2:"16/1", name3:"12/1", name4:"12/1", name5:"12/1", total:"100", significant:"없음"},
+	    {month:10, name1:"5/5", name2:"16/1", name3:"12/1", name4:"12/1", name5:"12/1", total:"100", significant:"없음"},
+	    {month:11, name1:"5/5", name2:"16/1", name3:"12/1", name4:"12/1", name5:"12/1", total:"100", significant:"없음"},
+	    {month:12, name1:"5/5", name2:"16/1", name3:"12/1", name4:"12/1", name5:"12/1", total:"100", significant:"없음"},
+	];
+	
+	var table = new Tabulator("#example-table", {
+	    height:"381px",
+	    layout:"fitColumns",
+	    data:tableData,
+	    placeholder:"No Data Set",
+	    columns:[
+	        {title:"월", field:"month",hozAlign:"center", headerSort:false},
+	        {title:"콜롬비아(kg)", field:"name1",hozAlign:"center", headerSort:false},
+	        {title:"코스타리카(kg)", field:"name2",hozAlign:"center", headerSort:false},
+	        {title:"브라질(kg)", field:"name3",hozAlign:"center", headerSort:false},
+	        {title:"에티오피아(kg)", field:"name4",hozAlign:"center", headerSort:false},
+	        {title:"페루(kg)", field:"name5",hozAlign:"center", headerSort:false},
+	        {title:"총 생산량(kg)", field:"total",hozAlign:"center", headerSort:false},
+	        {title:"특이사항", field:"significant", hozAlign:"center", headerSort:false},
+	    ],
+	});
+	
+	document.getElementById("download-xlsx").addEventListener("click", function(){
+	    table.download("xlsx", "data.xlsx", {sheetName:"My Data"});
+	});
+	
+	
+</script>
+</div>
+</body>
+</html>

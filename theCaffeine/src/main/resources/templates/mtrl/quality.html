@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/index}">
+<head>
+<meta charset="UTF-8">
+<title>quality</title>
+</head>
+<body>
+<div layout:fragment="content">
+	<div class="mt-3 mb-3">
+    	<h3 class="fw-bold py-3"><span class="text-muted fw-light">자재 관리 /</span> 자재 검사 관리</h3>
+	</div>
+	<div class="d-flex mt-4">
+	  <div class="p-2 flex-grow-1"><h4>품질검사 대기 목록</h4></div>
+	  <div class="p-2"><button type="button" class="btn btn-primary" id="mtrlQualityBtn">검사 요청</button></div>
+	</div>
+	<div id="mtrl_quality_wait_list">
+	 	
+	</div>
+	
+	<script>
+		// 품질검사 대기 목록
+		var table = new Tabulator("#mtrl_quality_wait_list", {
+		   height:"100%",
+		   selectableRows:true,
+		   pagination:"local",
+		    paginationSize:6,
+		    paginationSizeSelector:[3, 6, 8, 10],
+		    movableColumns:true,
+		    paginationCounter:"rows",
+		    rowHeader:{headerSort:false, resizable: false, frozen:true, headerHozAlign:"center", hozAlign:"center", formatter:"rowSelection", titleFormatter:"rowSelection", cellClick:function(e, cell){
+		        cell.getRow().toggleSelect();
+		      }},
+		    columns:[
+		        {title:"자재코드", field:"mtCd", width:169, hozAlign:"center"},
+		        {title:"자재명", field:"mtName", width:200, hozAlign:"center"}, 
+		        {title:"거래처", field:"cliName", width:200, hozAlign:"center"},
+		        {title:"자재 도착일", field:"placeodArridt", width:210, hozAlign:"center"},
+		        {title:"수량", field:"placeodQt", width:190, hozAlign:"center", editor:"input"},
+		        {title:"단위", field:"unit", width:180, hozAlign:"center"},
+		        {title:"발주 담당자", field:"placeodChg", width:190, hozAlign:"center"}
+		    ],
+		});
+		
+		listReq();
+		
+		// 입고대기 목록 데이터
+		function listReq() {
+			fetch("/ajax/qualityList")
+			.then(res => res.json())
+			.then(res => table.setData(res))
+		}
+		
+		let selectMtrl = "";
+		
+		// 검사요청 버튼 이벤트
+		mtrlQualityBtn.addEventListener("click", e=> {
+			if(selectMtrl == "") {
+				alert("선택된 자재가 없습니다.")
+			} else {
+				console.log(selectMtrl);
+				addModReq(selectMtrl);
+			}
+		})
+		
+		function addModReq(selectMtrl) {
+			for(order of selectMtrl) {
+				const mtCd = order.mtCd;
+				const placeodQt= order.placeodQt;
+				const placeodArridt = order.placeodArridt;
+				const cliName = order.cliName;
+				const placeodChg = order.placeodChg;
+				const mtPlaceodCd = order.mtPlaceodCd;
+				let param = {mtCd, placeodQt, placeodArridt, cliName, placeodChg, mtPlaceodCd};
+				fetch("/ajax/mtrlQuality",{
+					method : "post",
+					headers: {
+					      "Content-Type": "application/json",
+					    },
+					body : JSON.stringify(param)
+				})
+				.then(res => res.json())
+				.then(res => console.log(res))
+			}
+			modRes();
+		}
+		
+		// 검사요청 처리 응답
+		function modRes() {
+			alert("검사요청이 완료되었습니다!");
+			location.href= "/material/quality"
+		}
+		
+		table.on("rowSelectionChanged", function(data, rows, selected, deselected){
+			selectMtrl = data;
+		});
+		
+		
+	</script>
+	
+</div>
+</body>
+</html>

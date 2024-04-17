@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/index}">
+
+<head>
+  <meta charset="UTF-8">
+  <title>주문 조회</title>
+</head>
+
+<body>
+  <div layout:fragment="content">
+
+    <!-- Large Modal -->
+    <div class="modal fade" id="pdStockModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel3">주문 정보</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+
+          <div class="modal-body">
+            <!-- Basic Layout & Basic with Icons -->
+            <!-- HTML5 Inputs -->
+            <!-- 거래처 선택 -->
+            <div class="card-body">
+
+              <div class="mb-3 row">
+                <label for="html5-url-input" class="col-md-2 col-form-label">거래처명</label>
+                <div class="col-md-10">
+                  <p class="mb-0" id="mCliName"></p>
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label for="html5-url-input" class="col-md-2 col-form-label">거래처코드</label>
+                <div class="col-md-10">
+                  <p class="mb-0" id="mCliCd"></p>
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label for="html5-url-input" class="col-md-2 col-form-label">사업자번호</label>
+                <div class="col-md-10">
+                  <p class="mb-0" id="mBussno"></p>
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label for="html5-tel-input" class="col-md-2 col-form-label">전화번호</label>
+                <div class="col-md-10">
+                  <p class="mb-0" id="mTel"></p>
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label for="html5-tel-input" class="col-md-2 col-form-label">주소</label>
+                <div class="col-md-10">
+                  <p class="mb-0" id="mAddr"></p>
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label for="html5-tel-input" class="col-md-2 col-form-label">이메일</label>
+                <div class="col-md-10">
+                  <p class="mb-0" id="mMail"></p>
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label for="html5-tel-input" class="col-md-2 col-form-label">거래처
+                  담당자</label>
+                <div class="col-md-10">
+                  <p class="mb-0" id="mCliChg"></p>
+                </div>
+              </div>
+            </div>
+
+            <hr class="m-0">
+
+            <!-- 주문정보 -->
+            <div class="card-body">
+
+              <div class="mb-3 row">
+                <label for="html5-tel-input" class="col-md-2 col-form-label">주문
+                  담당자</label>
+                <div class="col-md-10">
+                  <p class="mb-0" id="mOdChg"></p>
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label for="html5-time-input" class="col-md-2 col-form-label">주문일</label>
+                <div class="col-md-10">
+                  <p class="mb-0" id="mOdDt"></p>
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label for="html5-color-input" class="col-md-2 col-form-label">납기일</label>
+                <div class="col-md-10">
+                  <p class="mb-0" id="mDueDt"></p>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="card-body">
+              <!-- Bordered Table -->
+              <!-- <div class="card">
+                <h5 class="card-header">주문 제품</h5>
+                <div class="card-body"> -->
+              <div class="mb-3 row">
+
+                <div class="table-responsive text-nowrap">
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th>제품코드</th>
+                        <th>제품명</th>
+                        <th>수량</th>
+                        <th>단위</th>
+                        <th>단가</th>
+                        <th>합계</th>
+                      </tr>
+                    </thead>
+                    <tbody id="mOdPd">
+
+                    </tbody>
+
+                  </table>
+                </div>
+                <!-- </div>
+                </div> -->
+                <!--/ Bordered Table -->
+              </div>
+              <div class="mb-3 row">
+                <label for="html5-tel-input" class="col-md-2 col-form-label">할인율</label>
+                <div class="col-md-10">
+                  <p class="mb-0" id="mDcPercent"></p>
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label for="html5-tel-input" class="col-md-2 col-form-label">총
+                  주문금액</label>
+                <div class="col-md-10">
+                  <p class="mb-0" id="mTotalPrice"></p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+              닫기
+            </button>
+            <button type="button" class="btn btn-primary">수정</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- Content wrapper -->
+    <div class="content-wrapper">
+      <!-- Content -->
+
+      <div class="container-xxl flex-grow-1 container-p-y">
+        <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">영업 관리 /</span> 주문 조회</h4>
+
+        <div class="card mb-4">
+          <h5 class="card-header">주문 검색</h5>
+          <div class="card-body">
+            <!-- <form id="formAccountSettings" method="POST" onsubmit="return false"> -->
+            <div class="row">
+
+              <div class="mb-3 row col-md-6">
+                <label for="html5-search-input" class="col-md-3 col-form-label">거래처 코드</label>
+                <div class="col-md-9">
+                  <input class="form-control" type="search" id="cliCd" placeholder="거래처 코드">
+                </div>
+              </div>
+              <div class="mb-3 row col-md-6">
+                <label for="pdCd" class="col-md-3 col-form-label">제품코드</label>
+                <div class="col-md-9">
+                  <input class="form-control" type="text" id="pdCd" placeholder="제품 코드">
+                </div>
+              </div>
+              <div class="mb-3 row col-md-6">
+                <label for="html5-search-input" class="col-md-3 col-form-label">거래처명</label>
+                <div class="col-md-9">
+                  <input class="form-control" type="search" id="cliName" placeholder="거래처 이름">
+                </div>
+              </div>
+              <div class="mb-3 row col-md-6">
+                <label for="html5-search-input" class="col-md-3 col-form-label">제품명</label>
+                <div class="col-md-9">
+                  <input class="form-control" type="search" id="pdName" placeholder="제품명">
+                </div>
+              </div>
+              <div class="mb-3 row col-md-6">
+                <label for="html5-search-input" class="col-md-3 col-form-label">거래처 담당자명</label>
+                <div class="col-md-9">
+                  <input class="form-control" type="search" id="cliChg" placeholder="거래처 담당자 이름">
+                </div>
+              </div>
+              <div class="mb-3 row col-md-6">
+                <label for="html5-search-input" class="col-md-3 col-form-label">담당자명</label>
+                <div class="col-md-9">
+                  <input class="form-control" type="search" id="odChg" placeholder="주문 접수자">
+                </div>
+              </div>
+
+              <div class="mb-3 row col-md-6">
+                <label for="html5-date-input" class="col-md-3 col-form-label">주문일</label>
+                <div class="col-md-9">
+                  <input class="form-control" type="date" id="minOdDt" value="">
+                </div>
+              </div>
+              <div class="mb-3 row col-md-6">
+                <label for="html5-date-input" class="col-md-1 col-form-label">~</label>
+                <div class="col-md-9">
+                  <input class="form-control" type="date" id="maxOdDt">
+                </div>
+              </div>
+              <div class="mb-3 row col-md-6">
+                <label for="html5-date-input" class="col-md-3 col-form-label">납기일</label>
+                <div class="col-md-9">
+                  <input class="form-control" type="date" id="minDueDt">
+                </div>
+              </div>
+              <div class="mb-3 row col-md-6">
+                <label for="html5-date-input" class="col-md-1 col-form-label">~</label>
+                <div class="col-md-9">
+                  <input class="form-control" type="date" id="maxDueDt" placeholder="231465">
+                </div>
+              </div>
+
+              <div class="mb-3 row">
+                <label for="html5-search-input" class="col-md-2 col-form-label">주문상태</label>
+                <div class="col-md-10">
+                  <div class="form-check form-check-inline mt-3">
+                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="1" name="odSt">
+                    <label class="form-check-label" for="inlineCheckbox1">주문접수</label>
+                  </div>
+                  <div class="form-check form-check-inline mt-3">
+                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="3" name="odSt">
+                    <label class="form-check-label" for="inlineCheckbox1">출고완료</label>
+                  </div>
+                  <div class="form-check form-check-inline mt-3">
+                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="4" name="odSt">
+                    <label class="form-check-label" for="inlineCheckbox1">구매확정</label>
+                  </div>
+                  <div class="form-check form-check-inline mt-3">
+                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="5" name="odSt">
+                    <label class="form-check-label" for="inlineCheckbox1">반품중</label>
+                  </div>
+                  <div class="form-check form-check-inline mt-3">
+                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="9" name="odSt">
+                    <label class="form-check-label" for="inlineCheckbox1">반품완료</label>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- <div class="mt-2"> -->
+          <div class="mb-3 row col-md-6">
+            <label for="html5-date-input" class="col-md-3 col-form-label"></label>
+            <div class="col-md-9">
+              <button type="submit" class="btn btn-primary me-2" id="searchBtn">검색</button>
+              <button type="reset" class="btn btn-outline-secondary" id="resetBtn">초기화</button>
+            </div>
+          </div>
+          <!-- <div class="mb-3 row col-md-6">
+            <label for="html5-date-input" class="col-md-1 col-form-label"></label>
+            <div class="col-md-9">
+            </div>
+            </div> 아래 버튼으로 대체 예정
+            <div class="mt-2">
+                          <button type="submit" class="btn btn-primary me-2">검색</button>
+                          <button type="reset" class="btn btn-outline-secondary">초기화</button>
+                        </div>
+            </form>
+          </div> -->
+        </div>
+
+        <!-- 주문목록 그리드 -->
+        <div id="orderListTable" class="mb-3">
+
+        </div>
+
+      </div>
+    </div>
+
+    <script>
+      // 체크한 주문상태를 담을 배열 선언
+      let stList = [];
+      let orderList = [];
+
+      // 검색 조건 초기화
+      resetBtn.addEventListener("click", e => {
+        document.getElementById('cliCd').value = null;
+        document.getElementById('cliName').value = null;
+        document.getElementById('cliChg').value = null;
+        document.getElementById('pdCd').value = null;
+        document.getElementById('pdName').value = null;
+        document.getElementById('odChg').value = null;
+        document.getElementById('minOdDt').value = null;
+        document.getElementById('maxOdDt').value = null;
+        document.getElementById('minDueDt').value = null;
+        document.getElementById('maxDueDt').value = null;
+        //stList = null;
+      })
+
+      // 검색 버튼 누르면 조건대로 검색한 주문목록 불러오기
+      searchBtn.addEventListener("click", e => {
+        checkList();
+
+        let cliCd = document.getElementById('cliCd').value;
+        let cliName = document.getElementById('cliName').value;
+        let cliChg = document.getElementById('cliChg').value;
+        let pdCd = document.getElementById('pdCd').value;
+        let pdName = document.getElementById('pdName').value;
+        let odChg = document.getElementById('odChg').value;
+        let minOdDt = document.getElementById('minOdDt').value;
+        let maxOdDt = document.getElementById('maxOdDt').value;
+        let minDueDt = document.getElementById('minDueDt').value;
+        let maxDueDt = document.getElementById('maxDueDt').value;
+
+        if (stList.length == 0) {
+          stList = null;
+        }
+
+        let param = { cliCd, cliName, cliChg, pdCd, pdName, odChg, minOdDt, maxOdDt, minDueDt, maxDueDt, stList }
+
+        console.log(param);
+        fetch("/sales/ajax/orderMng", {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(param)
+        })
+          .then(res => res.json())
+          .then(res => table.setData(res))
+      })
+
+      // 조건검색 : 체크된 주문상태만 배열에 담기
+      function checkList() {
+        // 주문상태 배열 초기화
+        stList = [];
+
+        // Name이 odSt인 속성 취득
+        const odSt = document.getElementsByName("odSt");
+        // 취득한 속성 만큼 루프
+        for (let i = 0; i < odSt.length; i++) {
+          // 속성중에 체크 된 항목이 있을 경우
+          if (odSt[i].checked == true) {
+            stList.push(odSt[i].value);
+          }
+        }
+      }
+
+      // 주문 목록 그리드 만들기
+      var table = new Tabulator("#orderListTable", {
+        layout: "fitColumns",
+        height: "100%",
+        //responsiveLayout: "hide",
+        rowHeader: { formatter: "rownum", headerSort: false, width: 70, hozAlign: "center", resizable: false, frozen: true },
+        resizableColumnFit: true,
+        layout: "fitColumns",
+        columns: [ //주문일, 거래처, 제품명, 주문금액(부분합), 납기일, 상태, 인쇄
+          { title: "주문번호", field: "odNo", width: 70, hozAlign: "center" },
+          { title: "주문일", field: "odDt", width: 90, hozAlign: "center" },
+          { title: "거래처", field: "cliName", width: 120, hozAlign: "center" },
+          { title: "거래처 담당자", field: "cliChg", width: 100, hozAlign: "center" },
+          { title: "제품", field: "pd", width: 400, hozAlign: "center" },
+          { title: "할인율", field: "dcRate", width: 50, hozAlign: "center" },
+          { title: "총 금액", field: "totalPrice", width: 90, hozAlign: "center" },
+          { title: "주문 담당자", field: "odChg", width: 80, hozAlign: "center" },
+          { title: "납기일", field: "dueDt", width: 90, hozAlign: "center" },
+          { title: "주문상태", field: "st", width: 100, hozAlign: "center" },
+          // { title: "인쇄", field: "week", width: 160, hozAlign: "center" }
+        ],
+      });
+
+      // 행 클릭시 모달 띄우고 해당 주문정보 보여주기
+      table.on("rowClick", function (e, row) {
+        const myModal = new bootstrap.Modal('#pdStockModal', {
+          keyboard: false
+        })
+        const modalToggle = document.getElementById('pdStockModal');
+        myModal.show(modalToggle);
+
+        let odNo = row.getData().odNo;
+        getOdInfo(odNo);
+      });
+
+
+      //주문 정보 불러오기
+      function getOdInfo(odNo) {
+        fetch("/sales/ajax/odInfo?odNo=" + odNo)
+          .then(res => res.json())
+          .then(res => {
+            let info = res.odInfo;
+            let list = res.odPdList;
+
+            getInfo(info);
+            getList(list);
+          });
+      }
+
+      //주문 정보 출력
+      function getInfo(info) {
+        document.getElementById('mCliName').innerText = info.cliName;
+        document.getElementById('mCliCd').innerText = info.cliCd;
+        document.getElementById('mBussno').innerText = info.bussno;
+        document.getElementById('mTel').innerText = info.tel;
+        document.getElementById('mAddr').innerText = info.addr;
+        document.getElementById('mMail').innerText = info.mail;
+        document.getElementById('mCliChg').innerText = info.cliChg;
+        document.getElementById('mOdChg').innerText = info.odChg;
+        document.getElementById('mOdDt').innerText = info.odDt;
+        document.getElementById('mDueDt').innerText = info.dueDt;
+        document.getElementById('mDcPercent').innerText = info.dcPercent;
+        document.getElementById('mTotalPrice').innerText = info.totalPrice;
+      }
+
+      //주문에 해당하는 제품 목록 출력 (tr 만들기)
+      function getList(list) {
+        let pdList = '';
+        console.log(list);
+        list.forEach(ele => { //제품코드	제품명	수량	단위	단가	합계
+          let tr = `<tr >                        
+                      <td>${ele.pdCd}</td>
+                      <td>${ele.pdName}</td>
+                      <td>${ele.qt}</td>
+                      <td>${ele.unit}</td>
+                      <td>${ele.cost}</td>
+                      <td>${ele.detailPrice}</td>
+                    </tr>`
+          pdList += tr;
+        })
+        mOdPd.innerHTML = pdList;
+      }
+
+    </script>
+  </div>
+
+
+</body>
+
+</html>

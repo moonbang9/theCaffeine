@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.theCaffeine.mes.mtrl.mapper.MtrlSituationMapper">
+
+	<sql id="condition">
+		<where>
+ 			<if test="mtCd != null and mtCd != '' ">
+ 		   		AND m.mt_cd like '%' || #{mtCd} || '%'		
+ 			</if>
+ 			<if test="mtName != null and mtName != '' ">
+ 		   		AND m.mt_name like '%' || #{mtName} || '%'		
+ 			</if>
+ 			<if test="minDt1 != null">
+ 		   		AND ms.str_compdt >= #{minDt} 			
+ 			</if>
+ 			<if test="minDt2 != null">
+ 		   		AND ms.str_compdt <![CDATA[<=]]> #{maxDt}			
+ 			</if>			
+ 			<if test="mtDiv != null and mtDiv != '' ">
+				AND m.mt_div = #{mtDiv}
+			</if>
+ 		</where>
+	</sql>
+
+	<select id="getMtrlStoreList" resultType="MtrlSituationVO"> 
+		SELECT  m.mt_div
+		        ,m.mt_cd
+		        ,m.mt_name
+		        ,ms.str_qt
+		        ,m.unit
+		        ,ms.str_compdt
+		        ,ms.str_chg
+		FROM    mt_str ms
+		JOIN    mt m
+		ON      m.mt_cd = ms.mt_cd
+		<include refid="condition"></include>
+		ORDER BY str_compdt DESC
+ 	</select>
+ 	
+ 	<sql id="condition2">
+		<where>
+ 			<if test="mtCd != null and mtCd != '' ">
+ 		   		AND m.mt_cd like '%' || #{mtCd} || '%'		
+ 			</if>
+ 			<if test="mtName != null and mtName != '' ">
+ 		   		AND m.mt_name like '%' || #{mtName} || '%'		
+ 			</if>
+ 			<if test="minDt1 != null">
+ 		   		AND ms.send_compdt >= #{minDt} 			
+ 			</if>
+ 			<if test="minDt2 != null">
+ 		   		AND ms.send_compdt <![CDATA[<=]]> #{maxDt}			
+ 			</if>			
+ 			<if test="mtDiv != null and mtDiv != '' ">
+				AND m.mt_div = #{mtDiv}
+			</if>
+ 		</where>
+	</sql>
+ 	
+ 	<select id="getMtrlSendList" resultType="MtrlSituationVO"> 
+		SELECT  m.mt_div
+		        ,m.mt_cd
+		        ,m.mt_name
+		        ,ms.send_qt
+		        ,m.unit
+		        ,ms.mt_lot
+		        ,ms.send_compdt
+		        ,ms.send_chg
+		FROM    mt_send ms
+		JOIN    mt_stk mk
+		ON      mk.mt_lot = ms.mt_lot
+		JOIN    mt m
+		ON      m.mt_cd = mk.mt_cd
+		<include refid="condition2"></include>
+		ORDER BY send_compdt DESC
+ 	</select>
+ 	
+ 	<sql id="condition3">
+		<where>
+ 			<if test="mtCd != null and mtCd != '' ">
+ 		   		AND m.mt_cd like '%' || #{mtCd} || '%'		
+ 			</if>
+ 			<if test="mtName != null and mtName != '' ">
+ 		   		AND m.mt_name like '%' || #{mtName} || '%'		
+ 			</if>
+ 			<if test="minDt1 != null">
+ 		   		AND mr.rtn_compdt >= #{minDt} 			
+ 			</if>
+ 			<if test="minDt2 != null">
+ 		   		AND mr.rtn_compdt <![CDATA[<=]]> #{maxDt}			
+ 			</if>			
+ 			<if test="mtDiv != null and mtDiv != '' ">
+				AND m.mt_div = #{mtDiv}
+			</if>
+ 		</where>
+	</sql>
+ 	
+ 	<select id="getMtrlReturnList" resultType="MtrlSituationVO"> 
+		SELECT  m.mt_div
+		        ,m.mt_cd
+		        ,m.mt_name
+		        ,mr.rtn_qt
+		        ,m.unit
+		        ,mr.rtn_compdt
+		        ,mr.rtn_chg
+		FROM    mt_rtn mr
+		JOIN    mt m
+		ON      m.mt_cd = mr.mt_cd
+		<include refid="condition3"></include>
+		ORDER BY rtn_compdt DESC
+ 	</select>
+</mapper>

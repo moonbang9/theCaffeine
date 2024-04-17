@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.theCaffeine.mes.fclt.mapper.OperationMapper">
+
+
+<sql id="conditionop">
+<where>
+<if test="fcName != null and fcName != '' ">
+lower(fc_name) LIKE '%' || #{fcName} || '%'
+</if>
+<if test="insMf != null and insMf != '' ">
+AND ins_mf = #{insMf}	
+</if>
+<if test="st != null and st != '' ">
+AND st = #{st}
+</if>
+</where>
+</sql>
+
+<!-- 비가동 목록 -->
+<select id="getOprtList" resultType="OperationVO">
+	SELECT  
+                F.FC_NAME,
+             CASE WHEN INS_MF = 0 THEN '로스팅'
+                                                        ELSE '포장'
+                END AS INS_MF,
+              CASE WHEN ST = 0 THEN '가동'
+                                                ELSE '비가동'
+                END AS ST,
+                N.NONOP_CD,
+                N.NONOP_STT_TIME,
+                N.NONOP_FN_TIME,
+                N.FC_CHG,
+                N.RSN,
+                N.RSN_DESC,
+                N.FC_CD
+	FROM NONOP_MGMT N JOIN FC F ON  N.FC_CD = F.FC_CD
+	<include refid="conditionop"></include>
+</select>
+
+<!--  비가동 단건 조회 -->
+<select id="getOprtInfo" parameterType="string" resultType="OperationVO">
+	select   F.FC_NAME,
+                F.INS_MF,
+                F.ST,
+                N.NONOP_CD,
+                N.NONOP_STT_TIME,
+                N.NONOP_FN_TIME,
+                N.FC_CHG,
+                N.RSN,
+                N.RSN_DESC,
+                N.FC_CD
+	FROM NONOP_MGMT N JOIN FC F ON  N.FC_CD = F.FC_CD
+	where N.NONOP_CD = #{nonopCd}	
+</select>
+
+
+<!--  설비 비가동 등록 -->
+	<insert id="insertOprt" parameterType="OperationVO">
+		INSERT INTO NONOP_MGMT
+					(
+					NONOP_CD,
+					NONOP_STT_TIME,
+					NONOP_FN_TIME,
+					FC_CHG,
+					RSN,
+					RSN_DESC,
+					FC_CD
+					)
+		    VALUES  (
+		    		  SEQ_FCNONOP.NEXTVAL
+		    		,#{nonopSttTime}
+		    		,#{nonopFnTime}
+		    		,#{fcChg}
+		    		,#{rsn}
+		    		,#{rsnDesc}
+		    		,#{fcCd}
+		    		)
+	</insert>
+
+<!-- 설비 삭제 -->
+
+<delete id="deleteOprt" parameterType="String">
+	DELETE FROM NONOP_MGMT
+	where NONOP_CD = #{nonopCd}
+</delete>
+
+<!-- 설비 정보 수정 -->
+<update id="updateOprt" parameterType="OperationVO">
+	UPDATE NONOP_MGMT
+	SET
+					NONOP_STT_TIME=#{nonopSttTime},
+					FC_CHG=#{fcChg},
+					RSN=#{rsn},
+					RSN_DESC=#{rsnDesc}
+	WHERE NONOP_CD = #{nonopCd} and fc_cd=#{fcCd}
+</update>
+
+<update id="updateOpStatus" parameterType="String">
+	UPDATE FC 
+	SET ST = 0
+	WHERE FC_CD = #{fcCd}
+</update>
+
+<!-- 비가동 종료 시간 -->
+<update id="updateFnTime" parameterType="OperationVO">
+	UPDATE NONOP_MGMT
+	SET NONOP_FN_TIME = SYSDATE
+	WHERE NONOP_CD = #{nonopCd}
+</update>
+
+</mapper>

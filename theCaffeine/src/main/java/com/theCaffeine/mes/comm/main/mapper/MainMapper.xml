@@ -3,9 +3,12 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.theCaffeine.mes.comm.main.mapper.MainMapper">
 
- 	<select id="getBoardInfo" resultType="TestVO">
-		SELECT *
-		FROM   test
+ 	<select id="getCodeDetailList" resultType="CodeDetailVO">
+		SELECT  detail_cd_no
+		        ,detail_cd_name
+		        ,wk_cd_no
+		FROM    com_detail_cd
+		WHERE   wk_cd_no = #{wkCdNo}
 	</select>
 
 </mapper>

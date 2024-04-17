@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.theCaffeine.mes.sale.mapper.OrderMngMapper">
+	<sql id="condition">
+		<where>
+ 			<if test="pdCd != null and pdCd != '' ">
+	 		 	AND d.pd_cd like '%' || #{pdCd} || '%' 			
+ 			</if>
+ 			<if test="pdName != null and pdName != '' ">
+ 		   		AND p.pd_name like '%' || #{pdName} || '%'			
+ 			</if>
+ 			<if test="cliCd != null and cliCd != '' ">
+ 		   		AND o.cli_cd like '%' || #{cliCd} || '%'		
+ 			</if>
+ 			<if test="cliName != null and cliName != '' ">
+ 		   		AND c.cli_name like '%' || #{cliName} || '%'		
+ 			</if>
+ 			<if test="cliChg != null and cliChg != '' ">
+ 		   		AND c.cli_chg like '%' || #{cliChg} || '%'		
+ 			</if>
+ 			<if test="odChg != null and odChg != '' ">
+ 		   		AND o.od_chg like '%' || #{odChg} || '%'	
+ 			</if>
+ 			<if test="minOdDt != null">
+ 		   		AND o.od_dt >= #{minOdDt} 			
+ 			</if>
+ 			<if test="maxOdDt != null">
+ 		   		AND o.od_dt <![CDATA[<=]]> #{maxOdDt}			
+ 			</if>
+ 			<if test="minDueDt != null">
+ 		   		AND d.due_dt >= #{minDueDt}		
+ 			</if>
+ 			<if test="maxDueDt != null ">
+ 		   		AND d.due_dt <![CDATA[<=]]> #{maxDueDt}		
+ 			</if> 			
+ 			<if test="stList != null">
+				AND o.od_st 
+ 				<foreach collection="stList" open="in (" close=")" separator="," item="st">				
+ 					#{st}
+ 				</foreach>
+ 			</if>
+ 		   </where>
+	</sql>
+	
+	<select id="getOrderList" resultType="OrderMngVO" parameterType="OrderMngVO">
+		select de.od_no
+				, o.cli_cd
+				, c.cli_name
+				, c.cli_chg 
+				, d.od_detailno
+             	, d.pd_cd
+				, p.pd_name
+				, CASE WHEN (de.cnt > 0) THEN p.pd_name || ' 외 ' || de.cnt || '건'
+             		   ELSE p.pd_name
+             	  END AS pd  
+             	, o.od_chg
+				, o.od_dt
+             	, d.due_dt
+             	, o.dc_rate
+             	, o.total_price
+             	, o.od_st 
+             	, FIND_CODE_NAME ('od_st', o.od_st)	AS st
+		from od_detail d 
+		    JOIN (select min(od_detailno) as minDetailNo
+		    			, (count(*)-1) as cnt
+		    			, od_no
+		          from od_detail
+		          group by od_no) de 
+		    ON d.od_detailno = de.minDetailNO
+		    JOIN pd p
+		    ON d.pd_cd = p.pd_cd
+		    JOIN od o
+		    ON o.od_no = de.od_no
+		    JOIN cli c
+		    ON c.cli_cd = o.cli_cd
+        <include refid="condition"></include> 
+		ORDER BY de.od_no DESC
+	</select>
+	
+	<select id="getOdInfo" parameterType="int" resultType="OrderVO">
+		select c.cli_name
+				, o.cli_cd
+				, c.bussno
+				, c.tel
+				, c.addr
+				, c.mail
+				, c.cli_chg
+				, o.od_chg
+				, o.od_dt
+				, d.due_dt
+				, (o.dc_rate*100) || '%' as dc_percent
+				, o.total_price
+		from od o
+		    JOIN cli c
+		    	ON o.cli_cd = c.cli_cd
+		    JOIN (select min(due_dt) due_dt
+		    			, od_no
+				  from od_detail
+				  group by od_no) d
+	    		ON o.od_no = d.od_no
+		where o.od_no = #{odNo}	
+	</select>
+	
+	<select id="getOdPdList" parameterType="int" resultType="ProductVO">
+		select d.pd_cd
+				, p.pd_name
+				, d.qt
+				, p.unit
+				, p.cost
+				, d.detail_price
+		from od_detail d 
+			JOIN pd p
+    			ON d.pd_cd = p.pd_cd
+		where d.od_no = #{odNo}
+		order by od_detailno
+	</select>
+	
+</mapper>

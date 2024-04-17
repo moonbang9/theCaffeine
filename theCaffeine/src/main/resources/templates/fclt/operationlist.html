@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/index}">
+<head>
+<meta charset="UTF-8">
+<title>facility</title>
+</head>
+<body>
+	<div layout:fragment="content">
+		<h1>비가동 관리</h1>
+		<div id="example-table">
+			<div class="divider text-start">
+				<div class="divider-text ">설비 관리</div>
+			</div>
+
+			<!-- Vertically Centered Modal -->
+			<div class="row gy-2 gx-3 align-items-center">
+				<div class="mt-3">
+					<div class="d-flex">
+						<form action="" name="frmSearchop" class="col">
+
+							<div class="mb-3 row"
+								style="justify-content: center; align-content: center;">
+								<label class="col-sm-2" for="searchNameop">설비명</label>
+								<div class="col-md-4">
+									<input class="form-control" type="text" name="searchNameop" id="searchNameop">
+								</div>
+							</div>
+							<div class="mb-3 row"
+								style="justify-content: center; align-content: center;">
+								<label class="col-sm-2" for="searchMfop">공정라인</label>
+								<div class="col-md-4">
+									<select class="form-select" name="searchMfof" id="searchMfop">
+										<option value="">선택</option>
+										<option value="0">로스팅</option>
+										<option value="1">포장</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="mb-3 row"
+								style="justify-content: center; align-content: center;">
+								<label class="col-sm-2 ">설비상태</label>
+								<div class="col-md-4">
+									<label class="form-check-label" for="defaultRadio1">전체 </label> 
+										<input class="form-check-input" type="radio" value="" id="defaultRadio1" name="searchStop" checked> 
+										<label class="form-check-label" for="defaultRadio1" style="padding-left: 10px;"> 가동 </label> 
+										<input class="form-check-input" type="radio" value="0" id="defaultRadio2" name="searchStop"> 
+										<label class="form-check-label" for="defaultRadio2" style="padding-left: 10px;"> 비가동 </label>
+									<input class="form-check-input" type="radio" value="1" id="defaultRadio3" name="searchStop">
+								</div>
+							</div>
+							<div class="d-grid gap-2 d-md-flex justify-content-md-center">
+								<button class="btn btn-secondary" type="button" id="resetopBtn" style="margin-top: 12px;">초기화</button>
+								<button class="btn btn-primary" type="button" id="searchopBtn" style="margin-top: 12px; margin-right: 5px;">검색</button>
+							</div>
+						</form>
+
+
+					</div>
+					<div class="divider text-start">
+						<div class="divider-text "></div>
+					</div>
+
+
+					
+					<!-- Modal -->
+					<div class="modal fade" id="modalCenter" tabindex="-1"
+						aria-hidden="true">
+						<div class="modal-dialog modal-dialog-centered" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="addOpType" style="display: block">비가동
+										등록</h5>
+									<h5 class="modal-title" id="updtOpType" style="display: none">비가동
+										수정</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal"
+										aria-label="Close"></button>
+								</div>
+								<div class="modal-body">
+									<div class="row">
+										<div class="col mb-3">
+											<div class="input-group" style="display: none;">
+												<span class="input-group-text col-2" id="basic-addon14">비가동
+													코드</span> <input type="number" class="form-control"
+													id="operationCd" aria-describedby="basic-addon14" readonly>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col mb-3">
+											<div class="input-group">
+												<span class="input-group-text col-2" id="basic-addon14">설비명</span>
+												<select class="form-select" id="nonopfacilName">
+													<option th:each="fclt : ${OperatingFcltNames}"
+														th:value="${fclt.fcCd}" th:text="${fclt.fcName}">
+												</select>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col mb-3">
+											<div class="input-group">
+												<span class="input-group-text col-2" id="basic-addon14">담당자</span>
+												<input type="text" class="form-control" id="nonopCharge"
+													aria-describedby="basic-addon14">
+											</div>
+										</div>
+									</div>
+
+									<div class="row">
+										<div class="col mb-3">
+											<div class="input-group">
+												<label class="input-group-text col-2"
+													for="inputGroupSelect01">사유 종류</label> <select
+													class="form-select" id="nonopReason">
+													<option selected value="">선택</option>
+													<option value="정기점검">정기점검</option>
+													<option value="기타">기타</option>
+												</select>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col mb-3">
+											<div class="input-group">
+												<span class="input-group-text col-2">사유 상세</span>
+												<textarea class="form-control" aria-label="With textarea"
+													placeholder="Comment" id="nonopDetail"></textarea>
+											</div>
+										</div>
+									</div>
+
+									<div class="row">
+										<div class="col mb-3">
+											<div class="input-group">
+												<span class="input-group-text col-2" id="basic-addon14">시작시간</span>
+												<div class="col-md-10">
+													<input class="form-control" type="datetime-local"
+														id="nonopStartTime">
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-outline-secondary"
+										data-bs-dismiss="modal">취소</button>
+									<button type="button" style="display: block;"
+										class="btn btn-primary" id="saveOprtBtn">등록</button>
+									<button type="button" style="display: none;"
+										class="btn btn-primary" id="updateOprtBtn">수정</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="oprtListTable"></div>
+					<div
+						class="demo-inline-spacing d-grid gap-2 d-md-flex justify-content-md-end">
+					<!-- Button trigger modal -->
+					<button type="button" class="btn btn-primary"
+						data-bs-toggle="modal" data-bs-target="#modalCenter"
+						id="addNonopBtn">비가동 처리</button>
+					</div>
+				</div>
+			</div>
+			<script>
+				
+				//수정버튼
+				var editorIcon = function(cell, formatterParams, onRendered) {
+			  		return "<button class='btn btn-info btn-sm'>종료</button>";
+				}
+	var oprttable = new Tabulator("#oprtListTable", {
+	    //layout:"fitColumns",
+	    pagination:"local",
+			    paginationSize:10,
+			    paginationSizeSelector:[10, 20, 30, 40],
+			    movableColumns:true,
+			    paginationCounter:"rows",
+	    height:"100%",
+	    rowHeader:{formatter:"rownum", headerSort:false, width:84, hozAlign:"center", resizable:false, frozen:true},
+	    //resizableColumnFit:true,
+	   
+	    columns:[
+	        {title:"비가동 코드", field:"nonopCd", width:100, hozAlign:"center"},
+	        {title:"설비 명", field:"fcName", width:195, hozAlign:"center"}, 
+	        {title:"상태", field:"st", width:100, hozAlign:"center"},
+	        {title:"시작 시간", field:"nonopSttTime", width:150, hozAlign:"center"},
+	        {title:"종료 시간", field:"nonopFnTime", width:190, hozAlign:"center"},
+	        {title:"담당자", field:"fcChg", width:150, hozAlign:"center"},
+	        {title:"사유", field:"rsn", width:150, hozAlign:"center"},
+	        {title:"사유 상세", field:"rsnDesc", width:160, hozAlign:"center"},
+	        {title:"비가동 종료", field:"nonopFnButton",width:90,formatter: editorIcon, hozAlign:"center",resizable:false, headerSort:false,
+	            cellClick:function(e, cell){
+	            	console.log('nonopCd:'+cell._cell.row.data.nonopCd);
+	            	let nonopCd = cell._cell.row.data.nonopCd;
+	        		let param = {nonopCd};
+	        		//console.log(param);
+	        		fetch("/fclt/updatefntime",{
+	        			method : "post",
+	        			headers: {
+	        			      "Content-Type": "application/json",
+	        			    },
+	        			body : JSON.stringify(param)
+	        		})
+	        		.then(res => res.json())
+	        		.then(res => alert("비가동 처리가 종료되었습니다")
+	        		
+	        		);
+	        		location.href= "/fclt/operationlist";
+	        		
+	        	}
+	        		
+	        },
+	       
+	    ],
+	});
+	// 비가동 목록 데이터
+	/*  function listReq() {
+		fetch("/fclt/getoperation")
+		.then(res => res.json())
+		.then(res =>{
+			console.log(res)
+			oprttable.setData(res)} )
+		
+	}  */
+	
+	//클릭 시 단건 데이터 불러오기
+	oprttable.on("rowClick", function(e, row){
+		addOpType.style.display="none";
+		updtOpType.style.display="block";
+		saveOprtBtn.style.display = "none";
+		updateOprtBtn.style.display = "block";
+		let nonopCd = row.getData().nonopCd;
+		console.log(nonopCd);
+		fetch("/fclt/operationlist/"+ nonopCd)
+		.then(res => res.json())
+		.then(res => {
+			console.log(res);
+			const myModal = new bootstrap.Modal('#modalCenter', {
+				  keyboard: false
+				})
+			const modalToggle = document.getElementById('modalCenter'); 
+			myModal.show(modalToggle);
+			getInfo(res);
+		})
+	});
+	
+	//목록 VALUE 불러오기 (수정 용)
+	function getInfo(obj){
+		operationCd.value = obj.nonopCd;
+		nonopfacilName.value=obj.fcCd;
+		nonopCharge.value = obj.fcChg;
+		nonopReason.value = obj.rsn;
+		console.log(obj.rsn);
+		nonopDetail.value = obj.rsnDesc;
+		document.getElementById("nonopStartTime").value = obj.nonopSttTime;
+		nonopStartTime.value = obj.nonopSttTime;
+		//nonopFinishTime.value = obj.nonopFnTime;
+		saveOprtBtn.style.display="none";
+		updateOprtBtn.style.display="block";
+		fcCd = obj.fcCd;
+	}
+	
+	// 검색 조건 기준 원자재 목록 데이터
+	searchopBtn.addEventListener("click",function(){
+		const searchNameop= frmSearchop.searchNameop.value;
+		console.log(searchNameop);
+		const searchMfop = frmSearchop.searchMfop.value;
+		console.log(searchMfop);
+		const searchStatusop = document.querySelector('input[name="searchStop"]:checked').value;
+		//const searchStopVal = searchStatusop.value;
+		console.log(searchStatusop);
+		let paramop = {
+				fcName: searchNameop,
+		        // 값이 없으면 undefined
+		        insMf: searchMfop ? searchMfop : '',
+		        st: searchStatusop ? searchStatusop : ''
+		};
+		
+		fetch("/fclt/getoperation",{
+			method:"post",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body:JSON.stringify(paramop)
+		})
+		.then(res => res.json())
+		.then(res =>{
+			console.log(res)
+			oprttable.setData(res);
+	})
+	.catch(err=>{
+		console.log(err);
+	});
+	});
+	
+	//초기화 버튼 값 비워주기 
+	
+	resetopBtn.addEventListener("click",function(){
+		searchNameop.value= '';
+		searchMfop.value ='';
+	});
+	
+	//listReq();
+	
+	//등록창 비워주기 
+	addNonopBtn.addEventListener("click",function(){
+		addOpType.style.display="block";
+		updtOpType.style.display="none";
+		saveOprtBtn.style.display="block";
+		updateOprtBtn.style.display="none";
+		operationCd.value = "";
+		nonopfacilName.value="";
+		nonopCharge.value = "";
+		nonopReason.value = "";
+		nonopDetail.value = "";
+		nonopStartTime.value = "";
+		//nonopFinishTime.value = "";
+		
+	});
+	
+	saveOprtBtn.addEventListener("click", e=> {
+			saveReq();
+		});
+	
+	// 등록 요청
+	function saveReq() {
+		
+		const nonopSttTime= nonopStartTime.value.replace('T',' ');
+		const fcChg= nonopCharge.value;
+		const rsn= nonopReason.value;
+		const rsnDesc= nonopDetail.value;
+		const fcCd = nonopfacilName.value;
+		let param = {nonopSttTime,fcChg,rsn,rsnDesc,fcCd};
+		console.log(param);
+		fetch("/fclt/insertoprt",{
+			method : "post",
+			headers: {
+			      "Content-Type": "application/json",
+			    },
+			body : JSON.stringify(param)
+		})
+		.then(res => res.json())
+		.then(res => saveRes(res))
+	}
+	
+	// 등록 응답
+	function saveRes(res) {
+		alert("비가동 등록이 완료되었습니다.");
+		location.href= "/fclt/operationlist"
+	}
+	
+	//수정 등록 시 데이터 값 넘기기
+	updateOprtBtn.addEventListener("click", e=> {
+		modReq();
+	})
+	// 수정 요청
+	function modReq() {
+		
+		const nonopSttTime= nonopStartTime.value.replace('T',' ');
+		const fcChg= nonopCharge.value;
+		const rsn= nonopReason.value;
+		const rsnDesc= nonopDetail.value;
+		const fcCd = nonopfacilName.value;
+		const nonopCd = operationCd.value;
+		
+		let param = {nonopSttTime,fcChg,rsn,rsnDesc,fcCd,nonopCd};
+		console.log(param);
+		fetch("/fclt/updateoprt",{
+			method : "post",
+			headers: {
+			      "Content-Type": "application/json",
+			    },
+			body : JSON.stringify(param)
+		})
+		.then(res => res.json())
+		.then(res => modRes(res))
+	}
+
+	// 수정 요청 응답
+	function modRes(res) {
+		alert("수정이 완료되었습니다!");
+		location.href= "/fclt/operationlist"
+	}
+	</script>
+		</div>
+	</div>
+</body>
+</html>

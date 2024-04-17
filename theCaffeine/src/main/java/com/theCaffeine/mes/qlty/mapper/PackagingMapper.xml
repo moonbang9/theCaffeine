@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.theCaffeine.mes.qlty.mapper.PackagingMapper">
+
+	<select id="getPackagingCheckList" parameterType="PackagingVO">
+		SELECT pack_ck_no,
+			   nc_name,
+			   ck_st,
+			   pd_name,
+			   pdt_qt,
+			   pd_lot,
+			   pack_dt,
+			   pack_chg,
+			   pdt_inst_detail_no
+	      FROM pack_ck
+	     WHERE ck_st = 0
+	  ORDER BY pack_ck_no   
+	</select>
+	
+	<update id="updatePackckRes" parameterType="PackagingVO">
+		UPDATE pack_ck
+		   SET first_nc = #{firstNc},
+		       second_nc = #{secondNc},
+		       third_nc = #{thirdNc},
+		       fourth_nc = #{fourthNc},
+		       fifth_nc = #{fifthNc},
+		       nc_avg_val = #{ncAvgVal},
+		       packck_res = #{packckRes},
+		       ck_dt = sysdate,
+		       ck_chg = '박미선 대리'
+		 WHERE pack_ck_no = #{packCkNo}
+	</update>
+
+	<!-- 검사완료 후 ck_st 값을 0에서 1로 변경 -->
+	<update id="updateCkSt" parameterType="int">
+	    UPDATE pack_ck
+           SET ck_st = 1
+         WHERE pack_ck_no = #{packCkNo}
+	</update>
+	
+	<select id="getPackagingDoneList" parameterType="PackagingVO">
+		SELECT pack_ck_no,
+			   nc_name,
+			   ck_st,
+			   pd_name,
+			   pdt_qt,
+			   pd_lot,
+			   pack_dt,
+			   pack_chg,
+			   packck_res,
+			   ck_dt,
+			   ck_chg,
+			   pdt_inst_detail_no
+	      FROM pack_ck
+	     WHERE ck_st = 1
+	  ORDER BY pack_ck_no DESC
+	</select>
+	
+	<!-- 검사완료에서 삭제버튼 클릭시 검사대기 목록으로 이동 -->
+	<delete id="deletePackagingDoneList" parameterType="int">
+		UPDATE pack_ck
+           SET ck_st = 0
+         WHERE pack_ck_no = #{packCkNo}
+	</delete>
+	
+	<update id="updateSuccessInstPackaging" parameterType="int">
+		update pdt_inst_detail
+		set comp_st=4
+		where pdt_inst_detail_no = #{pdtInstDetailNo}
+	</update>
+	
+	<update id="updateSuccessHistPackaging" parameterType="int">
+		update pdt_hist
+		set pack_qual_st=1
+		where pdt_inst_detail_no = #{pdtInstDetailNo}
+	</update>
+
+
+</mapper>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.theCaffeine.mes.mtrl.mapper.MtrlStoringMapper">
+
+	<select id="getMtrlPassList" resultType="MtrlOrderVO"> 
+		SELECT  m.mt_cd,
+		        m.mt_name,
+		        mp.placeod_qt,
+		        mp.mt_placeod_cd,
+		        m.unit,
+		        m.exp_dt,
+		        mc.ck_dt,
+		        mc.ck_chg
+		FROM mt m JOIN mt_placeod mp
+		ON m.mt_cd = mp.mt_cd
+		JOIN mt_ck mc
+		ON mc.mt_placeod_cd = mp.mt_placeod_cd
+		WHERE mp.placeod_st = 5 AND mc.mc_res = '합격'
+		ORDER BY mc.str_comp_dt
+ 	</select>
+
+	<select id="getMtrlFailList" resultType="MtrlOrderVO"> 
+		SELECT  m.mt_cd,
+		        m.mt_name,
+		        mp.placeod_qt,
+		        mp.mt_placeod_cd,
+		        m.unit,
+		        mc.ck_dt,
+		        mc.ck_chg
+		FROM mt m JOIN mt_placeod mp
+		ON m.mt_cd = mp.mt_cd
+		JOIN mt_ck mc
+		ON mc.mt_placeod_cd = mp.mt_placeod_cd
+		WHERE mp.placeod_st = 5 AND mc.mc_res = '불합격'
+		ORDER BY mc.str_comp_dt
+ 	</select>
+ 	
+ 	<select id="getMtrlSubsidiaryList" resultType="MtrlOrderVO"> 
+		SELECT  m.mt_cd,
+		        m.mt_name,
+		        mp.placeod_qt,
+		        mp.mt_placeod_cd,
+		        m.unit,
+		        m.exp_dt,
+		        mp.placeod_compdt + m.leadtm AS placeod_arridt, -- 자재도착일
+		        mp.placeod_chg -- 발주담당자
+		FROM mt m JOIN mt_placeod mp
+		ON m.mt_cd = mp.mt_cd
+		WHERE mp.placeod_st = 3 AND m.mt_div = '부자재'
+		ORDER BY placeod_arridt
+	</select>
+	
+	<insert id="insertMtrlReturn" parameterType="MtrlReturnVO">
+		INSERT INTO mt_rtn
+					(mt_rtn_no
+					,rtn_qt
+					,rtn_compdt
+					,rtn_chg
+					,mt_placeod_cd
+					,mt_cd)
+		    VALUES  (
+		    		SEQ_MT_RTN_NO.nextval
+		    		,#{rtnQt}
+		    		,sysdate
+		    		,#{rtnChg}
+		    		,#{mtPlaceodCd}
+		    		,#{mtCd}
+		    		)
+	</insert>
+	
+	<update id="updateMtrlOrder2" parameterType="String">
+		UPDATE  mt_placeod
+		SET     placeod_st = 7
+		WHERE   mt_placeod_cd = #{mtPlaceodCd}
+	</update>
+
+	<select id="insertMtrlStr" statementType="CALLABLE" parameterType="MtrlStoreVO">
+        CALL MT_STORING(
+                #{strQt, mode=INOUT, jdbcType=INTEGER},
+                #{strChg, mode=IN, jdbcType=VARCHAR},
+                #{mtPlaceodCd, mode=IN, jdbcType=VARCHAR},
+                #{mtCd, mode=IN, jdbcType=VARCHAR},
+                #{expDt, mode=IN, jdbcType=INTEGER})
+    </select>
+    
+    <update id="updateMtrlOrder" parameterType="String">
+		UPDATE  mt_placeod
+		SET     placeod_st = 6
+		WHERE   mt_placeod_cd = #{mtPlaceodCd}
+	</update>
+
+
+	<sql id="condition">
+		<where>
+			<if test="mtCd != null and mtCd != '' ">
+				m.mt_cd LIKE '%' || #{mtCd} || '%'
+			</if>
+			<if test="mtName != null and mtName != '' ">
+				AND m.mt_name LIKE '%' || #{mtName} || '%'	
+			</if>
+			<if test="mtDiv != null and mtDiv != '' ">
+				AND m.mt_div = #{mtDiv}
+			</if>
+		</where>
+	</sql>
+
+	<select id="getMtrlStockList" resultType="MtrlStkListVO"> 
+		SELECT m.mt_div
+			   ,ms.mt_cd
+			   ,m.mt_name
+			   ,SUM(ms.stk_qt) as sum_stk_qt
+			   ,m.unit
+		  FROM mt_stk ms
+		  JOIN mt m
+		    ON m.mt_cd = ms.mt_cd
+		    <include refid="condition"></include>
+		 GROUP BY m.mt_div, ms.mt_cd, m.mt_name, m.unit
+		 ORDER BY mt_div desc
+ 	</select>
+ 	
+	<select id="getRotStockList" resultType="MtrlStkListVO" parameterType="String"> 
+		SELECT mk.mt_lot
+		       ,mk.mt_cd
+		       ,mk.stk_qt
+		       ,mk.exp_dt
+		       ,mr.str_compdt
+		FROM   mt_stk mk
+		JOIN   mt_str mr
+		ON     mk.mt_str_no = mr.mt_str_no
+		WHERE  mk.mt_cd = #{mtCd}
+		ORDER BY str_compdt
+	</select>
+</mapper>

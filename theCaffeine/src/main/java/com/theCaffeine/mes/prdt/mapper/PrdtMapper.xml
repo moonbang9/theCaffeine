@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.theCaffeine.mes.prdt.mapper.PrdtMapper">
+
+	<select id="getPlanList" resultType="PlanVO">
+		select w.pdt_plan_cd, w.wk_plan_stt_dt, case when r.cnt = '-1' then null
+                                        else r.pd_name || ' 외 ' || r.cnt || '개'
+                                        end as plantot, 
+                                        w.psum, 
+                                        w.wk_plan_stt_dt+(select max(leadtm) from mt) wk_plan_stt_dt2 from 
+		(select p.pdt_plan_cd, p.wk_plan_stt_dt, sum(d.qt) as psum from pdt_plan_detail d right outer 
+			join PDTPLAN p 
+			on p.pdt_plan_cd=d.pdt_plan_cd GROUP by p.pdt_plan_cd, p.wk_plan_stt_dt order by p.pdt_plan_cd) w
+		join (select pdt_plan_cd, count(pd_name)-1 as cnt, min(pd_name) as pd_name 
+				from (select p.pdt_plan_cd, d.pd_name 
+        				from pdt_plan_detail d right outer 
+        				join PDTPLAN p 
+        				on p.pdt_plan_cd=d.pdt_plan_cd GROUP by p.pdt_plan_cd, d.pd_name 
+        				order by p.pdt_plan_cd) 
+        		group by pdt_plan_cd) r 
+		on w.pdt_plan_cd=r.pdt_plan_cd 
+		order by r.pdt_plan_cd
+	</select>
+	
+	<select id="getPlanInfo" resultType="PlanVO">
+		select 	pdt_plan_cd,
+				wk_plan_stt_dt,
+				od_name
+		from PDTPLAN
+		where pdt_plan_cd = #{pdtPlanCd}
+	</select>
+	
+	<select id="getPlanDetailList" resultType="PlanVO">
+		SELECT 	ppd.pd_name,
+        		ppd.qt,
+        		ppd.due_dt,
+        		ppd.pd_cd,
+        		ppd.pdt_plan_cd,
+        		ppd.pdt_plan_detail_no,
+                p.unit_qt
+		FROM 	PDT_PLAN_DETAIL ppd
+        join pd p on ppd.pd_cd = p.pd_cd
+		WHERE  	pdt_plan_cd = #{pdtPlanCd}
+	</select>
+	
+	<select id="getQnttMtrlList" resultType="MtrlPlanVO">
+		select * 
+		from (select m.pdt_plan_cd, m.bag as placeod_qt, m.mt_cd, y.mt_div, y.mt_name, m.unit 
+        		from    (select a.pd_cd, b.unit, b.mt_cd, a.box/2 bag, a.pdt_plan_cd 
+                		from bom b 
+                		join    (select ppd.pdt_plan_cd, ppd.pd_cd, sum(ppd.qt)/p.unit_qt as box, p.unit 
+                        		from PDT_PLAN_DETAIL ppd 
+                        		join pd p 
+                        		on p.pd_cd=ppd.pd_cd 
+                        		group by ppd.pdt_plan_cd,p.unit_qt,p.unit,ppd.pd_cd) a 
+                		on a.pd_cd=b.pd_cd 
+                		where b.detail_unit='kg') m 
+        		join mt y 
+        		on m.mt_cd=y.mt_cd
+    		union
+    		select m.pdt_plan_cd, m.bag as placeod_qt, m.mt_cd, y.mt_div, y.mt_name, m.unit 
+    		from    (select a.pd_cd, b.unit, b.mt_cd, a.box * b.consum bag, a.pdt_plan_cd
+            		from bom b 
+            		join    (select ppd.pdt_plan_cd, ppd.pd_cd, sum(ppd.qt)/p.unit_qt as box, p.unit 
+                    		from PDT_PLAN_DETAIL ppd 
+                    		join pd p 
+                    		on p.pd_cd=ppd.pd_cd 
+                    		group by ppd.pdt_plan_cd,p.unit_qt,p.unit,ppd.pd_cd) a 
+            		on a.pd_cd=b.pd_cd 
+            		where b.detail_unit='pcs') m 
+    		join mt y 
+    		on m.mt_cd=y.mt_cd
+    		union
+    		select m.pdt_plan_cd, m.bag as placeod_qt, m.mt_cd, y.mt_div, y.mt_name, m.unit 
+    		from    (select b.unit, b.mt_cd, sum(a.box * b.consum) bag, a.pdt_plan_cd
+            		from bom b 
+            		join    (select ppd.pdt_plan_cd, ppd.pd_cd, sum(ppd.qt)/p.unit_qt as box, p.unit 
+                    		from PDT_PLAN_DETAIL ppd 
+                    		join pd p 
+                    		on p.pd_cd=ppd.pd_cd 
+                    		group by ppd.pdt_plan_cd,p.unit_qt,p.unit,ppd.pd_cd) a 
+            		on a.pd_cd=b.pd_cd 
+            		where b.detail_unit='box' group by a.pdt_plan_cd,b.unit, b.mt_cd) m 
+    		join mt y 
+    		on m.mt_cd=y.mt_cd)
+		where pdt_plan_cd = #{pdtPlanCd}
+	</select>
+	
+	<select id="getDetailOrderList" resultType="PlanOrderDetailVO">
+		select 	od.pd_cd, 
+				p.unit, 
+				od.qt, 
+				od.due_dt,
+                0 as pre_pdt_qt,
+                od.od_detailno,
+                0 as tot_qt
+		from od_detail od 
+		left outer join pd p 
+		on od.pd_cd = p.pd_cd 
+		<where>
+			<if test="pdCd != null and pdCd != ''">
+				AND od.pd_cd = #{pdCd}
+			</if>
+			<if test="dueDt != null">
+			<![CDATA[	AND due_dt >= #{dueDt} ]]>
+			</if>
+		</where>
+		order by od.due_dt
+	</select>
+	
+	<select id="getSafeInventoryList" resultType="SafePlanVO">
+		select 	e.pd_cd, 
+				e.unit, 
+				nvl(w.tat,0) now_stk, 
+				nvl(e.safe_stk_qt,0) safe_stk, 
+				nvl((nvl(w.tat,0) - nvl(e.safe_stk_qt,0)),0) ms_stk 
+		from (select p.pd_name, ps.unit,sum(qt) tat, ps.pd_cd 
+				from PD_STK ps 	
+				join pd p 
+				on ps.pd_cd = p.pd_cd 
+				where qt > 0 and pdt_dt >= sysdate group by p.pd_name, ps.unit, ps.pd_cd) w 
+			right outer join (select pd_cd, safe_stk_qt, pd_name, unit from pd) e 
+			on w.pd_cd = e.pd_cd
+	</select>
+	
+	<select id="getFailProdList" resultType="FailPlanVO">
+		select q.pd_cd, nvl(w.tat,0) fail_tat 
+		from 	(select pid.pd_cd, sum(pid.qt) tat 
+				from PDT_INST_DETAIL pid 
+				join PDT_INST pi 
+				on pid.pdt_inst_no = pi.pdt_inst_no 
+				where pid.comp_st = 6 and pi.pdt_plan_cd = (select max(pdt_plan_cd) 
+															from PDTPLAN 
+														<![CDATA[	where wk_plan_stt_dt < (select max(wk_plan_stt_dt) 
+																					from PDTPLAN 
+																					where wk_plan_stt_dt <= sysdate))]]> 
+				group by pid.pd_cd) w 
+		right outer join pd q 
+		on w.pd_cd=q.pd_cd
+	</select>
+	
+	<select id="getSuccessProdList" resultType="FailPlanVO">
+		select p.pd_cd, nvl(sum(r.qt),0) bef_success_tat 
+		from pd p 
+		left outer join (select * 
+						from PDT_INST_DETAIL q 
+						join (select * 
+							  from PDT_INST 
+							  where pdt_plan_cd=(select max(pdt_plan_cd) pdt_plan_cd 
+								  				from PDTPLAN 
+                                    <![CDATA[   where wk_plan_stt_dt < (select max(wk_plan_stt_dt) 
+								  										from PDTPLAN 
+								  										where wk_plan_stt_dt <= sysdate))) w ]]>
+						on q.pdt_inst_no=w.pdt_inst_no where q.comp_st=5) r 
+		on p.pd_cd=r.pd_cd 
+		group by p.pd_cd
+	</select>
+	
+	<select id="getNotDate" resultType="FailPlanVO">
+		select max(f.w) no_date 
+		from 	(select wk_plan_stt_dt+(select max(leadtm) from mt)+1 w 
+				from pdtplan 
+				group by wk_plan_stt_dt) f
+	</select>
+	
+	<select id="getBasicPlanList" resultType="PlanVO">
+		select pd_cd, 0 qt, null due_dt, pd_name, 0 add_qt, unit_qt, 0 as tot_qt from pd
+	</select>
+	
+	<select id="getPlanConsum" resultType="FailPlanVO">
+		select a.pd_cd,(a.consum / b.consum) consum 
+		from (select pd_cd,consum from bom where detail_unit='kg') a 
+		join (select pd_cd,consum from bom where detail_unit='box') b 
+		on a.pd_cd=b.pd_cd
+	</select>
+	
+	<insert id="insertPrdtPlan" parameterType="PlanVO">
+		insert into PDTPLAN(pdt_plan_cd, wk_plan_stt_dt, od_name) 
+		VALUES 	(#{pdtPlanCd},
+				#{wkPlanSttDt},
+				#{odName})
+	</insert>
+	
+	<insert id="insertPrdtDetailPlan" parameterType="PlanDetailVO">
+		insert into PDT_PLAN_DETAIL(pdt_plan_detail_no, pdt_plan_cd, pd_name, qt, due_dt,pd_cd) 
+		VALUES 	(pdt_plan_detail_seq.nextval,
+				#{pdtPlanCd},
+				#{pdName},
+				#{qt},
+				#{dueDt},
+				#{pdCd})
+	</insert>
+	
+	<update id="updatePrdtPlan" parameterType="PlanVO">
+		update PDTPLAN 
+		SET wk_plan_stt_dt=#{wkPlanSttDt}, od_name=#{odName}
+		where pdt_plan_cd = #{pdtPlanCd}
+	</update>
+	
+	<update id="updatePrdtDetailPlan" parameterType="PlanDetailVO">
+		update PDT_PLAN_DETAIL 
+		SET qt = #{qt}, due_dt=#{dueDt}
+		where pdt_plan_detail_no = #{pdtPlanDetailNo}
+	</update>
+	
+	<delete id="planDelete">
+		delete from PDTPLAN where pdt_plan_cd = #{pdtPlanCd}
+	</delete>
+	
+	<delete id="planDetailDelete">
+		delete from PDT_PLAN_DETAIL where pdt_plan_cd = #{pdtPlanCd}
+	</delete>
+	
+	<select id="getInstList" resultType="InstVO">
+	select q.msum, q.isum, q.pdt_inst_no,q.insttot,t.pdt_inst_dt 
+		from(select 	sum(w.m)/60 msum,
+				sum(w.isum) isum,
+				w.pdt_inst_no,
+				case when count(w.pdt_inst_dt)-1 = '0' 
+				then min(pd.pd_name)
+                else min(pd.pd_name) || ' 외 ' || (count(w.pdt_inst_dt)-1) || '개'
+                end as insttot 
+		from (select d.pd_cd, sum(d.qt) isum, p.pdt_inst_dt, round(sum(pdtexpt_fn_time-pdt_stt_time)*24*60,2) m,p.pdt_inst_no
+				from PDT_INST_DETAIL d left outer 
+				join PDT_INST p 
+				on p.pdt_inst_no=d.pdt_inst_no
+				group by d.pd_cd, p.pdt_inst_dt,p.pdt_inst_no
+				order by p.pdt_inst_dt) w 
+		right outer join 	(select DISTINCT p.pdt_inst_no 
+							from PDT_INST p 
+							join PDT_INST_DETAIL pd 
+							on p.pdt_inst_no=pd.pdt_inst_no) e 
+		on w.pdt_inst_no = e.pdt_inst_no
+		join pd pd 
+		on pd.pd_cd=d.w.pd_cd
+		group by w.pdt_inst_no)q 
+	left outer join PDT_INST t 
+	on q.pdt_inst_no = t.pdt_inst_no
+	order by t.pdt_inst_dt
+	</select>
+	
+	<select id="getInstDetailList" resultType="InstVO">
+		select 	d.pdt_inst_detail_no,
+				d.pd_cd,
+				d.qt,
+				d.pdt_stt_time,
+				d.pdtexpt_fn_time,
+				d.pdt_inst_no, 
+				d.comp_st,
+				p.pd_name 
+		from PDT_INST_DETAIL d 
+		join pd p on d.pd_cd=p.pd_cd
+		where d.pdt_inst_no = #{pdtInstNo}
+		order by d.pdt_stt_time
+	</select>
+	
+	<delete id="instDelete">
+		delete from pdt_inst where pdt_inst_no = #{pdtInstNo}
+	</delete>
+	
+	<delete id="instDetailDelete">
+		delete from PDT_INST_DETAIL where pdt_inst_no = #{pdtInstNo}
+	</delete>
+	
+	<delete id="instDetailDelete2">
+		delete from PDT_INST_DETAIL where pdt_inst_detail_no = #{pdtInstDetailNo}
+	</delete>
+	
+	<select id="getPlanCdList">
+		select pdt_plan_cd 
+		from PDTPLAN 
+		<![CDATA[where wk_plan_stt_dt >= sysdate-(select max(leadtm) from mt)]]>
+		order by pdt_plan_cd
+	</select>
+	
+	<insert id="insertPrdtInst" parameterType="InstVO">
+		insert into PDT_INST(PDT_INST_NO, PDT_INST_DT, PDT_PLAN_CD) 
+		VALUES 	(PDT_INST_SEQ.nextval,
+				#{pdtInstDt},
+				#{pdtPlanCd})
+	</insert>
+	
+	<insert id="insertPrdtInstDetail" parameterType="InstVO">
+		<selectKey keyProperty="pdtInstNo" order="BEFORE" resultType="int">
+			select max(pdt_inst_no) from PDT_INST
+		</selectKey>
+	
+		insert into PDT_INST_DETAIL(PDT_INST_DETAIL_NO, PDT_INST_NO, PD_CD, QT, PDT_STT_TIME, PDTEXPT_FN_TIME, COMP_ST) 
+		VALUES 	(PDT_PLAN_DETAIL_SEQ.nextval,
+				#{pdtInstNo},
+				#{pdCd},
+				#{qt},
+				#{pdtSttTime},
+				#{pdtexptFnTime},
+				#{compSt})
+	</insert>
+	
+	<select id="updateMtSend" statementType="CALLABLE" parameterType="int">
+		CALL PRDT_MT_RESEND(#{pdtInstDetailNo, mode=IN, jdbcType=INTEGER})
+	</select>
+	
+	<select id="getTodayProduct" resultType="HistVO" parameterType="HistVO">
+		select d.pd_cd, nvl(c.pdt_target_qt,0) pdt_target_qt, nvl(d.pdt_now_qt,0) pdt_now_qt, nvl((c.pdt_target_qt-d.pdt_now_qt),0) pdt_remain_qt 
+		from (select pd_cd,sum(qt) pdt_target_qt 
+				from pdt_inst_detail 
+				where pdt_stt_time between #{pdtDt} and #{pdtDt}+1 group by pd_cd) c 
+                
+		right outer join (select b.pd_cd, nvl(a.w,0) pdt_now_qt 
+							from (select pd_cd,sum(qt) w 
+									from pdt_inst_detail 
+									where pdt_stt_time between CASE WHEN #{pdtDt} > trunc(sysdate,'dd') THEN #{pdtDt}+1
+															   ELSE #{pdtDt} 
+															   END 
+															   and CASE WHEN #{pdtDt} = trunc(sysdate,'dd') THEN sysdate
+                                                                                                                      ELSE #{pdtDt}+1
+                                                                                                                      END group by pd_cd) a 
+        					right outer join pd b on a.pd_cd = b.pd_cd) d 
+		on c.pd_cd = d.pd_cd
+	</select>
+</mapper>

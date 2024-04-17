@@ -4,32 +4,327 @@
 	layout:decorate="~{layout/index}">
 <head>
 <meta charset="UTF-8">
-<title>standard.html</title>
+<title>packaging.html</title>
 </head>
 
 <body>
 	<div layout:fragment="content">
-		<h1>검사 기준 관리</h1>
-	<div id="QualityStandard">
+		<h1>포장 검사</h1>
+		<div id="QualityStandard"></div>
+		<div class="demo-inline-spacing mt-3">
+			<div class="list-group list-group-horizontal-md text-md-center">
 
-	<div id="example-table">
-	</div>
-	</div>
+				<a class="list-group-item list-group-item-action active"
+					id="home-list-item" data-bs-toggle="list" href="#horizontal-home">검사대기</a>
+
+				<a class="list-group-item list-group-item-action"
+					id="profile-list-item" data-bs-toggle="list"
+					href="#horizontal-profile">검사완료</a>
+			</div>
+			<button id="print-table">인쇄</button>
+			<button id="download-pdf">PDF 다운로드</button>
+		</div>
+		<div class="tab-content px-0 mt-0">
+			<div class="tab-pane fade show active" id="horizontal-home">
+				<div id="waiting-table"></div>
+			</div>
+
+			<div class="tab-pane fade" id="horizontal-profile">
+				<div id="done-table"></div>
+			</div>
+		</div>
+		<!-- Modal -->
+		<div class="modal fade" id="basicModal" tabindex="-1"
+			aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel1">검사결과</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<div class="row">
+							<div class="col mb-3">
+								<label for="result1" class="form-label">1차 결과</label> <input
+									type="number" id="result1" class="form-control"
+									placeholder="1차" />
+							</div>
+							<div class="col mb-3">
+								<label for="result2" class="form-label">2차 결과</label> <input
+									type="number" id="result2" class="form-control"
+									placeholder="2차" />
+							</div>
+							<div class="col mb-3">
+								<label for="result3" class="form-label">3차 결과</label> <input
+									type="number" id="result3" class="form-control"
+									placeholder="3차" />
+							</div>
+							<div class="col mb-3">
+								<label for="result4" class="form-label">4차 결과</label> <input
+									type="number" id="result4" class="form-control"
+									placeholder="4차" />
+							</div>
+							<div class="col mb-3">
+								<label for="result5" class="form-label">5차 결과</label> <input
+									type="number" id="result5" class="form-control"
+									placeholder="5차" />
+							</div>
+						</div>
+						<div id="averageResult"></div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-outline-secondary"
+							data-bs-dismiss="modal">취소</button>
+						<button type="button" class="btn btn-primary" id="confirm_button">저장</button>
+					</div>
+				</div>
+			</div>
+		</div>
 
 
-	<script>
-	var table = new Tabulator("#QualityStandard", {
-	    height:"311px",
-	    layout:"fitColumns",
-	    resizableColumnFit:true,
-	    columns:[
-	        {title:"카테고리", field:"name", width:200, resizable:true},
-	        {title:"품질검사명", field:"progress", resizable:true},
-	        {title:"통과기준", field:"gender", resizable:true}, 
-	        {title:"입력가능값", field:"rating", resizable:true}
-	    ],
-	});
-	</script>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.20/jspdf.plugin.autotable.min.js"></script>
+
+
+		<script>
+		//검사 대기 테이블
+	    var table1 = new Tabulator("#waiting-table", {
+	      height: "500px",
+	      layout: "fitColumns",
+	      pagination: "local",
+	      paginationSize: 10,
+	      paginationSizeSelector: [5, 10, 15, 20],
+	      movableColumns: true,
+	      paginationCounter: "rows",
+
+	      columns: [{
+	        title: "No",
+	        width: 60,
+	        field: "packCkNo"
+	      }, {
+	        title: "검사명",
+	        //width: 120,
+	        field: "ncName",
+	      }, {
+	        title: "제품LOT",
+	        field: "pdLot"
+	      }, {
+	        title: "수량",
+	        //width: 70,
+	        field: "pdtQt"
+	      }, {
+	        title: "포장일",
+	        field: "packDt"
+	      }, {
+	        title: "포장 담당자",
+	        field: "packChg"
+	      },],
+
+	    });
+		
+	  //검사완료 테이블
+	    var table2 = new Tabulator("#done-table", {
+	      height: "500px",
+	      layout: "fitColumns",
+	      pagination: "local",
+	      paginationSize: 10,
+	      paginationSizeSelector: [5, 10, 15, 20],
+	      movableColumns: true,
+	      paginationCounter: "rows",
+
+	      columns: [{
+	    	  title: "No",
+	          width: 60,
+	          field: "packCkNo"
+	        }, {
+	          title: "검사명",
+	          //width: 120,
+	          field: "ncName",
+	        },{
+	          title: "검사결과",
+	          //width: 100,
+	          field: "packckRes",
+	        }, {
+	          title: "제품LOT",
+		      field: "pdLot"
+	        }, {
+	          title: "수량",
+	          //width: 70,
+	          field: "pdtQt"
+	        }, {
+	          title: "포장일",
+	          field: "packDt"
+	        }, {
+	          title: "포장 담당자",
+	          field: "packChg"
+	      }, {
+	        title: "검사 담당자",
+	        field: "ckChg"
+	      }, {
+	        title: "검사일",
+	        field: "ckDt"
+	      }, {
+	        title: "삭제", formatter: "buttonCross", width: 80, hozAlign: "center", cellClick: function (e, cell) {
+	          console.log(cell.getRow()._row.data.packCkNo);
+	          if (confirm("삭제하시겠습니까?")) {
+	            const packCkNo = cell.getRow()._row.data.packCkNo;
+	            const pdtInstDetailNo = cell.getRow()._row.data.pdtInstDetailNo;
+	            let param = {"packCkNo":packCkNo, "pdtInstDetailNo": pdtInstDetailNo};
+	            fetch("/ajax/deletePackagingDoneList", {
+	              method: "post",
+	              headers: {
+	                "Content-Type": "application/json",
+	              },
+	              body: JSON.stringify(param)
+	            })
+	              .then(res => {
+	                alert("삭제가 완료되었습니다.");
+	                location.href = "/quality/packaging";
+	                cell.getRow().delete();
+	              })
+	          }
+	        }
+	      }
+	      ],
+
+	    });
+		
+	    listWaiting();
+	    listDone();
+	    
+	  //검사대기 목록 데이터
+	    function listWaiting() {
+	          fetch("/ajax/packagingCheckList")
+	            .then(res => res.json())
+	            .then(res => table1.setData(res))
+	    }
+	  	//검사완료 목록 데이터
+	    function listDone() {
+	      fetch("/ajax/packagingDoneList")
+	        .then(res => res.json())
+	        .then(res => table2.setData(res))
+	    }
+	  	
+	  //인쇄 버튼
+	    document.getElementById("print-table").addEventListener("click",
+	      function () {
+	        table1.print(false, true);
+	      });
+
+	    //pdf 다운로드 버튼
+	    document.getElementById("download-pdf").addEventListener("click", function () {
+	      table1.download("pdf", "data.pdf", {
+	        orientation: "portrait", // 페이지 방향을 세로로 설정
+	        title: "Example Report", // 보고서 제목 설정
+	        
+	      });
+	    });
+	    
+	    let averageFixed = "";
+	    let testResult = "";
+	    let letPackCkNo = "";
+	    let letCkSt = "";
+	    
+	  //행 클릭시 모달창 출력
+	    table1.on("rowClick", function (e, row) {
+	      console.log(row.getData());
+	      letPackCkNo = row.getData().packCkNo;
+	      letCkSt = row.getData().ckSt;
+	      const myModal = new bootstrap.Modal('#basicModal', {
+	        keyboard: false
+	      })
+	      const modalToggle = document.getElementById('basicModal');
+	      myModal.show(modalToggle);
+	    });
+	  
+	 // 확인 버튼 클릭 이벤트 처리
+	    document.getElementById("confirm_button").addEventListener("click", function () {
+	      // 모달 창에서 값을 가져오기
+	      var result1 = parseFloat(document.getElementById("result1").value);
+	      var result2 = parseFloat(document.getElementById("result2").value);
+	      var result3 = parseFloat(document.getElementById("result3").value);
+	      var result4 = parseFloat(document.getElementById("result4").value);
+	      var result5 = parseFloat(document.getElementById("result5").value);
+
+	      // 입력한 값이 비어 있는지 확인
+	      if (isNaN(result1) || isNaN(result2) || isNaN(result3) || isNaN(result4) || isNaN(result5)) {
+	        alert("모든 결과를 입력하세요.");
+	        return;
+	      }
+
+	      // 입력한 값들의 평균 계산
+	      averageFixed1 = ((result1 + result2 + result3 + result4 + result5) / 5).toFixed(2);
+	      averageFixed = ((result1 + result2 + result3 + result4 + result5) / 5).toFixed(0);
+
+
+	      // 평균을 확인 창에 표시
+	      var resultMessage = "입력한 검사결과의 평균은 " + averageFixed1 + " 입니다. \n 질소충전검사 합격 기준은 1 이하입니다.";
+
+	      // 검사 결과 계산
+	      if (averageFixed >= 0 && averageFixed <= 1) {
+	        testResult = "합격";
+	      } else {
+	        testResult = "불합격";
+	      }
+
+	      // 결과 메시지에 검사 결과 포함
+	      resultMessage += "\n검사 결과: " + testResult;
+
+	      // 결과 메시지를 평균 결과 창에 표시
+	      document.getElementById("averageResult").innerText = resultMessage;
+
+	    });
+
+	    confirm_button.addEventListener("click", e => {
+	      saveReq();
+	    })
+	    
+	    //검사값 디비 등록
+        function saveReq() {
+          const firstNc = result1.value;
+          const secondNc = result2.value;
+          const thirdNc = result3.value;
+          const fourthNc = result4.value;
+          const fifthNc = result5.value;
+          const ncAvgVal = averageFixed;
+          const packckRes = testResult;
+          const packCkNo = letPackCkNo;
+          const ckSt = letCkSt;
+          let param = { firstNc, secondNc, thirdNc, fourthNc, fifthNc, ncAvgVal, packckRes, packCkNo, ckSt };
+          console.log(param);
+          fetch("/ajax/updatePackckRes", {
+            method: "post",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(param)
+          })
+            .then(res => res.json())
+            .then(res => {
+              console.log(res);
+              saveRes(res);
+            });
+        }
+
+        // 등록 응답 처리
+        function saveRes(res) {
+          console.log(res)
+          if (res >= 1) {
+            alert("등록이 완료되었습니다!");
+            location.href = "/quality/packaging";
+          } else {
+            alert("등록에 실패했습니다.");
+          }
+        }
+	  
+	    
+	  
+	  
+			
+		</script>
 	</div>
 </body>
 </html>

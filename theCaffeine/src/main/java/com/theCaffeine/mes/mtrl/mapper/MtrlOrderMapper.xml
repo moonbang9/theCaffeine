@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.theCaffeine.mes.mtrl.mapper.MtrlOrderMapper">
+
+	 <select id="getMtrlStkList" resultType="MtrlStkListVO"> 
+		-- 발주진행중인 자재 수량
+		with p as (SELECT mp.mt_cd 
+		                  ,SUM(mp.placeod_qt) as pqd
+		            FROM (SELECT mt_cd
+		                        ,placeod_qt  
+		                    FROM mt_placeod 
+		                    WHERE placeod_st BETWEEN 2 AND 5) mp 
+		            JOIN mt_stk ms
+		              ON ms.mt_cd = mp.mt_cd
+		           GROUP BY mp.mt_cd)
+		            ,
+		            
+		-- 자재별 재고현황
+		 msp as (SELECT mp.mt_cd
+				        ,SUM(ms.stk_qt) AS sum_stk_qt
+				        ,SUM(mp.placeod_qt) AS safe_stk_qt
+				        ,SUM(ms.stk_qt) as nn
+		                ,SUM(mp.placeod_qt) AS qt_difference
+				FROM mt_placeod mp 
+				JOIN mt_stk ms
+				  ON ms.mt_cd = mp.mt_cd
+				WHERE placeod_reqdt BETWEEN TO_CHAR(add_months(SYSDATE, -1), 'yyyy-mm-dd') AND SYSDATE
+				GROUP BY mp.mt_cd)
+		        ,
+		        
+		-- 자재별 차주 생산계획현황 
+		 mpp as (SELECT b.mt_cd
+		                ,ab.pd_cd
+		                ,ab.pqt
+		                ,b.unit
+		                ,b.consum
+		        FROM bom b 
+		        JOIN (SELECT pd_cd ,SUM(qt / 24) pqt
+		             FROM pdt_plan_detail 
+		             WHERE pdt_plan_cd = 'K240408'
+		             GROUP BY pd_cd) ab
+		        ON b.pd_cd = ab.pd_cd)
+		 
+		 SELECT DISTINCT m.mt_div
+		        ,m.mt_cd
+		        ,m.mt_name
+		        ,m.unit
+		        ,CASE WHEN mpp.unit = 'Bag' THEN mpp.pqt
+		              WHEN mpp.unit = 'Box' THEN (SELECT SUM(mpp.pqt) FROM mpp WHERE mpp.unit = 'Box') * mpp.consum
+		              WHEN mpp.unit = 'pcs' THEN mpp.pqt * mpp.consum
+		         END  AS pqtt
+		        ,msp.sum_stk_qt
+		        ,NVL(p.pqd, 0) AS sum_placeod_qt
+		        ,TRUNC(msp.safe_stk_qt * (m.safe_stk_rate / 100)) AS safe_stk_qt
+		        ,msp.nn + NVL(p.pqd, 0) - TRUNC(msp.safe_stk_qt * m.safe_stk_rate / 100) - (CASE WHEN mpp.unit = 'Bag' THEN mpp.pqt
+			                                                                                     WHEN mpp.unit = 'Box' THEN (SELECT SUM(mpp.pqt) FROM mpp WHERE mpp.unit = 'Box') * mpp.consum
+			                                                                                     WHEN mpp.unit = 'pcs' THEN mpp.pqt * mpp.consum
+			                                                                                END) AS qt_difference    
+		FROM msp 
+		LEFT OUTER JOIN p
+		  ON msp.mt_cd = p.mt_cd
+		JOIN mt m
+		  ON m.mt_cd = msp.mt_cd
+		JOIN mpp
+		  ON mpp.mt_cd = msp.mt_cd
+		ORDER BY qt_difference
+
+ 	</select>
+
+	 <select id="getMtrlOrderList" resultType="MtrlOrderVO"> 
+		SELECT  mp.mt_placeod_cd,
+				m.mt_div,
+		        m.mt_cd,
+		        m.mt_name,
+		        c.cli_name,
+		        mp.placeod_reqdt,
+		        mp.placeod_qt,
+		        m.unit,
+		        mp.placeod_st,
+		        mp.placeod_requester,
+		        m.leadtm
+		FROM 	mt_placeod mp JOIN mt m
+		ON mp.mt_cd = m.mt_cd
+		JOIN cli c
+		ON mp.cli_cd = c.cli_cd
+		WHERE mp.placeod_st = 1
+		ORDER BY mp.placeod_reqdt
+ 	</select>
+ 	
+ 	<select id="getMtrlCliList" resultType="MtrlOrderVO"> 
+		SELECT  cli_cd,
+		        cli_name
+		FROM    cli
+		WHERE   cli_cd LIKE 'M%'
+		ORDER BY cli_cd
+ 	</select>
+ 	
+ 	<select id="getMtrlList" resultType="MtrlOrderVO"> 
+		SELECT  m.mt_cd,
+		        m.mt_name,
+		        c.cli_cd
+		FROM    mt m JOIN cli c
+		ON      m.cli_cd = c.cli_cd
+		WHERE   m.cli_cd = #{cliCd}
+ 	</select>
+ 	
+ 	<insert id="insertMtrlOrder" parameterType="MtrlOrderVO">
+		INSERT INTO mt_placeod
+					(mt_placeod_cd,
+					placeod_qt,
+					placeod_compdt,
+					placeod_requester,
+					placeod_chg,
+					mt_cd,
+					cli_cd)
+		    VALUES  (
+		    		SEQ_MT_PLACEOD.nextval
+		    		,#{placeodQt}
+		    		,#{placeodCompdt}
+		    		,#{placeodRequester}
+		    		,#{placeodChg}
+		    		,#{mtCd}
+		    		,#{cliCd}
+		    		)
+	</insert>
+	
+	<delete id="deleteMtrlOrder" parameterType="String">
+		DELETE FROM mt_placeod
+		WHERE mt_placeod_cd = #{mtPlaceodCd}
+	</delete>
+	
+	<update id="updateMtrlOrder" parameterType="MtrlOrderVO">
+		UPDATE  mt_placeod
+		SET     placeod_st = 2,
+		        placeod_compdt = sysdate,
+		        placeod_chg = '박민수 대리',
+		        placeod_qt = #{placeodQt}
+		WHERE   mt_placeod_cd = #{mtPlaceodCd}
+	</update>
+	
+	<update id="updateMtrlOrder2" parameterType="String">
+		UPDATE  mt_placeod
+		SET     placeod_st = 3
+		WHERE   mt_placeod_cd = #{mtPlaceodCd}
+	</update>
+	
+	<select id="getMtrlqualList" resultType="MtrlOrderVO"> 
+		SELECT  m.mt_cd,
+                m.mt_name,
+                c.cli_name,
+                mp.placeod_compdt + m.leadtm AS placeod_arridt,
+                mp.placeod_qt,
+                m.unit,
+                mp.placeod_chg,
+                mp.mt_placeod_cd
+        FROM 	mt_placeod mp JOIN mt m
+		ON mp.mt_cd = m.mt_cd
+		JOIN cli c
+		ON mp.cli_cd = c.cli_cd
+        WHERE mp.placeod_st = 3 AND m.mt_div = '원자재'
+		ORDER BY placeod_arridt
+ 	</select>
+ 	
+	<insert id="insertMtrlQuality" parameterType="MtrlOrderVO">
+		INSERT INTO mt_ck
+					(mt_ck_no,
+					mt_cd,
+					str_qt,
+					str_comp_dt,
+					cli_name,
+					str_chg,
+					mc_name,
+					mt_placeod_cd)
+		    VALUES  (
+		    		SEQ_MT_CK_NO.nextval
+		    		,#{mtCd}
+		    		,#{placeodQt}
+		    		,#{placeodArridt}
+		    		,#{cliName}
+		    		,#{placeodChg}
+		    		,'수분검사'
+		    		,#{mtPlaceodCd}
+		    		)
+	</insert>
+	
+	<update id="updateMtrlOrder3" parameterType="String">
+		UPDATE  mt_placeod
+		SET     placeod_st = 4
+		WHERE   mt_placeod_cd = #{mtPlaceodCd}
+	</update>
+	
+
+	<sql id="condition">
+		<where>
+ 			<if test="cliCd != null and cliCd != '' ">
+	 		 	AND c.cli_cd like '%' || #{cliCd} || '%' 			
+ 			</if>
+ 			<if test="cliName != null and cliName != '' ">
+ 		   		AND c.cli_name like '%' || #{cliName} || '%'			
+ 			</if>
+ 			<if test="mtCd != null and mtCd != '' ">
+ 		   		AND m.mt_cd like '%' || #{mtCd} || '%'		
+ 			</if>
+ 			<if test="mtName != null and mtName != '' ">
+ 		   		AND m.mt_name like '%' || #{mtName} || '%'		
+ 			</if>
+ 			<if test="placeodCompdt1 != null">
+ 		   		AND mp.placeod_compdt >= #{placeodCompdt1} 			
+ 			</if>
+ 			<if test="placeodCompdt2 != null">
+ 		   		AND mp.placeod_compdt <![CDATA[<=]]> #{placeodCompdt2}			
+ 			</if>			
+ 			<if test="stList != null">
+				AND mp.placeod_st 
+ 				<foreach collection="stList" open="in (" close=")" separator="," item="st">				
+ 					#{st}
+ 				</foreach>
+ 			</if>
+ 		</where>
+	</sql>
+	
+	<select id="getMtrlOrderSearchList" resultType="MtrlOrderListVO"> 
+		SELECT 	c.cli_cd
+				,c.cli_name
+				,m.mt_cd
+				,m.mt_name
+				,mp.placeod_compdt
+				,mp.placeod_chg
+				,mp.mt_placeod_cd
+				,FIND_CODE_NAME ('placeod_st', mp.placeod_st) AS st
+		FROM 	(SELECT * 
+				FROM 	mt_placeod 
+				WHERE	placeod_st BETWEEN 2 and 7) mp
+		JOIN 	mt m
+		ON 		mp.mt_cd = m.mt_cd
+		JOIN 	cli c
+		ON 		m.cli_cd = c.cli_cd
+		<include refid="condition"></include>
+		ORDER BY placeod_compdt DESC
+	</select>
+	
+	<select id="getMtrlPlaceodInfo" parameterType="String" resultType="MtrlOrderListVO">
+		SELECT  c.cli_cd
+		        ,c.cli_name
+		        ,c.bussno
+		        ,c.tel
+		        ,c.addr
+		        ,c.mail
+		        ,c.cli_chg
+		        ,mp.placeod_compdt
+		        ,m.mt_cd
+		        ,m.mt_name
+		        ,mp.placeod_qt
+		        ,m.unit
+		        ,m.cost
+		        ,(mp.placeod_qt * m.cost) as placeod_cost
+		        ,mp.placeod_chg
+		        ,(mp.placeod_compdt + m.leadtm) as dueDt
+		FROM    mt_placeod mp
+		JOIN    cli c
+		ON      mp.cli_cd = c.cli_cd
+		JOIN    mt m
+		ON      mp.mt_cd = m.mt_cd
+		WHERE   mt_placeod_cd = #{mtPlaceodCd}
+	</select>
+</mapper>
