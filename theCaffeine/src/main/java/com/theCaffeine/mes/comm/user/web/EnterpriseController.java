@@ -5,6 +5,7 @@ package com.theCaffeine.mes.comm.user.web;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.theCaffeine.mes.comm.user.model.EnterpriseVO;
 import com.theCaffeine.mes.comm.user.service.EnterpriseService;
+import com.theCaffeine.mes.fclt.model.FcltVO;
+import com.theCaffeine.mes.scrt.CustomUserDetails;
 
 
 
@@ -31,7 +34,7 @@ public class EnterpriseController {
 				return mv;
 			}
 			
-			
+		
 		//회원가입 페이지 이동
 			@GetMapping("/memb/register")
 			public ModelAndView register() { 
@@ -87,11 +90,23 @@ public class EnterpriseController {
 						ModelAndView mv = new ModelAndView("memb/myinfo");
 						return mv;
 					}
+		//구독 결제 페이지
+					@GetMapping("/memb/pricing")
+					public ModelAndView pricing() { 
+						ModelAndView mv = new ModelAndView("memb/pricing");
+						return mv;
+					}
 					
 		//사원 관리 페이지
 					@GetMapping("/memb/addmembers")
 					public ModelAndView myMembers() { 
 						ModelAndView mv = new ModelAndView("memb/addmembers");
+						return mv;
+					}
+					//정기구독 페이지
+					@GetMapping("/memb/monthly")
+					public ModelAndView monthlypay() { 
+						ModelAndView mv = new ModelAndView("memb/pricing");
 						return mv;
 					}
 		 

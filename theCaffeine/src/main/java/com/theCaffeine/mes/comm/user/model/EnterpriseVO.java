@@ -12,6 +12,7 @@ public class EnterpriseVO {
 		String chg;
 		String mail;
 		String ceo;
-		int authNo;
+		String authNo;
+		String authName;
 		int st;
 }

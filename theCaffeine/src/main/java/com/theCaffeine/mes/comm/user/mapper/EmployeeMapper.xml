@@ -19,24 +19,26 @@
 	FROM EMP
 </select>
 
-
 <!-- 단건 조회 -->
-<select id="getEmpInfo" parameterType="int" resultType="EmployeeVO">
+<select id="getEmpInfo" parameterType="string" resultType="EmployeeVO">
 
- SELECT  EMP_NO,
-			ID,
-			PW,
-			NAME,
-			TEL,
-			ENTER_CD,
-			AUTH_NO,
-			DPT
-	FROM EMP
-    WHERE EMP_NO= #{empNo}
+ SELECT  e.EMP_NO,
+			e.ID,
+			'{noop}' || e.pw as pw,
+			e.NAME,
+			e.TEL,
+			e.ENTER_CD,
+			e.AUTH_NO,
+            'ROLE_' || upper(a.auth_name) as AUTH_NAME,
+			e.DPT
+	FROM EMP e
+    JOIN
+		AUTH a ON e.AUTH_NO = a.auth_No
+    WHERE id=#{ID}
 </select>
 
 <!-- 아이디체크 조회 -->
-<select id="idChk" parameterType="string" resultType="string">
+<select id="idChkemp" parameterType="string" resultType="string">
 
  SELECT  	ID
 	FROM EMP
