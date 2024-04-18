@@ -20,5 +20,6 @@ public interface ProcessMapper {
 	int updateSuccessHistProcess(Integer pdtInstDetailNo);
 	//검사 실패
 	int updateFailInstProcess(Integer pdtInstDetailNo);
+	int updateFailHistProcess(Integer pdtInstDetailNo);
 
 }

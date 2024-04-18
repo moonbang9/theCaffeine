@@ -166,8 +166,8 @@
 	      }, {
 	        title: "검사일",
 	        field: "ckDt"
-	      }, {
-	        title: "삭제", formatter: "buttonCross", width: 80, hozAlign: "center", cellClick: function (e, cell) {
+	      }, 
+	      /*{title: "삭제", formatter: "buttonCross", width: 80, hozAlign: "center", cellClick: function (e, cell) {
 	          console.log(cell.getRow()._row.data.packCkNo);
 	          if (confirm("삭제하시겠습니까?")) {
 	            const packCkNo = cell.getRow()._row.data.packCkNo;
@@ -187,7 +187,7 @@
 	              })
 	          }
 	        }
-	      }
+	      }*/
 	      ],
 
 	    });
@@ -227,12 +227,18 @@
 	    let testResult = "";
 	    let letPackCkNo = "";
 	    let letCkSt = "";
+	    let pdtInstDetailNo = "";
+	    let pdLot = "";
+	    let pdName = "";
 	    
 	  //행 클릭시 모달창 출력
 	    table1.on("rowClick", function (e, row) {
 	      console.log(row.getData());
 	      letPackCkNo = row.getData().packCkNo;
 	      letCkSt = row.getData().ckSt;
+	      pdtInstDetailNo = row.getData().pdtInstDetailNo;
+	      pdLot = row.getData().pdLot;
+	      pdName = row.getData().pdName;
 	      const myModal = new bootstrap.Modal('#basicModal', {
 	        keyboard: false
 	      })
@@ -293,20 +299,49 @@
           const packckRes = testResult;
           const packCkNo = letPackCkNo;
           const ckSt = letCkSt;
-          let param = { firstNc, secondNc, thirdNc, fourthNc, fifthNc, ncAvgVal, packckRes, packCkNo, ckSt };
+          let param = { firstNc, secondNc, thirdNc, fourthNc, fifthNc, ncAvgVal, packckRes, packCkNo, ckSt, pdtInstDetailNo };
+          let param1 = { "pdLot": pdLot, "pdName" : pdName, "pdtInstDetailNo" : pdtInstDetailNo};
           console.log(param);
-          fetch("/ajax/updatePackckRes", {
-            method: "post",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(param)
-          })
-            .then(res => res.json())
-            .then(res => {
-              console.log(res);
-              saveRes(res);
-            });
+          if(packckRes == "불합격"){
+        	  fetch("/ajax/updateFailPackckRes", {
+                  method: "post",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(param)
+                })
+                  .then(res => res.json())
+                  .then(res => {
+                    console.log(res);
+                    saveRes(res);
+                  });
+          }else{
+        	  fetch("/ajax/insertPdSTK", {
+                  method: "post",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(param1)
+                })
+                  .then(res => res.json())
+                  .then(res => {
+                    console.log(res);
+                  });
+        	  
+        	  fetch("/ajax/updatePackckRes", {
+                  method: "post",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(param)
+                })
+                  .then(res => res.json())
+                  .then(res => {
+                    console.log(res);
+                    saveRes(res);
+                  });
+        	  
+          }
         }
 
         // 등록 응답 처리

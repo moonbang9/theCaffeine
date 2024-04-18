@@ -119,7 +119,7 @@
 				from PD_STK ps 	
 				join pd p 
 				on ps.pd_cd = p.pd_cd 
-				where qt > 0 and pdt_dt >= sysdate group by p.pd_name, ps.unit, ps.pd_cd) w 
+				where qt > 0 and exp_dt >= sysdate group by p.pd_name, ps.unit, ps.pd_cd) w 
 			right outer join (select pd_cd, safe_stk_qt, pd_name, unit from pd) e 
 			on w.pd_cd = e.pd_cd
 	</select>
