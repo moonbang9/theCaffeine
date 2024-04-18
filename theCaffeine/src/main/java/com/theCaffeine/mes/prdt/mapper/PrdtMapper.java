@@ -8,6 +8,7 @@ import com.theCaffeine.mes.mtrl.model.MtrlSendVO;
 import com.theCaffeine.mes.prdt.model.FailPlanVO;
 import com.theCaffeine.mes.prdt.model.HistVO;
 import com.theCaffeine.mes.prdt.model.InstVO;
+import com.theCaffeine.mes.prdt.model.MfProcessVO;
 import com.theCaffeine.mes.prdt.model.MtrlPlanVO;
 import com.theCaffeine.mes.prdt.model.PlanDetailVO;
 import com.theCaffeine.mes.prdt.model.PlanOrderDetailVO;
@@ -45,4 +46,5 @@ public interface PrdtMapper {
 	int insertPrdtInstDetail(InstVO vo); //지시상세 등록
 	String updateMtSend(Integer pdtInstDetailNo); // 반납자재 수정
 	List<HistVO> getTodayProduct(HistVO vo); //금일 생산지시 목표량
+	List<MfProcessVO> getInstDetailProcess(InstVO vo); // 공정과정
 }

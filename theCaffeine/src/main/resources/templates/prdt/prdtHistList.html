@@ -97,16 +97,16 @@
 	    columns:[
 	        {title:"생산상품코드", field:"pdCd", hozAlign:"center", width:150},
 	        {title:"생산시작시간", field:"pdtSttTime", hozAlign:"center", width:230},
-	        {title:"예열 및 대기", field:"mfCd", hozAlign:"center", width:100},
-	        {title:"투입", field:"qt", hozAlign:"center", width:100},
-	        {title:"1차크랙", field:"pdtSttTime1", hozAlign:"center", width:100},
-	        {title:"2차크랙", field:"pdtexptFnTime2", hozAlign:"center", width:100},
-	        {title:"배출", field:"pdtexptFnTime3", hozAlign:"center", width:100},
-	        {title:"공정검사", field:"pdtexptFnTime4", hozAlign:"center", width:100},
-	        {title:"냉각", field:"pdtexptFnTime5", hozAlign:"center", width:100},
-	        {title:"봉지포장", field:"pdtexptFnTime6", hozAlign:"center", width:100},
-	        {title:"포장검사", field:"pdtexptFnTime7", hozAlign:"center", width:100},
-	        {title:"입고", field:"pdtexptFnTime8", hozAlign:"center", width:100},
+	        {title:"예열 및 대기", field:"process1", hozAlign:"center", width:100},
+	        {title:"투입", field:"process2", hozAlign:"center", width:100},
+	        {title:"1차크랙", field:"process3", hozAlign:"center", width:100},
+	        {title:"2차크랙", field:"process4", hozAlign:"center", width:100},
+	        {title:"배출", field:"process5", hozAlign:"center", width:100},
+	        {title:"공정검사", field:"process6", hozAlign:"center", width:100},
+	        {title:"냉각", field:"process7", hozAlign:"center", width:100},
+	        {title:"봉지포장", field:"process8", hozAlign:"center", width:100},
+	        {title:"포장검사", field:"process9", hozAlign:"center", width:100},
+	        {title:"입고", field:"process10", hozAlign:"center", width:100},
 	    ],
 	});
 	
@@ -117,20 +117,12 @@
 		.then(res => table.setData(res))
 	}
 	
-	// 생산상세지시 진행현황 데이터
-	function targetListReq(res) {
-		
-		fetch("/ajax/instDetailLists/"+ pdtInstNo)
-		.then(res => res.json())
-		.then(res => {
-			table4.setData(res)
-		})
-	}
-	
 	// 주간 생산계획 버튼 이벤트
 	table.on("rowClick", function(e, row){
 		let pdtInstNo = row.getData().pdtInstNo;
-		let param = {"pdtDt" : row.getData().pdtInstDt}
+		let pdtDt = row.getData().pdtInstDt;
+		let param = {"pdtDt" : pdtDt}
+		let param1 = {"pdtInstDt" : pdtDt}
 		
 		fetch("/ajax/todayProductList",{
 					method : "post",
@@ -147,7 +139,19 @@
 		.then(res => {
 			table2.setData(res)
 			dates = e.target.parentElement.firstElementChild.innerText
-			//targetListReq(res);
+		})
+		
+		// 생산상세지시 진행현황 데이터
+		fetch("/ajax/instDetailProcess",{
+			method : "post",
+			headers: {
+			      "Content-Type": "application/json",
+			    },
+			body : JSON.stringify(param1)
+		})
+		.then(res => res.json())
+		.then(res => {
+			table4.setData(res)
 		})
 		
 		

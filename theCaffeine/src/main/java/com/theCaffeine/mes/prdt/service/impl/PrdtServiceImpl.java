@@ -12,6 +12,7 @@ import com.theCaffeine.mes.prdt.model.FailPlanVO;
 import com.theCaffeine.mes.prdt.model.HistVO;
 import com.theCaffeine.mes.prdt.model.InstResistVO;
 import com.theCaffeine.mes.prdt.model.InstVO;
+import com.theCaffeine.mes.prdt.model.MfProcessVO;
 import com.theCaffeine.mes.prdt.model.MtrlPlanVO;
 import com.theCaffeine.mes.prdt.model.PlanDetailVO;
 import com.theCaffeine.mes.prdt.model.PlanOrderDetailVO;
@@ -192,6 +193,12 @@ public class PrdtServiceImpl implements PrdtService{
 	public List<HistVO> getTodayProduct(HistVO vo) {
 		// TODO Auto-generated method stub
 		return prdtMapper.getTodayProduct(vo);
+	}
+
+	@Override
+	public List<MfProcessVO> getInstDetailProcess(InstVO vo) {
+		// TODO Auto-generated method stub
+		return prdtMapper.getInstDetailProcess(vo);
 	}
 	
 }
