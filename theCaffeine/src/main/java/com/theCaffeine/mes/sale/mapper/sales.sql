@@ -778,7 +778,7 @@ select * from od_detail
 ;
 select * from send;
 select * from pd_stk;
-
+select * from pd;
 /* 폐기 - 불량유형: 파손, 스크래치,... */
 
 
