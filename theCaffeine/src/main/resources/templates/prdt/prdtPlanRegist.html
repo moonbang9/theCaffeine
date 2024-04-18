@@ -136,9 +136,12 @@
 	//등록
 	prdtSaveBtn1.addEventListener("click", e=> {
 		console.log(selectOrder)
+		let planCds = 'K' + dayNameing.value.substring(2, 4) + dayNameing.value.substring(5, 7) + dayNameing.value.substring(8, 10);
+		if(planCds == 'K'){
+			alert('주간계획일자를 입력후 다시 이용해주세요.');
+		}else{
 		console.log('K'+dayNameing.value.substring(2, 4) + dayNameing.value.substring(5, 7) + dayNameing.value.substring(8, 10))
 		
-		let planCds = 'K' + dayNameing.value.substring(2, 4) + dayNameing.value.substring(5, 7) + dayNameing.value.substring(8, 10);
 		let params1 = {pdtPlanCd : planCds, wkPlanSttDt : dayNameing.value, odName : naming.value}
 		let params2 = PlanDetailData();
 		/*let params3 = PlanOrderDetailData();*/
@@ -165,6 +168,7 @@
 				alert('등록에 실패하였습니다.')
 			}
 		})
+		}
 	})
 	
 	//수정
@@ -371,8 +375,8 @@
 	selectableRows:true,
     pagination:"local",
     paginationSize:8,
-    movableColumns:true,
     paginationCounter:"rows",
+    movableColumns:true,
     rowHeader:{resizable: false, frozen: true, hozAlign:"center", formatter: "rowSelection", cssClass:"range-header-col", cellClick:function(e, cell){
         cell.getRow().toggleSelect();
         setResistList()

@@ -66,7 +66,7 @@
 	
 	<update id="updateSuccessInstPackaging" parameterType="int">
 		update pdt_inst_detail
-		set comp_st=4
+		set comp_st=5
 		where pdt_inst_detail_no = #{pdtInstDetailNo}
 	</update>
 	
@@ -75,6 +75,23 @@
 		set pack_qual_st=1
 		where pdt_inst_detail_no = #{pdtInstDetailNo}
 	</update>
+	
+	<update id="updateFailHistPackaging" parameterType="int">
+		update pdt_hist
+		set pack_qual_st=1, fail_rsn = '포장 검사 불만족'
+		where pdt_inst_detail_no = #{pdtInstDetailNo}
+	</update>
+	
+	<update id="updateFailInstPackaging" parameterType="int">
+		update pdt_inst_detail
+		set comp_st=6
+		where pdt_inst_detail_no = #{pdtInstDetailNo}
+	</update>
+	
+	<insert id="insertPdSTK" parameterType="PackagingVO">
+		INSERT INTO pd_stk (PD_LOT, UNIT, QT, PDT_DT, EXP_DT, PD_CD, PDT_INST_DETAIL_NO)
+    	VALUES (#{pdLot}, 'box', 2, SYSDATE, ADD_MONTHS(SYSDATE, 1), #{pdName}, #{pdtInstDetailNo})
+	</insert>
 
 
 </mapper>

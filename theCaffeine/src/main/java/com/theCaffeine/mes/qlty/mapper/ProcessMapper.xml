@@ -82,10 +82,16 @@
 		where pdt_inst_detail_no = #{pdtInstDetailNo}
 	</update>
 	
-	<!-- 공정 검사,포장 검사 실패시 -->
+	<!-- 공정 검사 실패시 -->
 	<update id="updateFailInstProcess" parameterType="int">
 		update pdt_inst_detail
 		set comp_st=6
+		where pdt_inst_detail_no = #{pdtInstDetailNo}
+	</update>
+	
+	<update id="updateFailHistProcess" parameterType="int">
+		update pdt_hist
+		set mf_qual_st=1, fail_rsn = "공정 검사 불만족"
 		where pdt_inst_detail_no = #{pdtInstDetailNo}
 	</update>
 
