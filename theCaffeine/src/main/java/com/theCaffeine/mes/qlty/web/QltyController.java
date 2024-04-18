@@ -50,19 +50,4 @@ public class QltyController {
 		return qltyService.deleteMtrlDoneList(mtPlaceodCd);
 	}
 	
-
-	// 검사조회 페이지이동
-	@GetMapping("/quality/lookup")
-	public ModelAndView lookup() {
-		ModelAndView mv = new ModelAndView("qlty/lookup");
-		return mv;
-	}	
-
-	// 검사기준관리 페이지이동
-	@GetMapping("/quality/standard")
-	public ModelAndView standard() {
-		ModelAndView mv = new ModelAndView("qlty/standard");
-		return mv;
-	}
-	
 }
