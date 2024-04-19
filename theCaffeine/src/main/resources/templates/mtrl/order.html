@@ -166,15 +166,15 @@
 		    paginationSizeSelector:[3, 6, 8, 10],
 		    paginationCounter:"rows",
 		    columns:[
-		        {title:"분류", field:"mtDiv", width:130, hozAlign:"center"},
-		        {title:"자재코드", field:"mtCd", width:180, hozAlign:"center"}, 
-		        {title:"자재명", field:"mtName", width:180, hozAlign:"center"},
-		        {title:"단위", field:"unit", width:130, formatter:"money", hozAlign:"center"},
-		        {title:"차주생산계획 수량", field:"pqtt", width:150, hozAlign:"center"},
-		        {title:"재고 수량", field:"sumStkQt", width:135, hozAlign:"center"},
-		        {title:"발주 수량", field:"sumPlaceodQt", width:135, hozAlign:"center"},
-		        {title:"안전재고 수량", field:"safeStkQt", width:135, hozAlign:"center"},
-		        {title:"수량 차", field:"qtDifference", width:135, hozAlign:"center"}
+		        {title:"분류", field:"mtDiv", width:130, headerHozAlign: "center", hozAlign:"center"},
+		        {title:"자재코드", field:"mtCd", width:180, headerHozAlign: "center", hozAlign:"center"}, 
+		        {title:"자재명", field:"mtName", width:180, headerHozAlign: "center"},
+		        {title:"단위", field:"unit", width:130, headerHozAlign: "center", formatter:"money", hozAlign:"center"},
+		        {title:"차주생산계획 수량", field:"pqtt", width:150, headerHozAlign: "center", hozAlign:"right"},
+		        {title:"재고 수량", field:"sumStkQt", width:135, headerHozAlign: "center", hozAlign:"right"},
+		        {title:"발주 수량", field:"sumPlaceodQt", width:135, headerHozAlign: "center", hozAlign:"right"},
+		        {title:"안전재고 수량", field:"safeStkQt", width:135, headerHozAlign: "center", hozAlign:"right"},
+		        {title:"수량 차", field:"qtDifference", width:135, headerHozAlign: "center", hozAlign:"right"}
 		    ],rowFormatter: function(row) {
 		        var data = row.getData();
 		        var qtDifferenceValue = data.qtDifference;
@@ -204,13 +204,13 @@
 		        cell.getRow().toggleSelect();
 		      }},
 		    columns:[
-		        {title:"분류", field:"mtDiv", width:169, hozAlign:"center", vertAlign:"middle"},
-		        {title:"자재코드", field:"mtCd", width:200, hozAlign:"center", vertAlign:"middle"}, 
-		        {title:"자재명", field:"mtName", width:240, hozAlign:"center", vertAlign:"middle"},
-		        {title:"거래처", field:"cliName", width:290, hozAlign:"center", vertAlign:"middle"},
-		        {title:"수량", field:"placeodQt", width:170, hozAlign:"center", editor:"input", vertAlign:"middle"},
-		        {title:"단위", field:"unit", width:170, hozAlign:"center", vertAlign:"middle"},
-		        {title:"삭제", formatter:editorIcon, width:100, hozAlign:"center", cellClick:function(e, cell){
+		        {title:"분류", field:"mtDiv", width:169, headerHozAlign: "center", hozAlign:"center", vertAlign:"middle"},
+		        {title:"자재코드", field:"mtCd", width:200, headerHozAlign: "center", hozAlign:"center", vertAlign:"middle"}, 
+		        {title:"자재명", field:"mtName", width:240, headerHozAlign: "center", vertAlign:"middle"},
+		        {title:"거래처", field:"cliName", width:290, headerHozAlign: "center", hozAlign:"center", vertAlign:"middle"},
+		        {title:"수량", field:"placeodQt", width:170, headerHozAlign: "center", hozAlign:"right", editor:"input", vertAlign:"middle"},
+		        {title:"단위", field:"unit", width:170, headerHozAlign: "center", hozAlign:"center", vertAlign:"middle"},
+		        {title:"삭제", formatter:editorIcon, width:100, headerHozAlign: "center", hozAlign:"center", cellClick:function(e, cell){
 		        	console.log(cell.getRow()._row.data.mtPlaceodCd);
 		    		if(confirm("삭제하시겠습니까?")) {
 		        		const mtPlaceodCd = cell.getRow()._row.data.mtPlaceodCd;

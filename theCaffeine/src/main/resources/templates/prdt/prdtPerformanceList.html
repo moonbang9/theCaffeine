@@ -88,6 +88,15 @@ var table = new Tabulator("#productionPlan-table", {
 	        {title:"실패사유", field:"pdtexptFnTime", hozAlign:"center", width:200},
 	    ],
 	});
+	
+	selectNav();
+	
+	function selectNav() {
+		mainPage.classList.remove('active');
+		prdt.classList.add('active');
+		prdt.classList.add('open');
+		prdt_prdtPerformanceList.classList.add('active');
+	}
 </script>
 </div>
 </body>

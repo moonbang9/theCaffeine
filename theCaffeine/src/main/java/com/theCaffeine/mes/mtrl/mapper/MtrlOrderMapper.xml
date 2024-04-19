@@ -38,7 +38,11 @@
 		        FROM bom b 
 		        JOIN (SELECT pd_cd ,SUM(qt / 24) pqt
 		             FROM pdt_plan_detail 
-		             WHERE pdt_plan_cd = 'K240408'
+		             WHERE pdt_plan_cd = (SELECT MIN(pdt_plan_cd) 
+		             					 FROM PDTPLAN 
+		             					 WHERE wk_plan_stt_dt > (SELECT MAX(wk_plan_stt_dt) 
+		             					 						FROM pdtplan 
+		             					 						WHERE wk_plan_stt_dt <![CDATA[<=]]> SYSDATE))
 		             GROUP BY pd_cd) ab
 		        ON b.pd_cd = ab.pd_cd)
 		 
@@ -65,27 +69,6 @@
 		JOIN mpp
 		  ON mpp.mt_cd = msp.mt_cd
 		ORDER BY qt_difference
-
- 	</select>
-
-	 <select id="getMtrlOrderList" resultType="MtrlOrderVO"> 
-		SELECT  mp.mt_placeod_cd,
-				m.mt_div,
-		        m.mt_cd,
-		        m.mt_name,
-		        c.cli_name,
-		        mp.placeod_reqdt,
-		        mp.placeod_qt,
-		        m.unit,
-		        mp.placeod_st,
-		        mp.placeod_requester,
-		        m.leadtm
-		FROM 	mt_placeod mp JOIN mt m
-		ON mp.mt_cd = m.mt_cd
-		JOIN cli c
-		ON mp.cli_cd = c.cli_cd
-		WHERE mp.placeod_st = 1
-		ORDER BY mp.placeod_reqdt
  	</select>
  	
  	<select id="getMtrlCliList" resultType="MtrlOrderVO"> 
