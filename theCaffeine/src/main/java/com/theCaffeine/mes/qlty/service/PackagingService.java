@@ -12,6 +12,8 @@ public interface PackagingService {
 	List<PackagingVO> getPackagingDoneList(PackagingVO vo);
 	
 	int updatePackckRes (PackagingVO vo);
+	int updateFailPackckRes (PackagingVO vo);
+	int insertPdSTK (PackagingVO vo);
 	
 	int deletePackagingDoneList(PackagingVO vo);
 

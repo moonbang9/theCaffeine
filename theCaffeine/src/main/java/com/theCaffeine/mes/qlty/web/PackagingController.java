@@ -36,6 +36,18 @@ public class PackagingController {
 		return packagingService.updatePackckRes(vo);
 	}
 	
+	// 포장검사결과 실패등록
+	@PostMapping("/ajax/updateFailPackckRes")
+	public int updateFailPackckRes(@RequestBody PackagingVO vo) {
+		return packagingService.updateFailPackckRes(vo);
+	}
+	
+	// 포장검사결과 완제품 등록
+	@PostMapping("/ajax/insertPdSTK")
+	public int insertPdSTK(@RequestBody PackagingVO vo) {
+		return packagingService.insertPdSTK(vo);
+	}
+	
 	// 포장검사완료 목록
 	@GetMapping("/ajax/packagingDoneList")
 	public List<PackagingVO> packagingDoneList(PackagingVO vo){

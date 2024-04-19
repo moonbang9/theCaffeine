@@ -119,7 +119,7 @@
 				from PD_STK ps 	
 				join pd p 
 				on ps.pd_cd = p.pd_cd 
-				where qt > 0 and pdt_dt >= sysdate group by p.pd_name, ps.unit, ps.pd_cd) w 
+				where qt > 0 and exp_dt >= sysdate group by p.pd_name, ps.unit, ps.pd_cd) w 
 			right outer join (select pd_cd, safe_stk_qt, pd_name, unit from pd) e 
 			on w.pd_cd = e.pd_cd
 	</select>
@@ -317,5 +317,38 @@
                                                                                                                       END group by pd_cd) a 
         					right outer join pd b on a.pd_cd = b.pd_cd) d 
 		on c.pd_cd = d.pd_cd
+	</select>
+	
+	<select id="getInstDetailProcess" resultType="MfProcessVO" parameterType="InstVO">
+		select pd_cd, pdt_stt_time, 
+        	Decode(w,1,'O') as process1,
+        	Decode(w,2,'O') as process2,
+        	Decode(w,3,'O') as process3,
+        	Decode(w,4,'O') as process4,
+        	Decode(w,5,'O') as process5,
+        	Decode(w,6,'O') as process6,
+        	Decode(w,7,'O') as process7,
+        	Decode(w,8,'O') as process8,
+        	Decode(w,9,'O') as process9,
+        	Decode(w,10,'O') as process10
+		from (select CASE WHEN mf_no in (select mf_no from MF_PD_DUR_TIME where pdt_ps_cd = 'RPre001') THEN 1
+            WHEN mf_no in (select mf_no from MF_PD_DUR_TIME where pdt_ps_cd = 'RInv002') THEN 2
+            WHEN mf_no in (select mf_no from MF_PD_DUR_TIME where pdt_ps_cd = 'RCro003') THEN 3
+            WHEN mf_no in (select mf_no from MF_PD_DUR_TIME where pdt_ps_cd = 'RCrt004') THEN 4
+            WHEN mf_no in (select mf_no from MF_PD_DUR_TIME where pdt_ps_cd = 'RExh005') THEN 5
+            WHEN mf_no in (select mf_no from MF_PD_DUR_TIME where pdt_ps_cd = 'RChk006') THEN 6
+            WHEN mf_no in (select mf_no from MF_PD_DUR_TIME where pdt_ps_cd = 'Cool007') THEN 7
+            WHEN mf_no in (select mf_no from MF_PD_DUR_TIME where pdt_ps_cd = 'Case001') THEN 8
+            WHEN mf_no in (select mf_no from MF_PD_DUR_TIME where pdt_ps_cd = 'PChk002') THEN 9
+            WHEN mf_no in (select mf_no from MF_PD_DUR_TIME where pdt_ps_cd = 'Stor003') THEN 10
+            END as w , pdt_stt_time, pd_cd
+			from PDT_HIST)
+		where trunc(pdt_stt_time,'dd') = #{pdtInstDt}
+	</select>
+	
+	<select id="getNonopFc" resultType="NonopFcVO">
+		select f.fc_cd, n.nonop_cd, n.nonop_stt_time, n.nonop_fn_time, (select count(*) from fc where ins_mf = 0) tot_fc 
+		from fc f join nonop_mgmt n on f.fc_cd = n.fc_cd 
+		where ins_mf = 0 and n.nonop_fn_time > sysdate
 	</select>
 </mapper>

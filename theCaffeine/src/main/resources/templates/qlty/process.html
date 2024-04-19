@@ -39,7 +39,7 @@
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLabel1">검사결과</h5>
+						<h5 class="modal-title" id="exampleModalLabel1">색도검사결과 (색도검사 합격 기준은 65~85 입니다.)</h5>
 						<button type="button" class="btn-close" data-bs-dismiss="modal"
 							aria-label="Close"></button>
 					</div>
@@ -95,31 +95,43 @@
       height: "500px",
       layout: "fitColumns",
       pagination: "local",
-      paginationSize: 10,
+      paginationSize: 15,
       paginationSizeSelector: [5, 10, 15, 20],
       movableColumns: true,
       paginationCounter: "rows",
 
       columns: [{
         title: "No",
+        headerHozAlign: "center",
         width: 60,
+        hozAlign: "center",
         field: "mfCkNo"
       }, {
         title: "검사명",
+        headerHozAlign: "center",
         //width: 120,
+        hozAlign: "center",
         field: "ccName",
       }, {
         title: "제품코드",
+        headerHozAlign: "center",
+        hozAlign: "center",
         field: "pdName"
       }, {
         title: "수량",
+        headerHozAlign: "center",
         //width: 70,
+        hozAlign: "right",
         field: "pdtQt"
       }, {
         title: "로스팅일",
+        headerHozAlign: "center",
+        hozAlign: "center",
         field: "rtDt"
       }, {
         title: "로스팅 담당자",
+        headerHozAlign: "center",
+        hozAlign: "center",
         field: "rtChg"
       },],
 
@@ -130,44 +142,62 @@
       height: "500px",
       layout: "fitColumns",
       pagination: "local",
-      paginationSize: 10,
+      paginationSize: 15,
       paginationSizeSelector: [5, 10, 15, 20],
       movableColumns: true,
       paginationCounter: "rows",
 
       columns: [{
     	  title: "No",
+          headerHozAlign: "center",
+    	  hozAlign: "center",
           width: 60,
           field: "mfCkNo"
         }, {
           title: "검사명",
+          headerHozAlign: "center",
           //width: 120,
+          hozAlign: "center",
           field: "ccName",
         },{
            title: "검사결과",
+           headerHozAlign: "center",
            //width: 100,
+           hozAlign: "center",
            field: "mfckRes",
         }, {
           title: "제품코드",
+          headerHozAlign: "center",
+          hozAlign: "center",
           field: "pdName"
         }, {
           title: "수량",
+          headerHozAlign: "center",
           //width: 70,
+          hozAlign: "right",
           field: "pdtQt"
         }, {
           title: "로스팅일",
+          headerHozAlign: "center",
+          hozAlign: "center",
           field: "rtDt"
         }, {
           title: "로스팅 담당자",
+          headerHozAlign: "center",
+          hozAlign: "center",
           field: "rtChg"
       }, {
         title: "검사 담당자",
+        headerHozAlign: "center",
+        hozAlign: "center",
         field: "ckChg"
       }, {
         title: "검사일",
+        headerHozAlign: "center",
+        hozAlign: "center",
         field: "ckDt"
-      }, {
-        title: "삭제", formatter: "buttonCross", width: 80, hozAlign: "center", cellClick: function (e, cell) {
+      }, 
+      /*{title: "삭제", formatter: "buttonCross", width: 80, hozAlign: "center", cellClick: function (e, cell) {
           console.log(cell.getRow()._row.data.pdtInstDetailNo);
           if (confirm("삭제하시겠습니까?")) {
             const mfCkNo = cell.getRow()._row.data.mfCkNo;
@@ -187,7 +217,7 @@
               })
           }
         }
-      }
+      }*/
       ],
 
     });
@@ -226,12 +256,15 @@
     let testResult = "";
     let letMfCkNo = "";
     let letCkSt = "";
+    let pdtInstDetailNo = "";
+    let tf = false;
     
   //행 클릭시 모달창 출력
     table1.on("rowClick", function (e, row) {
       console.log(row.getData());
       letMfCkNo = row.getData().mfCkNo;
       letCkSt = row.getData().ckSt;
+      pdtInstDetailNo = row.getData().pdtInstDetailNo;
       const myModal = new bootstrap.Modal('#basicModal', {
         keyboard: false
       })
@@ -247,11 +280,15 @@
       var result3 = parseFloat(document.getElementById("result3").value);
       var result4 = parseFloat(document.getElementById("result4").value);
       var result5 = parseFloat(document.getElementById("result5").value);
-
+	
+      tf = false;
+      
       // 입력한 값이 비어 있는지 확인
       if (isNaN(result1) || isNaN(result2) || isNaN(result3) || isNaN(result4) || isNaN(result5)) {
         alert("모든 결과를 입력하세요.");
         return;
+      }else{
+    	  tf = true;
       }
 
       // 입력한 값들의 평균 계산
@@ -259,7 +296,7 @@
 
 
       // 평균을 확인 창에 표시
-      var resultMessage = "입력한 검사결과의 평균은 " + averageFixed + " 입니다. \n 색도검사 합격 기준은 65~85 입니다.";
+      var resultMessage = "입력한 검사결과의 평균은 " + averageFixed + " 입니다.";
 
       // 검사 결과 계산
       if (averageFixed >= 65 && averageFixed <= 85) {
@@ -273,12 +310,13 @@
 
       // 결과 메시지를 평균 결과 창에 표시
       document.getElementById("averageResult").innerText = resultMessage;
-
+		
+      saveReq();
     });
 
-    confirm_button.addEventListener("click", e => {
-      saveReq();
-    })
+    /*confirm_button.addEventListener("click", e => {
+      //saveReq();
+    })*/
     
     //검사값 디비 등록
         function saveReq() {
@@ -291,26 +329,46 @@
           const mfckRes = testResult;
           const mfCkNo = letMfCkNo;
           const ckSt = letCkSt;
-          let param = { firstCc, secondCc, thirdCc, fourthCc, fifthCc, ccAvg, mfckRes, mfCkNo, ckSt };
+          //const pdtInstDetailNo = pdtInstDetailNo;
+          let param = { firstCc, secondCc, thirdCc, fourthCc, fifthCc, ccAvg, mfckRes, mfCkNo, ckSt, pdtInstDetailNo };
           console.log(param);
-          fetch("/ajax/updateMfckRes", {
-            method: "post",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(param)
-          })
-            .then(res => res.json())
-            .then(res => {
-              console.log(res);
-              saveRes(res);
-            });
+          if(tf){
+        	  if(mfckRes == "불합격"){
+            	  fetch("/ajax/updateFailMfckRes", {
+                      method: "post",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify(param)
+                    })
+                      .then(res => res.json())
+                      .then(res => {
+                        console.log(res);
+                        saveRes(res);
+                      });
+              }else{
+            	  fetch("/ajax/updateMfckRes", {
+                      method: "post",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify(param)
+                    })
+                      .then(res => res.json())
+                      .then(res => {
+                        console.log(res);
+                        saveRes(res);
+                    }); 
+          }
+          }else{
+        	  saveRes(0);
+          }
         }
 
         // 등록 응답 처리
         function saveRes(res) {
           console.log(res)
-          if (res >= 1) {
+          if (res >= 1 && tf == true) {
             alert("등록이 완료되었습니다!");
             location.href = "/quality/process";
           } else {

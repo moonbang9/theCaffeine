@@ -1,56 +1,94 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-  layout:decorate="~{layout/index}">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/index}">
 <head>
 <meta charset="UTF-8">
 <title>management</title>
 </head>
 <body>
-<div layout:fragment="content">
-	<h1>마이 페이지</h1>
-	<div id="example-table">
-	   <div class="col-xl">
-                  <div class="card mb-4">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                      <h5 class="mb-0">사원 관리</h5>
-                      
-                       
-                    </div>
-                   
-                    <div class="card-body">
-                      <form>
-                        <div class="mb-3" style="width: 200px;">
-                          <label class="form-label" for="basic-default-fullname">사원ID</label>
-                          <input type="text" class="form-control" id="basic-default-fullname" placeholder="사원ID" />
-                        </div>
-                        <div class="mb-3" style="width: 200px;">
-                          <label class="form-label" for="basic-default-company">비밀번호</label>
-                          <input type="password" class="form-control" id="basic-default-company" placeholder="비밀번호" />
-                        </div>
-                        <div class="mb-3" style="width: 200px">
-                          <label class="form-label" for="basic-default-email">사원 이름</label>
-                          <div class="input-group input-group-merge">
-                           <input type="text" class="form-control" id="basic-default-company" placeholder="사원 이름" />
-                          </div>
-                        </div>
-                        <div class="mb-3" style="width: 200px">
-                          <label class="form-label" for="basic-default-phone">부서</label>
-                          <input type="text" class="form-control" id="basic-default-company" placeholder="소속 부서" />
-                        </div>
-                        <div class="mb-3" style="width: 200px">
-                          <label class="form-label" for="basic-default-message">연락처</label>
-                          <input type="tel" class="form-control" id="basic-default-company" placeholder="-없이 입력" />
-                        </div>
-                      </form>
-                      <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#smallModal">
-                        등록
-                        </button>
+	<div layout:fragment="content">
+		<h1>사원 관리</h1>
+		<div id="example-table">
+			<div class="divider text-start">
+				<div class="divider-text ">마이 페이지</div>
+			</div>
+			<div class="card mb-4">
+				<h5 class="card-header">주문 검색</h5>
+				<div class="card-body">
+					<!-- <form id="formAccountSettings" method="POST" onsubmit="return false"> -->
+					<div class="row">
+
+						<div class="mb-3 row col-md-6">
+							<label for="html5-search-input" class="col-md-3 col-form-label">사원ID</label>
+							<div class="col-md-9">
+								<input type="text" class="form-control" id="empId" name="userid" onblur="idChk()"
+						placeholder="사원ID" />
+						 <div class="idchck"></div>
+							</div>
 						</div>
-                    </div>
-                  </div>
-                </div>
-	</div>
+						<div class="mb-3 row col-md-6">
+							<label for="pdCd" class="col-md-3 col-form-label">비밀번호</label>
+							<div class="col-md-9">
+								<input type="password" class="form-control"
+						id="emppw" name="userpw" placeholder="비밀번호" />
+							</div>
+						</div>
+						<div class="mb-3 row col-md-6">
+							<label for="html5-search-input" class="col-md-3 col-form-label">사원 이름</label>
+							<div class="col-md-9">
+								<input type="text" class="form-control" id="empname"
+							placeholder="사원 이름" />
+							</div>
+						</div>
+						<div class="mb-3 row col-md-6">
+							<label for="html5-search-input" class="col-md-3 col-form-label">부서</label>
+							<div class="col-md-9">
+								<input type="text" class="form-control" id="basic-default-company" placeholder="소속 부서" />
+							</div>
+						</div>
+						<div class="mb-3 row col-md-6">
+							<label for="html5-search-input" class="col-md-3 col-form-label">연락처
+								</label>
+							<div class="col-md-9">
+								<input type="tel" class="form-control" id="basic-default-company" placeholder="-없이 입력" />
+							</div>
+						</div>
+						
+
+					
+					</div>
+
+				</div>
+
+				<!-- <div class="mt-2"> -->
+				
+					<label for="html5-date-input" class="col-md-3 col-form-label"></label>
+					<div class="d-grid gap-2 d-md-flex justify-content-md-center ">
+						<button type="submit" class="btn btn-primary me-2" id="searchBtn">등록</button>
+						<button type="reset" class="btn btn-outline-secondary"
+							id="resetBtn">초기화</button>
+					</div>
+		
+				<!-- <div class="mb-3 row col-md-6">
+            <label for="html5-date-input" class="col-md-1 col-form-label"></label>
+            <div class="col-md-9">
+            </div>
+            </div> 아래 버튼으로 대체 예정
+            <div class="mt-2">
+                          <button type="submit" class="btn btn-primary me-2">검색</button>
+                          <button type="reset" class="btn btn-outline-secondary">초기화</button>
+                        </div>
+            </form>
+          </div> -->
+			</div>
+
+		</div>
+
+		
+
+
+
 <script>
 	
 	/* var table = new Tabulator("#example-table", {

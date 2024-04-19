@@ -5,7 +5,7 @@ package com.theCaffeine.mes.comm.user.web;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,8 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.theCaffeine.mes.comm.user.model.EnterpriseVO;
 import com.theCaffeine.mes.comm.user.service.EnterpriseService;
-import com.theCaffeine.mes.fclt.model.FcltVO;
-import com.theCaffeine.mes.scrt.CustomUserDetails;
+
 
 
 
@@ -48,7 +47,7 @@ public class EnterpriseController {
 				return enterService.getEnterpriseList(vo);
 			}
 		//회원가입 등록 처리 
-			@PostMapping("/memb/insert") //요청 url -> empMng.html 에 등록
+			@PostMapping("/memb/insert") 
 			public EnterpriseVO insert(@RequestBody EnterpriseVO vo) {
 				enterService.insertEnter(vo);
 				return vo;

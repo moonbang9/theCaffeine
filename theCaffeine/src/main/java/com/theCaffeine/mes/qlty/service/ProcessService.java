@@ -11,6 +11,7 @@ public interface ProcessService {
 	List<ProcessVO> getProcessCheckList(ProcessVO vo);
 	List<ProcessVO> getProcessDoneList(ProcessVO vo);
 	int updateMfckRes(ProcessVO vo);
+	int updateFailMfckRes(ProcessVO vo);
 	int deleteProcessDoneList(ProcessVO vo);
 	
 }

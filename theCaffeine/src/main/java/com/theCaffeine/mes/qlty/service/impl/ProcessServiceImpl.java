@@ -31,14 +31,22 @@ public class ProcessServiceImpl implements ProcessService{
 	@Override
 	public int updateMfckRes(ProcessVO vo) {
 		processMapper.updateMfckRes(vo);
+		processMapper.updateSuccessHistProcess(vo.getPdtInstDetailNo());
 		return processMapper.updateCkSt(vo.getMfCkNo());
 	}
 	
 	@Transactional
 	@Override
+	public int updateFailMfckRes(ProcessVO vo) {
+		processMapper.updateMfckRes(vo);
+		processMapper.updateFailHistProcess(vo.getPdtInstDetailNo());
+		processMapper.updateFailInstProcess(vo.getPdtInstDetailNo());
+		return processMapper.updateCkSt(vo.getMfCkNo());
+	}
+	
+	@Override
 	public int deleteProcessDoneList(ProcessVO vo) {
-			processMapper.updateSuccessHistProcess(vo.getPdtInstDetailNo());
-		
+			
 		return processMapper.deleteProcessDoneList(vo.getMfCkNo());
 	}
 	

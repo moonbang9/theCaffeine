@@ -18,16 +18,16 @@ public class MfProcessVO {
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
 	private Date pdtSttTime; 			//생산 시작 시간
-	private String RPre; 			//예열 및 대기
-	private String RInv; 			//투입
-	private String RCro; 			//1차크랙
-	private String RCrt; 			//2차크랙
-	private String RExh; 			//배출
-	private String RChk; 			//공정검사
-	private String Cool; 			//냉각
-	private String Case; 			//봉지포장
-	private String PChk; 			//포장검사
-	private String Stor; 			//입고
+	private String process1; 			//예열 및 대기
+	private String process2; 			//투입
+	private String process3; 			//1차크랙
+	private String process4; 			//2차크랙
+	private String process5; 			//배출
+	private String process6; 			//공정검사
+	private String process7; 			//냉각
+	private String process8; 			//봉지포장
+	private String process9; 			//포장검사
+	private String process10; 			//입고
 	
 	private String pdtPdCd; 			//생산 제품 코드
 	private String addMfTime; 			//추가 공정 시간

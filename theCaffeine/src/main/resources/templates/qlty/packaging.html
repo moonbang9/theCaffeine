@@ -39,7 +39,7 @@
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLabel1">검사결과</h5>
+						<h5 class="modal-title" id="exampleModalLabel1">포장검사결과 (질소충전검사 합격 기준은 1 이하입니다.)</h5>
 						<button type="button" class="btn-close" data-bs-dismiss="modal"
 							aria-label="Close"></button>
 					</div>
@@ -95,31 +95,43 @@
 	      height: "500px",
 	      layout: "fitColumns",
 	      pagination: "local",
-	      paginationSize: 10,
+	      paginationSize: 15,
 	      paginationSizeSelector: [5, 10, 15, 20],
 	      movableColumns: true,
 	      paginationCounter: "rows",
 
 	      columns: [{
 	        title: "No",
+	        headerHozAlign: "center",
 	        width: 60,
+	        hozAlign: "center",
 	        field: "packCkNo"
 	      }, {
 	        title: "검사명",
+	        headerHozAlign: "center",
 	        //width: 120,
+	        hozAlign: "center",
 	        field: "ncName",
 	      }, {
 	        title: "제품LOT",
+	        headerHozAlign: "center",
+	        hozAlign: "center",
 	        field: "pdLot"
 	      }, {
 	        title: "수량",
+	        headerHozAlign: "center",
 	        //width: 70,
+	        hozAlign: "right",
 	        field: "pdtQt"
 	      }, {
 	        title: "포장일",
+	        headerHozAlign: "center",
+	        hozAlign: "center",
 	        field: "packDt"
 	      }, {
 	        title: "포장 담당자",
+	        headerHozAlign: "center",
+	        hozAlign: "center",
 	        field: "packChg"
 	      },],
 
@@ -130,44 +142,62 @@
 	      height: "500px",
 	      layout: "fitColumns",
 	      pagination: "local",
-	      paginationSize: 10,
+	      paginationSize: 15,
 	      paginationSizeSelector: [5, 10, 15, 20],
 	      movableColumns: true,
 	      paginationCounter: "rows",
 
 	      columns: [{
 	    	  title: "No",
+	    	  headerHozAlign: "center",
 	          width: 60,
+	          hozAlign: "center",
 	          field: "packCkNo"
 	        }, {
 	          title: "검사명",
+	          headerHozAlign: "center",
 	          //width: 120,
+	          hozAlign: "center",
 	          field: "ncName",
 	        },{
 	          title: "검사결과",
+	          headerHozAlign: "center",
 	          //width: 100,
+	          hozAlign: "center",
 	          field: "packckRes",
 	        }, {
 	          title: "제품LOT",
+	          headerHozAlign: "center",
+	          hozAlign: "center",
 		      field: "pdLot"
 	        }, {
 	          title: "수량",
+	          headerHozAlign: "center",
 	          //width: 70,
+	          hozAlign: "right",
 	          field: "pdtQt"
 	        }, {
 	          title: "포장일",
+	          headerHozAlign: "center",
+	          hozAlign: "center",
 	          field: "packDt"
 	        }, {
 	          title: "포장 담당자",
+	          headerHozAlign: "center",
+	          hozAlign: "center",
 	          field: "packChg"
 	      }, {
 	        title: "검사 담당자",
+	        headerHozAlign: "center",
+	        hozAlign: "center",
 	        field: "ckChg"
 	      }, {
 	        title: "검사일",
+	        headerHozAlign: "center",
+	        hozAlign: "center",
 	        field: "ckDt"
-	      }, {
-	        title: "삭제", formatter: "buttonCross", width: 80, hozAlign: "center", cellClick: function (e, cell) {
+	      }, 
+	      /*{title: "삭제", formatter: "buttonCross", width: 80, hozAlign: "center", cellClick: function (e, cell) {
 	          console.log(cell.getRow()._row.data.packCkNo);
 	          if (confirm("삭제하시겠습니까?")) {
 	            const packCkNo = cell.getRow()._row.data.packCkNo;
@@ -187,7 +217,7 @@
 	              })
 	          }
 	        }
-	      }
+	      }*/
 	      ],
 
 	    });
@@ -227,12 +257,18 @@
 	    let testResult = "";
 	    let letPackCkNo = "";
 	    let letCkSt = "";
+	    let pdtInstDetailNo = "";
+	    let pdLot = "";
+	    let pdName = "";
 	    
 	  //행 클릭시 모달창 출력
 	    table1.on("rowClick", function (e, row) {
 	      console.log(row.getData());
 	      letPackCkNo = row.getData().packCkNo;
 	      letCkSt = row.getData().ckSt;
+	      pdtInstDetailNo = row.getData().pdtInstDetailNo;
+	      pdLot = row.getData().pdLot;
+	      pdName = row.getData().pdName;
 	      const myModal = new bootstrap.Modal('#basicModal', {
 	        keyboard: false
 	      })
@@ -261,7 +297,7 @@
 
 
 	      // 평균을 확인 창에 표시
-	      var resultMessage = "입력한 검사결과의 평균은 " + averageFixed1 + " 입니다. \n 질소충전검사 합격 기준은 1 이하입니다.";
+	      var resultMessage = "입력한 검사결과의 평균은 " + averageFixed1 + " 입니다.";
 
 	      // 검사 결과 계산
 	      if (averageFixed >= 0 && averageFixed <= 1) {
@@ -293,20 +329,49 @@
           const packckRes = testResult;
           const packCkNo = letPackCkNo;
           const ckSt = letCkSt;
-          let param = { firstNc, secondNc, thirdNc, fourthNc, fifthNc, ncAvgVal, packckRes, packCkNo, ckSt };
+          let param = { firstNc, secondNc, thirdNc, fourthNc, fifthNc, ncAvgVal, packckRes, packCkNo, ckSt, pdtInstDetailNo };
+          let param1 = { "pdLot": pdLot, "pdName" : pdName, "pdtInstDetailNo" : pdtInstDetailNo};
           console.log(param);
-          fetch("/ajax/updatePackckRes", {
-            method: "post",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(param)
-          })
-            .then(res => res.json())
-            .then(res => {
-              console.log(res);
-              saveRes(res);
-            });
+          if(packckRes == "불합격"){
+        	  fetch("/ajax/updateFailPackckRes", {
+                  method: "post",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(param)
+                })
+                  .then(res => res.json())
+                  .then(res => {
+                    console.log(res);
+                    saveRes(res);
+                  });
+          }else{
+        	  fetch("/ajax/insertPdSTK", {
+                  method: "post",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(param1)
+                })
+                  .then(res => res.json())
+                  .then(res => {
+                    console.log(res);
+                  });
+        	  
+        	  fetch("/ajax/updatePackckRes", {
+                  method: "post",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(param)
+                })
+                  .then(res => res.json())
+                  .then(res => {
+                    console.log(res);
+                    saveRes(res);
+                  });
+        	  
+          }
         }
 
         // 등록 응답 처리

@@ -56,7 +56,6 @@
 							</div>
 						</form>
 
-
 					</div>
 					<div class="divider text-start">
 						<div class="divider-text "></div>
@@ -196,16 +195,24 @@
 			   
 			    columns:[
 			        {title:"설비 코드", field:"fcCd", width:100, hozAlign:"center" },
-			        {title:"설비 명", field:"fcName", width:195, hozAlign:"center", frozen:true}, 
-			        {title:"투입 공정", field:"insMf", width:100, hozAlign:"center"},
+			        {title:"설비 명", field:"fcName", width:195, hozAlign:"left", frozen:true}, 
+			        {title:"설비 상태", field:"st", width:130, hozAlign:"center"},
+			        {title:"투입 공정", field:"insMf", width:130, hozAlign:"center"},
 			        {title:"제조 업체", field:"mnfCom", width:150, hozAlign:"center"},
 			        {title:"입고 일자", field:"strDt", width:190, hozAlign:"center"},
 			        {title:"마지막 점검일", field:"lastInsDt", width:150, hozAlign:"center"},
 			        {title:"다음 정기점검일", field:"nextInsDt", width:150, hozAlign:"center"},
-			        {title:"생산량", field:"output", width:150, hozAlign:"center"},
-			        {title:"설비 상태", field:"st", width:100, hozAlign:"center"},
-			        {title:"Col", field:"col" ,formatter:"color", width:50, backgroundColor:"#ff0000"}
-			    ],
+			        {title:"생산량", field:"output", width:100, hozAlign:"right"}
+			       
+			    ],rowFormatter: function(row) {
+			        var data = row.getData();
+			        var stValue = data.st;
+			        if (stValue === "가동") {
+			            row.getElement().style.backgroundColor = "#c8e6c9"; 
+			        } else if (stValue === "비가동") {
+			            row.getElement().style.backgroundColor = "#ffcdd2"; 
+			        }
+			    }
 			});
 			
 			fclttable.on("rowClick", function(e, row){
