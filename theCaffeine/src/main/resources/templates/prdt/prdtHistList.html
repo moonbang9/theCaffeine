@@ -220,7 +220,14 @@
 		return [WEEK_KOR[weekNum], (dates.getMonth()+1)+'월'];
 	}
 	
+	selectNav();
 	
+	function selectNav() {
+		mainPage.classList.remove('active');
+		prdt.classList.add('active');
+		prdt.classList.add('open');
+		prdt_prdtHistList.classList.add('active');
+	}
 	
 	
 </script>

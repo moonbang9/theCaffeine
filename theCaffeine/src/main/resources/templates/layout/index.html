@@ -106,7 +106,7 @@
 
           <ul class="menu-inner py-1">
             <!-- Dashboard -->
-            <li class="menu-item active">
+            <li class="menu-item active" id="mainPage">
               <a href="index.html" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
                 <div data-i18n="Analytics">Dashboard</div>
@@ -114,39 +114,34 @@
             </li>
 
             <!-- 영업 관리 -->
-            <li class="menu-item">
+            <li class="menu-item" id="sale">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-layout"></i>
                 <div data-i18n="Layouts">영업 관리</div>
               </a>
 
               <ul class="menu-sub">
-              	<li class="menu-item">
-                  <a href="/sales/clientList" class="menu-link">
-                    <div data-i18n="Blank">거래처 관리</div>
-                  </a>
-                </li>
-                <li class="menu-item">
+                <li class="menu-item" id="sale_orderMng">
                   <a href="/sales/orderMng" class="menu-link">
                     <div data-i18n="Without menu">주문 조회</div>
                   </a>
                 </li>
-                <li class="menu-item">
+                <li class="menu-item" id="sale_insertOrderPage">
                   <a href="/sales/insertOrderPage" class="menu-link">
                     <div data-i18n="Without navbar">주문 등록</div>
                   </a>
                 </li>
-                <li class="menu-item">
+                <li class="menu-item" id="sale_sendOrder">
                   <a href="/sales/sendOrder" class="menu-link">
                     <div data-i18n="Fluid">주문 출고 관리</div>
                   </a>
                 </li>
-                <li class="menu-item">
+                <li class="menu-item" id="sale_stockMng">
                   <a href="/sales/stockMng" class="menu-link">
                     <div data-i18n="Container">제품 재고 관리</div>
                   </a>
                 </li>
-                <li class="menu-item">
+                <li class="menu-item" id="sale_clientList">
                   <a href="/sales/clientList" class="menu-link">
                     <div data-i18n="Blank">제품 폐기 관리</div>
                   </a>
@@ -155,34 +150,34 @@
             </li>
             
             <!-- 생산 관리 -->
-            <li class="menu-item">
+            <li class="menu-item" id="prdt">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-layout"></i>
                 <div data-i18n="Layouts">생산 관리</div>
               </a>
 
               <ul class="menu-sub">
-                <li class="menu-item">
+                <li class="menu-item" id="prdt_prdtYearState">
                   <a href="/production/prdtYearState" class="menu-link">
                     <div data-i18n="Without menu">연간 생산 현황</div>
                   </a>
                 </li>
-                <li class="menu-item">
+                <li class="menu-item" id="prdt_plan">
                   <a href="/production/plan" class="menu-link">
                     <div data-i18n="Without navbar">생산 계획 관리</div>
                   </a>
                 </li>
-                <li class="menu-item">
+                <li class="menu-item" id="prdt_prdtInst">
                   <a href="/production/prdtInst" class="menu-link">
                     <div data-i18n="Container">생산 지시 관리</div>
                   </a>
                 </li>
-                <li class="menu-item">
+                <li class="menu-item" id="prdt_prdtHistList">
                   <a href="/production/prdtHistList" class="menu-link">
                     <div data-i18n="Fluid">생산 내역 조회</div>
                   </a>
                 </li>
-                <li class="menu-item">
+                <li class="menu-item" id="prdt_prdtPerformanceList">
                   <a href="/production/prdtPerformanceList" class="menu-link">
                     <div data-i18n="Blank">생산 실적 조회</div>
                   </a>
@@ -191,49 +186,49 @@
             </li>
             
 			<!-- 자재 관리 -->
-            <li class="menu-item">
+            <li class="menu-item" id="mtrl">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-layout"></i>
-                <div data-i18n="Layouts">자재 관리</div>
+                <div data-i18n="자재 관리">자재 관리</div>
               </a>
 
               <ul class="menu-sub">
-                <li class="menu-item">
+                <li class="menu-item" id="mtrl_management">
                   <a href="/material/management" class="menu-link">
                     <div data-i18n="Without menu">자재 관리</div>
                   </a>
                 </li>
-                <li class="menu-item">
+                <li class="menu-item" id="mtrl_orderlist">
                   <a href="/material/orderlist" class="menu-link">
                     <div data-i18n="Without navbar">자재 발주 조회</div>
                   </a>
                 </li>
-                <li class="menu-item">
+                <li class="menu-item" id="mtrl_order">
                   <a href="/material/order" class="menu-link">
                     <div data-i18n="Container">자재 발주 관리</div>
                   </a>
                 </li>
-                <li class="menu-item">
+                <li class="menu-item" id="mtrl_quality">
                   <a href="/material/quality" class="menu-link">
                     <div data-i18n="Fluid">자재 검사 관리</div>
                   </a>
                 </li>
-                <li class="menu-item">
+                <li class="menu-item" id="mtrl_situation">
                   <a href="/material/situation" class="menu-link">
                     <div data-i18n="Blank">자재 현황 조회</div>
                   </a>
                 </li>
-                <li class="menu-item">
+                <li class="menu-item" id="mtrl_storing">
                   <a href="/material/storing" class="menu-link">
                     <div data-i18n="Blank">자재 입고 관리</div>
                   </a>
                 </li>
-                <li class="menu-item">
+                <li class="menu-item" id="mtrl_send">
                   <a href="/material/send" class="menu-link">
                     <div data-i18n="Blank">자재 출고 관리</div>
                   </a>
                 </li>
-                <li class="menu-item">
+                <li class="menu-item" id="mtrl_stocklist">
                   <a href="/material/stocklist" class="menu-link">
                     <div data-i18n="Blank">자재 재고 조회</div>
                   </a>
@@ -242,24 +237,24 @@
             </li>
             
             <!-- 품질 관리 -->
-            <li class="menu-item">
+            <li class="menu-item" id="qlty">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-layout"></i>
                 <div data-i18n="Layouts">품질 관리</div>
               </a>
 
               <ul class="menu-sub">
-                <li class="menu-item">
+                <li class="menu-item" id="qlty_material">
                   <a href="/quality/material" class="menu-link">
                     <div data-i18n="Without menu">자재 검사</div>
                   </a>
                 </li>
-                <li class="menu-item">
+                <li class="menu-item" id="qlty_process">
                   <a href="/quality/process" class="menu-link">
                     <div data-i18n="Without navbar">공정 검사</div>
                   </a>
                 </li>
-                <li class="menu-item">
+                <li class="menu-item" id="qlty_packaging">
                   <a href="/quality/packaging" class="menu-link">
                     <div data-i18n="Container">포장 검사</div>
                   </a>
@@ -268,24 +263,24 @@
             </li>
             
             <!-- 설비 관리 -->
-            <li class="menu-item">
+            <li class="menu-item" id="fclt">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-layout"></i>
                 <div data-i18n="Layouts">설비 관리</div>
               </a>
 
               <ul class="menu-sub">
-                <li class="menu-item">
+                <li class="menu-item" id="fclt_facilitylist">
                   <a href="/fclt/facilitylist" class="menu-link">
                     <div data-i18n="Without menu">설비 관리</div>
                   </a>
                 </li>
-                <li class="menu-item">
+                <li class="menu-item" id="fclt_operationlist">
                   <a href="/fclt/operationlist" class="menu-link">
                     <div data-i18n="Without navbar">비가동 관리</div>
                   </a>
                 </li>
-                <li class="menu-item">
+                <li class="menu-item" id="fclt_inspectionlist">
                   <a href="/fclt/inspectionlist" class="menu-link">
                     <div data-i18n="Container">점검 관리</div>
                   </a>
@@ -296,13 +291,13 @@
             <li class="menu-header small text-uppercase">
               <span class="menu-header-text">마이페이지</span>
             </li>
-            <li class="menu-item">
+            <li class="menu-item" id="memb_myinfo">
               <a href="/memb/myinfo" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-dock-top"></i>
                 <div data-i18n="Account Settings">내 정보</div>
               </a>
             </li>
-            <li class="menu-item">
+            <li class="menu-item" id="memb_addmembers">
               <a href="/memb/addmembers" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-lock-open-alt"></i>
                 <div data-i18n="Authentications">사원 관리</div>
@@ -452,6 +447,7 @@
 		        item.classList.add('active');
 		    })
 		})
+		
 	</script>
 
     

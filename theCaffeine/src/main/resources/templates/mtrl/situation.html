@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>situation</title>
+    <title>자재 현황 조회</title>
 </head>
 
 <body>
@@ -374,6 +374,16 @@
 			    ],
 			});
 	
+	      
+	  	selectNav();
+		
+		function selectNav() {
+			mainPage.classList.remove('active');
+			mtrl.classList.add('active');
+			mtrl.classList.add('open');
+		    mtrl_situation.classList.add('active');
+		}
+		
 	    </script>
     	
 	</div>

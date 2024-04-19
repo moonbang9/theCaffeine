@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>stocklist</title>
+    <title>자재 재고 조회</title>
 </head>
 
 <body>
@@ -176,6 +176,16 @@
             rotList.style.display = "none";
         })
             
+        
+        selectNav();
+	
+		function selectNav() {
+			mainPage.classList.remove('active');
+			mtrl.classList.add('active');
+			mtrl.classList.add('open');
+		    mtrl_stocklist.classList.add('active');
+		}
+		
         </script>
     </div>
 

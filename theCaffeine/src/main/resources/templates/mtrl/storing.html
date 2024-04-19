@@ -3,7 +3,7 @@
   layout:decorate="~{layout/index}">
 <head>
 <meta charset="UTF-8">
-<title>storing</title>
+<title>자재 입고 관리</title>
 </head>
 <body>
 <div layout:fragment="content">
@@ -47,6 +47,9 @@
 	
 		// 합격 목록
 		var table = new Tabulator("#mtrl_pass_list", {
+			placeholder:function(){
+		        return this.getHeaderFilters().length ? "No Matching Data" : "합격 원자재 없음";
+		    },
 		   height:"100%",
 		   selectableRows:true,
 		   pagination:"local",
@@ -76,6 +79,9 @@
 		
 		// 불합격 목록
 		var table2 = new Tabulator("#mtrl_fail_list", {
+			placeholder:function(){
+		        return this.getHeaderFilters().length ? "No Matching Data" : "불합격 원자재 없음";
+		    },
 		   height:"100%",
 		   selectableRows:true,
 		   pagination:"local",
@@ -105,6 +111,9 @@
 		
 		// 부자재 목록
 		var table3 = new Tabulator("#mtrl_subsidiary_list", {
+			placeholder:function(){
+		        return this.getHeaderFilters().length ? "No Matching Data" : "합격 부자재 없음";
+		    },
 		   height:"100%",
 		   selectableRows:true,
 		   pagination:"local",
@@ -266,7 +275,14 @@
 		}
 		
 		
+		selectNav();
 		
+		function selectNav() {
+			mainPage.classList.remove('active');
+			mtrl.classList.add('active');
+			mtrl.classList.add('open');
+		    mtrl_storing.classList.add('active');
+		}
 		
 	</script>
 

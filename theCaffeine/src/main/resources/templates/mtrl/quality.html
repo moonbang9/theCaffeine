@@ -3,7 +3,7 @@
   layout:decorate="~{layout/index}">
 <head>
 <meta charset="UTF-8">
-<title>quality</title>
+<title>자재 검사 관리</title>
 </head>
 <body>
 <div layout:fragment="content">
@@ -21,6 +21,9 @@
 	<script>
 		// 품질검사 대기 목록
 		var table = new Tabulator("#mtrl_quality_wait_list", {
+			placeholder:function(){
+		        return this.getHeaderFilters().length ? "No Matching Data" : "검사 자재 없음";
+		    },
 		   height:"100%",
 		   selectableRows:true,
 		   pagination:"local",
@@ -95,6 +98,15 @@
 			selectMtrl = data;
 		});
 		
+		
+		selectNav();
+		
+		function selectNav() {
+			mainPage.classList.remove('active');
+			mtrl.classList.add('active');
+			mtrl.classList.add('open');
+		    mtrl_quality.classList.add('active');
+		}
 		
 	</script>
 	

@@ -3,7 +3,7 @@
   layout:decorate="~{layout/index}">
 <head>
 <meta charset="UTF-8">
-<title>send</title>
+<title>자재 출고 관리</title>
 </head>
 <body>
 <div layout:fragment="content">
@@ -99,6 +99,15 @@
 		}
 		
 	
+		selectNav();
+		
+		function selectNav() {
+			mainPage.classList.remove('active');
+			mtrl.classList.add('active');
+			mtrl.classList.add('open');
+		    mtrl_send.classList.add('active');
+		}
+		
 	</script>
 </div>
 </body>

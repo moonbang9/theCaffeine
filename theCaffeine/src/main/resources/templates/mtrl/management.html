@@ -3,7 +3,7 @@
   layout:decorate="~{layout/index}">
 <head>
 <meta charset="UTF-8">
-<title>management</title>
+<title>자재 관리</title>
 </head>
 <body>
 <div layout:fragment="content">
@@ -351,6 +351,19 @@
 		alert("수정이 완료되었습니다!");
 		location.href= "/material/management"
 	}
+	
+	
+	
+	selectNav();
+	
+	function selectNav() {
+		mainPage.classList.remove('active');
+		mtrl.classList.add('active');
+		mtrl.classList.add('open');
+	    mtrl_management.classList.add('active');
+	}
+	
+	
 	</script>
 </div>
 </body>
