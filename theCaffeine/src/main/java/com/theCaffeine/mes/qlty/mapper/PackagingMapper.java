@@ -20,5 +20,11 @@ public interface PackagingMapper {
 	// 포장 성공
 	int updateSuccessInstPackaging(Integer pdtInstDetailNo);
 	int updateSuccessHistPackaging(Integer pdtInstDetailNo);
+	// 포장 실패
+	int updateFailInstPackaging(Integer pdtInstDetailNo);
+	int updateFailHistPackaging(Integer pdtInstDetailNo);
+	
+	//완제품 등록
+	int insertPdSTK(PackagingVO vo);
 
 }
