@@ -22,6 +22,7 @@ import com.theCaffeine.mes.prdt.model.InstResistVO;
 import com.theCaffeine.mes.prdt.model.InstVO;
 import com.theCaffeine.mes.prdt.model.MfProcessVO;
 import com.theCaffeine.mes.prdt.model.MtrlPlanVO;
+import com.theCaffeine.mes.prdt.model.NonopFcVO;
 import com.theCaffeine.mes.prdt.model.PlanOrderDetailVO;
 import com.theCaffeine.mes.prdt.model.PlanResistVO;
 import com.theCaffeine.mes.prdt.model.PlanVO;
@@ -238,6 +239,12 @@ public class ProductionController {
 	@PostMapping("/ajax/instDetailProcess")
 	public List<MfProcessVO> instDetailProcess(@RequestBody InstVO vo) {
 		return prdtService.getInstDetailProcess(vo);
+	}
+	
+	//비가동설비 예약 리스트
+	@GetMapping("/ajax/nonopFcList")
+	public List<NonopFcVO> getNonopFc() {
+		return prdtService.getNonopFc();
 	}
 	
 }

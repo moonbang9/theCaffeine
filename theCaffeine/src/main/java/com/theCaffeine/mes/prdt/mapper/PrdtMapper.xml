@@ -345,4 +345,10 @@
 			from PDT_HIST)
 		where trunc(pdt_stt_time,'dd') = #{pdtInstDt}
 	</select>
+	
+	<select id="getNonopFc" resultType="NonopFcVO">
+		select f.fc_cd, n.nonop_cd, n.nonop_stt_time, n.nonop_fn_time, (select count(*) from fc where ins_mf = 0) tot_fc 
+		from fc f join nonop_mgmt n on f.fc_cd = n.fc_cd 
+		where ins_mf = 0 and n.nonop_fn_time > sysdate
+	</select>
 </mapper>
