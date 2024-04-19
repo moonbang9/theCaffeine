@@ -54,12 +54,25 @@
                                 </div>
                             </div>
                             <div class="mb-3 row col-md-6">
-                                <label for="html5-search-input" class="col-md-3 col-form-label">제품명</label>
+                                <label for="html5-search-input" class="col-md-3 col-form-label"></label>
                                 <div class="col-md-9">
-                                    <input class="form-control" type="search" id="pdName"
-                                        placeholder="입력한 단어가 포함된 제품이 검색됩니다">
+                                    
                                 </div>
                             </div>
+                            
+                            <div class="mb-3 row col-md-6">
+                                <label for="html5-search-input" class="col-md-3 col-form-label">제품명</label>
+                                <div class="col-md-9">
+                                    <input class="form-control" type="search" id="pdName" placeholder="제품명을 입력하세요">
+                                </div>
+                            </div>
+                            <div class="mb-3 row col-md-6">
+                                <label for="html5-search-input" class="col-md-3 col-form-label"></label>
+                                <div class="col-md-9">
+                                    
+                                </div>
+                            </div>
+                            
 
 
                             <div class="mb-3 row col-md-6">
@@ -142,16 +155,26 @@
                 rowHeader: { formatter: "rownum", headerSort: false, width: 70, hozAlign: "center", resizable: false, frozen: true },
                 resizableColumnFit: true,
                 layout: "fitColumns",
-                columns: [ //제품코드, 제품명, 단위, 재고량, 총 미출고량, 납기3주미만미출고량, 납기3주미만 예상부족분, 주 예상생산량, 월 예상생산량 
+                columns: [ // 제품코드, 제품명, 단위, 총재고, 총미출고, 2주예상생산, 2주미출고
+                		   // 2주미출고/(총재고+2주예상생산) * 100 : 출고가능예상통계
+                		   // (총재고+2주예상생산)-2주미출고 : 2주 출고가능량
                     { title: "제품코드", field: "pdCd", width: 150, hozAlign: "center" },
                     { title: "제품명", field: "pdName", width: 150, hozAlign: "center" },
                     { title: "단위", field: "unit", width: 150, hozAlign: "center" },
-                    { title: "재고량", field: "curStk", width: 150, hozAlign: "center" },
-                    { title: "총 미출고량", field: "notSend", width: 150, hozAlign: "center" },
-                    { title: "납기3주미만 미출고량", field: "threeWNotSend", width: 150, hozAlign: "center" },
-                    { title: "납기3주미만 재고미달량", field: "shortage", width: 150, hozAlign: "center" },
-                    { title: "주 예상생산량", field: "weeklyPrd", width: 150, hozAlign: "center" },
-                    { title: "월 예상생산량", field: "monthlyPrd", width: 150, hozAlign: "center" }
+                    { title: "총 재고", field: "curStk", width: 150, hozAlign: "center" },
+                    { title: "총 미출고", field: "totalNotSend", width: 150, hozAlign: "center" },
+                    { title: "2주 예상생산", field: "twoWPrdt", width: 150, hozAlign: "center" },
+                    { title: "2주 미출고", field: "twoWNotSend", width: 150, hozAlign: "center" },
+                    //{ title: "2주 미출고량/출고가능량", field: "possStats", width: 150, hozAlign: "center" },
+                    //{title:"2주 미출고량/출고가능량", field:"progress", formatter:"progress", formatterParams:{color:["#00dd00", "orange", "rgb(255,0,0)"]}, sorter:"number", width:100},
+                    { title: "2주 예상출고 가능량", field: "possTwoSend", width: 150, hozAlign: "center" },
+                    {title:"2주 미출고량/출고가능량", field:"twoWNotSend", formatter:"progress", formatterParams:{
+					    min:0,
+					    max:10,
+					    color:["green", "orange", "red"],
+					    legendColor:"#000000",
+					    legendAlign:"center",
+					}}
                 ],
             });
             // LOT별 재고 조회

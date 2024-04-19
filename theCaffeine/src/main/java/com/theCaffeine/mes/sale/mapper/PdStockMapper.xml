@@ -35,40 +35,49 @@
 
 
 	<select id="pdStockList" resultType="PdStockVO">
-		<![CDATA[ select p.pd_cd
-						, p.pd_name
-						, p.unit
-						, c.curStk
-						, t.threeWNotSend
-						, n.notSend
-						, trunc( (p.safe_stk_qt/21)*30.5 , 0 ) as monthlyPrd
-						, trunc( (p.safe_stk_qt/3), 0 )as weeklyPrd
-						, CASE WHEN t.threeWnotSend > c.curStk
-		        					THEN t.threeWnotSend - c.curStk
-		    				   ELSE 0
-		    				   END AS shortage
-				from pd p 
-					JOIN (select count(*) as curStk
-								, pd_cd
-						  from pd_stk
-						  where qt >0 
-						  	and exp_dt > sysdate
-						  group by pd_cd) c
-					ON c.pd_cd = p.pd_cd
-					JOIN (select count(*) as threeWnotSend
-								, pd_cd
-						  from od_detail
-						  where od_detail_st<3 
-						  	and (sysdate-due_dt) <21
-						  group by pd_cd) t
-		    		ON p.pd_cd = t.pd_cd    
-					JOIN (select count(*) as notSend
-								, pd_cd
-						  from od_detail
-						  where od_detail_st<3
-						  group by pd_cd) n
-					ON p.pd_cd = n.pd_cd
-				ORDER BY p.pd_cd ]]>
+		<![CDATA[ select DISTINCT d.pd_cd
+									, p.pd_name
+									, p.unit
+									, st.total_stk as "curStk"
+									, dn.total_not_send as "totalNotSend"
+									, tl.tw_prdt as "twoWPrdt"
+									, wn.tw_not_send as "twoWNotSend"
+									, TRUNC((wn.tw_not_send/(st.total_stk + tl.tw_prdt)*100),1) as "possStats"
+									, TRUNC(((st.total_stk + tl.tw_prdt)-wn.tw_not_send), 0) as "possTwoSend"
+					from pd p JOIN od_detail d
+				            	ON p.pd_cd = d.pd_cd
+				              JOIN ( select sum(qt)/12 as total_stk
+				              				, pd_cd
+				                       from pd_stk
+				                      where ADD_MONTHS(sysdate, 6) <= exp_dt
+				                      group by pd_cd) st
+				            	ON d.pd_cd = st.pd_cd
+				              JOIN ( select sum(qt) as total_not_send
+				              				, pd_cd
+				                       from od_detail
+				                      where send_od_st = 1
+				                      group by pd_cd) dn
+				            	ON d.pd_cd = dn.pd_cd
+				              JOIN ( select sum(lan.qt/12) as tw_prdt
+				            				, lan.pd_cd 
+				                      from pdt_plan_detail lan JOIN ( select pdt_plan_cd
+				                     										, wk_plan_stt_dt
+							                                           from pdtplan
+							                                          where wk_plan_stt_dt > sysdate
+							                                                AND wk_plan_stt_dt < TO_DATE(NEXT_DAY(sysdate+ 14 , '월')) ) lnn
+				              									ON lan.pdt_plan_cd = lnn.pdt_plan_cd
+				                  group by lan.pd_cd) tl
+				            	ON d.pd_cd = tl.pd_cd
+				             JOIN (select sum(nsn.qt) as tw_not_send
+				             			, nsn.pd_cd
+				                     from od_detail nsn JOIN (select od_detailno
+				                     								, pd_cd
+								                                from od_detail
+								                               where send_od_st = 1
+								                                    and (due_dt -sysdate) <= 14) nsq
+				                    					  ON nsn.od_detailno = nsq.od_detailno
+				                    group by nsn.pd_cd) wn
+				              ON d.pd_cd = wn.pd_cd ]]>
 	</select>
 	
 	<select id="lotStockList" parameterType="LotStockVO" resultType="LotStockVO">
