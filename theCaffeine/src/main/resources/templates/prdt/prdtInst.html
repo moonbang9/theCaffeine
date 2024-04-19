@@ -4,6 +4,13 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style>
+	.malgun{font-family:'malgun';}
+	@font-face {
+  		font-family: "malgun";
+      	src: url("/fonts/malgun.ttf");
+	}
+</style>
 </head>
 <body>
 <div layout:fragment="content">
@@ -210,6 +217,15 @@
 		  var dayOfMonth = d.getDate();
 		  d.setDate(dayOfMonth - 5);
 		  return getDateStr(d);
+	}
+	
+	selectNav();
+	
+	function selectNav() {
+		mainPage.classList.remove('active');
+		prdt.classList.add('active');
+		prdt.classList.add('open');
+		prdt_prdtInst.classList.add('active');
 	}
 	
 	

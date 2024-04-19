@@ -54,7 +54,14 @@
 	    table.download("xlsx", "data.xlsx", {sheetName:"My Data"});
 	});
 	
+	selectNav();
 	
+	function selectNav() {
+		mainPage.classList.remove('active');
+		prdt.classList.add('active');
+		prdt.classList.add('open');
+		prdt_prdtYearState.classList.add('active');
+	}
 </script>
 </div>
 </body>

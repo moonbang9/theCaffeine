@@ -25,7 +25,7 @@
 				FROM mt_placeod mp 
 				JOIN mt_stk ms
 				  ON ms.mt_cd = mp.mt_cd
-				WHERE placeod_reqdt BETWEEN TO_CHAR(add_months(SYSDATE, -1), 'yyyy-mm-dd') AND SYSDATE
+				WHERE placeod_reqdt BETWEEN TO_CHAR(add_months(SYSDATE, -1), 'yyyy-mm-dd') AND TO_CHAR(SYSDATE, 'yyyy-mm-dd')
 				GROUP BY mp.mt_cd)
 		        ,
 		        
