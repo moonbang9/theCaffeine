@@ -33,7 +33,7 @@ public class WebSecurityConfig {
 	}
 	
 	@Bean
-	public AuthenticationFailureHandler failureHandler() {
+	public AuthenticationFailureHandler lgfailureHandler() {
 		return new CustomLoginFailureHandler();
 	}
 	
@@ -44,8 +44,8 @@ public class WebSecurityConfig {
 			.authorizeHttpRequests((requests) -> requests
 				.antMatchers("/","/memb/register" ,"/memb/login","/memb/changepw","/memb/changeid","/memb/findid","/memb/findpw","/assets/**","/fonts/**","/js/**","/scss/**").permitAll()
 //				.antMatchers("/login").permitAll()
-//				.antMatchers("/memb/monthly").hasAnyRole("ADMIN")
-//				.antMatchers("/userslist").hasAnyRole("PER00001")
+				.antMatchers("/fclt/**").hasRole("FCLT")
+                .antMatchers("/**/**").hasAnyRole("ADMIN")
 				.anyRequest().authenticated()
 			)
 			// 람다식
@@ -58,7 +58,7 @@ public class WebSecurityConfig {
 						.successHandler(successHandler())
 //						.defaultSuccessUrl("/", true) //로그인 하면 무조건 메인 페이지로  
 						.permitAll()
-						 .failureHandler(failureHandler())
+						 .failureHandler(lgfailureHandler())
 						
 			.and()
 //			.logout((logout) -> logout.permitAll())

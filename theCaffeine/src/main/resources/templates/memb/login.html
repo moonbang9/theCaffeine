@@ -28,8 +28,9 @@
               </div>
               <!-- /Logo -->
              <form th:action="@{/memb/userlogin}" method="post" name="frm">
+              <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
                 <div class="mb-3">
-                  <label for="email" class="form-label">아이디</label>
+                  <label for="username" class="form-label">아이디</label>
                   <input
                     type="text"
                     class="form-control"
@@ -55,12 +56,14 @@
                     />
                     <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                   </div>
+                  
                   <div style="text-align: right;">
                   <a href="/memb/findid">
                     <small>아이디 찾기</small> |
                     </a>
                     <a href="/memb/findpw">
                     <small>비밀번호 찾기</small>
+            
                   </a>
                 </div>
                 </div>
@@ -68,6 +71,11 @@
                   <button class="btn btn-primary d-grid w-100" type="submit">로그인</button>
                 </div>
 				</form>
+				<div th:if="${param.error}">
+                <div class="alert alert-danger" role="alert">
+                    <span th:text="${param.error}"></span>
+                </div>
+            </div>
               <p class="text-center">
                 <span>아직 회원이 아니신가요?</span>
                 <a href="register">

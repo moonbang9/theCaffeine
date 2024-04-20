@@ -15,4 +15,9 @@ public class EnterpriseVO {
 		String authNo;
 		String authName;
 		int st;
+		// table view 
+		String memType;
+		String name;
+		String tel;
+		String dpt;
 }
