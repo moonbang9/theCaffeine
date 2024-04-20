@@ -178,6 +178,27 @@
 					}}
                 ],
             });
+         	// 
+            pdStockTable.on("rowClick", function (e, row) {
+            	pdStockTable.deselectRow();
+            	pdStockTable.selectRow(1);
+            	
+                let pdCd = row.getData().pdCd;
+                console.log(pdCd);
+                param = { pdCd };
+                console.log(param);
+                getLotStockList(param);
+            });
+         
+            //pdStockTable.on("rowSelectionChanged", function(data, rows){
+            	
+          	  //document.getElementById("select-stats").innerHTML = data.length;
+            	
+          	//});
+            
+            
+            
+            
             // LOT별 재고 조회
             var lotStockTable = new Tabulator("#lotStockTable", {
                 // layout:"fitColumns",
@@ -197,9 +218,7 @@
             });
 
 
-            table.on("rowSelectionChanged", function(data, rows){
-            	  document.getElementById("select-stats").innerHTML = data.length;
-            	});
+            
             
             
 
@@ -257,14 +276,7 @@
 
                 //document.getElementById('zeroQt').checked = false;
             }
-            // 
-            pdStockTable.on("rowClick", function (e, row) {
-                let pdCd = row.getData().pdCd;
-                console.log(pdCd);
-                param = { pdCd };
-                console.log(param);
-                getLotStockList(param);
-            });
+            
 
 
         	selectNav();
