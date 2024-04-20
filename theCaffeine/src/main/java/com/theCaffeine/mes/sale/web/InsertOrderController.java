@@ -29,15 +29,6 @@ public class InsertOrderController {
 	
 	@Autowired InsertOrderService insertOrderService;
 	
-	// 거래처 조회 페이지이동
-	@GetMapping("/clientList")
-	public ModelAndView clientList() { 
-		ModelAndView mv = new ModelAndView("sale/clientList");
-		return mv;
-	}
-	
-	
-	
 	
 	// 주문 등록 페이지이동
 	@GetMapping("/insertOrderPage")

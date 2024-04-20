@@ -4,7 +4,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>출고 관리</title>
+  <title>제품 출고</title>
 </head>
 
 <body>
@@ -373,12 +373,39 @@
       }
 
       let sendCheck = '출고 완료';
-      for(e of results){
-        console.log('e는',e);
-        if(e != 1){
-          sendCheck = '재고 부족으로 출고 실패';
-        }                    
+
+      if(results.every( e => e==1)){
+        console.log('모든결과가1 ', results.every( e => e==1));
+        sendCheck = '모두 출고 완료';
+      }else if(results.every( e => e==2)){
+        console.log('모든결과가2 ', results.every( e => e==2))
+        sendCheck = '모든 주문이 재고 부족으로 출고되지 못했습니다.';
+      // }else if(results.every(e => e==3)){
+      //   console.log('모든결과가3 ', results.every( e => e==3));
+      //   sendCheck = '서버 오류로 출고되지 못했습니다.';
+      // }else if(results.some(e=>e==1) && results.some(e=>e==2) && results.some(e=>e==3)){
+      //   console.log('1,2,3모두 포함 ', results.some(e=>e==1) ,results.some(e=>e==2) ,results.some(e=>e==3));
+      //   sendCheck = '일부 출고 완료, 일부는 재고 부족으로 출고되지 못했습니다.';
+      }else if(results.some(e=>e==1) && results.some(e=>e==2)){
+        console.log('1,2포함 ', results.some(e=>e==1) , results.some(e=>e==2));
+        sendCheck = '일부 주문 출고 완료, 일부는 재고 부족으로 출고되지 못했습니다.';
+      // }else if(results.some(e=>e==1) && results.some(e=>e==3)){
+      //   console.log('1,3포함 ', results.some(e=>e==1) , results.some(e=>e==3));
+      //   sendCheck = '출고 완료';
+      // }else if(results.some(e=>e==2) && results.some(e=>e==3)){
+      //   console.log('2,3포함 ', results.some(e=>e==2) , results.some(e=>e==3));
+      //   sendCheck = '출고 완료';
+      }else{
+        console.log('1,2,3모두의 some결과 ', results.some(e=>e==1) ,results.some(e=>e==2) ,results.some(e=>e==3));
+        sendCheck = '일부 주문 출고 완료, 일부는 재고 부족으로 출고되지 못했습니다.';
       }
+
+      // for(e of results){
+      //   console.log('e는',e);
+      //   if(e != 1){
+      //     sendCheck = '재고 부족으로 출고 실패';
+      //   }                    
+      // }
       alert(sendCheck);
 
       getNotSendList(nSendCondition);

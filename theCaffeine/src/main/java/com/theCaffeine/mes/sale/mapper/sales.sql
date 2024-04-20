@@ -524,6 +524,13 @@ VALUEs('PCT01-240410-0001', 'box', 2, '24/04/10','24/05/10','PCT01',23);
 insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
 VALUEs('PCT01-240410-0002', 'box', 2, '24/04/10','24/05/10','PCT01',24);
 
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PPR01-240420-0001', 'box', 2, '24/04/20','25/04/20','PPR01',25);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PPR01-240420-0002', 'box', 2, '24/04/20','25/04/20','PPR01',26);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PPR01-240420-0003', 'box', 2, '24/04/20','25/04/20','PPR01',27);
+
 
 
 
@@ -937,4 +944,24 @@ group by nsn.pd_cd;
 
 select * from od order by od_no DESC;
 select * from od_detail order by od_detailno DESC;
+
+select * 
+from pd_stk 
+where pd_cd = 'PPR01'
+    --AND qt>0
+    --AND ADD_MONTHS(sysdate, 6) <= exp_dt
+order by pd_lot;
+
 select * from pd_stk;
+
+SELECT DISTINCT NVL( (SELECT SUM(qt) as qt
+                   FROM pd_stk 
+                  WHERE pd_cd = 'PPR01' ) , 0) as qt
+   -- INTO v_lot_sum
+    FROM pd_stk
+    --WHERE rownum = 1
+/
+    
+select * from pd;
+
+select * from disc_pd;

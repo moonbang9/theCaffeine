@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>제품 재고 관리</title>
+    <title>제품 재고</title>
 </head>
 
 <body>
@@ -155,6 +155,7 @@
                 rowHeader: { formatter: "rownum", headerSort: false, width: 70, hozAlign: "center", resizable: false, frozen: true },
                 resizableColumnFit: true,
                 layout: "fitColumns",
+                selectableRows:true, //make rows selectable
                 columns: [ // 제품코드, 제품명, 단위, 총재고, 총미출고, 2주예상생산, 2주미출고
                 		   // 2주미출고/(총재고+2주예상생산) * 100 : 출고가능예상통계
                 		   // (총재고+2주예상생산)-2주미출고 : 2주 출고가능량
@@ -196,6 +197,11 @@
             });
 
 
+            table.on("rowSelectionChanged", function(data, rows){
+            	  document.getElementById("select-stats").innerHTML = data.length;
+            	});
+            
+            
 
             // 제품별 재고 목록
             function getPdStockList() {

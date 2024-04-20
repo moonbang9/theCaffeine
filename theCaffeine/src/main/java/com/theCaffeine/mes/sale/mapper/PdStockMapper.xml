@@ -77,7 +77,8 @@
 								                                    and (due_dt -sysdate) <= 14) nsq
 				                    					  ON nsn.od_detailno = nsq.od_detailno
 				                    group by nsn.pd_cd) wn
-				              ON d.pd_cd = wn.pd_cd ]]>
+				              ON d.pd_cd = wn.pd_cd
+				order by d.pd_cd ]]>
 	</select>
 	
 	<select id="lotStockList" parameterType="LotStockVO" resultType="LotStockVO">
@@ -91,6 +92,7 @@
 		                  ON l.pd_cd = p.pd_cd
     	<include refid="condition"></include>
 		ORDER BY l.pd_lot DESC
+				, l.pd_cd
 	</select>
 
 </mapper>
