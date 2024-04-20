@@ -35,4 +35,5 @@ public class InstVO {
 	private Integer isum; 				//총 생산수량
 	private String insttot; 			//지시 총 상품명 (외 몇개)
 	private String pdName; 				//상품명
+	private String pdtChg; 				//생산 담당자
 }

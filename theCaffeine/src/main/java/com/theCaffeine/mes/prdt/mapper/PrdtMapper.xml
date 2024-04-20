@@ -275,10 +275,11 @@
 	</select>
 	
 	<insert id="insertPrdtInst" parameterType="InstVO">
-		insert into PDT_INST(PDT_INST_NO, PDT_INST_DT, PDT_PLAN_CD) 
+		insert into PDT_INST(PDT_INST_NO, PDT_INST_DT, PDT_PLAN_CD, PDT_CHG) 
 		VALUES 	(PDT_INST_SEQ.nextval,
 				#{pdtInstDt},
-				#{pdtPlanCd})
+				#{pdtPlanCd},
+				#{pdtChg})
 	</insert>
 	
 	<insert id="insertPrdtInstDetail" parameterType="InstVO">
@@ -350,5 +351,63 @@
 		select f.fc_cd, n.nonop_cd, n.nonop_stt_time, n.nonop_fn_time, (select count(*) from fc where ins_mf = 0) tot_fc 
 		from fc f join nonop_mgmt n on f.fc_cd = n.fc_cd 
 		where ins_mf = 0 and n.nonop_fn_time > sysdate
+	</select>
+	
+	<select id="getTot">
+		select tot1, tot2, tot3, tot4, tot5, tot6 
+		from 	(select nvl(sum(d.r),0) tot1 
+				from (select (ph.pdt_qt/a.consum) r, a.pd_cd from PDT_HIST ph 
+				join (select pd_cd, consum from bom where detail_unit = 'pcs') a on ph.pd_cd = a.pd_cd) d) z1
+		cross join (select nvl(sum(d.r),0) tot2 
+					from 	(select (ph.pdt_qt/a.consum) r, a.pd_cd 
+							from PDT_HIST ph 
+							join (select pd_cd, consum from bom where detail_unit = 'pcs') a 
+							on ph.pd_cd = a.pd_cd 
+							where trunc(ph.pdt_stt_time,'dd') = trunc(sysdate,'dd')) d) z2
+		cross join (select nvl(sum(d.pdt_qt),0) tot3 
+					from 	(select ph.pdt_qt/a.consum pdt_qt,a.pd_cd 
+							from PDT_HIST ph 
+							join (select pd_cd, consum from bom where detail_unit = 'pcs') a 
+							on ph.pd_cd = a.pd_cd 
+							join pdt_inst_detail pid 
+							on ph.pdt_inst_detail_no = pid.pdt_inst_detail_no 
+							where trunc(ph.pdt_stt_time,'dd') = trunc(sysdate,'dd') and pid.comp_st != 6) d) z3
+		cross join (select nvl(sum(d.pdt_qt),0) tot4 
+					from 	(select ph.pdt_qt/a.consum pdt_qt,a.pd_cd 
+							from PDT_HIST ph 
+							join (select pd_cd, consum from bom where detail_unit = 'pcs') a 
+							on ph.pd_cd = a.pd_cd 
+							join pdt_inst_detail pid 
+							on ph.pdt_inst_detail_no = pid.pdt_inst_detail_no 
+							where trunc(ph.pdt_stt_time,'dd') = trunc(sysdate,'dd') and pid.comp_st = 6) d) z4
+		cross join (select round(q.tot6/p.tot5,2)*100 tot5 
+					from 	(select nvl(sum(d.r),0) tot5 
+							from 	(select (ph.pdt_qt/a.consum) r, a.pd_cd 
+									from PDT_HIST ph 
+									join (select pd_cd, consum from bom where detail_unit = 'pcs') a 
+									on ph.pd_cd = a.pd_cd) d) p 
+					cross join (select nvl(sum(d.pdt_qt),0) tot6 
+								from 	(select ph.pdt_qt/a.consum pdt_qt,a.pd_cd 
+										from PDT_HIST ph 
+										join (select pd_cd, consum from bom where detail_unit = 'pcs') a 
+										on ph.pd_cd = a.pd_cd 
+										join pdt_inst_detail pid 
+										on ph.pdt_inst_detail_no = pid.pdt_inst_detail_no 
+										where pid.comp_st != 6) d) q) z5
+		cross join (select round(q.tot6/p.tot5,2)*100 tot6 
+					from 	(select nvl(sum(d.r),0) tot5 
+							from 	(select (ph.pdt_qt/a.consum) r, a.pd_cd 
+									from PDT_HIST ph 
+									join (select pd_cd, consum from bom where detail_unit = 'pcs') a 
+									on ph.pd_cd = a.pd_cd 
+									where trunc(ph.pdt_stt_time,'dd') = trunc(sysdate,'dd')) d) p 
+					cross join (select nvl(sum(d.pdt_qt),0) tot6 
+								from 	(select ph.pdt_qt/a.consum pdt_qt,a.pd_cd 
+										from PDT_HIST ph 
+										join (select pd_cd, consum from bom where detail_unit = 'pcs') a 
+										on ph.pd_cd = a.pd_cd 
+										join pdt_inst_detail pid 
+										on ph.pdt_inst_detail_no = pid.pdt_inst_detail_no 
+										where trunc(ph.pdt_stt_time,'dd') = trunc(sysdate,'dd') and pid.comp_st != 6) d) q) z6
 	</select>
 </mapper>

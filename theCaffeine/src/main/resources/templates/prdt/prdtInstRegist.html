@@ -91,9 +91,11 @@
 		let unitQts = []
 		let instLists =[] 
 		let nonopFcLists =[] 
+		//아이디
+		let memId = document.querySelector(".memId").innerText
 		
 		resistBtn.addEventListener("click", e=> {
-			let params1 = {pdtPlanCd : planCds.value, pdtInstDt : planDay2.value}
+			let params1 = {pdtPlanCd : planCds.value, pdtInstDt : planDay2.value, pdtChg : memId}
 			let params2 = InstDetailData();
 			let param = {instVO : params1, 
 					instDetailVO : params2
