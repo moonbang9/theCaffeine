@@ -225,12 +225,12 @@
 	    //resizableColumnFit:true,
 	   
 	    columns:[
-	        {title:"점검 코드", field:"insCd", width:160, hozAlign:"center"},
-	        {title:"설비 명", field:"fcName", width:195, hozAlign:"center" ,frozen:true}, 
-	        {title:"점검일", field:"insDt", width:150, hozAlign:"center"},
+	        {title:"점검 코드", field:"insCd", width:100, hozAlign:"center"},
+	        {title:"설비 명", field:"fcName", width:195, hozAlign:"left" ,frozen:true}, 
+	        {title:"점검일", field:"insDt", width:200, hozAlign:"center"},
 	        {title:"점검 구분", field:"insCat", width:150, hozAlign:"center"},
-	        {title:"점검 내용", field:"insCont", width:160, hozAlign:"center"},
-	        {title:"판정", field:"cc", width:150, hozAlign:"center"}, 
+	        {title:"점검 내용", field:"insCont", width:310, hozAlign:"left"},
+	        {title:"판정", field:"cc", width:160, hozAlign:"center"}, 
 	        {title:"담당자", field:"chg", width:180, hozAlign:"center"}
 	    ],rowFormatter: function(row) {
 	        var data = row.getData();
@@ -427,6 +427,15 @@
 	function modRes(res) {
 		alert("수정이 완료되었습니다!");
 		location.href= "/fclt/inspectionlist"
+	}
+	
+	selectNav();
+	
+	function selectNav() {
+		mainPage.classList.remove('active');
+		fclt.classList.add('active');
+		fclt.classList.add('open');
+		fclt_inspectionlist.classList.add('active');
 	}
 	</script>
 		</div>

@@ -3,7 +3,7 @@
   layout:decorate="~{layout/index}">
 <head>
 <meta charset="UTF-8">
-<title>storing</title>
+<title>자재 입고 관리</title>
 </head>
 <body>
 <div layout:fragment="content">
@@ -47,6 +47,9 @@
 	
 		// 합격 목록
 		var table = new Tabulator("#mtrl_pass_list", {
+			placeholder:function(){
+		        return this.getHeaderFilters().length ? "No Matching Data" : "합격 원자재 없음";
+		    },
 		   height:"100%",
 		   selectableRows:true,
 		   pagination:"local",
@@ -58,12 +61,12 @@
 		        cell.getRow().toggleSelect();
 		      }},
 		    columns:[
-		        {title:"자재코드", field:"mtCd", width:220, hozAlign:"center"},
-		        {title:"자재명", field:"mtName", width:239, hozAlign:"center"}, 
-		        {title:"수량", field:"placeodQt", width:210, hozAlign:"center"},
-		        {title:"단위", field:"unit", width:210, hozAlign:"center"},
-		        {title:"검사 완료일", field:"ckDt", width:230, hozAlign:"center", editor:"input"},
-		        {title:"검사 담당자", field:"ckChg", width:230, hozAlign:"center"}
+		        {title:"자재코드", field:"mtCd", width:220, headerHozAlign: "center", hozAlign:"center"},
+		        {title:"자재명", field:"mtName", width:239, headerHozAlign: "center"}, 
+		        {title:"수량", field:"placeodQt", width:210, headerHozAlign: "center", hozAlign:"right"},
+		        {title:"단위", field:"unit", width:210, headerHozAlign: "center", hozAlign:"center"},
+		        {title:"검사 완료일", field:"ckDt", width:230, headerHozAlign: "center", hozAlign:"center", editor:"input"},
+		        {title:"검사 담당자", field:"ckChg", width:230, headerHozAlign: "center", hozAlign:"center"}
 		    ],
 		});
 		
@@ -76,6 +79,9 @@
 		
 		// 불합격 목록
 		var table2 = new Tabulator("#mtrl_fail_list", {
+			placeholder:function(){
+		        return this.getHeaderFilters().length ? "No Matching Data" : "불합격 원자재 없음";
+		    },
 		   height:"100%",
 		   selectableRows:true,
 		   pagination:"local",
@@ -87,12 +93,12 @@
 		        cell.getRow().toggleSelect();
 		      }},
 		    columns:[
-		        {title:"자재코드", field:"mtCd", width:220, hozAlign:"center"},
-		        {title:"자재명", field:"mtName", width:239, hozAlign:"center"}, 
-		        {title:"수량", field:"placeodQt", width:210, hozAlign:"center"},
-		        {title:"단위", field:"unit", width:210, hozAlign:"center"},
-		        {title:"검사 완료일", field:"ckDt", width:230, hozAlign:"center", editor:"input"},
-		        {title:"검사 담당자", field:"ckChg", width:230, hozAlign:"center"}
+		        {title:"자재코드", field:"mtCd", width:220, headerHozAlign: "center", hozAlign:"center"},
+		        {title:"자재명", field:"mtName", width:239, headerHozAlign: "center"}, 
+		        {title:"수량", field:"placeodQt", width:210, headerHozAlign: "center", hozAlign:"right"},
+		        {title:"단위", field:"unit", width:210, headerHozAlign: "center", hozAlign:"center"},
+		        {title:"검사 완료일", field:"ckDt", width:230, headerHozAlign: "center", hozAlign:"center", editor:"input"},
+		        {title:"검사 담당자", field:"ckChg", width:230, headerHozAlign: "center", hozAlign:"center"}
 		    ],
 		});
 		
@@ -105,6 +111,9 @@
 		
 		// 부자재 목록
 		var table3 = new Tabulator("#mtrl_subsidiary_list", {
+			placeholder:function(){
+		        return this.getHeaderFilters().length ? "No Matching Data" : "합격 부자재 없음";
+		    },
 		   height:"100%",
 		   selectableRows:true,
 		   pagination:"local",
@@ -116,12 +125,12 @@
 		        cell.getRow().toggleSelect();
 		      }},
 		    columns:[
-		        {title:"자재코드", field:"mtCd", width:220, hozAlign:"center"},
-		        {title:"자재명", field:"mtName", width:239, hozAlign:"center"}, 
-		        {title:"수량", field:"placeodQt", width:210, hozAlign:"center"},
-		        {title:"단위", field:"unit", width:210, hozAlign:"center"},
-		        {title:"자재 도착일", field:"placeodArridt", width:230, hozAlign:"center", editor:"input"},
-		        {title:"발주 담당자", field:"placeodChg", width:230, hozAlign:"center"}
+		        {title:"자재코드", field:"mtCd", width:220, headerHozAlign: "center", hozAlign:"center"},
+		        {title:"자재명", field:"mtName", width:239, headerHozAlign: "center"}, 
+		        {title:"수량", field:"placeodQt", width:210, headerHozAlign: "center", hozAlign:"right"},
+		        {title:"단위", field:"unit", width:210, headerHozAlign: "center", hozAlign:"center"},
+		        {title:"자재 도착일", field:"placeodArridt", width:230, headerHozAlign: "center", hozAlign:"center"},
+		        {title:"발주 담당자", field:"placeodChg", width:230, headerHozAlign: "center", hozAlign:"center"}
 		    ],
 		});
 		
@@ -266,7 +275,14 @@
 		}
 		
 		
+		selectNav();
 		
+		function selectNav() {
+			mainPage.classList.remove('active');
+			mtrl.classList.add('active');
+			mtrl.classList.add('open');
+		    mtrl_storing.classList.add('active');
+		}
 		
 	</script>
 

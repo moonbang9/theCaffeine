@@ -41,7 +41,7 @@
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLabel1">검사결과</h5>
+						<h5 class="modal-title" id="exampleModalLabel1">수분검사결과 (합격 기준은 11%~13% 입니다)</h5>
 						<button type="button" class="btn-close" data-bs-dismiss="modal"
 							aria-label="Close"></button>
 					</div>
@@ -99,37 +99,51 @@
           height: "500px",
           layout: "fitColumns",
           pagination: "local",
-          paginationSize: 10,
+          paginationSize: 15,
           paginationSizeSelector: [5, 10, 15, 20],
           movableColumns: true,
           paginationCounter: "rows",
 
           columns: [{
             title: "No",
+            headerHozAlign: "center",
             width: 60,
+            hozAlign: "center",
             field: "mtCkNo"
           }, {
             title: "검사명",
+            headerHozAlign: "center",
             width: 120,
+            hozAlign: "center",
             field: "mcName",
           }, {
             title: "제품명",
+            headerHozAlign: "center",
             field: "mtName"
           }, {
             title: "수량",
+            headerHozAlign: "center",
             width: 70,
+            hozAlign: "right",
             field: "placeodQt"
           }, {
             title: "거래처명",
+            headerHozAlign: "center",
             field: "cliName"
           }, {
             title: "발주 요청일",
+            headerHozAlign: "center",
+            hozAlign: "center",
             field: "placeodReqdt"
           }, {
             title: "발주 요청자",
+            headerHozAlign: "center",
+            hozAlign: "center",
             field: "placeodRequester"
           }, {
             title: "발주 담당자",
+            headerHozAlign: "center",
+            hozAlign: "center",
             field: "placeodChg"
           },
           ],
@@ -141,50 +155,80 @@
           height: "500px",
           layout: "fitColumns",
           pagination: "local",
-          paginationSize: 10,
+          paginationSize: 15,
           paginationSizeSelector: [5, 10, 15, 20],
           movableColumns: true,
           paginationCounter: "rows",
 
           columns: [{
             title: "No",
+            headerHozAlign: "center",
             width: 60,
+            hozAlign: "center",
             field: "mtCkNo"
           }, {
             title: "검사명",
-            width: 120,
+            headerHozAlign: "center",
+            width: 100,
+            hozAlign: "center",
             field: "mcName",
           }, {
             title: "검사결과",
-            width: 100,
+            headerHozAlign: "center",
+            width: 90,
+            hozAlign: "center",
             field: "mcRes",
           }, {
             title: "제품명",
+            headerHozAlign: "center",
             field: "mtName"
           }, {
             title: "수량",
+            headerHozAlign: "center",
             width: 70,
+            hozAlign: "right",
             field: "placeodQt"
           }, {
             title: "거래처명",
+            headerHozAlign: "center",
             field: "cliName"
           }, {
             title: "발주 요청일",
+            headerHozAlign: "center",
+            width: 110,
+            hozAlign: "center",
             field: "placeodReqdt"
           }, {
             title: "발주 요청자",
+            headerHozAlign: "center",
+            width: 120,
+            hozAlign: "center",
             field: "placeodRequester"
           }, {
             title: "발주 담당자",
+            headerHozAlign: "center",
+            width: 120,
+            hozAlign: "center",
             field: "placeodChg"
           }, {
             title: "검사 담당자",
+            headerHozAlign: "center",
+            width: 120,
+            hozAlign: "center",
             field: "ckChg"
           }, {
             title: "검사일",
+            headerHozAlign: "center",
+            width: 110,
+            hozAlign: "center",
             field: "ckDt"
           }, {
-            title: "삭제", formatter: "buttonCross", width: 80, hozAlign: "center", cellClick: function (e, cell) {
+            title: "삭제",
+            headerHozAlign: "center",
+            formatter: function(cell, formatterParams, onRendered) {
+                return "<button class='btn btn-danger btn-sm'>삭제</button>";
+              }, 
+            width: 80, hozAlign: "center", cellClick: function (e, cell) {            	
               console.log(cell.getRow()._row.data.mtPlaceodCd);
               if (confirm("삭제하시겠습니까?")) {
                 const mtPlaceodCd = cell.getRow()._row.data.mtPlaceodCd;
@@ -274,7 +318,7 @@
 
 
           // 평균을 확인 창에 표시
-          var resultMessage = "입력한 검사결과의 평균은 " + averageFixed + "% 입니다. \n 수분검사 합격 기준은 11%~13% 입니다.";
+          var resultMessage = "입력한 검사결과의 평균은 " + averageFixed + "% 입니다.";
 
           // 검사 결과 계산
 
@@ -334,7 +378,14 @@
         }
 
 
-
+    	selectNav();
+    	
+    	function selectNav() {
+    		mainPage.classList.remove('active');
+    		qlty.classList.add('active');
+    		qlty.classList.add('open');
+    		qlty_material.classList.add('active');
+    	}
 
 
 

@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>situation</title>
+    <title>자재 현황 조회</title>
 </head>
 
 <body>
@@ -325,13 +325,13 @@
 			    paginationCounter:"rows",
 			    rowHeader:{formatter:"rownum", headerSort:false, width:50, hozAlign:"center", resizable:false, frozen:true, vertAlign:"middle"},
 			    columns:[
-			        {title:"분류", field:"mtDiv", width:130, hozAlign:"center", vertAlign:"middle"},
-			        {title:"자재코드", field:"mtCd", width:200, hozAlign:"center", vertAlign:"middle"}, 
-			        {title:"자재명", field:"mtName", width:220, hozAlign:"center", vertAlign:"middle"}, 
-			        {title:"입고수량", field:"strQt", width:148, hozAlign:"center", vertAlign:"middle"}, 
-			        {title:"단위", field:"unit", width:148, hozAlign:"center", vertAlign:"middle"}, 
-			        {title:"입고일자", field:"strCompdt", width:180, hozAlign:"center", vertAlign:"middle"},
-			        {title:"담당자", field:"strChg", width:180, hozAlign:"center", vertAlign:"middle"}
+			        {title:"분류", field:"mtDiv", width:130, headerHozAlign: "center", hozAlign:"center", vertAlign:"middle"},
+			        {title:"자재코드", field:"mtCd", width:200, headerHozAlign: "center", hozAlign:"center", vertAlign:"middle"}, 
+			        {title:"자재명", field:"mtName", width:220, headerHozAlign: "center", vertAlign:"middle"}, 
+			        {title:"입고수량", field:"strQt", width:148, headerHozAlign: "center", hozAlign:"right", vertAlign:"middle"}, 
+			        {title:"단위", field:"unit", width:148, headerHozAlign: "center", hozAlign:"center", vertAlign:"middle"}, 
+			        {title:"입고일자", field:"strCompdt", width:180, headerHozAlign: "center", hozAlign:"center", vertAlign:"middle"},
+			        {title:"담당자", field:"strChg", width:180, headerHozAlign: "center", hozAlign:"center", vertAlign:"middle"}
 			    ],
 			});
 	
@@ -344,14 +344,14 @@
 			    paginationCounter:"rows",
 			    rowHeader:{formatter:"rownum", headerSort:false, width:50, hozAlign:"center", resizable:false, frozen:true, vertAlign:"middle"},
 			    columns:[
-			    	{title:"분류", field:"mtDiv", width:110, hozAlign:"center", vertAlign:"middle"},
-			        {title:"자재코드", field:"mtCd", width:170, hozAlign:"center", vertAlign:"middle"}, 
-			        {title:"자재명", field:"mtName", width:190, hozAlign:"center", vertAlign:"middle"}, 
-			        {title:"출고수량", field:"sendQt", width:118, hozAlign:"center", vertAlign:"middle"}, 
-			        {title:"단위", field:"unit", width:118, hozAlign:"center", vertAlign:"middle"}, 
-			        {title:"LOT코드", field:"mtLot", width:180, hozAlign:"center", vertAlign:"middle"}, 
-			        {title:"출고일자", field:"sendCompdt", width:160, hozAlign:"center", vertAlign:"middle"},
-			        {title:"담당자", field:"sendChg", width:160, hozAlign:"center", vertAlign:"middle"}
+			    	{title:"분류", field:"mtDiv", width:110, headerHozAlign: "center", hozAlign:"center", vertAlign:"middle"},
+			        {title:"자재코드", field:"mtCd", width:170, headerHozAlign: "center", hozAlign:"center", vertAlign:"middle"}, 
+			        {title:"자재명", field:"mtName", width:190, headerHozAlign: "center", vertAlign:"middle"}, 
+			        {title:"출고수량", field:"sendQt", width:118, headerHozAlign: "center", hozAlign:"right", vertAlign:"middle"}, 
+			        {title:"단위", field:"unit", width:118, headerHozAlign: "center", hozAlign:"center", vertAlign:"middle"}, 
+			        {title:"LOT코드", field:"mtLot", width:180, headerHozAlign: "center", hozAlign:"center", vertAlign:"middle"}, 
+			        {title:"출고일자", field:"sendCompdt", width:160, headerHozAlign: "center", hozAlign:"center", vertAlign:"middle"},
+			        {title:"담당자", field:"sendChg", width:160, headerHozAlign: "center", hozAlign:"center", vertAlign:"middle"}
 			    ],
 			});
 	      
@@ -364,16 +364,26 @@
 			    paginationCounter:"rows",
 			    rowHeader:{formatter:"rownum", headerSort:false, width:50, hozAlign:"center", resizable:false, frozen:true, vertAlign:"middle"},
 			    columns:[
-			    	{title:"분류", field:"mtDiv", width:130, hozAlign:"center", vertAlign:"middle"},
-			        {title:"자재코드", field:"mtCd", width:200, hozAlign:"center", vertAlign:"middle"}, 
-			        {title:"자재명", field:"mtName", width:220, hozAlign:"center", vertAlign:"middle"}, 
-			        {title:"반품수량", field:"rtnQt", width:148, hozAlign:"center", vertAlign:"middle"}, 
-			        {title:"단위", field:"unit", width:148, hozAlign:"center", vertAlign:"middle"}, 
-			        {title:"반품일자", field:"rtnCompdt", width:180, hozAlign:"center", vertAlign:"middle"},
-			        {title:"담당자", field:"rtnChg", width:180, hozAlign:"center", vertAlign:"middle"}
+			    	{title:"분류", field:"mtDiv", width:130, headerHozAlign: "center", hozAlign:"center", vertAlign:"middle"},
+			        {title:"자재코드", field:"mtCd", width:200, headerHozAlign: "center", hozAlign:"center", vertAlign:"middle"}, 
+			        {title:"자재명", field:"mtName", width:220, headerHozAlign: "center", vertAlign:"middle"}, 
+			        {title:"반품수량", field:"rtnQt", width:148, headerHozAlign: "center", hozAlign:"right", vertAlign:"middle"}, 
+			        {title:"단위", field:"unit", width:148, headerHozAlign: "center", hozAlign:"center", vertAlign:"middle"}, 
+			        {title:"반품일자", field:"rtnCompdt", width:180, headerHozAlign: "center", hozAlign:"center", vertAlign:"middle"},
+			        {title:"담당자", field:"rtnChg", width:180, headerHozAlign: "center", hozAlign:"center", vertAlign:"middle"}
 			    ],
 			});
 	
+	      
+	  	selectNav();
+		
+		function selectNav() {
+			mainPage.classList.remove('active');
+			mtrl.classList.add('active');
+			mtrl.classList.add('open');
+		    mtrl_situation.classList.add('active');
+		}
+		
 	    </script>
     	
 	</div>

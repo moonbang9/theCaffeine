@@ -7,7 +7,9 @@ import com.theCaffeine.mes.prdt.model.FailPlanVO;
 import com.theCaffeine.mes.prdt.model.HistVO;
 import com.theCaffeine.mes.prdt.model.InstResistVO;
 import com.theCaffeine.mes.prdt.model.InstVO;
+import com.theCaffeine.mes.prdt.model.MfProcessVO;
 import com.theCaffeine.mes.prdt.model.MtrlPlanVO;
+import com.theCaffeine.mes.prdt.model.NonopFcVO;
 import com.theCaffeine.mes.prdt.model.PlanOrderDetailVO;
 import com.theCaffeine.mes.prdt.model.PlanResistVO;
 import com.theCaffeine.mes.prdt.model.PlanVO;
@@ -35,4 +37,6 @@ public interface PrdtService {
 	List<PlanVO> getPlanCdList(); // 계획코드 리스트
 	int instResist(InstResistVO vo); //지시 등록
 	List<HistVO> getTodayProduct(HistVO vo); //금일 생산지시 목표량
+	List<MfProcessVO> getInstDetailProcess(InstVO vo); // 공정과정
+	List<NonopFcVO> getNonopFc(); //비가동 설비 판단
 }

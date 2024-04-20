@@ -62,6 +62,9 @@
 	var table = new Tabulator("#productionPlan-table", {
     height:"100%",
     layout:"fitDataFill",
+    pagination:"local",
+    paginationSize:8,
+    paginationCounter:"rows",
     columns:[
         {title:"계획코드", field:"pdtPlanCd", hozAlign:"center", width:240},
         {title:"계획기간", field:"wkPlanSttDt", hozAlign:"center", width:310},
@@ -206,6 +209,15 @@
 		}
 
 		return [WEEK_KOR[weekNum], (dates.getMonth()+1)+'월'];
+	}
+	
+	selectNav();
+	
+	function selectNav() {
+		mainPage.classList.remove('active');
+		prdt.classList.add('active');
+		prdt.classList.add('open');
+		prdt_plan.classList.add('active');
 	}
 	</script>
 	</div>

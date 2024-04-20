@@ -10,16 +10,93 @@
 	
 	<h1>생산실적조회</h1>
 		<div class="demo-inline-spacing">
-		<button id="saveBtn"
-	        type="button"
-	        class="btn btn-primary">
-	        일정 등록
-	    </button>
-	</div>
-<script>
-	saveBtn.addEventListener("click", e=> {
-		location.href='/production/planRegist'
-	})
+		<div class="card mb-1">
+			<div class="card-body" >
+				<div class="mb-3 row">
+					<label for="" class="col-md-2 col-form-label">누적 총생산량(box)</label>
+					<div class="col">
+						<input class="form-control total1" type="text" value="" id="" readonly>
+					</div>
+					<label for="" class="col-md-2 col-form-label">금일 총생산량(box)</label>
+					<div class="col">
+						<input class="form-control todayTotal" type="text" value="" id="" readonly>
+					</div>
+					<label for="" class="col-md-2 col-form-label">금일 생산 실패량(box)</label>
+					<div class="col">
+						<input class="form-control todayFail" type="text" value="" id="" readonly>
+					</div>
+				</div>
+				<div class="mb-3 row">
+					<label for="" class="col-md-2 col-form-label">누적 총 수율</label>
+					<div class="col">
+						<input class="form-control totalYield" type="text" value="" id="" readonly>
+					</div>
+					<label for="" class="col-md-2 col-form-label" >수율</label>
+					<div class="col">
+						<input class="form-control todayYield" type="text" value="" id="" readonly>
+					</div>
+					<label for="" class="col-md-2 col-form-label">불량률</label>
+					<div class="col">
+						<input class="form-control todayFailYield" type="text" value="" id="" readonly>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="d-flex mt-5">
+	  		<div class="p-2 flex-grow-1"><h3>일별/상품별 생산실적조회</h3></div>
+		</div>
+		<div id="productionPlan-table"></div>
+		<div class="d-flex mt-5">
+	  		<div class="p-2 flex-grow-1"><h3>생산실패 내역조회</h3></div>
+		</div>
+		<div id="productionPlan-table2"></div>
+		</div>
+<script th:inline="javascript">
+var table = new Tabulator("#productionPlan-table", {
+    height:"100%",
+    layout:"fitDataFill",
+    pagination:"local",
+    paginationSize:10,
+    paginationCounter:"rows",
+    columns:[
+        {title:"생산일자", field:"pdtInstDt", hozAlign:"center", width:200},
+        {title:"상품코드", field:"insttot", hozAlign:"center", width:200},
+        {title:"단위", field:"isum", hozAlign:"center", width:200},
+        {title:"수량", field:"msum", hozAlign:"center", width:200},
+        {title:"생산시작시간", field:"pdtSttTime", hozAlign:"center", width:200},
+        {title:"생산종료시간", field:"pdtexptFnTime", hozAlign:"center", width:200},
+    ],
+});
+	
+	var table2 = new Tabulator("#productionPlan-table2", {
+		height:"100%",
+		layout:"fitDataFill",
+		pagination:"local",
+	    paginationSize:10,
+	    paginationCounter:"rows",
+	    columnDefaults:{
+	        headerSort:false,
+	        resizable:"header",
+	    },
+	    columns:[
+	        {title:"생산일자", field:"pdCd", hozAlign:"center", width:200},
+	        {title:"상품코드", field:"pdName", hozAlign:"center", width:200},
+	        {title:"단위", field:"isum2", hozAlign:"center", width:200},
+	        {title:"수량", field:"qt", hozAlign:"center", width:100},
+	        {title:"생산시작시간", field:"pdtSttTime", hozAlign:"center", width:200},
+	        {title:"생산종료시간", field:"pdtexptFnTime", hozAlign:"center", width:200},
+	        {title:"실패사유", field:"pdtexptFnTime", hozAlign:"center", width:200},
+	    ],
+	});
+	
+	selectNav();
+	
+	function selectNav() {
+		mainPage.classList.remove('active');
+		prdt.classList.add('active');
+		prdt.classList.add('open');
+		prdt_prdtPerformanceList.classList.add('active');
+	}
 </script>
 </div>
 </body>

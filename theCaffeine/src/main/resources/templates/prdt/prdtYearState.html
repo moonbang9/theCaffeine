@@ -10,7 +10,10 @@
 	<h1>연간 생산 현황</h1>
 	<h5>(계획량 / 실제 생산량)</h5>
 	<div class="demo-inline-spacing">
-		<button id="download-xlsx">Excel</button>
+		<div class="d-flex mt-5">
+	  		<div class="p-2 flex-grow-1"></div>
+	  		<div class="p-2"><button class="btn btn-success" id="download-xlsx">Excel</button></div>
+		</div>
 	</div>
 	<div id="example-table"></div>
 <script>
@@ -51,7 +54,14 @@
 	    table.download("xlsx", "data.xlsx", {sheetName:"My Data"});
 	});
 	
+	selectNav();
 	
+	function selectNav() {
+		mainPage.classList.remove('active');
+		prdt.classList.add('active');
+		prdt.classList.add('open');
+		prdt_prdtYearState.classList.add('active');
+	}
 </script>
 </div>
 </body>
