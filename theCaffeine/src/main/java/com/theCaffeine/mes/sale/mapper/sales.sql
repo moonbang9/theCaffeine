@@ -524,6 +524,13 @@ VALUEs('PCT01-240410-0001', 'box', 2, '24/04/10','24/05/10','PCT01',23);
 insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
 VALUEs('PCT01-240410-0002', 'box', 2, '24/04/10','24/05/10','PCT01',24);
 
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PPR01-240420-0001', 'box', 2, '24/04/20','25/04/20','PPR01',25);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PPR01-240420-0002', 'box', 2, '24/04/20','25/04/20','PPR01',26);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PPR01-240420-0003', 'box', 2, '24/04/20','25/04/20','PPR01',27);
+
 
 
 
@@ -778,7 +785,7 @@ select * from od_detail
 ;
 select * from send;
 select * from pd_stk;
-
+select * from pd;
 /* 폐기 - 불량유형: 파손, 스크래치,... */
 
 
@@ -790,4 +797,171 @@ SELECT NVL( (SELECT SUM(qt) as qt
                   , 0) as qt
    -- INTO v_lot_sum
     FROM pd_stk
-    WHERE rownum = 1; 
+    WHERE rownum = 1;
+    
+    
+/*  제품 재고 목록(예측수량) */
+select * from pdtplan;
+select * from pdt_plan_detail;
+select * from od;
+select * from od_detail;
+select * from pd_stk;
+select * from pd; --3주 안전재고 
+
+select d.due_dt, NEXT_DAY(d.due_dt + 28 , '월'), 
+        sum(pld.qt) as qt, pl.pdt_plan_cd, plwk_plan_stt_dt
+from od_detail d 
+    JOIN pdtplan pl
+        ON , pdt_plan_detail pld
+where ;
+
+
+
+select d.pd_cd, NEXT_DAY(d.due_dt + 21 , '월'), sum(d.qt) as total_not_send,
+    (select sum(qt) from od_detail where sysdate+21 < due_dt) as three_not_send,
+    sum(t.qt) as total_stk,
+    CASE when (three_not_send - total_stk) > 0 
+            then (three_not_send - total_stk)
+        else 0
+        as shortage,
+    ()
+    
+        
+    ADD_MONTHS(sysdate, 6) >=exp_dt;
+    
+select ld.qt, l.pdt_plan_cd
+from pdtplan l 
+    LEFT OUTER JOIN (select sum(qt) qt, pdt_plan_cd from pdt_plan_detail group by pdt_plan_cd) ld
+        ON l.pdt_plan_cd = ld.pdt_plan_cd
+where l.wk_plan_stt_dt > sysdate 
+    AND l.wk_plan_stt_dt < NEXT_DAY(sysdate + 28 , '월');
+
+select ld.pd_cd, sum(qt) as qt
+from pdtplan l pdt_plan_detail ld
+where l.wk_plan_stt_dt > sysdate 
+    AND l.wk_plan_stt_dt < NEXT_DAY(sysdate + 28 , '월');
+
+--제품코드, 제품명, 단위, 총 미출고, 납기3주/2주/1주미만 미출고, 재고량(유통기한 6개월 이상 남은), 납기3주미만 재고미달, 3주예상생산
+select pdt_plan_cd, TO_DATE(NEXT_DAY(sysdate + 14 , '일')) --2주예상생산량
+from pdtplan
+where wk_plan_stt_dt > sysdate 
+    AND wk_plan_stt_dt < TO_DATE(NEXT_DAY(sysdate + 14 , '일'));
+--계획상세 kg단위 (무조건 24kg - 2박스)
+
+
+
+--제품코드 제품명 단위 총재고,총미출고, 2주예상생산,2주미출고, 총재고+예상생산량 / 2주미출고 
+select DISTINCT d.pd_cd, p.pd_name, p.unit, 
+        st.total_stk as "총재고", 
+        dn.total_not_send as "총미출고", 
+        tl.tw_prdt as "2주예상생산", 
+        wn.tw_not_send as "2주미출고",  
+       TRUNC((wn.tw_not_send/(st.total_stk + tl.tw_prdt)*100),1) as "통계",
+       TRUNC(((st.total_stk + tl.tw_prdt)-wn.tw_not_send), 0) as "출고가능예상량"
+from pd p LEFT OUTER JOIN od_detail d
+            ON p.pd_cd = d.pd_cd
+             --총재고
+            JOIN (select NVL(sum(qt)/12,0) as total_stk, pd_cd
+                    from pd_stk
+                    where ADD_MONTHS(sysdate, 6) <=exp_dt
+                    group by pd_cd) st
+            ON d.pd_cd = st.pd_cd
+             --총미출고
+            JOIN (select sum(qt) as total_not_send, pd_cd
+                    from od_detail
+                    where send_od_st = 1
+                    group by pd_cd) dn
+            ON d.pd_cd = dn.pd_cd
+            --2주예상생산
+            JOIN (select sum(lan.qt/12) as tw_prdt, lan.pd_cd 
+                    from pdt_plan_detail lan
+                         JOIN ( select pdt_plan_cd, wk_plan_stt_dt
+                                            from pdtplan
+                                            where wk_plan_stt_dt > sysdate
+                                                AND wk_plan_stt_dt < TO_DATE(NEXT_DAY(sysdate+ 14 , '월')) ) lnn --2주(14일)
+                        ON lan.pdt_plan_cd = lnn.pdt_plan_cd
+                    group by lan.pd_cd) tl
+            ON d.pd_cd = tl.pd_cd
+            -- 2주미출고
+            JOIN (select sum(nsn.qt) as tw_not_send, nsn.pd_cd
+                    from od_detail nsn 
+                        JOIN (select od_detailno, pd_cd
+                                from od_detail
+                                where send_od_st = 1
+                                    and (due_dt -sysdate) <= 14) nsq
+                    ON nsn.od_detailno = nsq.od_detailno
+                    group by nsn.pd_cd) wn
+            ON d.pd_cd = wn.pd_cd
+            --(총재고+예상생산량) - 출고 가능한 예상량 
+            
+            ;
+  
+            
+/
+--총재고
+select sum(qt), pd_cd
+from pd_stk
+where ADD_MONTHS(sysdate, 6) <=exp_dt
+group by pd_cd;
+
+--총미출고
+select * from od_detail;
+select sum(qt), pd_cd
+from od_detail
+where send_od_st = 1
+group by pd_cd;
+
+-- 2주예상생산
+select pdt_plan_cd, wk_plan_stt_dt
+                        from pdtplan
+                        where wk_plan_stt_dt > sysdate
+                            AND wk_plan_stt_dt < TO_DATE(NEXT_DAY(sysdate+ 21 , '월'))  --7, 14, 21 숫자변경
+/
+(select sum(ld.qt/12) as "2주예상생산", ld.pd_cd
+from pdt_plan_detail ld
+     JOIN ( select pdt_plan_cd, wk_plan_stt_dt
+                        from pdtplan
+                        where wk_plan_stt_dt > sysdate
+                            AND wk_plan_stt_dt < TO_DATE(NEXT_DAY(sysdate+ 14 , '월')) ) l --2주(14일)
+    ON ld.pdt_plan_cd = l.pdt_plan_cd
+group by ld.pd_cd);
+/
+
+--2주 미출고
+select * from od_detail;
+select sum(nsn.qt), nsn.pd_cd
+from od_detail nsn 
+    JOIN (select od_detailno, pd_cd
+            from od_detail
+            where send_od_st = 1
+                and (due_dt -sysdate) <= 14) nsq
+ON nsn.od_detailno = nsq.od_detailno
+group by nsn.pd_cd;
+
+--총재고+예상생산량 / 2주미출고 
+
+
+
+select * from od order by od_no DESC;
+select * from od_detail order by od_detailno DESC;
+
+select * 
+from pd_stk 
+where pd_cd = 'PPR01'
+    --AND qt>0
+    --AND ADD_MONTHS(sysdate, 6) <= exp_dt
+order by pd_lot;
+
+select * from pd_stk;
+
+SELECT DISTINCT NVL( (SELECT SUM(qt) as qt
+                   FROM pd_stk 
+                  WHERE pd_cd = 'PPR01' ) , 0) as qt
+   -- INTO v_lot_sum
+    FROM pd_stk
+    --WHERE rownum = 1
+/
+    
+select * from pd;
+
+select * from disc_pd;

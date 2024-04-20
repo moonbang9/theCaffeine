@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/index}">
+
+<head>
+  <meta charset="UTF-8">
+  <title>제품 폐기</title>
+</head>
+
+<body>
+  <div layout:fragment="content">
+    <!-- Content wrapper -->
+    <div class="content-wrapper">
+      <!-- Content -->
+
+
+      <div class="container-xxl flex-grow-1 container-p-y">
+        <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">영업/</span> 제품 폐기 관리</h4>
+
+        <!-- Basic Layout -->
+        <div class="row">
+          <div class="col-xl-7">
+            <div class="card mb-4">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">폐기 조회</h5>
+
+              </div>
+              <div class="card-body">
+
+
+
+                <form>
+
+                  <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label" for="basic-default-name">제품</label>
+                    <div class="col-sm-10">
+
+                      <div class="btn-group">
+                        <select id="defaultSelect" class="form-select">
+                          <option>전체</option>
+                          <option value="PET01">에티오피아 G1 예가체프 첼바</option>
+                          <option value="PBR01">브라질 홀빈 로스팅 세하도 커피 원두</option>
+                          <option value="PCB01">콜롬비아 수프리모 후일라 싱글오리진 로스팅원두커피</option>
+                          <option value="PPR01">프리미엄 페루 싱글오리진 찬차마요 원두 커피</option>
+                          <option value="PCT01">코스타리카 따라주 로스팅 원두커피 홀빈 싱글오리진</option>
+                        </select>
+                      </div>                      
+
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <label class="col-sm-2 col-form-label" for="basic-default-company">일자</label>
+                    <div class="col-sm-10">
+                      <!-- <div class="mt-3"> -->
+                      <div class="btn-group" role="group" aria-label="Basic example">
+                        <button type="button" class="btn btn-outline-secondary">직접설정</button>
+                        <button type="button" class="btn btn-outline-secondary">금일</button>
+                        <button type="button" class="btn btn-outline-secondary">금주</button>
+                        <button type="button" class="btn btn-outline-secondary">전주</button>
+                        <button type="button" class="btn btn-outline-secondary">금월</button>
+                        <button type="button" class="btn btn-outline-secondary">전월</button>
+                        <!-- </div> -->
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row justify-content-end">
+                    <div class="col-sm-10">
+                      <button type="submit" class="btn btn-primary">조회</button>
+                    </div>
+                  </div>
+                </form>
+                
+              </div>
+            </div>
+          </div>
+          <div class="col-xl">
+            <div class="card mb-4">
+
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xl">
+
+            <!-- 주문목록 그리드 -->
+            <div id="discardTable" class="mb-3">
+
+            </div>
+
+
+
+          </div>
+
+        </div>
+
+
+      </div>
+      <!-- / Content -->
+
+
+
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+
+var discardTable = new Tabulator("#discardTable", {
+        layout: "fitColumns",
+        height: "100%",
+        selectableRows:true,
+        //responsiveLayout: "hide",
+        resizableColumnFit: true,
+        pagination:"local",
+		    paginationSize:30,
+		    paginationSizeSelector:[10, 20, 30],
+		    movableColumns:true,
+		    paginationCounter:"rows",
+        rowHeader:{
+            width:70,
+            headerSort:false, 
+						resizable: true, 
+						frozen:true, 
+						headerHozAlign:"center", 
+						hozAlign:"center", 
+						formatter:"rowSelection", 
+						titleFormatter:"rowSelection", 
+						cellClick:function(e, cell){ cell.getRow().toggleSelect(); }
+          },
+        columns: [ //주문일, 거래처, 제품명, 주문금액(부분합), 납기일, 상태, 인쇄
+          { title: "주문번호", field: "no", width: 150, hozAlign: "center" },
+          { title: "담당자", field: "odChg", width: 100, hozAlign: "center" },
+          { title: "주문일", field: "odDt", width: 110, hozAlign: "center" },
+          { title: "거래처", field: "cliName", width: 160, hozAlign: "center" },
+          { title: "제품", field: "pdName", width: 400, hozAlign: "center" },
+          { title: "수량", field: "qt", width: 70, hozAlign: "center" },
+          { title: "납기일", field: "dueDt", width: 110, hozAlign: "center" },
+          // { title: "인쇄", field: "week", width: 160, hozAlign: "center" }
+        ],
+      });
+
+
+    </script>
+
+  </div>
+</body>
+
+</html>
