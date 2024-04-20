@@ -30,6 +30,7 @@ public class MainController {
 			ModelAndView mv = new ModelAndView("layout/mainpage");
 			return mv;
 		}
+		
 	
 	// 공통코드 상세목록 데이터
 	@GetMapping("/ajax/codeDetailList/{wkCdNo}")

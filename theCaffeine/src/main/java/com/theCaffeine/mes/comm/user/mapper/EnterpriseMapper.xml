@@ -26,7 +26,7 @@
 	<select id="idChk" parameterType="string" resultType="string">
 
 		SELECT ID
-		FROM ENTER
+		FROM combined_view
 		WHERE ID= #{id}
 	</select>
 
@@ -34,24 +34,9 @@
 	<!-- 단건 조회 -->
 	<select id="getEnterInfo" parameterType="string"
 		resultType="EnterpriseVO">
-SELECT
-		e.ENTER_CD,
-		e.ID,
-		'{noop}' || e.pw as pw,
-		e.BUSSNO,
-		e.ENTER_NAME,
-		e.CHG,
-		e.MAIL,
-		e.CEO,
-		e.AUTH_NO,
-		'ROLE_' || upper(a.auth_Name) as AUTH_NAME,
-		e.ST
-		FROM
-		ENTER e
-		JOIN
-		AUTH a ON e.AUTH_NO = a.auth_No
+		SELECT * FROM COMBINED_VIEW
 		WHERE
-		e.ID =#{ID}
+		ID =#{ID}
 	</select>
 
 	<!-- 기업 회원 등록 -->

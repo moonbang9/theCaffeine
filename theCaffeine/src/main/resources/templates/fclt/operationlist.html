@@ -184,13 +184,13 @@
 	   
 	    columns:[
 	        {title:"비가동 코드", field:"nonopCd", width:100, hozAlign:"center"},
-	        {title:"설비 명", field:"fcName", width:195, hozAlign:"center"}, 
+	        {title:"설비 명", field:"fcName", width:195, hozAlign:"left",frozen:true}, 
 	        {title:"상태", field:"st", width:100, hozAlign:"center"},
 	        {title:"시작 시간", field:"nonopSttTime", width:150, hozAlign:"center"},
 	        {title:"종료 시간", field:"nonopFnTime", width:190, hozAlign:"center"},
 	        {title:"담당자", field:"fcChg", width:150, hozAlign:"center"},
 	        {title:"사유", field:"rsn", width:150, hozAlign:"center"},
-	        {title:"사유 상세", field:"rsnDesc", width:160, hozAlign:"center"},
+	        {title:"사유 상세", field:"rsnDesc", width:160, hozAlign:"left"},
 	        {title:"비가동 종료", field:"nonopFnButton",width:90,formatter: editorIcon, hozAlign:"center",resizable:false, headerSort:false,
 	            cellClick:function(e, cell){
 	            	console.log('nonopCd:'+cell._cell.row.data.nonopCd);
