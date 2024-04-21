@@ -152,7 +152,7 @@
                                     <![CDATA[   where wk_plan_stt_dt < (select max(wk_plan_stt_dt) 
 								  										from PDTPLAN 
 								  										where wk_plan_stt_dt <= sysdate))) w ]]>
-						on q.pdt_inst_no=w.pdt_inst_no where q.comp_st=5) r 
+						on q.pdt_inst_no=w.pdt_inst_no where q.comp_st in (3,4,5,6)) r 
 		on p.pd_cd=r.pd_cd 
 		group by p.pd_cd
 	</select>
@@ -353,7 +353,7 @@
 		where ins_mf = 0 and n.nonop_fn_time > sysdate
 	</select>
 	
-	<select id="getTot">
+	<select id="getTot" resultType="TotalVO">
 		select tot1, tot2, tot3, tot4, tot5, tot6 
 		from 	(select nvl(sum(d.r),0) tot1 
 				from (select (ph.pdt_qt/a.consum) r, a.pd_cd from PDT_HIST ph 
@@ -380,7 +380,7 @@
 							join pdt_inst_detail pid 
 							on ph.pdt_inst_detail_no = pid.pdt_inst_detail_no 
 							where trunc(ph.pdt_stt_time,'dd') = trunc(sysdate,'dd') and pid.comp_st = 6) d) z4
-		cross join (select round(q.tot6/p.tot5,2)*100 tot5 
+		cross join (select nvl(round(q.tot6/p.tot5,2)*100,0) tot5 
 					from 	(select nvl(sum(d.r),0) tot5 
 							from 	(select (ph.pdt_qt/a.consum) r, a.pd_cd 
 									from PDT_HIST ph 
@@ -394,7 +394,9 @@
 										join pdt_inst_detail pid 
 										on ph.pdt_inst_detail_no = pid.pdt_inst_detail_no 
 										where pid.comp_st != 6) d) q) z5
-		cross join (select round(q.tot6/p.tot5,2)*100 tot6 
+		cross join (select case when p.tot5 = 0 then 100 
+            				else nvl(round(q.tot6/p.tot5,2)*100,0) 
+            				end tot6
 					from 	(select nvl(sum(d.r),0) tot5 
 							from 	(select (ph.pdt_qt/a.consum) r, a.pd_cd 
 									from PDT_HIST ph 
@@ -402,12 +404,31 @@
 									on ph.pd_cd = a.pd_cd 
 									where trunc(ph.pdt_stt_time,'dd') = trunc(sysdate,'dd')) d) p 
 					cross join (select nvl(sum(d.pdt_qt),0) tot6 
-								from 	(select ph.pdt_qt/a.consum pdt_qt,a.pd_cd 
-										from PDT_HIST ph 
+								from 	(select nvl(sum(w.pdt_qt),0) pdt_qt, e.pd_cd 
+                                        from (select nvl(ph.pdt_qt/a.consum,0) pdt_qt, a.pd_cd
+                                                from PDT_HIST ph 
 										join (select pd_cd, consum from bom where detail_unit = 'pcs') a 
 										on ph.pd_cd = a.pd_cd 
 										join pdt_inst_detail pid 
 										on ph.pdt_inst_detail_no = pid.pdt_inst_detail_no 
-										where trunc(ph.pdt_stt_time,'dd') = trunc(sysdate,'dd') and pid.comp_st != 6) d) q) z6
+										where trunc(ph.pdt_stt_time,'dd') = trunc(sysdate,'dd') and pid.comp_st != 6) w
+                                        right outer join pd e
+                                        on w.pd_cd = e.pd_cd
+                                        group by e.pd_cd) d) q) z6
+	</select>
+	
+	<select id="getSuccessTot" resultType="HistVO">
+		select h.pdt_dt, h.pd_cd, h.pdt_unit, h.pdt_qt, h.pdt_stt_time, h.pdt_fn_time 
+		from PDT_HIST h 
+		join PDT_INST_DETAIL pid 
+		on h.pdt_inst_detail_no = pid.pdt_inst_detail_no 
+		where pid.comp_st = 5
+	</select>
+	<select id="getFailTot" resultType="HistVO">
+		select h.pdt_dt, h.pd_cd, h.pdt_unit, h.pdt_qt, h.pdt_stt_time, h.pdt_fn_time,h.fail_rsn
+		from PDT_HIST h 
+		join PDT_INST_DETAIL pid 
+		on h.pdt_inst_detail_no = pid.pdt_inst_detail_no 
+		where pid.comp_st=6
 	</select>
 </mapper>

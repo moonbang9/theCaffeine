@@ -27,6 +27,7 @@ import com.theCaffeine.mes.prdt.model.PlanOrderDetailVO;
 import com.theCaffeine.mes.prdt.model.PlanResistVO;
 import com.theCaffeine.mes.prdt.model.PlanVO;
 import com.theCaffeine.mes.prdt.model.SafePlanVO;
+import com.theCaffeine.mes.prdt.model.TotalVO;
 import com.theCaffeine.mes.prdt.service.PrdtService;
 
 @RestController
@@ -245,6 +246,24 @@ public class ProductionController {
 	@GetMapping("/ajax/nonopFcList")
 	public List<NonopFcVO> getNonopFc() {
 		return prdtService.getNonopFc();
+	}
+	
+	//실적값 리스트
+	@GetMapping("/ajax/totalsList")
+	public TotalVO totalsList() {
+		return prdtService.getTot();
+	}
+	
+	//성공실적값 리스트
+	@GetMapping("/ajax/successTotList")
+	public List<HistVO> successTotList() {
+		return prdtService.getSuccessTot();
+	}
+	
+	//실패실적값 리스트
+	@GetMapping("/ajax/failTotList")
+	public List<HistVO> failTotList() {
+		return prdtService.getFailTot();
 	}
 	
 }

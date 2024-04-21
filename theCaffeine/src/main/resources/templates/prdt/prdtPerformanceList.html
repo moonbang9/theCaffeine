@@ -15,35 +15,35 @@
 				<div class="mb-3 row">
 					<label for="" class="col-md-2 col-form-label">누적 총생산량(box)</label>
 					<div class="col">
-						<input class="form-control total1" type="text" value="" id="" readonly>
+						<input class="form-control totals" type="text" value="" id="" readonly>
 					</div>
 					<label for="" class="col-md-2 col-form-label">금일 총생산량(box)</label>
 					<div class="col">
 						<input class="form-control todayTotal" type="text" value="" id="" readonly>
 					</div>
+					<label for="" class="col-md-2 col-form-label">금일 생산 성공량(box)</label>
+					<div class="col">
+						<input class="form-control todaySuccess" type="text" value="" id="" readonly>
+					</div>
+				</div>
+				<div class="mb-3 row">
 					<label for="" class="col-md-2 col-form-label">금일 생산 실패량(box)</label>
 					<div class="col">
 						<input class="form-control todayFail" type="text" value="" id="" readonly>
 					</div>
-				</div>
-				<div class="mb-3 row">
-					<label for="" class="col-md-2 col-form-label">누적 총 수율</label>
+					<label for="" class="col-md-2 col-form-label" >누적 총 수율</label>
 					<div class="col">
 						<input class="form-control totalYield" type="text" value="" id="" readonly>
 					</div>
-					<label for="" class="col-md-2 col-form-label" >수율</label>
+					<label for="" class="col-md-2 col-form-label">금일 수율</label>
 					<div class="col">
 						<input class="form-control todayYield" type="text" value="" id="" readonly>
-					</div>
-					<label for="" class="col-md-2 col-form-label">불량률</label>
-					<div class="col">
-						<input class="form-control todayFailYield" type="text" value="" id="" readonly>
 					</div>
 				</div>
 			</div>
 		</div>
 		<div class="d-flex mt-5">
-	  		<div class="p-2 flex-grow-1"><h3>일별/상품별 생산실적조회</h3></div>
+	  		<div class="p-2 flex-grow-1"><h3>생산실적조회</h3></div>
 		</div>
 		<div id="productionPlan-table"></div>
 		<div class="d-flex mt-5">
@@ -52,6 +52,46 @@
 		<div id="productionPlan-table2"></div>
 		</div>
 <script th:inline="javascript">
+totList();
+successTotList();
+failTotList();
+
+let totals = document.querySelector('.totals');
+let todayTotal = document.querySelector('.todayTotal');
+let todaySuccess = document.querySelector('.todaySuccess');
+let todayFail = document.querySelector('.todayFail');
+let totalYield = document.querySelector('.totalYield');
+let todayYield = document.querySelector('.todayYield');
+
+function totList() {
+	fetch("/ajax/totalsList")
+	.then(res => res.json())
+	.then(res => {
+		totals.value = res.tot1 + "개";
+		todayTotal.value = res.tot2 + "개";
+		todaySuccess.value = res.tot3 + "개";
+		todayFail.value = res.tot4 + "개";
+		totalYield.value = res.tot5 + "%";
+		todayYield.value = res.tot6 + "%";
+	})
+}
+function successTotList() {
+	fetch("/ajax/successTotList")
+	.then(res => res.json())
+	.then(res => {
+		table.setData(res)
+	})
+}
+
+function failTotList() {
+	fetch("/ajax/failTotList")
+	.then(res => res.json())
+	.then(res => {
+		table2.setData(res)
+	})
+}
+
+
 var table = new Tabulator("#productionPlan-table", {
     height:"100%",
     layout:"fitDataFill",
@@ -59,12 +99,12 @@ var table = new Tabulator("#productionPlan-table", {
     paginationSize:10,
     paginationCounter:"rows",
     columns:[
-        {title:"생산일자", field:"pdtInstDt", hozAlign:"center", width:200},
-        {title:"상품코드", field:"insttot", hozAlign:"center", width:200},
-        {title:"단위", field:"isum", hozAlign:"center", width:200},
-        {title:"수량", field:"msum", hozAlign:"center", width:200},
+        {title:"생산일자", field:"pdtDt", hozAlign:"center", width:200},
+        {title:"상품코드", field:"pdCd", hozAlign:"center", width:200},
+        {title:"단위", field:"pdtUnit", hozAlign:"center", width:200},
+        {title:"수량", field:"pdtQt", hozAlign:"center", width:200},
         {title:"생산시작시간", field:"pdtSttTime", hozAlign:"center", width:200},
-        {title:"생산종료시간", field:"pdtexptFnTime", hozAlign:"center", width:200},
+        {title:"생산종료시간", field:"pdtFnTime", hozAlign:"center", width:200},
     ],
 });
 	
@@ -79,13 +119,13 @@ var table = new Tabulator("#productionPlan-table", {
 	        resizable:"header",
 	    },
 	    columns:[
-	        {title:"생산일자", field:"pdCd", hozAlign:"center", width:200},
-	        {title:"상품코드", field:"pdName", hozAlign:"center", width:200},
-	        {title:"단위", field:"isum2", hozAlign:"center", width:200},
-	        {title:"수량", field:"qt", hozAlign:"center", width:100},
+	        {title:"생산일자", field:"pdtDt", hozAlign:"center", width:200},
+	        {title:"상품코드", field:"pdCd", hozAlign:"center", width:200},
+	        {title:"단위", field:"pdtUnit", hozAlign:"center", width:200},
+	        {title:"수량", field:"pdtQt", hozAlign:"center", width:100},
 	        {title:"생산시작시간", field:"pdtSttTime", hozAlign:"center", width:200},
-	        {title:"생산종료시간", field:"pdtexptFnTime", hozAlign:"center", width:200},
-	        {title:"실패사유", field:"pdtexptFnTime", hozAlign:"center", width:200},
+	        {title:"생산종료시간", field:"pdtFnTime", hozAlign:"center", width:200},
+	        {title:"실패사유", field:"failRsn", hozAlign:"center", width:200},
 	    ],
 	});
 	
