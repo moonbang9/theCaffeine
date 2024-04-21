@@ -32,6 +32,7 @@ public class OrderMngVO {
 	private String odChg;
 	
 	private float dcRate;
+	private String dcPercent;
 	private int totalPrice;
 	
 	private String pdCd;
