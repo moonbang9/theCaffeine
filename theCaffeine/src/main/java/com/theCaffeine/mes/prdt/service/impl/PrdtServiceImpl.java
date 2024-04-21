@@ -20,6 +20,7 @@ import com.theCaffeine.mes.prdt.model.PlanOrderDetailVO;
 import com.theCaffeine.mes.prdt.model.PlanResistVO;
 import com.theCaffeine.mes.prdt.model.PlanVO;
 import com.theCaffeine.mes.prdt.model.SafePlanVO;
+import com.theCaffeine.mes.prdt.model.TotalVO;
 import com.theCaffeine.mes.prdt.service.PrdtService;
 
 @Service
@@ -206,6 +207,24 @@ public class PrdtServiceImpl implements PrdtService{
 	public List<NonopFcVO> getNonopFc() {
 		// TODO Auto-generated method stub
 		return prdtMapper.getNonopFc();
+	}
+
+	@Override
+	public TotalVO getTot() {
+		// TODO Auto-generated method stub
+		return prdtMapper.getTot();
+	}
+
+	@Override
+	public List<HistVO> getSuccessTot() {
+		// TODO Auto-generated method stub
+		return prdtMapper.getSuccessTot();
+	}
+
+	@Override
+	public List<HistVO> getFailTot() {
+		// TODO Auto-generated method stub
+		return prdtMapper.getFailTot();
 	}
 	
 }
