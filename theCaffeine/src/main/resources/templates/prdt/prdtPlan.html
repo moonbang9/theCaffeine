@@ -66,11 +66,11 @@
     paginationSize:8,
     paginationCounter:"rows",
     columns:[
-        {title:"계획코드", field:"pdtPlanCd", hozAlign:"center", width:240},
-        {title:"계획기간", field:"wkPlanSttDt", hozAlign:"center", width:310},
-        {title:"상품명", field:"plantot", hozAlign:"center", width:320},
-        {title:"총 예상 원두생산 수량(kg)", field:"psum", hozAlign:"center", width:320},
-        {title:"수정", field:"updates",width:90,formatter: editorIcon, hozAlign:"center",resizable:false, headerSort:false,
+        {title:"계획코드", field:"pdtPlanCd", hozAlign:"center", width:240, headerHozAlign: "center"},
+        {title:"계획기간", field:"wkPlanSttDt", hozAlign:"center", width:310, headerHozAlign: "center"},
+        {title:"상품명", field:"plantot", hozAlign:"center", width:320, headerHozAlign: "center"},
+        {title:"총 예상 원두생산 수량(kg)", field:"psum", hozAlign:"center", width:320, headerHozAlign: "center"},
+        {title:"수정", field:"updates",width:90,formatter: editorIcon, hozAlign:"center",resizable:false, headerSort:false, headerHozAlign: "center",
             cellClick:function(e, cell){
             	console.log(cell._cell.row.data.pdtPlanCd);
             	let pdtPlanCd = cell._cell.row.data.pdtPlanCd;
@@ -87,7 +87,7 @@
             	}
             }
         },
-        {title:"삭제", formatter:editorIcon2, width:90, hozAlign:"center", cellClick:function(e, cell){
+        {title:"삭제", formatter:editorIcon2, width:90, hozAlign:"center", headerHozAlign: "center", cellClick:function(e, cell){
         	let pdtPlanCd = cell._cell.row.data.pdtPlanCd;
             			console.log(pdtPlanCd)
         	if(cell._cell.row.data.wkPlanSttDt >= lastWeek(new Date())){
@@ -111,20 +111,20 @@
 	height:"100%",
 	layout:"fitDataTable",
     columns:[
-        {title:"자재코드", field:"mtCd", hozAlign:"center"},
-        {title:"분류", field:"mtDiv", hozAlign:"center"},
-        {title:"자재명", field:"mtName", hozAlign:"center"},
-        {title:"발주 단위", field:"unit", hozAlign:"center"},
-        {title:"발주/필요 자재량", field:"placeodQt", hozAlign:"center"},
+        {title:"자재명", field:"mtName", hozAlign:"left", headerHozAlign: "center",width:180},
+        {title:"자재코드", field:"mtCd", hozAlign:"center", headerHozAlign: "center",width:180},
+        {title:"분류", field:"mtDiv", hozAlign:"center", headerHozAlign: "center",width:100},
+        {title:"발주 단위", field:"unit", hozAlign:"center", headerHozAlign: "center"},
+        {title:"발주/필요 자재량", field:"placeodQt", hozAlign:"center", headerHozAlign: "center"},
     ],
 });
 	var table3 = new Tabulator("#productionPlan-table3", {
 	height:"100%",
     layout:"fitDataTable",
     columns:[
-        {title:"상품명", field:"pdName", hozAlign:"center"},
-        {title:"총 예상 생산 수량(kg)", field:"qt", hozAlign:"center"},
-        {title:"납기 일자", field:"dueDt", hozAlign:"center"},
+        {title:"상품명", field:"pdName", hozAlign:"left", headerHozAlign: "center"},
+        {title:"총 예상 생산 수량(kg)", field:"qt", hozAlign:"center", headerHozAlign: "center"},
+        {title:"납기 일자", field:"dueDt", hozAlign:"center", headerHozAlign: "center"},
     ],
 });
 	

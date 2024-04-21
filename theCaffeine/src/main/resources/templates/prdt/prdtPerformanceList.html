@@ -15,29 +15,29 @@
 				<div class="mb-3 row">
 					<label for="" class="col-md-2 col-form-label">누적 총생산량(box)</label>
 					<div class="col">
-						<input class="form-control totals" type="text" value="" id="" readonly>
+						<input class="form-control totals text-end" type="text" value="" id="" readonly>
 					</div>
 					<label for="" class="col-md-2 col-form-label">금일 총생산량(box)</label>
 					<div class="col">
-						<input class="form-control todayTotal" type="text" value="" id="" readonly>
+						<input class="form-control todayTotal text-end" type="text" value="" id="" readonly>
 					</div>
 					<label for="" class="col-md-2 col-form-label">금일 생산 성공량(box)</label>
 					<div class="col">
-						<input class="form-control todaySuccess" type="text" value="" id="" readonly>
+						<input class="form-control todaySuccess text-end" type="text" value="" id="" readonly>
 					</div>
 				</div>
 				<div class="mb-3 row">
 					<label for="" class="col-md-2 col-form-label">금일 생산 실패량(box)</label>
 					<div class="col">
-						<input class="form-control todayFail" type="text" value="" id="" readonly>
+						<input class="form-control todayFail text-end" type="text" value="" id="" readonly>
 					</div>
 					<label for="" class="col-md-2 col-form-label" >누적 총 수율</label>
 					<div class="col">
-						<input class="form-control totalYield" type="text" value="" id="" readonly>
+						<input class="form-control totalYield text-end" type="text" value="" id="" readonly>
 					</div>
 					<label for="" class="col-md-2 col-form-label">금일 수율</label>
 					<div class="col">
-						<input class="form-control todayYield" type="text" value="" id="" readonly>
+						<input class="form-control todayYield text-end" type="text" value="" id="" readonly>
 					</div>
 				</div>
 			</div>
@@ -99,12 +99,12 @@ var table = new Tabulator("#productionPlan-table", {
     paginationSize:10,
     paginationCounter:"rows",
     columns:[
-        {title:"생산일자", field:"pdtDt", hozAlign:"center", width:200},
-        {title:"상품코드", field:"pdCd", hozAlign:"center", width:200},
-        {title:"단위", field:"pdtUnit", hozAlign:"center", width:200},
-        {title:"수량", field:"pdtQt", hozAlign:"center", width:200},
-        {title:"생산시작시간", field:"pdtSttTime", hozAlign:"center", width:200},
-        {title:"생산종료시간", field:"pdtFnTime", hozAlign:"center", width:200},
+        {title:"생산일자", field:"pdtDt", hozAlign:"center", width:200, headerHozAlign: "center"},
+        {title:"상품코드", field:"pdCd", hozAlign:"center", width:200, headerHozAlign: "center"},
+        {title:"단위", field:"pdtUnit", hozAlign:"center", width:200, headerHozAlign: "center"},
+        {title:"수량", field:"pdtQt", hozAlign:"center", width:190, headerHozAlign: "center"},
+        {title:"생산시작시간", field:"pdtSttTime", hozAlign:"center", width:290, headerHozAlign: "center"},
+        {title:"생산종료시간", field:"pdtFnTime", hozAlign:"center", width:290, headerHozAlign: "center"},
     ],
 });
 	
@@ -119,13 +119,13 @@ var table = new Tabulator("#productionPlan-table", {
 	        resizable:"header",
 	    },
 	    columns:[
-	        {title:"생산일자", field:"pdtDt", hozAlign:"center", width:200},
-	        {title:"상품코드", field:"pdCd", hozAlign:"center", width:200},
-	        {title:"단위", field:"pdtUnit", hozAlign:"center", width:200},
-	        {title:"수량", field:"pdtQt", hozAlign:"center", width:100},
-	        {title:"생산시작시간", field:"pdtSttTime", hozAlign:"center", width:200},
-	        {title:"생산종료시간", field:"pdtFnTime", hozAlign:"center", width:200},
-	        {title:"실패사유", field:"failRsn", hozAlign:"center", width:200},
+	        {title:"생산일자", field:"pdtDt", hozAlign:"center", width:200, headerHozAlign: "center"},
+	        {title:"상품코드", field:"pdCd", hozAlign:"center", width:200, headerHozAlign: "center"},
+	        {title:"단위", field:"pdtUnit", hozAlign:"center", width:190, headerHozAlign: "center"},
+	        {title:"수량", field:"pdtQt", hozAlign:"center", width:100, headerHozAlign: "center"},
+	        {title:"생산시작시간", field:"pdtSttTime", hozAlign:"center", width:240, headerHozAlign: "center"},
+	        {title:"생산종료시간", field:"pdtFnTime", hozAlign:"center", width:240, headerHozAlign: "center"},
+	        {title:"실패사유", field:"failRsn", hozAlign:"left", width:200, headerHozAlign: "center"},
 	    ],
 	});
 	

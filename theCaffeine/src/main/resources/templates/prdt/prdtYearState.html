@@ -56,12 +56,12 @@
 	        {title:"에티오피아(kg)", field:"pet01",hozAlign:"center", headerSort:false, width:100, headerHozAlign: "center"},
 	        {title:"페루(kg)", field:"ppr01",hozAlign:"center", headerSort:false, width:90, headerHozAlign: "center"},
 	        {title:"총 생산량(kg)", field:"sums",hozAlign:"center", headerSort:false, width:100, headerHozAlign: "center"},
-	        {title:"특이사항", field:"insCont", hozAlign:"center", headerSort:false, headerHozAlign: "center"},
+	        {title:"특이사항", field:"insCont", hozAlign:"left", headerSort:false, headerHozAlign: "center"},
 	    ],
 	});
 	
 	document.getElementById("download-xlsx").addEventListener("click", function(){
-	    table.download("xlsx", "data.xlsx", {sheetName:"My Data"});
+	    table.download("xlsx", "연간생산계획.xlsx", {sheetName:"My Data"});
 	});
 	
 	
