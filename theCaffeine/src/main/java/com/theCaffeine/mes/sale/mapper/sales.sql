@@ -963,5 +963,111 @@ SELECT DISTINCT NVL( (SELECT SUM(qt) as qt
 /
     
 select * from pd;
+select * from mt;
+select * from bom;
+select * from disc_pd;
+delete disc_pd;
+
+-- 폐기할 LOT들
+-- 롯트번호, 단위, 수량, 생산일, 유통기한, 제품코드, 생산상세번호
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PET01-230212-0011', 'box', 2, '23/02/12','24/02/12','PET01',27);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PBR01-230225-0011', 'box', 2, '23/02/25','24/02/25','PBR01',27);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PCB01-230302-0011', 'box', 2, '23/03/02','24/03/02','PCB01',27);
+
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PPR01-231004-0011', 'box', 2, '23/10/04','24/10/04','PPR01',27);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PCT01-231229-0011', 'box', 2, '23/12/29','24/12/29','PCT01',27);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PET01-240108-0011', 'box', 2, '24/01/08','25/01/08','PET01',27);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PBR01-230202-0011', 'box', 2, '24/02/02','25/02/02','PBR01',27);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PCB01-240225-0011', 'box', 2, '24/02/25','25/02/25','PCB01',27);
+
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PPR01-230610-0011', 'box', 2, '23/06/10','24/06/10','PPR01',27);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PCT01-231112-0011', 'box', 2, '23/11/12','24/11/12','PCT01',27);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PET01-240304-0011', 'box', 2, '24/03/04','25/03/04','PET01',27);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PBR01-240320-0011', 'box', 2, '24/03/20','25/03/20','PBR01',27);
+
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PCB01-230909-0011', 'box', 2, '23/09/09','24/09/09','PCB01',27);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PPR01-230921-0011', 'box', 2, '23/09/21','24/09/21','PPR01',27);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PCT01-240120-0011', 'box', 2, '24/01/20','25/01/20','PCT01',27);
+
+PET01 113000
+PBR01 91000
+PCB01 124000
+PPR01 245333
+PCT01 140666
+
+--금일, 금주 전주 금월 전월15
+--유통기한 만료3, 품질불량5, 파손4, 기타3
+insert into disc_pd(disc_no, qt, cost, disc_dt, rsn, disc_chg, pd_lot)
+values(disc_pd_seq.nextval, 2, 113000*2, '24/03/02', 1, '김민수',  'PET01-230212-0011');
+insert into disc_pd(disc_no, qt, cost, disc_dt, rsn, disc_chg, pd_lot)
+values(disc_pd_seq.nextval, 2, 91000*2, '24/03/24', 1, '김민수',  'PBR01-230225-0011');
+insert into disc_pd(disc_no, qt, cost, disc_dt, rsn, disc_chg, pd_lot)
+values(disc_pd_seq.nextval, 2, 124000*2, '24/03/28', 1, '김민수',  'PCB01-230302-0011');
+
+insert into disc_pd(disc_no, qt, cost, disc_dt, rsn, disc_chg, pd_lot)
+values(disc_pd_seq.nextval, 1, 245333, '24/03/04', 2, '김민수',  'PPR01-231004-0011');
+insert into disc_pd(disc_no, qt, cost, disc_dt, rsn, disc_chg, pd_lot)
+values(disc_pd_seq.nextval, 2, 140666*2, '24/03/11', 2, '김민수',  'PCT01-231229-0011');
+insert into disc_pd(disc_no, qt, cost, disc_dt, rsn, disc_chg, pd_lot)
+values(disc_pd_seq.nextval, 2, 113000*2, '24/03/19', 2, '김민수',  'PET01-240108-0011');
+insert into disc_pd(disc_no, qt, cost, disc_dt, rsn, disc_chg, pd_lot)
+values(disc_pd_seq.nextval, 2, 91000*2, '24/03/22', 2, '김민수',  'PBR01-230202-0011');
+insert into disc_pd(disc_no, qt, cost, disc_dt, rsn, disc_chg, pd_lot)
+values(disc_pd_seq.nextval, 2, 124000*2, '24/03/29', 2, '김민수',  'PCB01-240225-0011');
+
+insert into disc_pd(disc_no, qt, cost, disc_dt, rsn, disc_chg, pd_lot)
+values(disc_pd_seq.nextval, 1, 113000, '24/03/04', 3, '이철수',  'PPR01-230610-0011');
+insert into disc_pd(disc_no, qt, cost, disc_dt, rsn, disc_chg, pd_lot)
+values(disc_pd_seq.nextval, 1, 140666, '24/03/06', 3, '이철수',  'PCT01-231112-0011');
+insert into disc_pd(disc_no, qt, cost, disc_dt, rsn, disc_chg, pd_lot)
+values(disc_pd_seq.nextval, 1, 113000, '24/03/09', 3, '이철수',  'PET01-240304-0011');
+insert into disc_pd(disc_no, qt, cost, disc_dt, rsn, disc_chg, pd_lot)
+values(disc_pd_seq.nextval, 1, 91000, '24/03/11', 3, '이철수',  'PBR01-240320-0011');
+
+insert into disc_pd(disc_no, qt, cost, disc_dt, rsn, disc_chg, pd_lot)
+values(disc_pd_seq.nextval, 1, 124000, '24/03/19', 4, '김민수',  'PCB01-230909-0011');
+insert into disc_pd(disc_no, qt, cost, disc_dt, rsn, disc_chg, pd_lot)
+values(disc_pd_seq.nextval, 1, 245333, '24/03/24', 4, '김민수',  'PPR01-230921-0011');
+insert into disc_pd(disc_no, qt, cost, disc_dt, rsn, disc_chg, pd_lot)
+values(disc_pd_seq.nextval, 1, 140666, '24/03/28', 4, '이철수',  'PCT01-240120-0011');
 
 select * from disc_pd;
+
+select d.disc_no, d.qt, d.cost, d.disc_dt, d.rsn, FIND_CODE_NAME ('rsn', d.rsn)	AS reason , d.disc_chg, d.pd_lot, SUBSTR(d.pd_lot, 1, 5) as pd_cd,
+p.pd_name
+--,LAST_DAY(ADD_MONTHS(sysdate, -2)),LAST_DAY(ADD_MONTHS(sysdate, -1))
+from disc_pd d JOIN pd p
+ON SUBSTR(d.pd_lot, 1, 5) = p.pd_cd
+where
+d.disc_dt > LAST_DAY(ADD_MONTHS(sysdate, -2))
+and d.disc_dt <= LAST_DAY(ADD_MONTHS(sysdate, -1))
+--and SUBSTR(pd_lot, 1, 5) = 'PCT01'
+order by d.disc_dt DESC
+		 			, p.pd_cd
+;
+--금일, 금주 전주 금월 전월15
+select * from disc_pd;
+
+select c.rsn, sum(c.qt) as sum_qt, FIND_CODE_NAME ('rsn', c.rsn) AS reason 
+from disc_pd d JOIN
+(select disc_no, qt, cost, disc_dt, rsn, disc_chg, pd_lot, SUBSTR(pd_lot, 1, 5) as pd_cd
+from disc_pd
+--where SUBSTR(pd_lot, 1, 5) LIKE '%PET01%'
+) c
+ON d.disc_no = c.disc_no
+group by c.rsn;

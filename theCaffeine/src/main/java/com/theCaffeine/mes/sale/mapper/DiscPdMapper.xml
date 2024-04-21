@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.theCaffeine.mes.sale.mapper.DiscPdMapper">
+	<sql id="condition">
+		<where>
+			<if test="pdCd != null and pdCd != '' ">
+	 		 	AND SUBSTR(d.pd_lot, 1, 5) like '%' || #{pdCd} || '%' 			
+ 			</if>
+ 			<if test="period == 1 ">
+	 		 	AND d.disc_dt > LAST_DAY(ADD_MONTHS(sysdate, -2))
+	 		 	AND d.disc_dt <![CDATA[<=]]> LAST_DAY(ADD_MONTHS(sysdate, -1))			
+ 			</if> 	
+ 			<if test="period == 2 ">
+	 		 	AND d.disc_dt > LAST_DAY(ADD_MONTHS(sysdate, -2))
+	 		 	AND d.disc_dt <![CDATA[<=]]> LAST_DAY(ADD_MONTHS(sysdate, -1))	
+ 			</if> 	
+ 			<if test="period == 3 ">
+	 		 	AND d.disc_dt > LAST_DAY(ADD_MONTHS(sysdate, -2))
+	 		 	AND d.disc_dt <![CDATA[<=]]> LAST_DAY(ADD_MONTHS(sysdate, -1))		
+ 			</if> 	
+ 			<if test="period == 4 ">
+	 		 	AND d.disc_dt > LAST_DAY(ADD_MONTHS(sysdate, -2))
+	 		 	AND d.disc_dt <![CDATA[<=]]> LAST_DAY(ADD_MONTHS(sysdate, -1))				
+ 			</if> 	
+ 			<if test="period == 5 ">
+	 		 	AND d.disc_dt > LAST_DAY(ADD_MONTHS(sysdate, -2))
+	 		 	AND d.disc_dt <![CDATA[<=]]> LAST_DAY(ADD_MONTHS(sysdate, -1))			
+ 			</if> 			
+ 		  </where>
+	</sql>
+	<sql id="condition2">
+		<where>
+			<if test="pdCd != null and pdCd != '' ">
+	 		 	AND SUBSTR(pd_lot, 1, 5) like '%' || #{pdCd} || '%' 			
+ 			</if>
+ 			<if test="period == 1 ">
+	 		 	AND disc_dt > LAST_DAY(ADD_MONTHS(sysdate, -2))
+	 		 	AND disc_dt <![CDATA[<=]]> LAST_DAY(ADD_MONTHS(sysdate, -1))			
+ 			</if> 	
+ 			<if test="period == 2 ">
+	 		 	AND disc_dt > LAST_DAY(ADD_MONTHS(sysdate, -2))
+	 		 	AND disc_dt <![CDATA[<=]]> LAST_DAY(ADD_MONTHS(sysdate, -1))	
+ 			</if> 	
+ 			<if test="period == 3 ">
+	 		 	AND disc_dt > LAST_DAY(ADD_MONTHS(sysdate, -2))
+	 		 	AND disc_dt <![CDATA[<=]]> LAST_DAY(ADD_MONTHS(sysdate, -1))		
+ 			</if> 	
+ 			<if test="period == 4 ">
+	 		 	AND disc_dt > LAST_DAY(ADD_MONTHS(sysdate, -2))
+	 		 	AND disc_dt <![CDATA[<=]]> LAST_DAY(ADD_MONTHS(sysdate, -1))				
+ 			</if> 	
+ 			<if test="period == 5 ">
+	 		 	AND disc_dt > LAST_DAY(ADD_MONTHS(sysdate, -2))
+	 		 	AND disc_dt <![CDATA[<=]]> LAST_DAY(ADD_MONTHS(sysdate, -1))			
+ 			</if> 			
+ 		  </where>
+	</sql>
+	
+	<select id="discPdList" resultType="DiscPdVO" parameterType="DiscPdVO">
+			select d.disc_no
+					, d.qt, d.cost
+					, d.disc_dt
+					, d.rsn
+					, FIND_CODE_NAME ('rsn', d.rsn)	AS reason 
+					, d.disc_chg
+					, d.pd_lot
+					, SUBSTR(d.pd_lot, 1, 5) as pd_cd
+					, p.pd_name	
+			 from disc_pd d JOIN pd p
+							  ON SUBSTR(d.pd_lot, 1, 5) = p.pd_cd	
+			<include refid="condition"></include> 		
+		 order by d.disc_dt DESC
+		 			, p.pd_cd	
+	</select>
+	<select id="discPdChart" resultType="DiscPdVO" parameterType="DiscPdVO">
+			select c.rsn
+					, sum(c.qt) as sum_qt
+					, FIND_CODE_NAME ('rsn', c.rsn) AS reason 
+			  from disc_pd d 
+			  		JOIN (select disc_no
+			  					 , qt
+			  					 , cost
+			  					 , disc_dt
+			  					 , rsn
+			  					 , disc_chg
+			  					 , pd_lot
+			  					 , SUBSTR(pd_lot, 1, 5) as pd_cd
+						   from disc_pd
+						   <include refid="condition2"></include>
+						  ) c
+					 ON d.disc_no = c.disc_no
+		  group by c.rsn
+	</select>
+</mapper>

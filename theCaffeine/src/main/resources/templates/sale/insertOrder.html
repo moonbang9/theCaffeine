@@ -131,8 +131,9 @@
 									<label for="html5-tel-input" class="col-md-2 col-form-label">주문
 										담당자</label>
 									<div class="col-md-10">
-										<input type="text" class="form-control" id="odChg" placeholder="콩볶아조"
-											aria-describedby="defaultFormControlHelp" />
+										<input type="text" readonly class="form-control-plaintext"
+											id="odChg" value="관리자"
+											name="odChg" />										
 									</div>
 								</div>
 
@@ -165,9 +166,10 @@
 													<th>
 														<select id="smallSelect" class="form-select form-select-sm"
 															v-model="selected" @change="selectPd(selected)">
-															<option :value="null" disabled style="display: none;">상품을
+															<option value="" disabled>상품을
 																선택해주세요
 															</option>
+															
 															<option :key="idx" v-for="(pd, idx) in productList"
 																:value="idx">{{pd.pdName}}</option>
 														</select>
@@ -270,6 +272,7 @@
 																						aria-describedby="button-addon2"
 																						v-model="keyword"
 																						v-on:keyup.enter="getCliList(keyword)"
+																						id="keywordInput"
 																						>
 																					<button class="btn btn-outline-primary"
 																						type="button" id="button-addon2"
@@ -400,6 +403,12 @@
 						const modalToggle = document.getElementById('modalCenter');
 						//console.log(this.myModal);
 						this.myModal.show(modalToggle);
+
+						// setTimeout(() => {
+						// 	if (cursor.value) cursor.value.focus()
+						// }, 0)
+
+						document.getElementById('keywordInput').focus();
 					},
 					//거래처 검색 모달 닫기
 					closeModal() {
