@@ -95,11 +95,11 @@
     paginationSize:8,
     paginationCounter:"rows",
     columns:[
-        {title:"계획일자", field:"pdtInstDt", hozAlign:"center", width:200},
-        {title:"상품명", field:"insttot", hozAlign:"center", width:400},
-        {title:"총 원두생산 수량(kg)", field:"isum", hozAlign:"center", width:200},
-        {title:"총 예상작업시간(시간)", field:"msum", hozAlign:"center", width:200},
-        {title:"삭제", formatter:editorIcon2, width:90, hozAlign:"center", cellClick:function(e, cell){
+        {title:"계획일자", field:"pdtInstDt", hozAlign:"center", width:200, headerHozAlign: "center"},
+        {title:"상품명", field:"insttot", hozAlign:"left", width:400, headerHozAlign: "center"},
+        {title:"총 원두생산 수량(kg)", field:"isum", hozAlign:"center", width:200, headerHozAlign: "center"},
+        {title:"총 예상작업시간(시간)", field:"msum", hozAlign:"center", width:200, headerHozAlign: "center"},
+        {title:"삭제", formatter:editorIcon2, width:90, hozAlign:"center", headerHozAlign: "center", cellClick:function(e, cell){
         	let pdtInstNo = cell._cell.row.data.pdtInstNo;
             			console.log(pdtInstNo)
         	if(cell._cell.row.data.pdtInstDt > getDateStr(new Date())){
@@ -150,11 +150,11 @@
 	        resizable:"header",
 	    },
 	    columns:[
-	        {title:"생산상품코드", field:"pdCd", hozAlign:"center", width:200},
-	        {title:"상품명", field:"pdName", hozAlign:"center", width:320},
-	        {title:"수량", field:"qt", hozAlign:"center", width:200},
-	        {title:"생산시작시간", field:"pdtSttTime", hozAlign:"center", width:320},
-	        {title:"생산예상종료시간", field:"pdtexptFnTime", hozAlign:"center", width:320},
+	        {title:"생산상품코드", field:"pdCd", hozAlign:"center", width:200, headerHozAlign: "center"},
+	        {title:"상품명", field:"pdName", hozAlign:"left", width:320, headerHozAlign: "center"},
+	        {title:"수량", field:"qt", hozAlign:"center", width:200, headerHozAlign: "center"},
+	        {title:"생산시작시간", field:"pdtSttTime", hozAlign:"center", width:320, headerHozAlign: "center"},
+	        {title:"생산예상종료시간", field:"pdtexptFnTime", hozAlign:"center", width:320, headerHozAlign: "center"},
 	    ],
 	});
 	

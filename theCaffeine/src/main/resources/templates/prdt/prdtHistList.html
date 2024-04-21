@@ -61,10 +61,10 @@
     paginationSize:8,
     paginationCounter:"rows",
     columns:[
-        {title:"계획일자", field:"pdtInstDt", hozAlign:"center", width:220},
-        {title:"상품명", field:"insttot", hozAlign:"center", width:400},
-        {title:"총 원두생산 수량(kg)", field:"isum", hozAlign:"center", width:400},
-        {title:"총 예상작업시간(시간)", field:"msum", hozAlign:"center", width:350},
+        {title:"계획일자", field:"pdtInstDt", hozAlign:"center", width:220, headerHozAlign: "center"},
+        {title:"상품명", field:"insttot", hozAlign:"left", width:400, headerHozAlign: "center"},
+        {title:"총 원두생산 수량(kg)", field:"isum", hozAlign:"center", width:400, headerHozAlign: "center"},
+        {title:"총 예상작업시간(시간)", field:"msum", hozAlign:"center", width:350, headerHozAlign: "center"},
     ],
 });
 	
@@ -76,11 +76,11 @@
 	        resizable:"header",
 	    },
 	    columns:[
-	        {title:"생산상품코드", field:"pdCd", hozAlign:"center", width:200},
-	        {title:"상품명", field:"pdName", hozAlign:"center", width:320},
-	        {title:"수량", field:"qt", hozAlign:"center", width:200},
-	        {title:"생산시작시간", field:"pdtSttTime", hozAlign:"center", width:320},
-	        {title:"생산예상종료시간", field:"pdtexptFnTime", hozAlign:"center", width:320},
+	        {title:"생산상품코드", field:"pdCd", hozAlign:"center", width:200, headerHozAlign: "center"},
+	        {title:"상품명", field:"pdName", hozAlign:"left", width:320, headerHozAlign: "center"},
+	        {title:"수량", field:"qt", hozAlign:"center", width:200, headerHozAlign: "center"},
+	        {title:"생산시작시간", field:"pdtSttTime", hozAlign:"center", width:320, headerHozAlign: "center"},
+	        {title:"생산예상종료시간", field:"pdtexptFnTime", hozAlign:"center", width:320, headerHozAlign: "center"},
 	    ],
 	});
 	
@@ -92,10 +92,10 @@
 	        resizable:"header",
 	    },
 	    columns:[
-	        {title:"생산상품코드", field:"pdCd", hozAlign:"center", width:330},
-	        {title:"생산 목표량", field:"pdtTargetQt", hozAlign:"center", width:350},
-	        {title:"생산 현황", field:"pdtNowQt", hozAlign:"center", width:350},
-	        {title:"남은 목표량", field:"pdtRemainQt", hozAlign:"center", width:350},
+	        {title:"생산상품코드", field:"pdCd", hozAlign:"center", width:330, headerHozAlign: "center"},
+	        {title:"생산 목표량", field:"pdtTargetQt", hozAlign:"center", width:350, headerHozAlign: "center"},
+	        {title:"생산 현황", field:"pdtNowQt", hozAlign:"center", width:350, headerHozAlign: "center"},
+	        {title:"남은 목표량", field:"pdtRemainQt", hozAlign:"center", width:350, headerHozAlign: "center"},
 	    ],
 	});
 	
@@ -107,18 +107,18 @@
 	        resizable:"header",
 	    },
 	    columns:[
-	        {title:"생산상품코드", field:"pdCd", hozAlign:"center", width:150},
-	        {title:"생산시작시간", field:"pdtSttTime", hozAlign:"center", width:230},
-	        {title:"예열 및 대기", field:"process1", hozAlign:"center", width:100},
-	        {title:"투입", field:"process2", hozAlign:"center", width:100},
-	        {title:"1차크랙", field:"process3", hozAlign:"center", width:100},
-	        {title:"2차크랙", field:"process4", hozAlign:"center", width:100},
-	        {title:"배출", field:"process5", hozAlign:"center", width:100},
-	        {title:"공정검사", field:"process6", hozAlign:"center", width:100},
-	        {title:"냉각", field:"process7", hozAlign:"center", width:100},
-	        {title:"봉지포장", field:"process8", hozAlign:"center", width:100},
-	        {title:"포장검사", field:"process9", hozAlign:"center", width:100},
-	        {title:"입고", field:"process10", hozAlign:"center", width:100},
+	        {title:"생산상품코드", field:"pdCd", hozAlign:"center", width:150, headerHozAlign: "center"},
+	        {title:"생산시작시간", field:"pdtSttTime", hozAlign:"center", width:230, headerHozAlign: "center"},
+	        {title:"예열 및 대기", field:"process1", hozAlign:"center", width:100, headerHozAlign: "center"},
+	        {title:"투입", field:"process2", hozAlign:"center", width:100, headerHozAlign: "center"},
+	        {title:"1차크랙", field:"process3", hozAlign:"center", width:100, headerHozAlign: "center"},
+	        {title:"2차크랙", field:"process4", hozAlign:"center", width:100, headerHozAlign: "center"},
+	        {title:"배출", field:"process5", hozAlign:"center", width:100, headerHozAlign: "center"},
+	        {title:"공정검사", field:"process6", hozAlign:"center", width:100, headerHozAlign: "center"},
+	        {title:"냉각", field:"process7", hozAlign:"center", width:100, headerHozAlign: "center"},
+	        {title:"봉지포장", field:"process8", hozAlign:"center", width:100, headerHozAlign: "center"},
+	        {title:"포장검사", field:"process9", hozAlign:"center", width:100, headerHozAlign: "center"},
+	        {title:"입고", field:"process10", hozAlign:"center", width:100, headerHozAlign: "center"},
 	    ],
 	});
 	

@@ -216,9 +216,9 @@
 			height:"100%",
 			layout:"fitDataFill",
 		    columns:[
-		        {title:"상품명", field:"pdName", hozAlign:"center", width:440},
-		        {title:"총 예상 생산 수량(kg)", field:"qt", hozAlign:"center", width:430},
-		        {title:"납기 일자", field:"dueDt", hozAlign:"center", width:440},
+		        {title:"상품명", field:"pdName", hozAlign:"left", width:440, headerHozAlign: "center"},
+		        {title:"총 예상 생산 수량(kg)", field:"qt", hozAlign:"center", width:430, headerHozAlign: "center"},
+		        {title:"납기 일자", field:"dueDt", hozAlign:"center", width:440, headerHozAlign: "center"},
 		    ],
 		});
 		
@@ -307,7 +307,7 @@
 			layout:"fitDataFill",
 			index:"rownum",
 		    columns:[
-		    	{field:"rownum", width:50, hozAlign:"center", formatter:"rownum", resizable:false, frozen:true, headerSort:false},
+		    	{field:"rownum", width:50, hozAlign:"center", formatter:"rownum", resizable:false, frozen:true, headerSort:false, headerHozAlign: "center"},
 		    	{title:"제품코드", field:"pdCd", hozAlign:"center", width:200, editor:"list", headerHozAlign: "center",
 		    		editorParams:{values: pdCds, freetext:false},
 		    		cellEdited: function(cell) {
@@ -320,7 +320,7 @@
 		    			}
 					},
 				},
-		        {title:"상품명", field:"pdName", width:300, hozAlign:"center", headerHozAlign: "center"},
+		        {title:"상품명", field:"pdName", width:300, hozAlign:"left", headerHozAlign: "center"},
 		        {title:"수량", field:"qt", hozAlign:"center", validator:["min:0", "numeric"], width:100, headerHozAlign: "center",
 		        	/*editor:dateEditor5,
 		        	cellEdited: function(cell) {

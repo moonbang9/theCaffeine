@@ -423,6 +423,7 @@
 		join PDT_INST_DETAIL pid 
 		on h.pdt_inst_detail_no = pid.pdt_inst_detail_no 
 		where pid.comp_st = 5
+		order by h.pdt_stt_time desc
 	</select>
 	<select id="getFailTot" resultType="HistVO">
 		select h.pdt_dt, h.pd_cd, h.pdt_unit, h.pdt_qt, h.pdt_stt_time, h.pdt_fn_time,h.fail_rsn
