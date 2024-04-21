@@ -3,12 +3,11 @@
   layout:decorate="~{layout/index}">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>연간생산 계획현황</title>
 </head>
 <body>
 <div layout:fragment="content">
-	<h1>연간 생산 현황</h1>
-	<h5>(계획량 / 실제 생산량)</h5>
+	<h1>연간생산 계획현황</h1>
 	<div class="demo-inline-spacing">
 		<div class="d-flex mt-5">
 	  		<div class="p-2 flex-grow-1"></div>
@@ -17,6 +16,17 @@
 	</div>
 	<div id="example-table"></div>
 <script>
+	selectNav();
+	monthsList();
+	
+	// 연간계획조회 데이터
+	function monthsList() {
+		fetch("/ajax/monthsList")
+		.then(res => res.json())
+		.then(res => table.setData(res))
+	}
+	
+	
 	//연간 생산 데이터
 	let tableData = [
 	    {month:1, name1:"5/5", name2:"12/1", name3:"12/1", name4:"12/1", name5:"12/1", total:"100", significant:"없음"},
@@ -34,19 +44,19 @@
 	];
 	
 	var table = new Tabulator("#example-table", {
-	    height:"381px",
+	    height:"100%",
 	    layout:"fitColumns",
-	    data:tableData,
+	    //data:tableData,
 	    placeholder:"No Data Set",
 	    columns:[
-	        {title:"월", field:"month",hozAlign:"center", headerSort:false},
-	        {title:"콜롬비아(kg)", field:"name1",hozAlign:"center", headerSort:false},
-	        {title:"코스타리카(kg)", field:"name2",hozAlign:"center", headerSort:false},
-	        {title:"브라질(kg)", field:"name3",hozAlign:"center", headerSort:false},
-	        {title:"에티오피아(kg)", field:"name4",hozAlign:"center", headerSort:false},
-	        {title:"페루(kg)", field:"name5",hozAlign:"center", headerSort:false},
-	        {title:"총 생산량(kg)", field:"total",hozAlign:"center", headerSort:false},
-	        {title:"특이사항", field:"significant", hozAlign:"center", headerSort:false},
+	        {title:"월", field:"months",hozAlign:"center", headerSort:false, width:50, headerHozAlign: "center"},
+	        {title:"콜롬비아(kg)", field:"pcb01",hozAlign:"center", headerSort:false, width:90, headerHozAlign: "center"},
+	        {title:"코스타리카(kg)", field:"pct01",hozAlign:"center", headerSort:false, width:100, headerHozAlign: "center"},
+	        {title:"브라질(kg)", field:"pbr01",hozAlign:"center", headerSort:false, width:90, headerHozAlign: "center"},
+	        {title:"에티오피아(kg)", field:"pet01",hozAlign:"center", headerSort:false, width:100, headerHozAlign: "center"},
+	        {title:"페루(kg)", field:"ppr01",hozAlign:"center", headerSort:false, width:90, headerHozAlign: "center"},
+	        {title:"총 생산량(kg)", field:"sums",hozAlign:"center", headerSort:false, width:100, headerHozAlign: "center"},
+	        {title:"특이사항", field:"insCont", hozAlign:"center", headerSort:false, headerHozAlign: "center"},
 	    ],
 	});
 	
@@ -54,7 +64,6 @@
 	    table.download("xlsx", "data.xlsx", {sheetName:"My Data"});
 	});
 	
-	selectNav();
 	
 	function selectNav() {
 		mainPage.classList.remove('active');

@@ -15,6 +15,7 @@ import com.theCaffeine.mes.prdt.model.PlanResistVO;
 import com.theCaffeine.mes.prdt.model.PlanVO;
 import com.theCaffeine.mes.prdt.model.SafePlanVO;
 import com.theCaffeine.mes.prdt.model.TotalVO;
+import com.theCaffeine.mes.prdt.model.YearTotalVO;
 
 public interface PrdtService {
 	List<PlanVO> getPlanList(PlanVO vo); //주간 생산계획조회
@@ -43,4 +44,5 @@ public interface PrdtService {
 	TotalVO getTot(); //실적값들
 	List<HistVO> getSuccessTot(); //성공실적값
 	List<HistVO> getFailTot(); //실패실적값
+	List<YearTotalVO> getMonths(); //월간계획
 }

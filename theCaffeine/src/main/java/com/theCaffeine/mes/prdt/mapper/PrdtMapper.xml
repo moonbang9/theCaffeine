@@ -431,4 +431,294 @@
 		on h.pdt_inst_detail_no = pid.pdt_inst_detail_no 
 		where pid.comp_st=6
 	</select>
+	
+	<select id="getMonths" resultType="YearTotalVO">
+		(select f.mon, CASE WHEN f.mon = trunc(sysdate,'yy') THEN '1월' END months,  f.PBR01, f.PCB01, f.PCT01, f.PET01, f.PPR01, f.sums, d.ins_cont 
+		from    (select mon, PBR01, PCB01, PCT01, PET01, PPR01, sums 
+        		from (select nvl(r.cnt,0) cnt, t.pd_cd, nvl(r.mon,TO_DATE(trunc(sysdate,'yy'))) mon 
+                		from (select sum(d.qt) cnt, nvl(d.pd_cd,'sums') pd_cd, trunc(p.wk_plan_stt_dt,'mm') mon
+                        		from pdtplan p join pdt_plan_detail d on p.pdt_plan_cd=d.pdt_plan_cd 
+                        		where trunc(p.wk_plan_stt_dt,'mm') = TO_DATE(trunc(sysdate,'yy')) group by ROLLUP (d.pd_cd), trunc(p.wk_plan_stt_dt,'mm')) r
+                		right outer join (select count(*), nvl(pd_cd,'sums') pd_cd from pd group by ROLLUP (pd_cd)) t
+                		on r.pd_cd=t.pd_cd)
+		pivot (sum(cnt) for pd_cd in ('PBR01' as PBR01
+                            		, 'PCB01' as PCB01
+                            		, 'PCT01' as PCT01
+                            		, 'PET01' as PET01
+                            		, 'PPR01' as PPR01
+                            		, 'sums' as sums))) f
+		join    (select mon, max(f) ins_cont from (select mon, LISTAGG(w, ', ') WITHIN GROUP (ORDER BY w) f
+        		from (select f.y mon, to_char(trunc(f.ins_dt,'mm'),'yy/mm/dd') || ' ' || f.ins_cont w 
+              		from (select trunc(ins_dt,'mm') y, ins_dt, ins_cont from fc_ins) f
+        		right outer join (select TO_DATE(trunc(sysdate,'yy')) mon from dual) g
+        		on f.y = g.mon
+        		where trunc(ins_dt,'mm') = TO_DATE(trunc(sysdate,'yy'))) group by mon
+        		union all
+        		select trunc(sysdate,'yy') mon, null from dual) group by mon) d
+		on f.mon = d.mon)
+		union
+		(select f.mon, CASE WHEN f.mon = ADD_MONTHS(trunc(sysdate,'yy'),1) THEN '2월' END months,  f.PBR01, f.PCB01, f.PCT01, f.PET01, f.PPR01, f.sums, d.ins_cont 
+		from    (select mon, PBR01, PCB01, PCT01, PET01, PPR01, sums 
+        		from (select nvl(r.cnt,0) cnt, t.pd_cd, nvl(r.mon,TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),1))) mon 
+                		from (select sum(d.qt) cnt, nvl(d.pd_cd,'sums') pd_cd, trunc(p.wk_plan_stt_dt,'mm') mon
+                        		from pdtplan p join pdt_plan_detail d on p.pdt_plan_cd=d.pdt_plan_cd 
+                        		where trunc(p.wk_plan_stt_dt,'mm') = TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),1)) group by ROLLUP (d.pd_cd), trunc(p.wk_plan_stt_dt,'mm')) r
+                		right outer join (select count(*), nvl(pd_cd,'sums') pd_cd from pd group by ROLLUP (pd_cd)) t
+                		on r.pd_cd=t.pd_cd)
+		pivot (sum(cnt) for pd_cd in ('PBR01' as PBR01
+                            		, 'PCB01' as PCB01
+                            		, 'PCT01' as PCT01
+                           		 	, 'PET01' as PET01
+                            		, 'PPR01' as PPR01
+                            		, 'sums' as sums))) f
+		join    (select mon, max(f) ins_cont from (select mon, LISTAGG(w, ', ') WITHIN GROUP (ORDER BY w) f
+        		from (select f.y mon, to_char(trunc(f.ins_dt,'mm'),'yy/mm/dd') || ' ' || f.ins_cont w 
+              		from (select trunc(ins_dt,'mm') y, ins_dt, ins_cont from fc_ins) f
+        		right outer join (select TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),1)) mon from dual) g
+        		on f.y = g.mon
+        		where trunc(ins_dt,'mm') = TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),1))) group by mon
+        		union all
+        		select ADD_MONTHS(trunc(sysdate,'yy'),1) mon, null from dual) group by mon) d
+		on f.mon = d.mon)
+		union
+		(select f.mon, CASE WHEN f.mon = ADD_MONTHS(trunc(sysdate,'yy'),2) THEN '3월' END months,  f.PBR01, f.PCB01, f.PCT01, f.PET01, f.PPR01, f.sums, d.ins_cont 
+		from    (select mon, PBR01, PCB01, PCT01, PET01, PPR01, sums 
+        		from (select nvl(r.cnt,0) cnt, t.pd_cd, nvl(r.mon,TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),2))) mon 
+                		from (select sum(d.qt) cnt, nvl(d.pd_cd,'sums') pd_cd, trunc(p.wk_plan_stt_dt,'mm') mon
+                        		from pdtplan p join pdt_plan_detail d on p.pdt_plan_cd=d.pdt_plan_cd 
+                        		where trunc(p.wk_plan_stt_dt,'mm') = TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),2)) group by ROLLUP (d.pd_cd), trunc(p.wk_plan_stt_dt,'mm')) r
+                		right outer join (select count(*), nvl(pd_cd,'sums') pd_cd from pd group by ROLLUP (pd_cd)) t
+                		on r.pd_cd=t.pd_cd)
+		pivot (sum(cnt) for pd_cd in ('PBR01' as PBR01
+                            		, 'PCB01' as PCB01
+                            		, 'PCT01' as PCT01
+                            		, 'PET01' as PET01
+                            		, 'PPR01' as PPR01
+                            		, 'sums' as sums))) f
+		join    (select mon, max(f) ins_cont from (select mon, LISTAGG(w, ', ') WITHIN GROUP (ORDER BY w) f
+        		from (select f.y mon, to_char(trunc(f.ins_dt,'mm'),'yy/mm/dd') || ' ' || f.ins_cont w 
+              		from (select trunc(ins_dt,'mm') y, ins_dt, ins_cont from fc_ins) f
+        		right outer join (select TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),2)) mon from dual) g
+        		on f.y = g.mon
+        		where trunc(ins_dt,'mm') = TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),2))) group by mon
+        		union all
+        		select ADD_MONTHS(trunc(sysdate,'yy'),2) mon, null from dual) group by mon) d
+		on f.mon = d.mon)
+		union
+		(select f.mon, CASE WHEN f.mon = ADD_MONTHS(trunc(sysdate,'yy'),3) THEN '4월' END months,  f.PBR01, f.PCB01, f.PCT01, f.PET01, f.PPR01, f.sums, d.ins_cont 
+		from    (select mon, PBR01, PCB01, PCT01, PET01, PPR01, sums 
+        		from (select nvl(r.cnt,0) cnt, t.pd_cd, nvl(r.mon,TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),3))) mon 
+                		from (select sum(d.qt) cnt, nvl(d.pd_cd,'sums') pd_cd, trunc(p.wk_plan_stt_dt,'mm') mon
+                        		from pdtplan p join pdt_plan_detail d on p.pdt_plan_cd=d.pdt_plan_cd 
+                        		where trunc(p.wk_plan_stt_dt,'mm') = TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),3)) group by ROLLUP (d.pd_cd), trunc(p.wk_plan_stt_dt,'mm')) r
+                		right outer join (select count(*), nvl(pd_cd,'sums') pd_cd from pd group by ROLLUP (pd_cd)) t
+                		on r.pd_cd=t.pd_cd)
+		pivot (sum(cnt) for pd_cd in ('PBR01' as PBR01
+                            		, 'PCB01' as PCB01
+                            		, 'PCT01' as PCT01
+                            		, 'PET01' as PET01
+                            		, 'PPR01' as PPR01
+                            		, 'sums' as sums))) f
+		join    (select mon, max(f) ins_cont from (select mon, LISTAGG(w, ', ') WITHIN GROUP (ORDER BY w) f
+        		from (select f.y mon, to_char(trunc(f.ins_dt,'mm'),'yy/mm/dd') || ' ' || f.ins_cont w 
+              		from (select trunc(ins_dt,'mm') y, ins_dt, ins_cont from fc_ins) f
+        		right outer join (select TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),3)) mon from dual) g
+        		on f.y = g.mon
+        		where trunc(ins_dt,'mm') = TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),3))) group by mon
+        		union all
+        		select ADD_MONTHS(trunc(sysdate,'yy'),3) mon, null from dual) group by mon) d
+		on f.mon = d.mon)
+		union
+		(select f.mon, CASE WHEN f.mon = ADD_MONTHS(trunc(sysdate,'yy'),4) THEN '5월' END months,  f.PBR01, f.PCB01, f.PCT01, f.PET01, f.PPR01, f.sums, d.ins_cont 
+		from    (select mon, PBR01, PCB01, PCT01, PET01, PPR01, sums 
+        		from (select nvl(r.cnt,0) cnt, t.pd_cd, nvl(r.mon,TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),4))) mon 
+                		from (select sum(d.qt) cnt, nvl(d.pd_cd,'sums') pd_cd, trunc(p.wk_plan_stt_dt,'mm') mon
+                        		from pdtplan p join pdt_plan_detail d on p.pdt_plan_cd=d.pdt_plan_cd 
+                        		where trunc(p.wk_plan_stt_dt,'mm') = TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),4)) group by ROLLUP (d.pd_cd), trunc(p.wk_plan_stt_dt,'mm')) r
+                		right outer join (select count(*), nvl(pd_cd,'sums') pd_cd from pd group by ROLLUP (pd_cd)) t
+                		on r.pd_cd=t.pd_cd)
+		pivot (sum(cnt) for pd_cd in ('PBR01' as PBR01
+                            		, 'PCB01' as PCB01
+                            		, 'PCT01' as PCT01
+                            		, 'PET01' as PET01
+                            		, 'PPR01' as PPR01
+                            		, 'sums' as sums))) f
+		join    (select mon, max(f) ins_cont from (select mon, LISTAGG(w, ', ') WITHIN GROUP (ORDER BY w) f
+        		from (select f.y mon, to_char(trunc(f.ins_dt,'mm'),'yy/mm/dd') || ' ' || f.ins_cont w 
+              		from (select trunc(ins_dt,'mm') y, ins_dt, ins_cont from fc_ins) f
+        		right outer join (select TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),4)) mon from dual) g
+        		on f.y = g.mon
+        		where trunc(ins_dt,'mm') = TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),4))) group by mon
+        		union all
+        		select ADD_MONTHS(trunc(sysdate,'yy'),4) mon, null from dual) group by mon) d
+		on f.mon = d.mon)
+		union
+		(select f.mon, CASE WHEN f.mon = ADD_MONTHS(trunc(sysdate,'yy'),5) THEN '6월' END months,  f.PBR01, f.PCB01, f.PCT01, f.PET01, f.PPR01, f.sums, d.ins_cont 
+		from    (select mon, PBR01, PCB01, PCT01, PET01, PPR01, sums 
+        		from (select nvl(r.cnt,0) cnt, t.pd_cd, nvl(r.mon,TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),5))) mon 
+                		from (select sum(d.qt) cnt, nvl(d.pd_cd,'sums') pd_cd, trunc(p.wk_plan_stt_dt,'mm') mon
+                        		from pdtplan p join pdt_plan_detail d on p.pdt_plan_cd=d.pdt_plan_cd 
+                        		where trunc(p.wk_plan_stt_dt,'mm') = TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),5)) group by ROLLUP (d.pd_cd), trunc(p.wk_plan_stt_dt,'mm')) r
+                		right outer join (select count(*), nvl(pd_cd,'sums') pd_cd from pd group by ROLLUP (pd_cd)) t
+                		on r.pd_cd=t.pd_cd)
+		pivot (sum(cnt) for pd_cd in ('PBR01' as PBR01
+                            		, 'PCB01' as PCB01
+                            		, 'PCT01' as PCT01
+                            		, 'PET01' as PET01
+                            		, 'PPR01' as PPR01
+                            		, 'sums' as sums))) f
+		join    (select mon, max(f) ins_cont from (select mon, LISTAGG(w, ', ') WITHIN GROUP (ORDER BY w) f
+        		from (select f.y mon, to_char(trunc(f.ins_dt,'mm'),'yy/mm/dd') || ' ' || f.ins_cont w 
+              		from (select trunc(ins_dt,'mm') y, ins_dt, ins_cont from fc_ins) f
+        		right outer join (select TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),5)) mon from dual) g
+        		on f.y = g.mon
+        		where trunc(ins_dt,'mm') = TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),5))) group by mon
+        		union all
+        		select ADD_MONTHS(trunc(sysdate,'yy'),5) mon, null from dual) group by mon) d
+		on f.mon = d.mon)
+		union
+		(select f.mon, CASE WHEN f.mon = ADD_MONTHS(trunc(sysdate,'yy'),6) THEN '7월' END months,  f.PBR01, f.PCB01, f.PCT01, f.PET01, f.PPR01, f.sums, d.ins_cont 
+		from    (select mon, PBR01, PCB01, PCT01, PET01, PPR01, sums 
+        		from (select nvl(r.cnt,0) cnt, t.pd_cd, nvl(r.mon,TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),6))) mon 
+                		from (select sum(d.qt) cnt, nvl(d.pd_cd,'sums') pd_cd, trunc(p.wk_plan_stt_dt,'mm') mon
+                        		from pdtplan p join pdt_plan_detail d on p.pdt_plan_cd=d.pdt_plan_cd 
+                        		where trunc(p.wk_plan_stt_dt,'mm') = TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),6)) group by ROLLUP (d.pd_cd), trunc(p.wk_plan_stt_dt,'mm')) r
+                		right outer join (select count(*), nvl(pd_cd,'sums') pd_cd from pd group by ROLLUP (pd_cd)) t
+                		on r.pd_cd=t.pd_cd)
+		pivot (sum(cnt) for pd_cd in ('PBR01' as PBR01
+                            		, 'PCB01' as PCB01
+                            		, 'PCT01' as PCT01
+                            		, 'PET01' as PET01
+                            		, 'PPR01' as PPR01
+                            		, 'sums' as sums))) f
+		join    (select mon, max(f) ins_cont from (select mon, LISTAGG(w, ', ') WITHIN GROUP (ORDER BY w) f
+        		from (select f.y mon, to_char(trunc(f.ins_dt,'mm'),'yy/mm/dd') || ' ' || f.ins_cont w 
+              		from (select trunc(ins_dt,'mm') y, ins_dt, ins_cont from fc_ins) f
+        		right outer join (select TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),6)) mon from dual) g
+        		on f.y = g.mon
+        		where trunc(ins_dt,'mm') = TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),6))) group by mon
+        		union all
+        		select ADD_MONTHS(trunc(sysdate,'yy'),6) mon, null from dual) group by mon) d
+		on f.mon = d.mon)
+		union
+		(select f.mon, CASE WHEN f.mon = ADD_MONTHS(trunc(sysdate,'yy'),7) THEN '8월' END months,  f.PBR01, f.PCB01, f.PCT01, f.PET01, f.PPR01, f.sums, d.ins_cont 
+		from    (select mon, PBR01, PCB01, PCT01, PET01, PPR01, sums 
+        		from (select nvl(r.cnt,0) cnt, t.pd_cd, nvl(r.mon,TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),7))) mon 
+                		from (select sum(d.qt) cnt, nvl(d.pd_cd,'sums') pd_cd, trunc(p.wk_plan_stt_dt,'mm') mon
+                        		from pdtplan p join pdt_plan_detail d on p.pdt_plan_cd=d.pdt_plan_cd 
+                        		where trunc(p.wk_plan_stt_dt,'mm') = TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),7)) group by ROLLUP (d.pd_cd), trunc(p.wk_plan_stt_dt,'mm')) r
+                		right outer join (select count(*), nvl(pd_cd,'sums') pd_cd from pd group by ROLLUP (pd_cd)) t
+                		on r.pd_cd=t.pd_cd)
+		pivot (sum(cnt) for pd_cd in ('PBR01' as PBR01
+                            		, 'PCB01' as PCB01
+                            		, 'PCT01' as PCT01
+                            		, 'PET01' as PET01
+                            		, 'PPR01' as PPR01
+                            		, 'sums' as sums))) f
+		join    (select mon, max(f) ins_cont from (select mon, LISTAGG(w, ', ') WITHIN GROUP (ORDER BY w) f
+        		from (select f.y mon, to_char(trunc(f.ins_dt,'mm'),'yy/mm/dd') || ' ' || f.ins_cont w 
+              		from (select trunc(ins_dt,'mm') y, ins_dt, ins_cont from fc_ins) f
+        		right outer join (select TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),7)) mon from dual) g
+        		on f.y = g.mon
+        		where trunc(ins_dt,'mm') = TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),7))) group by mon
+        		union all
+        		select ADD_MONTHS(trunc(sysdate,'yy'),7) mon, null from dual) group by mon) d
+		on f.mon = d.mon)
+		union
+		(select f.mon, CASE WHEN f.mon = ADD_MONTHS(trunc(sysdate,'yy'),8) THEN '9월' END months,  f.PBR01, f.PCB01, f.PCT01, f.PET01, f.PPR01, f.sums, d.ins_cont 
+		from    (select mon, PBR01, PCB01, PCT01, PET01, PPR01, sums 
+        		from (select nvl(r.cnt,0) cnt, t.pd_cd, nvl(r.mon,TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),8))) mon 
+                		from (select sum(d.qt) cnt, nvl(d.pd_cd,'sums') pd_cd, trunc(p.wk_plan_stt_dt,'mm') mon
+                        		from pdtplan p join pdt_plan_detail d on p.pdt_plan_cd=d.pdt_plan_cd 
+                        		where trunc(p.wk_plan_stt_dt,'mm') = TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),8)) group by ROLLUP (d.pd_cd), trunc(p.wk_plan_stt_dt,'mm')) r
+                		right outer join (select count(*), nvl(pd_cd,'sums') pd_cd from pd group by ROLLUP (pd_cd)) t
+                		on r.pd_cd=t.pd_cd)
+		pivot (sum(cnt) for pd_cd in ('PBR01' as PBR01
+                            		, 'PCB01' as PCB01
+                            		, 'PCT01' as PCT01
+                            		, 'PET01' as PET01
+                            		, 'PPR01' as PPR01
+                            		, 'sums' as sums))) f
+		join    (select mon, max(f) ins_cont from (select mon, LISTAGG(w, ', ') WITHIN GROUP (ORDER BY w) f
+        		from (select f.y mon, to_char(trunc(f.ins_dt,'mm'),'yy/mm/dd') || ' ' || f.ins_cont w 
+              		from (select trunc(ins_dt,'mm') y, ins_dt, ins_cont from fc_ins) f
+        		right outer join (select TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),8)) mon from dual) g
+        		on f.y = g.mon
+        		where trunc(ins_dt,'mm') = TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),8))) group by mon
+        		union all
+        		select ADD_MONTHS(trunc(sysdate,'yy'),8) mon, null from dual) group by mon) d
+		on f.mon = d.mon)
+		union
+		(select f.mon, CASE WHEN f.mon = ADD_MONTHS(trunc(sysdate,'yy'),9) THEN '10월' END months,  f.PBR01, f.PCB01, f.PCT01, f.PET01, f.PPR01, f.sums, d.ins_cont 
+		from    (select mon, PBR01, PCB01, PCT01, PET01, PPR01, sums 
+        		from (select nvl(r.cnt,0) cnt, t.pd_cd, nvl(r.mon,TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),9))) mon 
+                		from (select sum(d.qt) cnt, nvl(d.pd_cd,'sums') pd_cd, trunc(p.wk_plan_stt_dt,'mm') mon
+                        		from pdtplan p join pdt_plan_detail d on p.pdt_plan_cd=d.pdt_plan_cd 
+                        		where trunc(p.wk_plan_stt_dt,'mm') = TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),9)) group by ROLLUP (d.pd_cd), trunc(p.wk_plan_stt_dt,'mm')) r
+                		right outer join (select count(*), nvl(pd_cd,'sums') pd_cd from pd group by ROLLUP (pd_cd)) t
+                		on r.pd_cd=t.pd_cd)
+		pivot (sum(cnt) for pd_cd in ('PBR01' as PBR01
+                            		, 'PCB01' as PCB01
+                            		, 'PCT01' as PCT01
+                            		, 'PET01' as PET01
+                            		, 'PPR01' as PPR01
+                            		, 'sums' as sums))) f
+		join    (select mon, max(f) ins_cont from (select mon, LISTAGG(w, ', ') WITHIN GROUP (ORDER BY w) f
+        		from (select f.y mon, to_char(trunc(f.ins_dt,'mm'),'yy/mm/dd') || ' ' || f.ins_cont w 
+              		from (select trunc(ins_dt,'mm') y, ins_dt, ins_cont from fc_ins) f
+        		right outer join (select TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),9)) mon from dual) g
+        		on f.y = g.mon
+        		where trunc(ins_dt,'mm') = TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),9))) group by mon
+        		union all
+        		select ADD_MONTHS(trunc(sysdate,'yy'),9) mon, null from dual) group by mon) d
+		on f.mon = d.mon)
+		union
+		(select f.mon, CASE WHEN f.mon = ADD_MONTHS(trunc(sysdate,'yy'),10) THEN '11월' END months,  f.PBR01, f.PCB01, f.PCT01, f.PET01, f.PPR01, f.sums, d.ins_cont 
+		from    (select mon, PBR01, PCB01, PCT01, PET01, PPR01, sums 
+        		from (select nvl(r.cnt,0) cnt, t.pd_cd, nvl(r.mon,TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),10))) mon 
+                		from (select sum(d.qt) cnt, nvl(d.pd_cd,'sums') pd_cd, trunc(p.wk_plan_stt_dt,'mm') mon
+                        		from pdtplan p join pdt_plan_detail d on p.pdt_plan_cd=d.pdt_plan_cd 
+                        		where trunc(p.wk_plan_stt_dt,'mm') = TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),10)) group by ROLLUP (d.pd_cd), trunc(p.wk_plan_stt_dt,'mm')) r
+                		right outer join (select count(*), nvl(pd_cd,'sums') pd_cd from pd group by ROLLUP (pd_cd)) t
+                		on r.pd_cd=t.pd_cd)
+		pivot (sum(cnt) for pd_cd in ('PBR01' as PBR01
+                            		, 'PCB01' as PCB01
+                            		, 'PCT01' as PCT01
+                            		, 'PET01' as PET01
+                            		, 'PPR01' as PPR01
+                            		, 'sums' as sums))) f
+		join    (select mon, max(f) ins_cont from (select mon, LISTAGG(w, ', ') WITHIN GROUP (ORDER BY w) f
+        		from (select f.y mon, to_char(trunc(f.ins_dt,'mm'),'yy/mm/dd') || ' ' || f.ins_cont w 
+              		from (select trunc(ins_dt,'mm') y, ins_dt, ins_cont from fc_ins) f
+        		right outer join (select TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),10)) mon from dual) g
+        		on f.y = g.mon
+        		where trunc(ins_dt,'mm') = TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),10))) group by mon
+        		union all
+        		select ADD_MONTHS(trunc(sysdate,'yy'),10) mon, null from dual) group by mon) d
+		on f.mon = d.mon)
+		union
+		(select f.mon, CASE WHEN f.mon = ADD_MONTHS(trunc(sysdate,'yy'),11) THEN '12월' END months,  f.PBR01, f.PCB01, f.PCT01, f.PET01, f.PPR01, f.sums, d.ins_cont 
+		from    (select mon, PBR01, PCB01, PCT01, PET01, PPR01, sums 
+        		from (select nvl(r.cnt,0) cnt, t.pd_cd, nvl(r.mon,TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),11))) mon 
+                		from (select sum(d.qt) cnt, nvl(d.pd_cd,'sums') pd_cd, trunc(p.wk_plan_stt_dt,'mm') mon
+                        		from pdtplan p join pdt_plan_detail d on p.pdt_plan_cd=d.pdt_plan_cd 
+                        		where trunc(p.wk_plan_stt_dt,'mm') = TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),11)) group by ROLLUP (d.pd_cd), trunc(p.wk_plan_stt_dt,'mm')) r
+                		right outer join (select count(*), nvl(pd_cd,'sums') pd_cd from pd group by ROLLUP (pd_cd)) t
+                on r.pd_cd=t.pd_cd)
+		pivot (sum(cnt) for pd_cd in ('PBR01' as PBR01
+                            		, 'PCB01' as PCB01
+                            		, 'PCT01' as PCT01
+                            		, 'PET01' as PET01
+                            		, 'PPR01' as PPR01
+                            		, 'sums' as sums))) f
+		join    (select mon, max(f) ins_cont from (select mon, LISTAGG(w, ', ') WITHIN GROUP (ORDER BY w) f
+        		from (select f.y mon, to_char(trunc(f.ins_dt,'mm'),'yy/mm/dd') || ' ' || f.ins_cont w 
+              		from (select trunc(ins_dt,'mm') y, ins_dt, ins_cont from fc_ins) f
+        		right outer join (select TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),11)) mon from dual) g
+        		on f.y = g.mon
+        		where trunc(ins_dt,'mm') = TO_DATE(ADD_MONTHS(trunc(sysdate,'yy'),11))) group by mon
+        		union all
+        		select ADD_MONTHS(trunc(sysdate,'yy'),11) mon, null from dual) group by mon) d
+		on f.mon = d.mon)
+	</select>
 </mapper>

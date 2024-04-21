@@ -17,6 +17,7 @@ import com.theCaffeine.mes.prdt.model.PlanResistVO;
 import com.theCaffeine.mes.prdt.model.PlanVO;
 import com.theCaffeine.mes.prdt.model.SafePlanVO;
 import com.theCaffeine.mes.prdt.model.TotalVO;
+import com.theCaffeine.mes.prdt.model.YearTotalVO;
 
 
 @Mapper
@@ -53,4 +54,5 @@ public interface PrdtMapper {
 	TotalVO getTot(); //실적값들
 	List<HistVO> getSuccessTot(); //성공실적값
 	List<HistVO> getFailTot(); //실패실적값
+	List<YearTotalVO> getMonths(); //월간계획
 }

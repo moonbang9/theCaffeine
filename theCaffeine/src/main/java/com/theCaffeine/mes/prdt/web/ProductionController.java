@@ -28,6 +28,7 @@ import com.theCaffeine.mes.prdt.model.PlanResistVO;
 import com.theCaffeine.mes.prdt.model.PlanVO;
 import com.theCaffeine.mes.prdt.model.SafePlanVO;
 import com.theCaffeine.mes.prdt.model.TotalVO;
+import com.theCaffeine.mes.prdt.model.YearTotalVO;
 import com.theCaffeine.mes.prdt.service.PrdtService;
 
 @RestController
@@ -264,6 +265,12 @@ public class ProductionController {
 	@GetMapping("/ajax/failTotList")
 	public List<HistVO> failTotList() {
 		return prdtService.getFailTot();
+	}
+	
+	//연간계획 리스트
+	@GetMapping("/ajax/monthsList")
+	public List<YearTotalVO> monthsList() {
+		return prdtService.getMonths();
 	}
 	
 }

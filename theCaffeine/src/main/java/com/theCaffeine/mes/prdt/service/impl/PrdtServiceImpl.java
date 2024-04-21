@@ -21,6 +21,7 @@ import com.theCaffeine.mes.prdt.model.PlanResistVO;
 import com.theCaffeine.mes.prdt.model.PlanVO;
 import com.theCaffeine.mes.prdt.model.SafePlanVO;
 import com.theCaffeine.mes.prdt.model.TotalVO;
+import com.theCaffeine.mes.prdt.model.YearTotalVO;
 import com.theCaffeine.mes.prdt.service.PrdtService;
 
 @Service
@@ -225,6 +226,12 @@ public class PrdtServiceImpl implements PrdtService{
 	public List<HistVO> getFailTot() {
 		// TODO Auto-generated method stub
 		return prdtMapper.getFailTot();
+	}
+
+	@Override
+	public List<YearTotalVO> getMonths() {
+		// TODO Auto-generated method stub
+		return prdtMapper.getMonths();
 	}
 	
 }
