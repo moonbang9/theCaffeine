@@ -36,6 +36,10 @@
 				, d.qt
 				, d.due_dt
 				, d.send_od_st
+				, CASE WHEN(d.due_dt - sysdate) <![CDATA[<]]> 7 THEN 2
+				       ELSE 1
+				       END
+				  as due_color
 		FROM od o 
 		    JOIN od_detail d
 		        ON o.od_no = d.od_no

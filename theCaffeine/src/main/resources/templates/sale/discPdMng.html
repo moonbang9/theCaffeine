@@ -19,112 +19,101 @@
       <div class="container-xxl flex-grow-1 container-p-y">
         <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">영업/</span> 제품 폐기 관리</h4>
 
-        <!-- Basic Layout -->
-        <div class="row">
-          <div class="col-xl-12">
-            <div class="card mb-4">
-              <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">폐기 조회</h5>
+        <div class="card mb-4">
+          <h5 class="card-header">주문 검색</h5>
+          <div class="card-body">
 
+
+            <form id="discPdCondition">
+
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label" for="basic-default-name">제품</label>
+                <div class="col-sm-10">
+
+                  <div class="btn-group">
+                    <select id="pdCdSelect" class="form-select">
+                      <option value="">전체</option>
+                      <option value="PET01">에티오피아 G1 예가체프 첼바</option>
+                      <option value="PBR01">브라질 홀빈 로스팅 세하도 커피 원두</option>
+                      <option value="PCB01">콜롬비아 수프리모 후일라 싱글오리진 로스팅원두커피</option>
+                      <option value="PPR01">프리미엄 페루 싱글오리진 찬차마요 원두 커피</option>
+                      <option value="PCT01">코스타리카 따라주 로스팅 원두커피 홀빈 싱글오리진</option>
+                    </select>
+                  </div>                      
+
+                </div>
               </div>
-              <div class="card-body">
 
-
-
-                <form id="discPdCondition">
-
-                  <div class="row mb-3">
-                    <label class="col-sm-2 col-form-label" for="basic-default-name">제품</label>
-                    <div class="col-sm-10">
-
-                      <div class="btn-group">
-                        <select id="pdCdSelect" class="form-select">
-                          <option value="">전체</option>
-                          <option value="PET01">에티오피아 G1 예가체프 첼바</option>
-                          <option value="PBR01">브라질 홀빈 로스팅 세하도 커피 원두</option>
-                          <option value="PCB01">콜롬비아 수프리모 후일라 싱글오리진 로스팅원두커피</option>
-                          <option value="PPR01">프리미엄 페루 싱글오리진 찬차마요 원두 커피</option>
-                          <option value="PCT01">코스타리카 따라주 로스팅 원두커피 홀빈 싱글오리진</option>
-                        </select>
-                      </div>                      
-
-                    </div>
-                  </div>
-
-                  <div class="row mb-3">
-                    <label class="col-sm-2 col-form-label" for="basic-default-company">일자</label>
-                    <div class="col-sm-10">
-                      <!-- <div class="mt-3"> -->
-                      <div class="btn-group" role="group" aria-label="Basic example">
-                        <button type="button" class="btn btn-outline-secondary" id="makePeriodBtn">직접설정</button>
-                        <button type="button" class="btn btn-outline-secondary" id="todayBtn">금일</button>
-                        <button type="button" class="btn btn-outline-secondary" id="thisWeek">금주</button>
-                        <button type="button" class="btn btn-outline-secondary" id="prevWeek">전주</button>
-                        <button type="button" class="btn btn-outline-secondary" id="thisMonth">금월</button>
-                        <button type="button" class="btn btn-outline-secondary" id="prevMonth">전월</button>
-                        <!-- </div> -->
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="row" style="display: none;" id="makePeriod">
-                  <div class="mb-3 row col-md-6">
-                    <label for="html5-date-input" class="col-md-3 col-form-label">주문일</label>
-                    <div class="col-md-9">
-                      <input class="form-control" type="date" id="minOdDt" value="">
-                    </div>
-                  </div>
-                  <div class="mb-3 row col-md-6">
-                    <label for="html5-date-input" class="col-md-1 col-form-label">~</label>
-                    <div class="col-md-9">
-                      <input class="form-control" type="date" id="maxOdDt">
-                    </div>
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label" for="basic-default-company">일자</label>
+                <div class="col-sm-10">
+                  <!-- <div class="mt-3"> -->
+                  <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-outline-secondary" id="makePeriodBtn">직접설정</button>
+                    <button type="button" class="btn btn-outline-secondary" id="todayBtn">금일</button>
+                    <button type="button" class="btn btn-outline-secondary" id="thisWeek">금주</button>
+                    <button type="button" class="btn btn-outline-secondary" id="prevWeek">전주</button>
+                    <button type="button" class="btn btn-outline-secondary" id="thisMonth">금월</button>
+                    <button type="button" class="btn btn-outline-secondary" id="prevMonth">전월</button>
+                    <!-- </div> -->
                   </div>
                 </div>
+              </div>
 
-                  <div class="mb-3 row">
-                    <label for="html5-search-input" class="col-md-2 col-form-label"></label>
-                    <div class="col-md-10">
-                        <div class="form-check form-check-inline mt-3">
-                            <input class="form-check-input" type="checkbox" id="discGraph" name="odSt">
-                            <label class="form-check-label" for="inlineCheckbox1">그래프로 보기</label>
-                        </div>
-                    </div>
-                  </div>
-
-                  <div class="row justify-content-end">
-                    <div class="col-sm-10">
-                      <button type="submit" class="btn btn-primary">조회</button>
-                    </div>
-                  </div>
-                </form>
-                
+              <div class="row" style="display: none;" id="makePeriod">
+              <div class="mb-3 row col-md-6">
+                <label for="html5-date-input" class="col-md-3 col-form-label">주문일</label>
+                <div class="col-md-9">
+                  <input class="form-control" type="date" id="minOdDt" value="">
+                </div>
+              </div>
+              <div class="mb-3 row col-md-6">
+                <label for="html5-date-input" class="col-md-1 col-form-label">~</label>
+                <div class="col-md-9">
+                  <input class="form-control" type="date" id="maxOdDt">
+                </div>
               </div>
             </div>
-          </div>
-          <div class="col-xl">
-            <div class="card mb-4">
 
-            </div>
+              <div class="mb-3 row">
+                <label for="html5-search-input" class="col-md-2 col-form-label"></label>
+                <div class="col-md-10">
+                    <div class="form-check form-check-inline mt-3">
+                        <input class="form-check-input" type="checkbox" id="discGraph" name="odSt">
+                        <label class="form-check-label" for="inlineCheckbox1">그래프로 보기</label>
+                    </div>
+                </div>
+              </div>
+
+              <div class="row justify-content-end">
+                <div class="col-sm-10">
+                  <button type="submit" class="btn btn-primary">조회</button>
+                </div>
+              </div>
+            </form>
+
+
           </div>
+
+          
         </div>
 
-        
-          
-		<div>
-            
-            <!-- 폐기 목록 그리드 -->
-            <div id="discardTable" class="mb-3">
 
-            </div>
-            <!-- 폐기 목록 그래프 -->
-            
-            <!--Div that will hold the pie chart-->
-            <div id="discardGraph" style="display: none;">
-              그래프
-            </div>
 
-       	</div>
+        <div>
+
+          <!-- 폐기 목록 그리드 -->
+          <div id="discardTable" class="mb-3">
+
+          </div>
+          <!-- 폐기 목록 그래프 -->
+
+          <!--Div that will hold the pie chart-->
+          <div id="discardGraph" style="display: none;">
+            그래프
+          </div>
+
+        </div>
 
 
       </div>
@@ -136,48 +125,48 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-      let condition = { };
+      let condition = {};
       let period = '';
 
       const graphData = [];
       //const chartRes = '';
 
       // 1금일 2금주 3전주 4금월 5전월 6직접설정
-      makePeriodBtn.addEventListener("click", e=> {
+      makePeriodBtn.addEventListener("click", e => {
         let thisDiv = document.getElementById("makePeriod");
-        if(thisDiv.style.display == 'none'){
+        if (thisDiv.style.display == 'none') {
           thisDiv.style.display = 'block';
-        }else{
+        } else {
           thisDiv.style.display = 'none';
         }
         //document.getElementById("makePeriod").style.display ='block';
         period = 6;
       })
-      todayBtn.addEventListener("click", e=> {
-        document.getElementById("makePeriod").style.display ='none';
+      todayBtn.addEventListener("click", e => {
+        document.getElementById("makePeriod").style.display = 'none';
         period = 1;
       })
-      thisWeek.addEventListener("click", e=> {
-        document.getElementById("makePeriod").style.display ='none';
+      thisWeek.addEventListener("click", e => {
+        document.getElementById("makePeriod").style.display = 'none';
         period = 2;
       })
-      prevWeek.addEventListener("click", e=> {
-        document.getElementById("makePeriod").style.display ='none';
+      prevWeek.addEventListener("click", e => {
+        document.getElementById("makePeriod").style.display = 'none';
         period = 3;
       })
-      thisMonth.addEventListener("click", e=> {
-        document.getElementById("makePeriod").style.display ='none';
+      thisMonth.addEventListener("click", e => {
+        document.getElementById("makePeriod").style.display = 'none';
         period = 4;
       })
-      prevMonth.addEventListener("click", e=> {
-        document.getElementById("makePeriod").style.display ='none';
+      prevMonth.addEventListener("click", e => {
+        document.getElementById("makePeriod").style.display = 'none';
         period = 5;
       })
 
       // 미처리된 출고목록 조건검색
       discPdCondition.onsubmit = async (e) => {
         e.preventDefault();
-        
+
         pdCdSelect = document.getElementById('pdCdSelect');
         pdCd = pdCdSelect.options[pdCdSelect.selectedIndex].value;
 
@@ -186,67 +175,66 @@
         //const minDiscDt = nSendSearch.nMaxOdDt.value;        
 
         let condition = { pdCd, period };
-        
+
         let showGraph = document.getElementById('discGraph').checked;
-        console.log('showGraph' , showGraph);
-        if(showGraph){
-          document.getElementById("discardGraph").style.display ='block';
-          document.getElementById("discardTable").style.display ='none';
-
-          // Load the Visualization API and the corechart package.
-      google.charts.load('current', {'packages':['corechart']});
-
-// Set a callback to run when the Google Visualization API is loaded.
-google.charts.setOnLoadCallback(drawChart);
-
-          //getDiscPdChart(condition);
-        }else{
-          document.getElementById("discardGraph").style.display ='none';
-          document.getElementById("discardTable").style.display ='block';
+        console.log('showGraph', showGraph);
+        if (showGraph) {
+          document.getElementById("discardGraph").style.display = 'block';
+          document.getElementById("discardTable").style.display = 'none';
+    
+          getDiscPdChart(condition);
+          drawChart() 
+        } else {
+          document.getElementById("discardGraph").style.display = 'none';
+          document.getElementById("discardTable").style.display = 'block';
           getDiscPdList(condition);
         }
-        
+
       }
 
-      async function getDiscPdList(condition){
+      async function getDiscPdList(condition) {
         let param = condition;
-        await axios.post("/sales/ajax/discPdList", param )
-                   .then(res=> {                      
-                      discardTable.setData(res.data);
-                    })
+        await axios.post("/sales/ajax/discPdList", param)
+          .then(res => {
+            discardTable.setData(res.data);
+          })
       }
 
 
-var discardTable = new Tabulator("#discardTable", {
-		height:"100%",
-	    layout:"fitColumns",
-	    pagination:"local",
-	    paginationSize:20,
-	    paginationSizeSelector:[10,20,30],
-	    movableColumns:true,
-	    paginationCounter:"rows",
-	    rowHeader:{formatter:"rownum",
-	    			headerSort:false, width:50, 
-	    			hozAlign:"center", 
-	    			resizable:false, 
-	    			frozen:true, 
-	    			vertAlign:"middle"},
-	    resizableRowGuide:true,        
-	    resizableColumnFit: true,
+      var discardTable = new Tabulator("#discardTable", {
+        height: "100%",
+        layout: "fitColumns",
+        pagination: "local",
+        paginationSize: 20,
+        paginationSizeSelector: [10, 20, 30],
+        movableColumns: true,
+        paginationCounter: "rows",
+        rowHeader: {
+          formatter: "rownum",
+          headerSort: false, width: 50,
+          hozAlign: "center",
+          resizable: false,
+          frozen: true,
+          vertAlign: "middle"
+        },
+        resizableRowGuide: true,
+        resizableColumnFit: true,
         columns: [ //disc_no |qt |cost   |disc_dt               |rsn |reason  |disc_chg |pd_lot            |pd_cd |
-          { title: "폐기일", field: "discDt", headerHozAlign:"center", width: 180, hozAlign: "center" },
-          { title: "LOT", field: "pdLot", headerHozAlign:"center", hozAlign: "center" },
-          { title: "제품명", field: "pdName", headerHozAlign:"center", width: 400, hozAlign: "left" },
-          { title: "수량", field: "qt", headerHozAlign:"center", width: 70, hozAlign: "right" },
-          { title: "단가", field: "cost", headerHozAlign:"center", width: 150, hozAlign: "center", formatter:"money", formatterParams:{
+          { title: "폐기일", field: "discDt", headerHozAlign: "center", width: 180, hozAlign: "center" },
+          { title: "LOT", field: "pdLot", headerHozAlign: "center", hozAlign: "center" },
+          { title: "제품명", field: "pdName", headerHozAlign: "center", width: 400, hozAlign: "left" },
+          { title: "수량", field: "qt", headerHozAlign: "center", width: 70, hozAlign: "right" },
+          {
+            title: "단가", field: "cost", headerHozAlign: "center", width: 150, hozAlign: "center", formatter: "money", formatterParams: {
               // decimal:",",
               // thousand:".",
               //symbol:"",
               //symbolAfter:"p",
-              negativeSign:true,
-              precision:false,
-          } },
-          { title: "사유", field: "reason", headerHozAlign:"center", hozAlign: "left" }         
+              negativeSign: true,
+              precision: false,
+            }
+          },
+          { title: "사유", field: "reason", headerHozAlign: "center", hozAlign: "left" }
         ],
       });
 
@@ -254,36 +242,40 @@ var discardTable = new Tabulator("#discardTable", {
 
 
 
-      async function getDiscPdChart(condition){
+      async function getDiscPdChart(condition) {
         let param = condition;
-        await axios.post("/sales/ajax/discPdChart", param )
-                   .then(res=> {
-                      console.log('차트결과', res);
-                      //graphData= res.data;
-                      res.data.forEach(e=>{
-                        let insideArr = [];
-                        insideArr.push(e.reason);
-                        insideArr.push(e.sumQt);
-                        console.log(insideArr)
+        await axios.post("/sales/ajax/discPdChart", param)
+          .then(res => {
+            console.log('차트결과', res);
+            //graphData= res.data;
+            res.data.forEach(e => {
+              let insideArr = [];
+              insideArr.push(e.reason);
+              insideArr.push(e.sumQt);
+              console.log(insideArr)
 
-                        graphData.push(insideArr);
-                      })
-                      console.log('graphData', graphData);
+              graphData.push(insideArr);
+            })
+            console.log('graphData', graphData);
 
-                      //chartRes = res.data;
-                    })
+            //chartRes = res.data;
+          })
       }
 
 
+        // Load the Visualization API and the corechart package.
+        google.charts.load('current', { 'packages': ['corechart'] });
 
-      
+        // Set a callback to run when the Google Visualization API is loaded.
+        google.charts.setOnLoadCallback(drawChart);
+
 
       // Callback that creates and populates a data table,
       // instantiates the pie chart, passes in the data and
       // draws it.
-      function drawChart() {
+      async function drawChart() {
 
-        getDiscPdChart(condition);
+        
 
         // Create the data table.
 
@@ -294,50 +286,52 @@ var discardTable = new Tabulator("#discardTable", {
         //   data.addColumn('date', e.sumQt);
         //   data.setCell(0, 0, 'Mike');
         // })
-        
-
-// data.addColumn('string', 'Employee Name');
-// data.addColumn('date', 'Start Date');
-// data.addRows(6);
-// data.setCell(0, 0, 'Mike');
-// data.setCell(0, 1, new Date(2008, 1, 28));
-// data.setCell(1, 0, 'Bob');
-// data.setCell(1, 1, new Date(2007, 5, 1));
-// data.setCell(2, 0, 'Alice');
-// data.setCell(2, 1, new Date(2006, 7, 16));
-// data.setCell(3, 0, 'Frank');
-// data.setCell(3, 1, new Date(2007, 11, 28));
-// data.setCell(4, 0, 'Floyd');
-// data.setCell(4, 1, new Date(2005, 3, 13));
-// data.setCell(5, 0, 'Fritz');
-// data.setCell(5, 1, new Date(2007, 9, 2));
 
 
+        // data.addColumn('string', 'Employee Name');
+        // data.addColumn('date', 'Start Date');
+        // data.addRows(6);
+        // data.setCell(0, 0, 'Mike');
+        // data.setCell(0, 1, new Date(2008, 1, 28));
+        // data.setCell(1, 0, 'Bob');
+        // data.setCell(1, 1, new Date(2007, 5, 1));
+        // data.setCell(2, 0, 'Alice');
+        // data.setCell(2, 1, new Date(2006, 7, 16));
+        // data.setCell(3, 0, 'Frank');
+        // data.setCell(3, 1, new Date(2007, 11, 28));
+        // data.setCell(4, 0, 'Floyd');
+        // data.setCell(4, 1, new Date(2005, 3, 13));
+        // data.setCell(5, 0, 'Fritz');
+        // data.setCell(5, 1, new Date(2007, 9, 2));
 
 
 
-            // const arrData = [];
-            // arrData.push(['Country','Popularity']);
-            // <c:forEach items="${nationList}" var="_nation" varStatus="_status">
-            //     arrData.push(['${_nation.nation}',${_nation.cnt}]);
-            // </c:forEach>
-              
-            
-            //var data = google.visualization.arrayToDataTable(graphData, false);
-              var data = google.visualization.DataTable(graphData);
-            
-           
 
-            
 
-      //   var data = google.visualization.arrayToDataTable(graphData ,
-      // false); // 'false' means that the first row contains labels, not data.
-      
+        // const arrData = [];
+        // arrData.push(['Country','Popularity']);
+        // <c:forEach items="${nationList}" var="_nation" varStatus="_status">
+        //     arrData.push(['${_nation.nation}',${_nation.cnt}]);
+        // </c:forEach>
+
+
+        var data = google.visualization.arrayToDataTable(graphData, false);
+        //var data = google.visualization.DataTable(graphData);
+
+
+
+
+
+        //   var data = google.visualization.arrayToDataTable(graphData ,
+        // false); // 'false' means that the first row contains labels, not data.
+
 
         // Set chart options
-        var options = {'title':'How Much Pizza I Ate Last Night',
-                       'width':500,
-                       'height':300};
+        var options = {
+          'title': 'How Much Pizza I Ate Last Night',
+          'width': 500,
+          'height': 300
+        };
 
         // Instantiate and draw our chart, passing in some options.
         var chart = new google.visualization.ColumnChart(document.getElementById('discardGraph'));

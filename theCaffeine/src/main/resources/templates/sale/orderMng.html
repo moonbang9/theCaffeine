@@ -295,6 +295,8 @@
       // 체크한 주문상태를 담을 배열 선언
       let stList = [];
       let orderList = [];
+      let param = {};
+      getOdList(param);
 
       // 검색 조건 초기화
       resetBtn.addEventListener("click", e => {
@@ -330,9 +332,14 @@
           stList = null;
         }
 
-        let param = { cliCd, cliName, cliChg, pdCd, pdName, odChg, minOdDt, maxOdDt, minDueDt, maxDueDt, stList }
+        param = { cliCd, cliName, cliChg, pdCd, pdName, odChg, minOdDt, maxOdDt, minDueDt, maxDueDt, stList }
 
         console.log(param);
+        getOdList(param);
+        
+      })
+
+      function getOdList(param){
         fetch("/sales/ajax/orderMng", {
           method: "post",
           headers: {
@@ -342,7 +349,8 @@
         })
           .then(res => res.json())
           .then(res => table.setData(res))
-      })
+      }
+      
 
       // 조건검색 : 체크된 주문상태만 배열에 담기
       function checkList() {

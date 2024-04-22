@@ -1071,3 +1071,40 @@ from disc_pd
 ) c
 ON d.disc_no = c.disc_no
 group by c.rsn;
+
+
+select case 
+        when(due_dt - sysdate) <7
+            then 2
+        else 1
+        end
+        as dueColor
+    from od_detail;
+    
+    
+    
+    SELECT LPAD(o.od_no, 5,0)||'-'||LPAD(d.od_detailno, 6, 0) as "no"
+				, o.od_no
+				, d.od_detailno
+				, o.od_dt
+				, c.cli_name
+				, o.od_chg
+				, p.pd_cd
+				, p.pd_name
+				, d.qt
+				, d.due_dt
+				, d.send_od_st
+				, CASE WHEN(d.due_dt - sysdate) <7 then 2
+				       ELSE 1
+				       END
+				  as due_color
+		FROM od o 
+		    JOIN od_detail d
+		        ON o.od_no = d.od_no
+		    JOIN cli c
+		        ON c.cli_cd = o.cli_cd
+		    JOIN pd p
+		        ON p.pd_cd = d.pd_cd
+		WHERE d.send_od_st = 1;
+        
+select * from od;
