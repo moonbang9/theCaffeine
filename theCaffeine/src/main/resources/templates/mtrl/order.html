@@ -210,13 +210,14 @@
 		        {title:"자재코드", field:"mtCd", width:200, headerHozAlign: "center", hozAlign:"center", vertAlign:"middle"}, 
 		        {title:"자재명", field:"mtName", width:240, headerHozAlign: "center", vertAlign:"middle"},
 		        {title:"거래처", field:"cliName", width:290, headerHozAlign: "center", hozAlign:"center", vertAlign:"middle"},
-		        {title:"수량", field:"placeodQt", width:170, headerHozAlign: "center", hozAlign:"right", editor:"input", vertAlign:"middle"},
+		        {title:"수량", field:"placeodQt", width:170, headerHozAlign: "center", hozAlign:"right", vertAlign:"middle"},
 		        {title:"단위", field:"unit", width:170, headerHozAlign: "center", hozAlign:"center", vertAlign:"middle"},
 		        {title:"삭제", formatter:editorIcon, width:100, headerHozAlign: "center", hozAlign:"center", cellClick:function(e, cell){
-		        	console.log(cell.getRow()._row.data.mtPlaceodCd);
+		        	console.log(cell.getRow()._row.data);
 		    		if(confirm("삭제하시겠습니까?")) {
 		        		const mtPlaceodCd = cell.getRow()._row.data.mtPlaceodCd;
 		    			let param = mtPlaceodCd;
+		    			console
 		        		fetch("/ajax/deleteMtrlOrder",{
 		    				method : "post",
 		    				headers: {
@@ -324,9 +325,8 @@
 			const cliCd= mtrl_order_clicd.value;
 			const mtCd = mtrl_order_mtcd.value;
 			const placeodQt = mtrl_order_qt.value;
-			const placeodRequester = mtrl_order_req.value;
-			if(cliCd != "" && mtCd != "" && placeodQt != "" && placeodRequester != ""){
-				let param = {cliCd, mtCd, placeodQt, placeodRequester};
+			if(cliCd != "" && mtCd != "" && placeodQt != ""){
+				let param = {cliCd, mtCd, placeodQt};
 				console.log(param);
 				fetch("/ajax/mtrlOrder",{
 					method : "post",
