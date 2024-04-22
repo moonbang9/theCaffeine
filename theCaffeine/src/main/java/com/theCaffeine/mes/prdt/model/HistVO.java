@@ -42,4 +42,5 @@ public class HistVO {
 	private Integer pdtNowQt; 			//생산 현재수량
 	private Integer pdtRemainQt; 		//생산 남은수량
 	private String pdCd; 				//제품 코드
+	private String pdtUnit; 			//생산단위
 }

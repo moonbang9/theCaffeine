@@ -23,300 +23,296 @@
 
 				<!-- Basic Layout & Basic with Icons -->
 				<div class="row">
-					
 
 
+					<!-- HTML5 Inputs -->
+					<div class="card mb-4">
+						<h5 class="card-header">주문 정보</h5>
 
 
-					<form v-on:submit="insertFrm">
-						<!-- HTML5 Inputs -->
-						<div class="card mb-4">
-							<h5 class="card-header">주문 정보</h5>
+						<!-- 거래처 선택 -->
+						<div class="card-body">
 
+							<div class="mb-3 row">
+								<label for="html5-email-input" class="col-md-2 col-form-label">거래처명</label>
+								<div class="col-md-10">
+									<div class="input-group">
 
-							<!-- 거래처 선택 -->
-							<div class="card-body">
-
-								<div class="mb-3 row">
-									<label for="html5-email-input" class="col-md-2 col-form-label">거래처명</label>
-									<div class="col-md-10">
-										<div class="input-group">
-
-											<!-- Button trigger modal -->
-											<button class="btn btn-outline-primary" type="button" id="button-addon1"
-												@click="openModal()">검색</button>
-
-
-
-											<!-- Modal -->
-											<div class="modal fade" id="modalCenter" tabindex="-1" aria-hidden="true">
-												<div class="modal-dialog modal-dialog-centered" role="document">
-													<div class="modal-content">
-														<div class="modal-header">
-															<h5 class="modal-title" id="modalCenterTitle">거래처 찾기</h5>
-															<button type="button" class="btn-close"
-																data-bs-dismiss="modal" aria-label="Close"></button>
-														</div>
-														<div class="modal-body">
-															<div class="row">
-																<div class="col mb-3">
-																	<label for="nameWithTitle" class="form-label">거래처코드,
-																		거래처명, 담당자명, 또는 전화번호 입력</label>
-
-																	<div class="input-group">
-																		<input type="text" class="form-control"
-																			placeholder="예) PET01, 브라질, 053-1111-1111"
-																			aria-label="Recipient's username"
-																			aria-describedby="button-addon2"
-																			v-model="keyword">
-																		<button class="btn btn-outline-primary"
-																			type="button" id="button-addon2"
-																			@click="getCliList(keyword)">검색</button>
-																	</div>
-
-
-																</div>
-															</div>
-
-															<!-- 모달바디 -->
-															<div class="row g-2">
-
-																<!-- Borderless Table -->
-																<div class="card">
-																	<!-- 		<h5 class="card-header">거래처 검색결과</h5> -->
-																	<div class="table-responsive text-nowrap">
-																		<table class="table table-borderless">
-																			<thead>
-																				<tr>
-																					<th>거래처코드</th>
-																					<th>거래처명</th>
-																					<th>거래처 담당자</th>
-																					<th>전화번호</th>
-																				</tr>
-																			</thead>
-																			<tbody>
-																				<tr v-bind:key="idx"
-																					v-for="(client, idx) in clientList"
-																					v-on:click="insertCli(client)">
-																					<td>{{client.cliCd}}</td>
-																					<td>{{client.cliName}}</td>
-																					<td>{{client.cliChg}}</td>
-																					<td>{{client.tel}}</td>
-																				</tr>
-
-																			</tbody>
-																		</table>
-																	</div>
-																</div>
-																<!--/ Borderless Table -->
-
-															</div>
-															<!-- 모달바디 끝 -->
-
-														</div>
-														<div class="modal-footer">
-															<button type="button" class="btn btn-outline-secondary"
-																data-bs-dismiss="modal">취소</button>
-															<!-- <button type="button" class="btn btn-primary">선택</button> -->
-														</div>
-													</div>
-												</div>
-											</div>
-											<!-- 모달 끝 -->
-
-
-
-
-											<input type="text" class="form-control" placeholder="거래처를 검색해 주세요"
-												aria-label="Example text with button addon"
-												aria-describedby="button-addon1" v-model="clientVO.cliName" readonly />
-										</div>
-									</div>
-								</div>
-
-								<div class="mb-3 row">
-									<label for="html5-url-input" class="col-md-2 col-form-label">거래처코드</label>
-									<div class="col-md-10">
-
-										<input type="text" readonly class="form-control-plaintext"
-											id="exampleFormControlReadOnlyInputPlain1" value="거래처 코드"
-											v-model="clientVO.cliCd" name="cliCd" />
-
-									</div>
-								</div>
-
-								<div class="mb-3 row">
-									<label for="html5-url-input" class="col-md-2 col-form-label">사업자번호</label>
-									<div class="col-md-10">
-										<input type="text" readonly class="form-control-plaintext"
-											id="exampleFormControlReadOnlyInputPlain1" value="거래처 사업자 번호"
-											v-model="clientVO.bussno" />
-									</div>
-								</div>
-
-								<div class="mb-3 row">
-									<label for="html5-tel-input" class="col-md-2 col-form-label">전화번호</label>
-									<div class="col-md-10">
-										<input type="text" class="form-control" id="defaultFormControlInput"
-											aria-describedby="defaultFormControlHelp" v-model="clientVO.tel" />
-									</div>
-								</div>
-
-								<div class="mb-3 row">
-									<label for="html5-tel-input" class="col-md-2 col-form-label">주소</label>
-									<div class="col-md-10">
-										<input type="text" class="form-control" id="defaultFormControlInput"
-											aria-describedby="defaultFormControlHelp" v-model="clientVO.addr" />
-									</div>
-								</div>
-
-								<div class="mb-3 row">
-									<label for="html5-tel-input" class="col-md-2 col-form-label">이메일</label>
-									<div class="col-md-10">
-										<input type="text" class="form-control" id="defaultFormControlInput"
-											aria-describedby="defaultFormControlHelp" v-model="clientVO.mail" />
-									</div>
-								</div>
-
-								<div class="mb-3 row">
-									<label for="html5-tel-input" class="col-md-2 col-form-label">거래처
-										담당자</label>
-									<div class="col-md-10">
-										<input type="text" class="form-control" id="defaultFormControlInput"
-											aria-describedby="defaultFormControlHelp" v-model="clientVO.cliChg" />
-									</div>
-								</div>
+										<!-- Button trigger modal -->
+										<button class="btn btn-outline-primary" type="button" id="button-addon1"
+											@click="openModal()">검색</button>
 
 
 
 
 
-							</div>
 
 
 
-							<hr class="m-0">
-
-
-							<!-- 주문정보 -->
-							<div class="card-body">
-
-								<div class="mb-3 row">
-									<label for="html5-tel-input" class="col-md-2 col-form-label">주문
-										담당자</label>
-									<div class="col-md-10">
-										<input type="text" class="form-control" id="odChg" placeholder="콩볶아조"
-											aria-describedby="defaultFormControlHelp" />
-									</div>
-								</div>
-
-								<div class="mb-3 row">
-									<label for="html5-time-input" class="col-md-2 col-form-label">주문일</label>
-									<div class="col-md-10">
-										<input class="form-control" type="date" value="2024-04-29" id="odDt" />
-									</div>
-								</div>
-
-								<div class="mb-3 row">
-									<label for="html5-color-input" class="col-md-2 col-form-label">납기일</label>
-									<div class="col-md-10">
-										<input class="form-control" type="date" value="2024-05-29" id="dueDt" />
-									</div>
-								</div>
-
-
-
-								<!-- Striped Rows -->
-								<div class="card">
-									<div>
-										<h5 class="card-header">주문 상품 선택</h5>
-									</div>
-									<div class="table-responsive text-nowrap">
-										<table class="table table-striped">
-											<thead>
-												<tr>
-													<th>상품</th>
-													<th>
-														<select id="smallSelect" class="form-select form-select-sm"
-															v-model="selected" @change="selectPd(selected)">
-															<option :value="null" disabled style="display: none;">상품을
-																선택해주세요
-															</option>
-															<option :key="idx" v-for="(pd, idx) in productList"
-																:value="idx">{{pd.pdName}}</option>
-														</select>
-													</th>
-													<th>수량</th>
-													<th>단위</th>
-													<th>단가</th>
-													<th>합계</th>
-													<th></th>
-												</tr>
-											</thead>
-											<tbody class="table-border-bottom-0">
-												<tr :key="idx" v-for="(selectedPd, idx) in selectedPdList">
-													<td>{{selectedPd.pdCd}}</td>
-													<td>{{selectedPd.pdName}}</td>
-													<td><input class="form-control" type="number" min='1'
-															v-model="selectedPd.qt" id="html5-number-input"
-															@input="makeDetailPrice(idx)"></td>
-													<td>{{selectedPd.unit}}</td>
-													<td>{{selectedPd.cost}}</td>
-													<td>{{selectedPd.detailPrice}}</td>
-													<td><button type="button" class="btn-close" data-bs-dismiss="modal"
-															aria-label="Close" @click="deletePd(idx)"></button></td>
-												</tr>
-											</tbody>
-										</table>
-									</div>
-								</div>
-								<!--/ Striped Rows -->
-							</div>
-
-
-
-
-							<div class="card-body">
-								<div class="mb-3 row">
-									<label for="html5-tel-input" class="col-md-2 col-form-label">할인율</label>
-									<div class="col-md-10">
-										<input type="text" class="form-control" id="defaultFormControlInput"
-											placeholder="0" aria-describedby="defaultFormControlHelp" v-model="pct"
-											@change="checkPct()" name="dcRate"
-											onKeyup="this.value=this.value.replace(/[^0-9]/g,'');" />
-									</div>
-								</div>
-								<div class="mb-3 row">
-									<label for="html5-tel-input" class="col-md-2 col-form-label">총
-										주문금액</label>
-									<div class="col-md-10">
-										<input type="text" class="form-control" id="defaultFormControlInput"
-											placeholder="0" aria-describedby="defaultFormControlHelp" v-model="total"
-											name="totalPrice" onKeyup="this.value=this.value.replace(/[^0-9]/g,'');" />
+										<input type="text" class="form-control" placeholder="거래처를 검색해 주세요"
+											aria-label="Example text with button addon" aria-describedby="button-addon1"
+											v-model="clientVO.cliName" readonly />
 									</div>
 								</div>
 							</div>
-							<div class="card-body">
-								<div class="row justify-content-end">
-									<div class="col-sm-10">
-										<button type="submit" class="btn btn-primary"
-											
-											id="insertBtn">Send</button>
-									</div>
+
+							<div class="mb-3 row">
+								<label for="html5-url-input" class="col-md-2 col-form-label">거래처코드</label>
+								<div class="col-md-10">
+
+									<input type="text" readonly class="form-control-plaintext"
+										id="exampleFormControlReadOnlyInputPlain1" value="거래처 코드"
+										v-model="clientVO.cliCd" name="cliCd" />
+
 								</div>
 							</div>
+
+							<div class="mb-3 row">
+								<label for="html5-url-input" class="col-md-2 col-form-label">사업자번호</label>
+								<div class="col-md-10">
+									<input type="text" readonly class="form-control-plaintext"
+										id="exampleFormControlReadOnlyInputPlain1" value="거래처 사업자 번호"
+										v-model="clientVO.bussno" />
+								</div>
+							</div>
+
+							<div class="mb-3 row">
+								<label for="html5-tel-input" class="col-md-2 col-form-label">전화번호</label>
+								<div class="col-md-10">
+									<input type="text" class="form-control" id="defaultFormControlInput"
+										aria-describedby="defaultFormControlHelp" v-model="clientVO.tel" />
+								</div>
+							</div>
+
+							<div class="mb-3 row">
+								<label for="html5-tel-input" class="col-md-2 col-form-label">주소</label>
+								<div class="col-md-10">
+									<input type="text" class="form-control" id="defaultFormControlInput"
+										aria-describedby="defaultFormControlHelp" v-model="clientVO.addr" />
+								</div>
+							</div>
+
+							<div class="mb-3 row">
+								<label for="html5-tel-input" class="col-md-2 col-form-label">이메일</label>
+								<div class="col-md-10">
+									<input type="text" class="form-control" id="defaultFormControlInput"
+										aria-describedby="defaultFormControlHelp" v-model="clientVO.mail" />
+								</div>
+							</div>
+
+							<div class="mb-3 row">
+								<label for="html5-tel-input" class="col-md-2 col-form-label">거래처
+									담당자</label>
+								<div class="col-md-10">
+									<input type="text" class="form-control" id="defaultFormControlInput"
+										aria-describedby="defaultFormControlHelp" v-model="clientVO.cliChg" />
+								</div>
+							</div>
+
 
 
 
 
 						</div>
-					</form>
+
+
+
+						<hr class="m-0">
+
+
+						<!-- 주문정보 -->
+						<div class="card-body">
+
+							<div class="mb-3 row">
+								<label for="html5-tel-input" class="col-md-2 col-form-label">주문
+									담당자</label>
+								<div class="col-md-10">
+									<input type="text" class="form-control" id="odChg" placeholder="관리자" value="관리자"
+										aria-describedby="defaultFormControlHelp" />
+								</div>
+							</div>
+
+							<div class="mb-3 row">
+								<label for="html5-time-input" class="col-md-2 col-form-label">주문일</label>
+								<div class="col-md-10">
+									<input class="form-control" type="date" value="2024-04-29" id="odDt" />
+								</div>
+							</div>
+
+							<div class="mb-3 row">
+								<label for="html5-color-input" class="col-md-2 col-form-label">납기일</label>
+								<div class="col-md-10">
+									<input class="form-control" type="date" value="2024-05-29" id="dueDt" />
+								</div>
+							</div>
+
+
+
+							<!-- Striped Rows -->
+							<div class="card">
+								<div>
+									<h5 class="card-header">주문 제품 선택</h5>
+								</div>
+								<div class="table-responsive text-nowrap">
+									<table class="table table-striped">
+										<thead>
+											<tr>
+												<th>제품</th>
+												<th>
+													<select id="smallSelect" class="form-select form-select-sm"
+														v-model="selected" @change="selectPd(selected)">
+														<option value="" disabled >제품을 선택해주세요
+														</option>
+														<option :key="idx" v-for="(pd, idx) in productList"
+															:value="idx">{{pd.pdName}}</option>
+													</select>
+												</th>
+												<th>수량</th>
+												<th>단위</th>
+												<th>단가</th>
+												<th>합계</th>
+												<th></th>
+											</tr>
+										</thead>
+										<tbody class="table-border-bottom-0">
+											<tr :key="idx" v-for="(selectedPd, idx) in selectedPdList">
+												<td>{{selectedPd.pdCd}}</td>
+												<td>{{selectedPd.pdName}}</td>
+												<td><input class="form-control" type="number" min='1'
+														v-model="selectedPd.qt" id="html5-number-input"
+														@input="makeDetailPrice(idx)"></td>
+												<td>{{selectedPd.unit}}</td>
+												<td>{{ Number(selectedPd.cost).toLocaleString() }}</td>
+												<td>{{ Number(selectedPd.detailPrice).toLocaleString() }}</td>
+												<td><button type="button" class="btn-close" data-bs-dismiss="modal"
+														aria-label="Close" @click="deletePd(idx)"></button></td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<!--/ Striped Rows -->
+						</div>
+
+
+
+
+						<div class="card-body">
+							<div class="mb-3 row">
+								<label for="html5-tel-input" class="col-md-2 col-form-label">할인율</label>
+								<div class="col-md-10">
+									<input type="text" class="form-control" id="defaultFormControlInput" placeholder="0"
+										aria-describedby="defaultFormControlHelp" v-model="pct" @change="checkPct()"
+										name="dcRate" onKeyup="this.value=this.value.replace(/[^0-9]/g,'');" />
+								</div>
+							</div>
+							<div class="mb-3 row">
+								<label for="html5-tel-input" class="col-md-2 col-form-label">총
+									주문금액</label>
+								<div class="col-md-10">
+									<input type="text" class="form-control" id="defaultFormControlInput" placeholder="0"
+										aria-describedby="defaultFormControlHelp" v-model="total" name="totalPrice"
+										onKeyup="this.value=this.value.replace(/[^0-9]/g,'');" />
+								</div>
+							</div>
+						</div>
+						<div class="card-body">
+							<div class="row justify-content-end">
+								<div class="col-sm-10">
+									<button type="submit" class="btn btn-primary" @click="insertOrder()">Send</button>
+								</div>
+							</div>
+						</div>
+
+
+
+
+					</div>
 
 
 
 				</div>
 				<!-- card card mb-4 끝-->
 			</div>
+
+													<!-- Modal -->
+													<div class="modal fade" id="modalCenter" tabindex="-1" aria-hidden="true">
+														<div class="modal-dialog modal-dialog-centered" role="document">
+															<div class="modal-content">
+																<div class="modal-header">
+																	<h5 class="modal-title" id="modalCenterTitle">거래처 찾기</h5>
+																	<button type="button" class="btn-close" data-bs-dismiss="modal"
+																		aria-label="Close"></button>
+																</div>
+																<div class="modal-body">
+																	<div class="row">
+																		<div class="col mb-3">
+																			<label for="nameWithTitle" class="form-label">거래처코드,
+																				거래처명, 담당자명, 또는 전화번호 입력</label>
+			
+																			<div class="input-group">
+																				<input type="text" class="form-control"
+																					placeholder="예) PET01, 브라질, 053-1111-1111"
+																					aria-label="Recipient's username"
+																					aria-describedby="button-addon2"
+																					v-model="keyword"
+																					v-on:keyup.enter="getCliList(keyword)"
+																					id="keywordInput"
+																					>
+																				<button class="btn btn-outline-primary"
+																					type="button" id="button-addon2"
+																					@click="getCliList(keyword)">검색</button>
+																			</div>
+			
+			
+																		</div>
+																	</div>
+			
+																	<!-- 모달바디 -->
+																	<div class="row g-2">
+			
+																		<!-- Borderless Table -->
+																		<div class="card">
+																			<!-- 		<h5 class="card-header">거래처 검색결과</h5> -->
+																			<div class="table-responsive text-nowrap">
+																				<table class="table table-borderless">
+																					<thead>
+																						<tr>
+																							<th>거래처코드</th>
+																							<th>거래처명</th>
+																							<th>거래처 담당자</th>
+																							<th>전화번호</th>
+																						</tr>
+																					</thead>
+																					<tbody>
+																						<tr v-bind:key="idx"
+																							v-for="(client, idx) in clientList"
+																							v-on:click="insertCli(client)">
+																							<td>{{client.cliCd}}</td>
+																							<td>{{client.cliName}}</td>
+																							<td>{{client.cliChg}}</td>
+																							<td>{{client.tel}}</td>
+																						</tr>
+			
+																					</tbody>
+																				</table>
+																			</div>
+																		</div>
+																		<!--/ Borderless Table -->
+			
+																	</div>
+																	<!-- 모달바디 끝 -->
+			
+																</div>
+																<div class="modal-footer">
+																	<button type="button" class="btn btn-outline-secondary"
+																		data-bs-dismiss="modal">취소</button>
+																	<!-- <button type="button" class="btn btn-primary">선택</button> -->
+																</div>
+															</div>
+														</div>
+													</div>
+													<!-- 모달 끝 -->
 		</div>
 		<!-- / Content -->
 		<div class="content-backdrop fade"></div>
@@ -341,7 +337,7 @@
 						pct: 0,
 
 						orderVO: {},
-						insertOrderDetailList: []
+						insertOrderDetailList : []					
 					}
 				},
 				created() {
@@ -387,6 +383,9 @@
 					},
 					//거래처 검색 모달 열기
 					openModal() {
+						this.keyword = '';
+						this.clientList= '';
+
 						const modalToggle = document.getElementById('modalCenter');
 						//console.log(this.myModal);
 						this.myModal.show(modalToggle);
@@ -450,8 +449,7 @@
 					// },
 
 					// 주문, 주문상세 테이블에 넣기
-					insertFrm: async function() {
-					//async insertOrder() {
+					async insertOrder() {
 						let odDt = document.getElementById('odDt').value;
 						let odChg = document.getElementById('odChg').value;
 						let dcRate = (this.pct / 100);
@@ -483,9 +481,11 @@
 
 						if (result.data == 'ok') {
 							alert('주문이 등록되었습니다.');
-							//location.href = "/sales/orderMng";
+							location.href = "/sales/orderMng";
 
 						}
+
+						
 					}
 
 
@@ -493,6 +493,17 @@
 			})
 			app.mount('#app')
 
+			
+			selectNav();
+			
+			function selectNav() {
+				mainPage.classList.remove('active');
+				sale.classList.add('active');
+				sale.classList.add('open');
+				sale_insertOrderPage.classList.add('active');
+			}
+					
+			
 		</script>
 	</div>
 	<!-- Content wrapper -->

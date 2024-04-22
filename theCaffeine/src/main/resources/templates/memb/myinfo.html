@@ -65,24 +65,7 @@
                          비밀번호 변경
                         </button>
                 
-                      <button
-                        type="button"
-                        class="btn btn-primary text-nowrap"
-                        data-bs-toggle="popover"
-                        data-bs-offset="0,14"
-                        data-bs-placement="bottom"
-                        data-bs-html="true"
-                        data-bs-content="<p>구독을 취소하게 되면 즉시 모든 권한이 사라지며,<br>관리 페이지를 더 이상 사용할 수 없게 됩니다.<br>그래도 진행하시겠습니까?</p> <div class='d-flex justify-content-between'><button type='button' class='btn btn-sm btn-outline-secondary'>취소</button><button type='button' class='btn btn-sm btn-primary'>구독 취소</button></div>"
-                        title="구독취소"
-                      >
-                        구독 취소
-                      </button>
-                    <button type="button" class="btn btn-primary text-nowrap" data-bs-toggle="popover" data-bs-offset="0,14" data-bs-placement="bottom" data-bs-html="true" data-bs-content="<p>This is a very beautiful popover, show some love.</p> <div class='d-flex justify-content-between'><button type='button' class='btn btn-sm btn-outline-secondary'>Skip</button><button type='button' class='btn btn-sm btn-primary'>Read More</button></div>" title="" data-bs-original-title="Popover Title">
-                        Popover on bottom
-                      </button>
-                        <button type="button" class="btn btn-primary text-nowrap" data-bs-toggle="popover" data-bs-offset="0,14" data-bs-placement="top" data-bs-html="true" data-bs-content="<p>This is a very beautiful popover, show some love.</p> <div class='d-flex justify-content-between'><button type='button' class='btn btn-sm btn-outline-secondary'>Skip</button><button type='button' class='btn btn-sm btn-primary'>Read More</button></div>" title="" data-bs-original-title="Popover Title">
-                        Popover on top
-                      </button>
+                      
 						</div>
 						
 						
@@ -129,21 +112,18 @@
                   </div>
                 </div>
 	</div>
-
-</div>
 <script>
 	
-	/* var table = new Tabulator("#example-table", {
-	    height:"311px",
-	    columns:[
-	    {title:"Name", field:"name"},
-	    {title:"Progress", field:"progress", sorter:"number"},
-	    {title:"Gender", field:"gender"},
-	    {title:"Rating", field:"rating"},
-	    {title:"Favourite Color", field:"col"},
-	    {title:"Date Of Birth", field:"dob", hozAlign:"center"},
-	    ],
-	}); */
+	
+	
+	selectNav();
+	
+	function selectNav() {
+		mainPage.classList.remove('active');
+		memb_myinfo.classList.add('active');
+	}
 </script>
+</div>
+
 </body>
 </html>

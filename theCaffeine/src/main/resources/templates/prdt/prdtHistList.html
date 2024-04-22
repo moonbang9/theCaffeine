@@ -1,22 +1,23 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-  layout:decorate="~{layout/index}">
+  layout:decorate="~{layout/index}" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>지시내역현황</title>
 </head>
 <body>
 <div layout:fragment="content">
 	
 	<h1>생산 지시내역현황</h1>
 		<div class="demo-inline-spacing">
-		
 		<div class="d-flex mt-5">
 	  		<div class="p-2 flex-grow-1"><h3>생산 지시조회</h3></div>
+	  		<div class="p-2"><button type="button" class="btn btn-warning pdfs" id="download-pdf2">pdf</button></div>
 		</div>
 		<div id="productionPlan-table"></div>
 		<div class="d-flex mt-5">
-	  		<div class="p-2 flex-grow-1"><h3>생산지시상세 및 금일 생산 현황</h3></div>
+	  		<div class="p-2 flex-grow-1"><h3>생산지시상세 및 생산 현황</h3></div>
+	  		<div class="p-2"><button type="button" class="btn btn-warning pdfs" id="download-pdf">pdf</button></div>
 		</div>
 		<div id="productionPlan-table2"></div>
 		</div>
@@ -27,6 +28,10 @@
 	  		<div class="p-2 flex-grow-1"><h3>생산지시상세 진행현황</h3></div>
 		</div>
 		<div id="productionPlan-table4"></div>
+		
+		<script src="/js/font.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.20/jspdf.plugin.autotable.min.js"></script>
 <script th:inline="javascript">
 	let dates = '';
 	$(window).on("load",function(e) {
@@ -34,6 +39,10 @@
 		
 	})
 	
+	//이름
+	let memId = document.querySelector(".memName").innerText
+	//권한
+	let memAuth = document.querySelector(".memAuth").innerText
 	
 	//수정버튼
 	var editorIcon = function(cell, formatterParams, onRendered) {
@@ -48,11 +57,15 @@
 	var table = new Tabulator("#productionPlan-table", {
     height:"100%",
     layout:"fitDataFill",
+    pagination:"local",
+    paginationSize:8,
+    paginationCounter:"rows",
+    selectableRows:true,
     columns:[
-        {title:"계획일자", field:"pdtInstDt", hozAlign:"center", width:220},
-        {title:"상품명", field:"insttot", hozAlign:"center", width:400},
-        {title:"총 원두생산 수량(kg)", field:"isum", hozAlign:"center", width:400},
-        {title:"총 예상작업시간(시간)", field:"msum", hozAlign:"center", width:350},
+        {title:"계획일자", field:"pdtInstDt", hozAlign:"center", width:220, headerHozAlign: "center"},
+        {title:"상품명", field:"insttot", hozAlign:"left", width:400, headerHozAlign: "center"},
+        {title:"총 원두생산 수량(kg)", field:"isum", hozAlign:"center", width:400, headerHozAlign: "center"},
+        {title:"총 예상작업시간(시간)", field:"msum", hozAlign:"center", width:350, headerHozAlign: "center"},
     ],
 });
 	
@@ -64,11 +77,11 @@
 	        resizable:"header",
 	    },
 	    columns:[
-	        {title:"생산상품코드", field:"pdCd", hozAlign:"center", width:200},
-	        {title:"상품명", field:"pdName", hozAlign:"center", width:320},
-	        {title:"수량", field:"qt", hozAlign:"center", width:200},
-	        {title:"생산시작시간", field:"pdtSttTime", hozAlign:"center", width:320},
-	        {title:"생산예상종료시간", field:"pdtexptFnTime", hozAlign:"center", width:320},
+	        {title:"생산상품코드", field:"pdCd", hozAlign:"center", width:200, headerHozAlign: "center"},
+	        {title:"상품명", field:"pdName", hozAlign:"left", width:320, headerHozAlign: "center"},
+	        {title:"수량", field:"qt", hozAlign:"center", width:200, headerHozAlign: "center"},
+	        {title:"생산시작시간", field:"pdtSttTime", hozAlign:"center", width:320, headerHozAlign: "center"},
+	        {title:"생산예상종료시간", field:"pdtexptFnTime", hozAlign:"center", width:320, headerHozAlign: "center"},
 	    ],
 	});
 	
@@ -80,10 +93,10 @@
 	        resizable:"header",
 	    },
 	    columns:[
-	        {title:"생산상품코드", field:"pdCd", hozAlign:"center", width:330},
-	        {title:"생산 목표량", field:"pdtTargetQt", hozAlign:"center", width:350},
-	        {title:"생산 현황", field:"pdtNowQt", hozAlign:"center", width:350},
-	        {title:"남은 목표량", field:"pdtRemainQt", hozAlign:"center", width:350},
+	        {title:"생산상품코드", field:"pdCd", hozAlign:"center", width:330, headerHozAlign: "center"},
+	        {title:"생산 목표량", field:"pdtTargetQt", hozAlign:"center", width:350, headerHozAlign: "center"},
+	        {title:"생산 현황", field:"pdtNowQt", hozAlign:"center", width:350, headerHozAlign: "center"},
+	        {title:"남은 목표량", field:"pdtRemainQt", hozAlign:"center", width:350, headerHozAlign: "center"},
 	    ],
 	});
 	
@@ -95,42 +108,36 @@
 	        resizable:"header",
 	    },
 	    columns:[
-	        {title:"생산상품코드", field:"pdCd", hozAlign:"center", width:150},
-	        {title:"생산시작시간", field:"pdtSttTime", hozAlign:"center", width:230},
-	        {title:"예열 및 대기", field:"mfCd", hozAlign:"center", width:100},
-	        {title:"투입", field:"qt", hozAlign:"center", width:100},
-	        {title:"1차크랙", field:"pdtSttTime1", hozAlign:"center", width:100},
-	        {title:"2차크랙", field:"pdtexptFnTime2", hozAlign:"center", width:100},
-	        {title:"배출", field:"pdtexptFnTime3", hozAlign:"center", width:100},
-	        {title:"공정검사", field:"pdtexptFnTime4", hozAlign:"center", width:100},
-	        {title:"냉각", field:"pdtexptFnTime5", hozAlign:"center", width:100},
-	        {title:"봉지포장", field:"pdtexptFnTime6", hozAlign:"center", width:100},
-	        {title:"포장검사", field:"pdtexptFnTime7", hozAlign:"center", width:100},
-	        {title:"입고", field:"pdtexptFnTime8", hozAlign:"center", width:100},
+	        {title:"생산상품코드", field:"pdCd", hozAlign:"center", width:150, headerHozAlign: "center"},
+	        {title:"생산시작시간", field:"pdtSttTime", hozAlign:"center", width:230, headerHozAlign: "center"},
+	        {title:"예열 및 대기", field:"process1", hozAlign:"center", width:100, headerHozAlign: "center"},
+	        {title:"투입", field:"process2", hozAlign:"center", width:100, headerHozAlign: "center"},
+	        {title:"1차크랙", field:"process3", hozAlign:"center", width:100, headerHozAlign: "center"},
+	        {title:"2차크랙", field:"process4", hozAlign:"center", width:100, headerHozAlign: "center"},
+	        {title:"배출", field:"process5", hozAlign:"center", width:100, headerHozAlign: "center"},
+	        {title:"공정검사", field:"process6", hozAlign:"center", width:100, headerHozAlign: "center"},
+	        {title:"냉각", field:"process7", hozAlign:"center", width:100, headerHozAlign: "center"},
+	        {title:"봉지포장", field:"process8", hozAlign:"center", width:100, headerHozAlign: "center"},
+	        {title:"포장검사", field:"process9", hozAlign:"center", width:100, headerHozAlign: "center"},
+	        {title:"입고", field:"process10", hozAlign:"center", width:100, headerHozAlign: "center"},
 	    ],
 	});
 	
 	// 주간 생산계획조회 데이터
 	function listReq() {
-		fetch("/ajax/instList")
+		fetch("/ajax/instList2")
 		.then(res => res.json())
 		.then(res => table.setData(res))
-	}
-	
-	// 생산상세지시 진행현황 데이터
-	function targetListReq(res) {
-		
-		fetch("/ajax/instDetailLists/"+ pdtInstNo)
-		.then(res => res.json())
-		.then(res => {
-			table4.setData(res)
-		})
 	}
 	
 	// 주간 생산계획 버튼 이벤트
 	table.on("rowClick", function(e, row){
 		let pdtInstNo = row.getData().pdtInstNo;
-		let param = {"pdtDt" : row.getData().pdtInstDt}
+		let pdtDt = row.getData().pdtInstDt;
+		let param = {"pdtDt" : pdtDt}
+		let param1 = {"pdtInstDt" : pdtDt}
+		table.deselectRow();
+		table.selectRow(row);
 		
 		fetch("/ajax/todayProductList",{
 					method : "post",
@@ -147,13 +154,34 @@
 		.then(res => {
 			table2.setData(res)
 			dates = e.target.parentElement.firstElementChild.innerText
-			//targetListReq(res);
+		})
+		
+		// 생산상세지시 진행현황 데이터
+		fetch("/ajax/instDetailProcess",{
+			method : "post",
+			headers: {
+			      "Content-Type": "application/json",
+			    },
+			body : JSON.stringify(param1)
+		})
+		.then(res => res.json())
+		.then(res => {
+			table4.setData(res)
 		})
 		
 		
 		
 		
 	});
+	
+	selectNav();
+	
+	function selectNav() {
+		mainPage.classList.remove('active');
+		prdt.classList.add('active');
+		prdt.classList.add('open');
+		prdt_prdtHistList.classList.add('active');
+	}
 	
 	//날짜
 	function getDateStr(myDate){
@@ -220,9 +248,83 @@
 		return [WEEK_KOR[weekNum], (dates.getMonth()+1)+'월'];
 	}
 	
+
+	selectNav();
+	
+	function selectNav() {
+		mainPage.classList.remove('active');
+		prdt.classList.add('active');
+		prdt.classList.add('open');
+		prdt_prdtHistList.classList.add('active');
+	}
+
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	//trigger download of data.pdf file
+    document.getElementById("download-pdf").addEventListener("click", function () {
+      table2.download("pdf", "금일생산지시 상세계획.pdf", {
+        orientation: "portrait", // 페이지 방향을 세로로 설정
+        title: dates + " 생산지시 계획", // 보고서 제목 설정
+    	  autoTable: function(doc) {
+    		  doc.addFileToVFS("malgun.ttf", malgunFont);
+    		  doc.addFont("malgun.ttf", "malgun", "normal"); 
+    		    doc.setFont("malgun");
+    		    return {
+    		      styles: {
+    		        font: "malgun",
+    		        fontStyle: "normal"
+    		      }
+    	  };
+    	  }
+      });
+    });
+	//trigger download of data.pdf file
+    document.getElementById("download-pdf2").addEventListener("click", function () {
+      table.download("pdf", "생산지시 계획.pdf", {
+        orientation: "portrait", // 페이지 방향을 세로로 설정
+        title: "생산지시 계획", // 보고서 제목 설정
+    	  autoTable: function(doc) {
+    		  doc.addFileToVFS("malgun.ttf", malgunFont);
+    		  doc.addFont("malgun.ttf", "malgun", "normal"); 
+    		    doc.setFont("malgun");
+    		    return {
+    		      styles: {
+    		        font: "malgun",
+    		        fontStyle: "normal"
+    		      }
+    	  }
+    	  }
+      })
+    })
+     
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
 </script>
 </div>
 </body>

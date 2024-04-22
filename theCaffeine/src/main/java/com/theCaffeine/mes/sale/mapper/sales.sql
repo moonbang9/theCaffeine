@@ -524,6 +524,13 @@ VALUEs('PCT01-240410-0001', 'box', 2, '24/04/10','24/05/10','PCT01',23);
 insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
 VALUEs('PCT01-240410-0002', 'box', 2, '24/04/10','24/05/10','PCT01',24);
 
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PPR01-240420-0001', 'box', 2, '24/04/20','25/04/20','PPR01',25);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PPR01-240420-0002', 'box', 2, '24/04/20','25/04/20','PPR01',26);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PPR01-240420-0003', 'box', 2, '24/04/20','25/04/20','PPR01',27);
+
 
 
 
@@ -778,7 +785,7 @@ select * from od_detail
 ;
 select * from send;
 select * from pd_stk;
-
+select * from pd;
 /* 폐기 - 불량유형: 파손, 스크래치,... */
 
 
@@ -790,4 +797,314 @@ SELECT NVL( (SELECT SUM(qt) as qt
                   , 0) as qt
    -- INTO v_lot_sum
     FROM pd_stk
-    WHERE rownum = 1; 
+    WHERE rownum = 1;
+    
+    
+/*  제품 재고 목록(예측수량) */
+select * from pdtplan;
+select * from pdt_plan_detail;
+select * from od;
+select * from od_detail;
+select * from pd_stk;
+select * from pd; --3주 안전재고 
+
+select d.due_dt, NEXT_DAY(d.due_dt + 28 , '월'), 
+        sum(pld.qt) as qt, pl.pdt_plan_cd, plwk_plan_stt_dt
+from od_detail d 
+    JOIN pdtplan pl
+        ON , pdt_plan_detail pld
+where ;
+
+
+
+select d.pd_cd, NEXT_DAY(d.due_dt + 21 , '월'), sum(d.qt) as total_not_send,
+    (select sum(qt) from od_detail where sysdate+21 < due_dt) as three_not_send,
+    sum(t.qt) as total_stk,
+    CASE when (three_not_send - total_stk) > 0 
+            then (three_not_send - total_stk)
+        else 0
+        as shortage,
+    ()
+    
+        
+    ADD_MONTHS(sysdate, 6) >=exp_dt;
+    
+select ld.qt, l.pdt_plan_cd
+from pdtplan l 
+    LEFT OUTER JOIN (select sum(qt) qt, pdt_plan_cd from pdt_plan_detail group by pdt_plan_cd) ld
+        ON l.pdt_plan_cd = ld.pdt_plan_cd
+where l.wk_plan_stt_dt > sysdate 
+    AND l.wk_plan_stt_dt < NEXT_DAY(sysdate + 28 , '월');
+
+select ld.pd_cd, sum(qt) as qt
+from pdtplan l pdt_plan_detail ld
+where l.wk_plan_stt_dt > sysdate 
+    AND l.wk_plan_stt_dt < NEXT_DAY(sysdate + 28 , '월');
+
+--제품코드, 제품명, 단위, 총 미출고, 납기3주/2주/1주미만 미출고, 재고량(유통기한 6개월 이상 남은), 납기3주미만 재고미달, 3주예상생산
+select pdt_plan_cd, TO_DATE(NEXT_DAY(sysdate + 14 , '일')) --2주예상생산량
+from pdtplan
+where wk_plan_stt_dt > sysdate 
+    AND wk_plan_stt_dt < TO_DATE(NEXT_DAY(sysdate + 14 , '일'));
+--계획상세 kg단위 (무조건 24kg - 2박스)
+
+
+
+--제품코드 제품명 단위 총재고,총미출고, 2주예상생산,2주미출고, 총재고+예상생산량 / 2주미출고 
+select DISTINCT d.pd_cd, p.pd_name, p.unit, 
+        st.total_stk as "총재고", 
+        dn.total_not_send as "총미출고", 
+        tl.tw_prdt as "2주예상생산", 
+        wn.tw_not_send as "2주미출고",  
+       TRUNC((wn.tw_not_send/(st.total_stk + tl.tw_prdt)*100),1) as "통계",
+       TRUNC(((st.total_stk + tl.tw_prdt)-wn.tw_not_send), 0) as "출고가능예상량"
+from pd p LEFT OUTER JOIN od_detail d
+            ON p.pd_cd = d.pd_cd
+             --총재고
+            JOIN (select NVL(sum(qt)/12,0) as total_stk, pd_cd
+                    from pd_stk
+                    where ADD_MONTHS(sysdate, 6) <=exp_dt
+                    group by pd_cd) st
+            ON d.pd_cd = st.pd_cd
+             --총미출고
+            JOIN (select sum(qt) as total_not_send, pd_cd
+                    from od_detail
+                    where send_od_st = 1
+                    group by pd_cd) dn
+            ON d.pd_cd = dn.pd_cd
+            --2주예상생산
+            JOIN (select sum(lan.qt/12) as tw_prdt, lan.pd_cd 
+                    from pdt_plan_detail lan
+                         JOIN ( select pdt_plan_cd, wk_plan_stt_dt
+                                            from pdtplan
+                                            where wk_plan_stt_dt > sysdate
+                                                AND wk_plan_stt_dt < TO_DATE(NEXT_DAY(sysdate+ 14 , '월')) ) lnn --2주(14일)
+                        ON lan.pdt_plan_cd = lnn.pdt_plan_cd
+                    group by lan.pd_cd) tl
+            ON d.pd_cd = tl.pd_cd
+            -- 2주미출고
+            JOIN (select sum(nsn.qt) as tw_not_send, nsn.pd_cd
+                    from od_detail nsn 
+                        JOIN (select od_detailno, pd_cd
+                                from od_detail
+                                where send_od_st = 1
+                                    and (due_dt -sysdate) <= 14) nsq
+                    ON nsn.od_detailno = nsq.od_detailno
+                    group by nsn.pd_cd) wn
+            ON d.pd_cd = wn.pd_cd
+            --(총재고+예상생산량) - 출고 가능한 예상량 
+            
+            ;
+  
+            
+/
+--총재고
+select sum(qt), pd_cd
+from pd_stk
+where ADD_MONTHS(sysdate, 6) <=exp_dt
+group by pd_cd;
+
+--총미출고
+select * from od_detail;
+select sum(qt), pd_cd
+from od_detail
+where send_od_st = 1
+group by pd_cd;
+
+-- 2주예상생산
+select pdt_plan_cd, wk_plan_stt_dt
+                        from pdtplan
+                        where wk_plan_stt_dt > sysdate
+                            AND wk_plan_stt_dt < TO_DATE(NEXT_DAY(sysdate+ 21 , '월'))  --7, 14, 21 숫자변경
+/
+(select sum(ld.qt/12) as "2주예상생산", ld.pd_cd
+from pdt_plan_detail ld
+     JOIN ( select pdt_plan_cd, wk_plan_stt_dt
+                        from pdtplan
+                        where wk_plan_stt_dt > sysdate
+                            AND wk_plan_stt_dt < TO_DATE(NEXT_DAY(sysdate+ 14 , '월')) ) l --2주(14일)
+    ON ld.pdt_plan_cd = l.pdt_plan_cd
+group by ld.pd_cd);
+/
+
+--2주 미출고
+select * from od_detail;
+select sum(nsn.qt), nsn.pd_cd
+from od_detail nsn 
+    JOIN (select od_detailno, pd_cd
+            from od_detail
+            where send_od_st = 1
+                and (due_dt -sysdate) <= 14) nsq
+ON nsn.od_detailno = nsq.od_detailno
+group by nsn.pd_cd;
+
+--총재고+예상생산량 / 2주미출고 
+
+
+
+select * from od order by od_no DESC;
+select * from od_detail order by od_detailno DESC;
+
+select * 
+from pd_stk 
+where pd_cd = 'PPR01'
+    --AND qt>0
+    --AND ADD_MONTHS(sysdate, 6) <= exp_dt
+order by pd_lot;
+
+select * from pd_stk;
+
+SELECT DISTINCT NVL( (SELECT SUM(qt) as qt
+                   FROM pd_stk 
+                  WHERE pd_cd = 'PPR01' ) , 0) as qt
+   -- INTO v_lot_sum
+    FROM pd_stk
+    --WHERE rownum = 1
+/
+    
+select * from pd;
+select * from mt;
+select * from bom;
+select * from disc_pd;
+delete disc_pd;
+
+-- 폐기할 LOT들
+-- 롯트번호, 단위, 수량, 생산일, 유통기한, 제품코드, 생산상세번호
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PET01-230212-0011', 'box', 2, '23/02/12','24/02/12','PET01',27);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PBR01-230225-0011', 'box', 2, '23/02/25','24/02/25','PBR01',27);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PCB01-230302-0011', 'box', 2, '23/03/02','24/03/02','PCB01',27);
+
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PPR01-231004-0011', 'box', 2, '23/10/04','24/10/04','PPR01',27);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PCT01-231229-0011', 'box', 2, '23/12/29','24/12/29','PCT01',27);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PET01-240108-0011', 'box', 2, '24/01/08','25/01/08','PET01',27);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PBR01-230202-0011', 'box', 2, '24/02/02','25/02/02','PBR01',27);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PCB01-240225-0011', 'box', 2, '24/02/25','25/02/25','PCB01',27);
+
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PPR01-230610-0011', 'box', 2, '23/06/10','24/06/10','PPR01',27);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PCT01-231112-0011', 'box', 2, '23/11/12','24/11/12','PCT01',27);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PET01-240304-0011', 'box', 2, '24/03/04','25/03/04','PET01',27);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PBR01-240320-0011', 'box', 2, '24/03/20','25/03/20','PBR01',27);
+
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PCB01-230909-0011', 'box', 2, '23/09/09','24/09/09','PCB01',27);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PPR01-230921-0011', 'box', 2, '23/09/21','24/09/21','PPR01',27);
+insert into PD_STK(pd_lot, unit, qt, pdt_dt, exp_dt, pd_cd, pdt_inst_detail_no) 
+VALUEs('PCT01-240120-0011', 'box', 2, '24/01/20','25/01/20','PCT01',27);
+
+PET01 113000
+PBR01 91000
+PCB01 124000
+PPR01 245333
+PCT01 140666
+
+--금일, 금주 전주 금월 전월15
+--유통기한 만료3, 품질불량5, 파손4, 기타3
+insert into disc_pd(disc_no, qt, cost, disc_dt, rsn, disc_chg, pd_lot)
+values(disc_pd_seq.nextval, 2, 113000*2, '24/03/02', 1, '김민수',  'PET01-230212-0011');
+insert into disc_pd(disc_no, qt, cost, disc_dt, rsn, disc_chg, pd_lot)
+values(disc_pd_seq.nextval, 2, 91000*2, '24/03/24', 1, '김민수',  'PBR01-230225-0011');
+insert into disc_pd(disc_no, qt, cost, disc_dt, rsn, disc_chg, pd_lot)
+values(disc_pd_seq.nextval, 2, 124000*2, '24/03/28', 1, '김민수',  'PCB01-230302-0011');
+
+insert into disc_pd(disc_no, qt, cost, disc_dt, rsn, disc_chg, pd_lot)
+values(disc_pd_seq.nextval, 1, 245333, '24/03/04', 2, '김민수',  'PPR01-231004-0011');
+insert into disc_pd(disc_no, qt, cost, disc_dt, rsn, disc_chg, pd_lot)
+values(disc_pd_seq.nextval, 2, 140666*2, '24/03/11', 2, '김민수',  'PCT01-231229-0011');
+insert into disc_pd(disc_no, qt, cost, disc_dt, rsn, disc_chg, pd_lot)
+values(disc_pd_seq.nextval, 2, 113000*2, '24/03/19', 2, '김민수',  'PET01-240108-0011');
+insert into disc_pd(disc_no, qt, cost, disc_dt, rsn, disc_chg, pd_lot)
+values(disc_pd_seq.nextval, 2, 91000*2, '24/03/22', 2, '김민수',  'PBR01-230202-0011');
+insert into disc_pd(disc_no, qt, cost, disc_dt, rsn, disc_chg, pd_lot)
+values(disc_pd_seq.nextval, 2, 124000*2, '24/03/29', 2, '김민수',  'PCB01-240225-0011');
+
+insert into disc_pd(disc_no, qt, cost, disc_dt, rsn, disc_chg, pd_lot)
+values(disc_pd_seq.nextval, 1, 113000, '24/03/04', 3, '이철수',  'PPR01-230610-0011');
+insert into disc_pd(disc_no, qt, cost, disc_dt, rsn, disc_chg, pd_lot)
+values(disc_pd_seq.nextval, 1, 140666, '24/03/06', 3, '이철수',  'PCT01-231112-0011');
+insert into disc_pd(disc_no, qt, cost, disc_dt, rsn, disc_chg, pd_lot)
+values(disc_pd_seq.nextval, 1, 113000, '24/03/09', 3, '이철수',  'PET01-240304-0011');
+insert into disc_pd(disc_no, qt, cost, disc_dt, rsn, disc_chg, pd_lot)
+values(disc_pd_seq.nextval, 1, 91000, '24/03/11', 3, '이철수',  'PBR01-240320-0011');
+
+insert into disc_pd(disc_no, qt, cost, disc_dt, rsn, disc_chg, pd_lot)
+values(disc_pd_seq.nextval, 1, 124000, '24/03/19', 4, '김민수',  'PCB01-230909-0011');
+insert into disc_pd(disc_no, qt, cost, disc_dt, rsn, disc_chg, pd_lot)
+values(disc_pd_seq.nextval, 1, 245333, '24/03/24', 4, '김민수',  'PPR01-230921-0011');
+insert into disc_pd(disc_no, qt, cost, disc_dt, rsn, disc_chg, pd_lot)
+values(disc_pd_seq.nextval, 1, 140666, '24/03/28', 4, '이철수',  'PCT01-240120-0011');
+
+select * from disc_pd;
+
+select d.disc_no, d.qt, d.cost, d.disc_dt, d.rsn, FIND_CODE_NAME ('rsn', d.rsn)	AS reason , d.disc_chg, d.pd_lot, SUBSTR(d.pd_lot, 1, 5) as pd_cd,
+p.pd_name
+--,LAST_DAY(ADD_MONTHS(sysdate, -2)),LAST_DAY(ADD_MONTHS(sysdate, -1))
+from disc_pd d JOIN pd p
+ON SUBSTR(d.pd_lot, 1, 5) = p.pd_cd
+where
+d.disc_dt > LAST_DAY(ADD_MONTHS(sysdate, -2))
+and d.disc_dt <= LAST_DAY(ADD_MONTHS(sysdate, -1))
+--and SUBSTR(pd_lot, 1, 5) = 'PCT01'
+order by d.disc_dt DESC
+		 			, p.pd_cd
+;
+--금일, 금주 전주 금월 전월15
+select * from disc_pd;
+
+select c.rsn, sum(c.qt) as sum_qt, FIND_CODE_NAME ('rsn', c.rsn) AS reason 
+from disc_pd d JOIN
+(select disc_no, qt, cost, disc_dt, rsn, disc_chg, pd_lot, SUBSTR(pd_lot, 1, 5) as pd_cd
+from disc_pd
+--where SUBSTR(pd_lot, 1, 5) LIKE '%PET01%'
+) c
+ON d.disc_no = c.disc_no
+group by c.rsn;
+
+
+select case 
+        when(due_dt - sysdate) <7
+            then 2
+        else 1
+        end
+        as dueColor
+    from od_detail;
+    
+    
+    
+    SELECT LPAD(o.od_no, 5,0)||'-'||LPAD(d.od_detailno, 6, 0) as "no"
+				, o.od_no
+				, d.od_detailno
+				, o.od_dt
+				, c.cli_name
+				, o.od_chg
+				, p.pd_cd
+				, p.pd_name
+				, d.qt
+				, d.due_dt
+				, d.send_od_st
+				, CASE WHEN(d.due_dt - sysdate) <7 then 2
+				       ELSE 1
+				       END
+				  as due_color
+		FROM od o 
+		    JOIN od_detail d
+		        ON o.od_no = d.od_no
+		    JOIN cli c
+		        ON c.cli_cd = o.cli_cd
+		    JOIN pd p
+		        ON p.pd_cd = d.pd_cd
+		WHERE d.send_od_st = 1;
+        
+select * from od;

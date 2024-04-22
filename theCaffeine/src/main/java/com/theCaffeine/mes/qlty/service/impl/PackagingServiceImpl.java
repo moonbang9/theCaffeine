@@ -31,16 +31,29 @@ public class PackagingServiceImpl implements PackagingService{
 	@Override
 	public int updatePackckRes(PackagingVO vo) {
 		packagingMapper.updatePackckRes(vo);
+		packagingMapper.updateSuccessInstPackaging(vo.getPdtInstDetailNo());
+		packagingMapper.updateSuccessHistPackaging(vo.getPdtInstDetailNo());
 		return packagingMapper.updateCkSt(vo.getPackCkNo());
 	}
 	
 	@Transactional
 	@Override
+	public int updateFailPackckRes(PackagingVO vo) {
+		packagingMapper.updatePackckRes(vo);
+		packagingMapper.updateFailInstPackaging(vo.getPdtInstDetailNo());
+		packagingMapper.updateFailHistPackaging(vo.getPdtInstDetailNo());
+		return packagingMapper.updateCkSt(vo.getPackCkNo());
+	}
+	
+	@Override
 	public int deletePackagingDoneList(PackagingVO vo) {
-		packagingMapper.updateSuccessInstPackaging(vo.getPdtInstDetailNo());
-		packagingMapper.updateSuccessHistPackaging(vo.getPdtInstDetailNo());
-		
 		return packagingMapper.deletePackagingDoneList(vo.getPackCkNo());
+	}
+
+	@Override
+	public int insertPdSTK(PackagingVO vo) {
+		// TODO Auto-generated method stub
+		return packagingMapper.insertPdSTK(vo);
 	}
 
 

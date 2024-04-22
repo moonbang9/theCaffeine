@@ -3,23 +3,140 @@
   layout:decorate="~{layout/index}">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>생산실적조회</title>
 </head>
 <body>
 <div layout:fragment="content">
 	
 	<h1>생산실적조회</h1>
 		<div class="demo-inline-spacing">
-		<button id="saveBtn"
-	        type="button"
-	        class="btn btn-primary">
-	        일정 등록
-	    </button>
-	</div>
-<script>
-	saveBtn.addEventListener("click", e=> {
-		location.href='/production/planRegist'
+		<div class="card mb-1">
+			<div class="card-body" >
+				<div class="mb-3 row">
+					<label for="" class="col-md-2 col-form-label">누적 총생산량(box)</label>
+					<div class="col">
+						<input class="form-control totals text-end" type="text" value="" id="" readonly>
+					</div>
+					<label for="" class="col-md-2 col-form-label">금일 총생산량(box)</label>
+					<div class="col">
+						<input class="form-control todayTotal text-end" type="text" value="" id="" readonly>
+					</div>
+					<label for="" class="col-md-2 col-form-label">금일 생산 성공량(box)</label>
+					<div class="col">
+						<input class="form-control todaySuccess text-end" type="text" value="" id="" readonly>
+					</div>
+				</div>
+				<div class="mb-3 row">
+					<label for="" class="col-md-2 col-form-label">금일 생산 실패량(box)</label>
+					<div class="col">
+						<input class="form-control todayFail text-end" type="text" value="" id="" readonly>
+					</div>
+					<label for="" class="col-md-2 col-form-label" >누적 총 수율</label>
+					<div class="col">
+						<input class="form-control totalYield text-end" type="text" value="" id="" readonly>
+					</div>
+					<label for="" class="col-md-2 col-form-label">금일 수율</label>
+					<div class="col">
+						<input class="form-control todayYield text-end" type="text" value="" id="" readonly>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="d-flex mt-5">
+	  		<div class="p-2 flex-grow-1"><h3>생산실적조회</h3></div>
+		</div>
+		<div id="productionPlan-table"></div>
+		<div class="d-flex mt-5">
+	  		<div class="p-2 flex-grow-1"><h3>생산실패 내역조회</h3></div>
+		</div>
+		<div id="productionPlan-table2"></div>
+		</div>
+<script th:inline="javascript">
+totList();
+successTotList();
+failTotList();
+
+let totals = document.querySelector('.totals');
+let todayTotal = document.querySelector('.todayTotal');
+let todaySuccess = document.querySelector('.todaySuccess');
+let todayFail = document.querySelector('.todayFail');
+let totalYield = document.querySelector('.totalYield');
+let todayYield = document.querySelector('.todayYield');
+
+function totList() {
+	fetch("/ajax/totalsList")
+	.then(res => res.json())
+	.then(res => {
+		totals.value = res.tot1 + "개";
+		todayTotal.value = res.tot2 + "개";
+		todaySuccess.value = res.tot3 + "개";
+		todayFail.value = res.tot4 + "개";
+		totalYield.value = res.tot5 + "%";
+		todayYield.value = res.tot6 + "%";
 	})
+}
+function successTotList() {
+	fetch("/ajax/successTotList")
+	.then(res => res.json())
+	.then(res => {
+		table.setData(res)
+	})
+}
+
+function failTotList() {
+	fetch("/ajax/failTotList")
+	.then(res => res.json())
+	.then(res => {
+		table2.setData(res)
+	})
+}
+
+
+var table = new Tabulator("#productionPlan-table", {
+    height:"100%",
+    layout:"fitDataFill",
+    pagination:"local",
+    paginationSize:10,
+    paginationCounter:"rows",
+    columns:[
+        {title:"생산일자", field:"pdtDt", hozAlign:"center", width:200, headerHozAlign: "center"},
+        {title:"상품코드", field:"pdCd", hozAlign:"center", width:200, headerHozAlign: "center"},
+        {title:"단위", field:"pdtUnit", hozAlign:"center", width:200, headerHozAlign: "center"},
+        {title:"수량", field:"pdtQt", hozAlign:"center", width:190, headerHozAlign: "center"},
+        {title:"생산시작시간", field:"pdtSttTime", hozAlign:"center", width:290, headerHozAlign: "center"},
+        {title:"생산종료시간", field:"pdtFnTime", hozAlign:"center", width:290, headerHozAlign: "center"},
+    ],
+});
+	
+	var table2 = new Tabulator("#productionPlan-table2", {
+		height:"100%",
+		layout:"fitDataFill",
+		pagination:"local",
+	    paginationSize:10,
+	    paginationCounter:"rows",
+	    columnDefaults:{
+	        headerSort:false,
+	        resizable:"header",
+	    },
+	    columns:[
+	        {title:"생산일자", field:"pdtDt", hozAlign:"center", width:200, headerHozAlign: "center"},
+	        {title:"상품코드", field:"pdCd", hozAlign:"center", width:200, headerHozAlign: "center"},
+	        {title:"단위", field:"pdtUnit", hozAlign:"center", width:190, headerHozAlign: "center"},
+	        {title:"수량", field:"pdtQt", hozAlign:"center", width:100, headerHozAlign: "center"},
+	        {title:"생산시작시간", field:"pdtSttTime", hozAlign:"center", width:240, headerHozAlign: "center"},
+	        {title:"생산종료시간", field:"pdtFnTime", hozAlign:"center", width:240, headerHozAlign: "center"},
+	        {title:"실패사유", field:"failRsn", hozAlign:"left", width:200, headerHozAlign: "center"},
+	    ],
+	});
+	
+	selectNav();
+	
+	function selectNav() {
+		mainPage.classList.remove('active');
+		prdt.classList.add('active');
+		prdt.classList.add('open');
+		prdt_prdtPerformanceList.classList.add('active');
+	}
 </script>
 </div>
 </body>

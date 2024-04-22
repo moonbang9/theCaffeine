@@ -51,11 +51,10 @@
 								</div>
 							</div>
 							<div class="d-grid gap-2 d-md-flex justify-content-md-center">
-								<button class="btn btn-secondary" type="button" id="resetBtn" style="margin-top: 12px;">초기화</button>
+								<button class="btn btn-secondary" type="reset" id="resetBtn" style="margin-top: 12px;">초기화</button>
 								<button class="btn btn-primary" type="button" id="searchBtn" style="margin-top: 12px; margin-right: 5px;">검색</button>
 							</div>
 						</form>
-
 
 					</div>
 					<div class="divider text-start">
@@ -181,8 +180,7 @@
 				</div>
 			</div>
 			<script>
-			
-			
+		
 			var fclttable = new Tabulator("#fcltListTable", {
 			    //layout:"fitColumns",
 			    pagination:"local",
@@ -196,16 +194,24 @@
 			   
 			    columns:[
 			        {title:"설비 코드", field:"fcCd", width:100, hozAlign:"center" },
-			        {title:"설비 명", field:"fcName", width:195, hozAlign:"center", frozen:true}, 
-			        {title:"투입 공정", field:"insMf", width:100, hozAlign:"center"},
+			        {title:"설비 명", field:"fcName", width:195, hozAlign:"left", frozen:true}, 
+			        {title:"설비 상태", field:"st", width:130, hozAlign:"center"},
+			        {title:"투입 공정", field:"insMf", width:130, hozAlign:"center"},
 			        {title:"제조 업체", field:"mnfCom", width:150, hozAlign:"center"},
 			        {title:"입고 일자", field:"strDt", width:190, hozAlign:"center"},
 			        {title:"마지막 점검일", field:"lastInsDt", width:150, hozAlign:"center"},
 			        {title:"다음 정기점검일", field:"nextInsDt", width:150, hozAlign:"center"},
-			        {title:"생산량", field:"output", width:150, hozAlign:"center"},
-			        {title:"설비 상태", field:"st", width:100, hozAlign:"center"},
-			        {title:"Col", field:"col" ,formatter:"color", width:50, backgroundColor:"#ff0000"}
-			    ],
+			        {title:"생산량", field:"output", width:100, hozAlign:"right"}
+			       
+			    ],rowFormatter: function(row) {
+			        var data = row.getData();
+			        var stValue = data.st;
+			        if (stValue === "가동") {
+			            row.getElement().style.backgroundColor = "#c8e6c9"; 
+			        } else if (stValue === "비가동") {
+			            row.getElement().style.backgroundColor = "#ffcdd2"; 
+			        }
+			    }
 			});
 			
 			fclttable.on("rowClick", function(e, row){
@@ -253,23 +259,13 @@
 				updateBtn.style.display="block";
 			}
 			
+			let searchName = "";
+			let searchMf = "";
+			let searchStatus = "";
 			
-			// 검색 조건 기준 원자재 목록 데이터
-			searchBtn.addEventListener("click",function(){
-				const searchName= frmSearch.searchName.value;
-				console.log(searchName);
-				const searchMf = frmSearch.searchMf.value;
-				console.log(searchMf);
-				const searchStatus = document.querySelector('input[name="searchSt"]:checked').value;
-				//const searchStVal = searchStatus.value;
-				console.log(searchStatus);
-				let param = {
-						fcName: searchName,
-				        // 값이 없으면 undefined
-				        insMf: searchMf ? searchMf : '',
-				        st: searchStatus ? searchStatus : ''
-				};
-				
+			let param = {searchName,searchMf,searchStatus};
+			getData(param);
+			function getData(param){
 				fetch("/fclt/getfacility",{
 					method:"post",
 					headers: {
@@ -284,16 +280,28 @@
 			})
 			.catch(err=>{
 				console.log(err);
-			});
+			})
+			}
+			// 검색 조건 기준 원자재 목록 데이터
+			searchBtn.addEventListener("click",function(){
+				searchName= frmSearch.searchName.value;
+				console.log(searchName);
+				searchMf = frmSearch.searchMf.value;
+				console.log(searchMf);
+				searchStatus = document.querySelector('input[name="searchSt"]:checked').value;
+				//const searchStVal = searchStatus.value;
+				console.log(searchStatus);
+				param = {
+						fcName: searchName,
+				        // 값이 없으면 undefined
+				        insMf: searchMf ? searchMf : '',
+				        st: searchStatus ? searchStatus : ''
+				};
+				getData(param);
+			
 			});
 			
-			//초기화 버튼 값 비워주기 
-			
-			resetBtn.addEventListener("click",function(){
-				searchName.value= '';
-				searchMf.value ='';
-			});
-			
+
 			
 			
 			
@@ -365,6 +373,15 @@
 		alert("수정이 완료되었습니다!");
 		location.href= "/fclt/facilitylist"
 	};
+	
+	selectNav();
+	
+	function selectNav() {
+		mainPage.classList.remove('active');
+		fclt.classList.add('active');
+		fclt.classList.add('open');
+		fclt_facilitylist.classList.add('active');
+	}
 	
 </script>
 </div>

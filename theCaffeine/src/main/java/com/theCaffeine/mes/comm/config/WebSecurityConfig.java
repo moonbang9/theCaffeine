@@ -8,9 +8,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import com.theCaffeine.mes.scrt.CustomAccessDeniedHandler;
+import com.theCaffeine.mes.scrt.CustomLoginFailureHandler;
 import com.theCaffeine.mes.scrt.CustomLoginSuccessHandler;
 
 @Configuration
@@ -30,15 +32,21 @@ public class WebSecurityConfig {
 		return new CustomLoginSuccessHandler();
 	}
 	
+	@Bean
+	public AuthenticationFailureHandler lgfailureHandler() {
+		return new CustomLoginFailureHandler();
+	}
+	
 	
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
 			.authorizeHttpRequests((requests) -> requests
-				.antMatchers("/","/memb/register" ,"/memb/login","/assets/**","/fonts/**","/js/**","/scss/**").permitAll()
+				.antMatchers("/","/main","/memb/register" ,"/memb/login","/memb/changepw","/memb/changeid","/memb/findid","/memb/findpw","/assets/**","/fonts/**","/js/**","/scss/**", "/accessError").permitAll()
 //				.antMatchers("/login").permitAll()
-//				.antMatchers("/memb/monthly").hasAnyRole("ADMIN")
-//				.antMatchers("/userslist").hasAnyRole("PER00001")
+				.antMatchers("/fclt/**").hasAnyRole("FCLT","ADMIN")
+                //.antMatchers("/**").hasRole("ADMIN")
+
 				.anyRequest().authenticated()
 			)
 			// 람다식
@@ -51,6 +59,8 @@ public class WebSecurityConfig {
 						.successHandler(successHandler())
 //						.defaultSuccessUrl("/", true) //로그인 하면 무조건 메인 페이지로  
 						.permitAll()
+						 .failureHandler(lgfailureHandler())
+						
 			.and()
 //			.logout((logout) -> logout.permitAll())
 			.logout().logoutSuccessUrl("/memb/login")

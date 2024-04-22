@@ -4,7 +4,7 @@
 	layout:decorate="~{layout/index}">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>주간생산 계획관리</title>
 </head>
 <body>
 	<div layout:fragment="content">
@@ -43,7 +43,7 @@
 	
 	//수정버튼
 	var editorIcon = function(cell, formatterParams, onRendered) {
-		if(cell._cell.row.data.wkPlanSttDt < lastWeek(new Date())){
+		if(cell._cell.row.data.wkPlanSttDt <= getDateStr(new Date())){
 			return null;	
 		}else{
   			return "<button class='btn btn-info btn-sm'>수정</button>";
@@ -52,7 +52,8 @@
 	//삭제버튼
 	var editorIcon2 = function(cell, formatterParams, onRendered) {
 		console.log(cell._cell.row.data.wkPlanSttDt);
-		if(cell._cell.row.data.wkPlanSttDt < lastWeek(new Date())){
+		//console.log(lastWeek(new Date()));
+		if(cell._cell.row.data.wkPlanSttDt <= getDateStr(new Date())){
 			return null;	
 		}else{
   			return "<button class='btn btn-danger btn-sm'>삭제</button>";
@@ -62,19 +63,23 @@
 	var table = new Tabulator("#productionPlan-table", {
     height:"100%",
     layout:"fitDataFill",
+    pagination:"local",
+    paginationSize:8,
+    paginationCounter:"rows",
+    selectableRows:true,
     columns:[
-        {title:"계획코드", field:"pdtPlanCd", hozAlign:"center", width:240},
-        {title:"계획기간", field:"wkPlanSttDt", hozAlign:"center", width:310},
-        {title:"상품명", field:"plantot", hozAlign:"center", width:320},
-        {title:"총 예상 원두생산 수량(kg)", field:"psum", hozAlign:"center", width:320},
-        {title:"수정", field:"updates",width:90,formatter: editorIcon, hozAlign:"center",resizable:false, headerSort:false,
+        {title:"계획코드", field:"pdtPlanCd", hozAlign:"center", width:240, headerHozAlign: "center"},
+        {title:"계획기간", field:"wkPlanSttDt", hozAlign:"center", width:310, headerHozAlign: "center"},
+        {title:"상품명", field:"plantot", hozAlign:"center", width:320, headerHozAlign: "center"},
+        {title:"총 예상 원두생산 수량(kg)", field:"psum", hozAlign:"center", width:320, headerHozAlign: "center"},
+        {title:"수정", field:"updates",width:90,formatter: editorIcon, hozAlign:"center",resizable:false, headerSort:false, headerHozAlign: "center",
             cellClick:function(e, cell){
             	console.log(cell._cell.row.data.pdtPlanCd);
             	let pdtPlanCd = cell._cell.row.data.pdtPlanCd;
             	console.log(cell._cell.row.data.wkPlanSttDt);
             	
             	//수정중
-            	if(cell._cell.row.data.wkPlanSttDt >= lastWeek(new Date())){
+            	if(cell._cell.row.data.wkPlanSttDt > getDateStr(new Date())){
             		/*fetch("/ajax/planDetailList/"+ pdtPlanCd)
             		.then(res => res.json())
             		.then(res => {
@@ -84,19 +89,21 @@
             	}
             }
         },
-        {title:"삭제", formatter:editorIcon2, width:90, hozAlign:"center", cellClick:function(e, cell){
+        {title:"삭제", formatter:editorIcon2, width:90, hozAlign:"center", headerHozAlign: "center", cellClick:function(e, cell){
         	let pdtPlanCd = cell._cell.row.data.pdtPlanCd;
             			console.log(pdtPlanCd)
-        	if(cell._cell.row.data.wkPlanSttDt >= lastWeek(new Date())){
+        	if(cell._cell.row.data.wkPlanSttDt > getDateStr(new Date())){
         		if(confirm("삭제하시겠습니까?")) {
         			fetch("/ajax/planDelete/"+ pdtPlanCd)
             		.then(res => {
             			console.log(res)
             			if(res.ok){
-            				alert('삭제가 완료되었습니다.')
+            				//alert('삭제가 완료되었습니다.')
+            				Swal.fire("삭제가 완료되었습니다.");
             				cell.getRow().delete();
             			}else{
-            				alert('삭제가 실패하였습니다.')
+            				Swal.fire("삭제가 실패하였습니다.");
+            				//alert('삭제가 실패하였습니다.')
             			}
             		})
             	}
@@ -108,20 +115,20 @@
 	height:"100%",
 	layout:"fitDataTable",
     columns:[
-        {title:"자재코드", field:"mtCd", hozAlign:"center"},
-        {title:"분류", field:"mtDiv", hozAlign:"center"},
-        {title:"자재명", field:"mtName", hozAlign:"center"},
-        {title:"발주 단위", field:"unit", hozAlign:"center"},
-        {title:"발주/필요 자재량", field:"placeodQt", hozAlign:"center"},
+        {title:"자재명", field:"mtName", hozAlign:"left", headerHozAlign: "center",width:180},
+        {title:"자재코드", field:"mtCd", hozAlign:"center", headerHozAlign: "center",width:180},
+        {title:"분류", field:"mtDiv", hozAlign:"center", headerHozAlign: "center",width:100},
+        {title:"발주 단위", field:"unit", hozAlign:"center", headerHozAlign: "center"},
+        {title:"발주/필요 자재량", field:"placeodQt", hozAlign:"center", headerHozAlign: "center"},
     ],
 });
 	var table3 = new Tabulator("#productionPlan-table3", {
 	height:"100%",
     layout:"fitDataTable",
     columns:[
-        {title:"상품명", field:"pdName", hozAlign:"center"},
-        {title:"총 예상 생산 수량(kg)", field:"qt", hozAlign:"center"},
-        {title:"납기 일자", field:"dueDt", hozAlign:"center"},
+        {title:"상품명", field:"pdName", hozAlign:"left", headerHozAlign: "center"},
+        {title:"총 예상 생산 수량(kg)", field:"qt", hozAlign:"center", headerHozAlign: "center"},
+        {title:"납기 일자", field:"dueDt", hozAlign:"center", headerHozAlign: "center"},
     ],
 });
 	
@@ -139,7 +146,8 @@
 		
 		let days = `(${weekNumOfMonth(wkPlanSttDt)[1]} ${weekNumOfMonth(wkPlanSttDt)[0]})`
 		document.querySelector(".dayy").innerText = days
-		
+		table.deselectRow();
+		table.selectRow(row);
 		/*if(wkPlanSttDt > lastWeek()  && wkPlanSttDt <= getDateStr(new Date())){
 			orderBnt.style.display = "block";
 		}else{
@@ -206,6 +214,15 @@
 		}
 
 		return [WEEK_KOR[weekNum], (dates.getMonth()+1)+'월'];
+	}
+	
+	selectNav();
+	
+	function selectNav() {
+		mainPage.classList.remove('active');
+		prdt.classList.add('active');
+		prdt.classList.add('open');
+		prdt_plan.classList.add('active');
 	}
 	</script>
 	</div>

@@ -36,7 +36,9 @@ AND (ins_dt BETWEEN #{insDt} AND #{insDt2})
                 ELSE '비가동'
                 END AS ST
 	FROM FC_INS FINS JOIN FC F ON FINS.FC_CD = F.FC_CD
+	
 	<include refid="conditionins"></include>
+	 ORDER BY FINS.INS_DT DESC
 </select>
 
 <!--  단건조회 -->
@@ -51,6 +53,7 @@ AND (ins_dt BETWEEN #{insDt} AND #{insDt2})
                FINS.FC_CD
 	FROM FC_INS FINS JOIN FC F ON FINS.FC_CD = F.FC_CD
 	where FINS.ins_cd = #{insCd}	
+	 ORDER BY FINS.INS_DT DESC
 </select>
 
 

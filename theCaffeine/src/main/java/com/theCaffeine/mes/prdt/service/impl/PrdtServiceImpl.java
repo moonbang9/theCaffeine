@@ -12,12 +12,16 @@ import com.theCaffeine.mes.prdt.model.FailPlanVO;
 import com.theCaffeine.mes.prdt.model.HistVO;
 import com.theCaffeine.mes.prdt.model.InstResistVO;
 import com.theCaffeine.mes.prdt.model.InstVO;
+import com.theCaffeine.mes.prdt.model.MfProcessVO;
 import com.theCaffeine.mes.prdt.model.MtrlPlanVO;
+import com.theCaffeine.mes.prdt.model.NonopFcVO;
 import com.theCaffeine.mes.prdt.model.PlanDetailVO;
 import com.theCaffeine.mes.prdt.model.PlanOrderDetailVO;
 import com.theCaffeine.mes.prdt.model.PlanResistVO;
 import com.theCaffeine.mes.prdt.model.PlanVO;
 import com.theCaffeine.mes.prdt.model.SafePlanVO;
+import com.theCaffeine.mes.prdt.model.TotalVO;
+import com.theCaffeine.mes.prdt.model.YearTotalVO;
 import com.theCaffeine.mes.prdt.service.PrdtService;
 
 @Service
@@ -137,6 +141,12 @@ public class PrdtServiceImpl implements PrdtService{
 		// TODO Auto-generated method stub
 		return prdtMapper.getInstList();
 	}
+	
+	@Override
+	public List<InstVO> getInstList2() {
+		// TODO Auto-generated method stub
+		return prdtMapper.getInstList2();
+	}
 
 	@Override
 	public List<InstVO> getInstDetailList(Integer pdtInstNo) {
@@ -192,6 +202,42 @@ public class PrdtServiceImpl implements PrdtService{
 	public List<HistVO> getTodayProduct(HistVO vo) {
 		// TODO Auto-generated method stub
 		return prdtMapper.getTodayProduct(vo);
+	}
+
+	@Override
+	public List<MfProcessVO> getInstDetailProcess(InstVO vo) {
+		// TODO Auto-generated method stub
+		return prdtMapper.getInstDetailProcess(vo);
+	}
+
+	@Override
+	public List<NonopFcVO> getNonopFc() {
+		// TODO Auto-generated method stub
+		return prdtMapper.getNonopFc();
+	}
+
+	@Override
+	public TotalVO getTot() {
+		// TODO Auto-generated method stub
+		return prdtMapper.getTot();
+	}
+
+	@Override
+	public List<HistVO> getSuccessTot() {
+		// TODO Auto-generated method stub
+		return prdtMapper.getSuccessTot();
+	}
+
+	@Override
+	public List<HistVO> getFailTot() {
+		// TODO Auto-generated method stub
+		return prdtMapper.getFailTot();
+	}
+
+	@Override
+	public List<YearTotalVO> getMonths() {
+		// TODO Auto-generated method stub
+		return prdtMapper.getMonths();
 	}
 	
 }

@@ -24,6 +24,21 @@ public class MainController {
 		return mv;
 	}
 	
+	// 에러 페이지이동
+		@GetMapping("/accessError")
+		public ModelAndView error() { 
+			ModelAndView mv = new ModelAndView("comm/accessError");
+			return mv;
+		}
+	
+	// 메인 페이지이동
+		@GetMapping("/main")
+		public ModelAndView mainpage() { 
+			ModelAndView mv = new ModelAndView("layout/mainpage");
+			return mv;
+		}
+		
+	
 	// 공통코드 상세목록 데이터
 	@GetMapping("/ajax/codeDetailList/{wkCdNo}")
 	public List<CodeDetailVO> getCodeDetailList(@PathVariable String wkCdNo) {

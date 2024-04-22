@@ -35,6 +35,14 @@ public class ProcessController {
 	public int updateMfckRes(@RequestBody ProcessVO vo) {
 		return processService.updateMfckRes(vo);
 	}
+	
+	// 공정검사결과 실패등록
+		@PostMapping("/ajax/updateFailMfckRes")
+		public int updateFailMfckRes(@RequestBody ProcessVO vo) {
+			return processService.updateFailMfckRes(vo);
+		}
+	
+	
 
 	// 공정검사완료 목록
 	@GetMapping("/ajax/processDoneList")

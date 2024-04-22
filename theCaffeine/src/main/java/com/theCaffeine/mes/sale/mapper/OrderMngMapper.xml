@@ -58,6 +58,7 @@
 				, o.od_dt
              	, d.due_dt
              	, o.dc_rate
+             	, o.dc_rate*100 || '%' as dc_percent
              	, o.total_price
              	, o.od_st 
              	, FIND_CODE_NAME ('od_st', o.od_st)	AS st

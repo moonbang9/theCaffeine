@@ -52,7 +52,7 @@
 								</div>
 							</div>
 							<div class="d-grid gap-2 d-md-flex justify-content-md-center">
-								<button class="btn btn-secondary" type="button" id="resetopBtn" style="margin-top: 12px;">초기화</button>
+								<button class="btn btn-secondary" type="reset" id="resetopBtn" style="margin-top: 12px;">초기화</button>
 								<button class="btn btn-primary" type="button" id="searchopBtn" style="margin-top: 12px; margin-right: 5px;">검색</button>
 							</div>
 						</form>
@@ -102,9 +102,9 @@
 									<div class="row">
 										<div class="col mb-3">
 											<div class="input-group">
-												<span class="input-group-text col-2" id="basic-addon14">담당자</span>
-												<input type="text" class="form-control" id="nonopCharge"
-													aria-describedby="basic-addon14">
+												<span class="input-group-text col-2" id="basic-addon14" >담당자</span>
+												<input type="text" class="form-control" id="nonopCharge" value=""
+													aria-describedby="basic-addon14" readonly>
 											</div>
 										</div>
 									</div>
@@ -166,6 +166,10 @@
 				</div>
 			</div>
 			<script>
+			let memId = document.querySelector(".memName").innerText;
+			console.log(memId);
+			nonopCharge.value = memId;
+			
 				
 				//수정버튼
 				var editorIcon = function(cell, formatterParams, onRendered) {
@@ -184,13 +188,13 @@
 	   
 	    columns:[
 	        {title:"비가동 코드", field:"nonopCd", width:100, hozAlign:"center"},
-	        {title:"설비 명", field:"fcName", width:195, hozAlign:"center"}, 
+	        {title:"설비 명", field:"fcName", width:195, hozAlign:"left",frozen:true}, 
 	        {title:"상태", field:"st", width:100, hozAlign:"center"},
 	        {title:"시작 시간", field:"nonopSttTime", width:150, hozAlign:"center"},
 	        {title:"종료 시간", field:"nonopFnTime", width:190, hozAlign:"center"},
 	        {title:"담당자", field:"fcChg", width:150, hozAlign:"center"},
 	        {title:"사유", field:"rsn", width:150, hozAlign:"center"},
-	        {title:"사유 상세", field:"rsnDesc", width:160, hozAlign:"center"},
+	        {title:"사유 상세", field:"rsnDesc", width:160, hozAlign:"left"},
 	        {title:"비가동 종료", field:"nonopFnButton",width:90,formatter: editorIcon, hozAlign:"center",resizable:false, headerSort:false,
 	            cellClick:function(e, cell){
 	            	console.log('nonopCd:'+cell._cell.row.data.nonopCd);
@@ -263,22 +267,14 @@
 		fcCd = obj.fcCd;
 	}
 	
-	// 검색 조건 기준 원자재 목록 데이터
-	searchopBtn.addEventListener("click",function(){
-		const searchNameop= frmSearchop.searchNameop.value;
-		console.log(searchNameop);
-		const searchMfop = frmSearchop.searchMfop.value;
-		console.log(searchMfop);
-		const searchStatusop = document.querySelector('input[name="searchStop"]:checked').value;
-		//const searchStopVal = searchStatusop.value;
-		console.log(searchStatusop);
-		let paramop = {
-				fcName: searchNameop,
-		        // 값이 없으면 undefined
-		        insMf: searchMfop ? searchMfop : '',
-		        st: searchStatusop ? searchStatusop : ''
-		};
-		
+	let searchNameop = "";
+	let searchMfop = "";
+	let searchStatusop = "";
+	
+	let paramop = {searchNameop,searchMfop,searchStatusop};
+	getopList(paramop);
+	
+	function getopList(paramop){
 		fetch("/fclt/getoperation",{
 			method:"post",
 			headers: {
@@ -293,15 +289,30 @@
 	})
 	.catch(err=>{
 		console.log(err);
-	});
+	})
+	}
+	
+	// 검색 조건 기준 원자재 목록 데이터
+	searchopBtn.addEventListener("click",function(){
+		searchNameop= frmSearchop.searchNameop.value;
+		console.log(searchNameop);
+		searchMfop = frmSearchop.searchMfop.value;
+		console.log(searchMfop);
+		searchStatusop = document.querySelector('input[name="searchStop"]:checked').value;
+		//const searchStopVal = searchStatusop.value;
+		console.log(searchStatusop);
+		let paramop = {
+				fcName: searchNameop,
+		        // 값이 없으면 undefined
+		        insMf: searchMfop ? searchMfop : '',
+		        st: searchStatusop ? searchStatusop : ''
+		};
+		
+		getopList(paramop);
+		
 	});
 	
-	//초기화 버튼 값 비워주기 
-	
-	resetopBtn.addEventListener("click",function(){
-		searchNameop.value= '';
-		searchMfop.value ='';
-	});
+
 	
 	//listReq();
 	
@@ -383,6 +394,15 @@
 	function modRes(res) {
 		alert("수정이 완료되었습니다!");
 		location.href= "/fclt/operationlist"
+	}
+	
+	selectNav();
+	
+	function selectNav() {
+		mainPage.classList.remove('active');
+		fclt.classList.add('active');
+		fclt.classList.add('open');
+		fclt_operationlist.classList.add('active');
 	}
 	</script>
 		</div>

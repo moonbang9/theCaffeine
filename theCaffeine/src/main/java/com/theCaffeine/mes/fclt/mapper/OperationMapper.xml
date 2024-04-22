@@ -36,7 +36,9 @@ AND st = #{st}
                 N.RSN_DESC,
                 N.FC_CD
 	FROM NONOP_MGMT N JOIN FC F ON  N.FC_CD = F.FC_CD
+	
 	<include refid="conditionop"></include>
+	ORDER BY N.NONOP_STT_TIME DESC
 </select>
 
 <!--  비가동 단건 조회 -->

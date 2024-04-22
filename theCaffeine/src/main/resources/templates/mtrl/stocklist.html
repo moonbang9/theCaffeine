@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>stocklist</title>
+    <title>자재 재고 조회</title>
 </head>
 
 <body>
@@ -93,6 +93,7 @@
      // 자재 재고 목록
 		var table = new Tabulator("#mtStockList", {
 		    height:"100%",
+		    selectableRows:true,
 		    pagination:"local",
 		    paginationSize:6,
 		    paginationSizeSelector:[3, 6, 8, 10],
@@ -100,17 +101,17 @@
 		    paginationCounter:"rows",
 		    rowHeader:{formatter:"rownum", headerSort:false, width:50, hozAlign:"center", resizable:false, frozen:true},
 		    columns:[
-		        {title:"분류", field:"mtDiv", width:100, hozAlign:"center"},
-		        {title:"자재코드", field:"mtCd", width:140, hozAlign:"center"}, 
-		        {title:"자재명", field:"mtName", width:169, hozAlign:"center"},
-		        {title:"수량", field:"sumStkQt", width:100, hozAlign:"center", formatterParams:{
+		        {title:"분류", field:"mtDiv", width:100, headerHozAlign: "center", hozAlign:"center"},
+		        {title:"자재코드", field:"mtCd", width:140, headerHozAlign: "center", hozAlign:"center"}, 
+		        {title:"자재명", field:"mtName", width:169, headerHozAlign: "center"},
+		        {title:"수량", field:"sumStkQt", width:100, headerHozAlign: "center", hozAlign:"right", formatterParams:{
 		            decimal:",",
 		            thousand:",",
 		            symbolAfter:"p",
 		            negativeSign:true,
 		            precision:false,
 		        }},
-		        {title:"단위", field:"unit", width:130, hozAlign:"center"},
+		        {title:"단위", field:"unit", width:130, headerHozAlign: "center", hozAlign:"center"},
 		    ],
 		});
 
@@ -119,17 +120,17 @@
 		    height:"100%",
 		    rowHeader:{formatter:"rownum", headerSort:false, width:50, hozAlign:"center", resizable:false, frozen:true},
 		    columns:[
-		        {title:"ROT코드", field:"mtLot", width:140, hozAlign:"center"},
-		        {title:"자재코드", field:"mtCd", width:129, hozAlign:"center"}, 
-		        {title:"수량", field:"stkQt", width:100, formatter:"money", hozAlign:"center", formatterParams:{
+		        {title:"ROT코드", field:"mtLot", width:140, headerHozAlign: "center", hozAlign:"center"},
+		        {title:"자재코드", field:"mtCd", width:129, headerHozAlign: "center", hozAlign:"center"}, 
+		        {title:"수량", field:"stkQt", width:100, headerHozAlign: "center", formatter:"money", hozAlign:"right", formatterParams:{
 		            decimal:",",
 		            thousand:",",
 		            symbolAfter:"p",
 		            negativeSign:true,
 		            precision:false,
 		        }},
-		        {title:"입고일", field:"strCompdt", width:135, hozAlign:"center"},
-		        {title:"유통기한", field:"expDt", width:135, hozAlign:"center"}
+		        {title:"입고일", field:"strCompdt", width:135, headerHozAlign: "center", hozAlign:"center"},
+		        {title:"유통기한", field:"expDt", width:135, headerHozAlign: "center", hozAlign:"center"}
 		    ],
 		});
 
@@ -143,6 +144,8 @@
 		
 		table.on("rowClick", function(e, row){
 			let mtCd = row.getData().mtCd;
+			table.deselectRow();
+			table.selectRow(row);
 			fetch("/ajax/lotStockList/" + mtCd)
 			.then(res => res.json())
 			.then(res => table2.setData(res))
@@ -176,6 +179,16 @@
             rotList.style.display = "none";
         })
             
+        
+        selectNav();
+	
+		function selectNav() {
+			mainPage.classList.remove('active');
+			mtrl.classList.add('active');
+			mtrl.classList.add('open');
+		    mtrl_stocklist.classList.add('active');
+		}
+		
         </script>
     </div>
 

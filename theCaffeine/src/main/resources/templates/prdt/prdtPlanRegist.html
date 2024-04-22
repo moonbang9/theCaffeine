@@ -4,7 +4,7 @@
 	layout:decorate="~{layout/index}">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>주간생산 계획등록</title>
 </head>
 <body>
 	<div layout:fragment="content">
@@ -136,9 +136,12 @@
 	//등록
 	prdtSaveBtn1.addEventListener("click", e=> {
 		console.log(selectOrder)
+		let planCds = 'K' + dayNameing.value.substring(2, 4) + dayNameing.value.substring(5, 7) + dayNameing.value.substring(8, 10);
+		if(planCds == 'K'){
+			alert('주간계획일자를 입력후 다시 이용해주세요.');
+		}else{
 		console.log('K'+dayNameing.value.substring(2, 4) + dayNameing.value.substring(5, 7) + dayNameing.value.substring(8, 10))
 		
-		let planCds = 'K' + dayNameing.value.substring(2, 4) + dayNameing.value.substring(5, 7) + dayNameing.value.substring(8, 10);
 		let params1 = {pdtPlanCd : planCds, wkPlanSttDt : dayNameing.value, odName : naming.value}
 		let params2 = PlanDetailData();
 		/*let params3 = PlanOrderDetailData();*/
@@ -147,24 +150,27 @@
 					planDetailVO : params2
 					//planOrderDetailVO : params3
 					};
-		
-		
-		fetch("/ajax/planResist",{
-			method : "post",
-			headers: {
-			      "Content-Type": "application/json",
-			    },
-			body : JSON.stringify(param)
-		})
-		.then(res => {
-			console.log(res)
-			if(res.ok==true){
-				alert('등록이 완료되었습니다.')
-				location.href='/production/plan'
+			if(params2[0].qt == 0 && params2[1].qt == 0 && params2[2].qt == 0 && params2[3].qt == 0 && params2[4].qt == 0){
+				alert('계획수량 입력후 다시 이용해주세요.');
 			}else{
-				alert('등록에 실패하였습니다.')
+				fetch("/ajax/planResist",{
+					method : "post",
+					headers: {
+				      	"Content-Type": "application/json",
+				    	},
+					body : JSON.stringify(param)
+				})
+				.then(res => {
+					console.log(res)
+					if(res.ok==true){
+						alert('등록이 완료되었습니다.')
+						location.href='/production/plan'
+					}else{
+						alert('등록에 실패하였습니다.')
+					}
+				})
 			}
-		})
+		}
 	})
 	
 	//수정
@@ -371,8 +377,8 @@
 	selectableRows:true,
     pagination:"local",
     paginationSize:8,
-    movableColumns:true,
     paginationCounter:"rows",
+    movableColumns:true,
     rowHeader:{resizable: false, frozen: true, hozAlign:"center", formatter: "rowSelection", cssClass:"range-header-col", cellClick:function(e, cell){
         cell.getRow().toggleSelect();
         setResistList()
@@ -382,12 +388,12 @@
       resizable:"header",
     },
     columns:[
-        {title:"제품코드", field:"pdCd", hozAlign:"center", width:330},
-        {title:"단위(1 Box= 3 Bag)", field:"unit", hozAlign:"center", width:330},
-        {title:"수량(Box)", field:"qt", hozAlign:"center", width:330},
+        {title:"제품코드", field:"pdCd", hozAlign:"center", width:330, headerHozAlign: "center"},
+        {title:"단위(1 Box= 3 Bag)", field:"unit", hozAlign:"center", width:330, headerHozAlign: "center"},
+        {title:"수량(Box)", field:"qt", hozAlign:"center", width:330, headerHozAlign: "center"},
         //{title:"생산중인 수량(Box)", field:"pdtQt", hozAlign:"center", width:200},
         //{title:"선택 수량(Box)", field:"prePdtQt", hozAlign:"center", width:200, editor:dateEditor},
-        {title:"납기 일", field:"dueDt", hozAlign:"center", width:330},
+        {title:"납기 일", field:"dueDt", hozAlign:"center", width:330, headerHozAlign: "center"},
     ],
 });
 	
@@ -395,26 +401,26 @@
     height:"180px",
     layout:"fitDataTable",
     columns:[
-        {title:"상품코드", field:"pdCd", hozAlign:"center"},
-        {title:"전 주 실패량(kg)", field:"failTat", hozAlign:"center"},
+        {title:"제품코드", field:"pdCd", hozAlign:"center", headerHozAlign: "center"},
+        {title:"전 주 실패량(kg)", field:"failTat", hozAlign:"center", headerHozAlign: "center"},
     ],
 });
 	var table3 = new Tabulator("#example-table3", {
 	height:"180px",
 	layout:"fitDataTable",
     columns:[
-        {title:"제품코드", field:"pdCd", hozAlign:"center", width:120},
-        {title:"단위", field:"unit", hozAlign:"center", width:100},
-        {title:"현재 재고 수량", field:"nowStk", hozAlign:"center", width:160},
-        {title:"안전 재고 수량", field:"safeStk", hozAlign:"center", width:160},
-        {title:"재고 수량차", field:"msStk", hozAlign:"center", width:150},
+        {title:"제품코드", field:"pdCd", hozAlign:"center", width:120, headerHozAlign: "center"},
+        {title:"단위", field:"unit", hozAlign:"center", width:100, headerHozAlign: "center"},
+        {title:"현재 재고 수량", field:"nowStk", hozAlign:"center", width:160, headerHozAlign: "center"},
+        {title:"안전 재고 수량", field:"safeStk", hozAlign:"center", width:160, headerHozAlign: "center"},
+        {title:"재고 수량차", field:"msStk", hozAlign:"center", width:150, headerHozAlign: "center"},
     	],
 	});
 	var table4 = new Tabulator("#example-table4", {
 	    height:"180px",
 	    columns:[
-	    	{title:"상품코드", field:"pdCd", hozAlign:"center"},
-	        {title:"전 주 생산량(kg)", field:"befSuccessTat", hozAlign:"center"},
+	    	{title:"제품코드", field:"pdCd", hozAlign:"center", headerHozAlign: "center"},
+	        {title:"전 주 생산량(kg)", field:"befSuccessTat", hozAlign:"center", headerHozAlign: "center"},
 	    ],
 	});
 	
@@ -428,12 +434,12 @@
 	      },
 	    index:"pdCd",
 	    columns:[
-	        {title:"제품코드", field:"pdCd", validator:"required", hozAlign:"center"},
-	        {title:"단위무게(kg)", field:"unitQt", hozAlign:"center"},
-	        {title:"주문수량(kg)", field:"qt", hozAlign:"center", validator:["min:0", "numeric"]},
-	        {title:"추가수량(kg)", field:"addQt", hozAlign:"center", editor:dateEditor5,  validator:["min:0", "numeric"]},
-	        {title:"수량합계(kg)", field:"totQt", hozAlign:"center", validator:["min:0", "numeric"]},
-	        {title:"최소 납기일", field:"dueDt", hozAlign:"center"},
+	        {title:"제품코드", field:"pdCd", validator:"required", hozAlign:"center", headerHozAlign: "center"},
+	        {title:"단위무게(kg)", field:"unitQt", hozAlign:"center", headerHozAlign: "center"},
+	        {title:"주문수량(kg)", field:"qt", hozAlign:"center", validator:["min:0", "numeric"], headerHozAlign: "center"},
+	        {title:"추가수량(kg)", field:"addQt", hozAlign:"center", editor:dateEditor5,  validator:["min:0", "numeric"], headerHozAlign: "center"},
+	        {title:"수량합계(kg)", field:"totQt", hozAlign:"center", validator:["min:0", "numeric"], headerHozAlign: "center"},
+	        {title:"최소 납기일", field:"dueDt", hozAlign:"center", headerHozAlign: "center"},
 	    ],
 	});
 	
@@ -632,6 +638,15 @@
 		prdtSaveBtn1.style.display = "none";
 		prdtModifyBtn1.style.display = "block";
 		dayNameing.readOnly = true;
+	}
+	
+	selectNav();
+	
+	function selectNav() {
+		mainPage.classList.remove('active');
+		prdt.classList.add('active');
+		prdt.classList.add('open');
+		prdt_plan.classList.add('active');
 	}
 	</script>
 

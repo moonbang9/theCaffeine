@@ -3,7 +3,7 @@
   layout:decorate="~{layout/index}">
 <head>
 <meta charset="UTF-8">
-<title>order</title>
+<title>자재 발주 관리</title>
 </head>
 <body>
 <div layout:fragment="content">
@@ -51,7 +51,7 @@
                 <div class="mb-3 row">
                   <label for="mtrl_order_req" class="col-md-2 col-form-label">발주 요청자</label>
                   <div class="col-md-10">
-                    <input class="form-control" type="text" value="청길동 과장" id="mtrl_order_req" readonly>
+                    <input class="form-control" type="text" value="" id="mtrl_order_req" readonly>
                   </div>
                 </div>
               </div>
@@ -77,7 +77,7 @@
 		</div>
 	</div>
 	<div class="d-flex mt-5">
-	  <div class="p-2 flex-grow-1"><h4>발주요청 자재 목록</h4></div>
+	  <div class="p-2 flex-grow-1"><h4>발주 자재 목록</h4></div>
 	  <div class="p-2"><button type="button" class="btn btn-warning" data-bs-toggle="modal"
 			        data-bs-target="#largeModal" id="mtrlOrderAddBtn">추가</button></div>
 	  <div class="p-2"><button type="button" class="btn btn-primary" id="mtrlOrderBtn">발주 처리</button></div>
@@ -90,6 +90,8 @@
 
 
 	<script>
+		let memId = document.querySelector(".memName").innerText;
+		mtrl_order_req.value = memId;
 		//삭제버튼
 		var editorIcon = function(cell, formatterParams, onRendered) {
 	  		return "<button class='btn btn-danger btn-sm'>삭제</button>";
@@ -133,7 +135,7 @@
 		function modReq(selectOrder) {
 			for(order of selectOrder) {
 				const placeodSt= order.placeodSt;
-				const placeodChg = order.placeodChg;
+				const placeodChg = memId;
 				const mtPlaceodCd = order.mtPlaceodCd;
 				const placeodQt = order.placeodQt;
 				const leadtm = order.leadtm;
@@ -154,7 +156,7 @@
 		// 발주처리 응답
 		function modRes() {
 			alert("발주가 완료되었습니다!");
-			location.href= "/material/order"
+			location.href= "/material/orderlist"
 		}
 		
 		// 자재 재고 목록
@@ -166,15 +168,15 @@
 		    paginationSizeSelector:[3, 6, 8, 10],
 		    paginationCounter:"rows",
 		    columns:[
-		        {title:"분류", field:"mtDiv", width:130, hozAlign:"center"},
-		        {title:"자재코드", field:"mtCd", width:180, hozAlign:"center"}, 
-		        {title:"자재명", field:"mtName", width:180, hozAlign:"center"},
-		        {title:"단위", field:"unit", width:130, formatter:"money", hozAlign:"center"},
-		        {title:"차주생산계획 수량", field:"pqtt", width:150, hozAlign:"center"},
-		        {title:"재고 수량", field:"sumStkQt", width:135, hozAlign:"center"},
-		        {title:"발주 수량", field:"sumPlaceodQt", width:135, hozAlign:"center"},
-		        {title:"안전재고 수량", field:"safeStkQt", width:135, hozAlign:"center"},
-		        {title:"수량 차", field:"qtDifference", width:135, hozAlign:"center"}
+		        {title:"분류", field:"mtDiv", width:130, headerHozAlign: "center", hozAlign:"center"},
+		        {title:"자재코드", field:"mtCd", width:180, headerHozAlign: "center", hozAlign:"center"}, 
+		        {title:"자재명", field:"mtName", width:180, headerHozAlign: "center"},
+		        {title:"단위", field:"unit", width:130, headerHozAlign: "center", formatter:"money", hozAlign:"center"},
+		        {title:"차주생산계획 수량", field:"pqtt", width:150, headerHozAlign: "center", hozAlign:"right"},
+		        {title:"재고 수량", field:"sumStkQt", width:135, headerHozAlign: "center", hozAlign:"right"},
+		        {title:"발주 수량", field:"sumPlaceodQt", width:135, headerHozAlign: "center", hozAlign:"right"},
+		        {title:"안전재고 수량", field:"safeStkQt", width:135, headerHozAlign: "center", hozAlign:"right"},
+		        {title:"수량 차", field:"qtDifference", width:135, headerHozAlign: "center", hozAlign:"right"}
 		    ],rowFormatter: function(row) {
 		        var data = row.getData();
 		        var qtDifferenceValue = data.qtDifference;
@@ -182,6 +184,8 @@
 		            row.getElement().style.backgroundColor = "#c8e6c9"; 
 		        } else if (qtDifferenceValue < 20) {
 		            row.getElement().style.backgroundColor = "#ffcdd2"; 
+		        } else {
+		        	row.getElement().style.backgroundColor = "#fff";
 		        }
 		    }
 		});
@@ -189,7 +193,7 @@
 		// 발주 요청목록
 		var table2 = new Tabulator("#mtrl_order_request_list", {
 			placeholder:function(){
-		        return this.getHeaderFilters().length ? "No Matching Data" : "ㅋㅋㅋ";
+		        return this.getHeaderFilters().length ? "No Matching Data" : "발주 자재 없음";
 		    },
 		   height:"100%",
 		   selectableRows:true,
@@ -202,17 +206,18 @@
 		        cell.getRow().toggleSelect();
 		      }},
 		    columns:[
-		        {title:"분류", field:"mtDiv", width:169, hozAlign:"center", vertAlign:"middle"},
-		        {title:"자재코드", field:"mtCd", width:200, hozAlign:"center", vertAlign:"middle"}, 
-		        {title:"자재명", field:"mtName", width:240, hozAlign:"center", vertAlign:"middle"},
-		        {title:"거래처", field:"cliName", width:290, hozAlign:"center", vertAlign:"middle"},
-		        {title:"수량", field:"placeodQt", width:170, hozAlign:"center", editor:"input", vertAlign:"middle"},
-		        {title:"단위", field:"unit", width:170, hozAlign:"center", vertAlign:"middle"},
-		        {title:"삭제", formatter:editorIcon, width:100, hozAlign:"center", cellClick:function(e, cell){
-		        	console.log(cell.getRow()._row.data.mtPlaceodCd);
+		        {title:"분류", field:"mtDiv", width:169, headerHozAlign: "center", hozAlign:"center", vertAlign:"middle"},
+		        {title:"자재코드", field:"mtCd", width:200, headerHozAlign: "center", hozAlign:"center", vertAlign:"middle"}, 
+		        {title:"자재명", field:"mtName", width:240, headerHozAlign: "center", vertAlign:"middle"},
+		        {title:"거래처", field:"cliName", width:290, headerHozAlign: "center", hozAlign:"center", vertAlign:"middle"},
+		        {title:"수량", field:"placeodQt", width:170, headerHozAlign: "center", hozAlign:"right", vertAlign:"middle"},
+		        {title:"단위", field:"unit", width:170, headerHozAlign: "center", hozAlign:"center", vertAlign:"middle"},
+		        {title:"삭제", formatter:editorIcon, width:100, headerHozAlign: "center", hozAlign:"center", cellClick:function(e, cell){
+		        	console.log(cell.getRow()._row.data);
 		    		if(confirm("삭제하시겠습니까?")) {
 		        		const mtPlaceodCd = cell.getRow()._row.data.mtPlaceodCd;
 		    			let param = mtPlaceodCd;
+		    			console
 		        		fetch("/ajax/deleteMtrlOrder",{
 		    				method : "post",
 		    				headers: {
@@ -220,7 +225,7 @@
 		    				    },
 		    				body : mtPlaceodCd
 		    			})
-		    			.then(res =>  {
+		    			.then(res => {
 							alert("삭제가 완료되었습니다.");
 							cell.getRow().delete();
 						})
@@ -320,9 +325,8 @@
 			const cliCd= mtrl_order_clicd.value;
 			const mtCd = mtrl_order_mtcd.value;
 			const placeodQt = mtrl_order_qt.value;
-			const placeodRequester = mtrl_order_req.value;
-			if(cliCd != "" && mtCd != "" && placeodQt != "" && placeodRequester != ""){
-				let param = {cliCd, mtCd, placeodQt, placeodRequester};
+			if(cliCd != "" && mtCd != "" && placeodQt != ""){
+				let param = {cliCd, mtCd, placeodQt};
 				console.log(param);
 				fetch("/ajax/mtrlOrder",{
 					method : "post",
@@ -342,6 +346,15 @@
 		function saveRes(res) {
 			alert("추가되었습니다!");
 			location.href= "/material/order"
+		}
+		
+		selectNav();
+		
+		function selectNav() {
+			mainPage.classList.remove('active');
+			mtrl.classList.add('active');
+			mtrl.classList.add('open');
+		    mtrl_order.classList.add('active');
 		}
 	</script>
 </div>

@@ -31,14 +31,16 @@
 									<input class="form-control" type="text" name="searchNameins" id="searchNameins">
 								</div>
 							</div>
-								<div class="mb-3 row" style="justify-content: center;align-content: center;">
-								<label class="col-sm-2">점검일자</label>
-								<div class="col-sm-6 input-group" style="width: 370px;" >
-									<input class="form-control" type="date" id="searchDate" name="searchDate">
-									<span class="input-group-text">-</span>
-									<input class="form-control" type="date" id="searchDate2" name="searchDate2">
-								</div>
-							</div>
+								<div class="mb-3 row" style="justify-content: center;">
+						        <label class="col-sm-2 col-form-label">점검일자</label>
+						        <div class="col-sm-4">
+						            <div class="input-group">
+						                <input class="form-control" type="date" id="searchDate" name="searchDate">
+						                <span class="input-group-text">-</span>
+						                <input class="form-control" type="date" id="searchDate2" name="searchDate2">
+						            </div>
+						        </div>
+						    </div>
 
 							<div class="mb-3 row"
 								style="justify-content: center; align-content: center;">
@@ -53,7 +55,7 @@
 								</div>
 							</div>
 							<div class="d-grid gap-2 d-md-flex justify-content-md-center">
-								<button class="btn btn-secondary" type="button" id="resetinsBtn" style="margin-top: 12px;">초기화</button>
+								<button class="btn btn-secondary" type="reset" id="resetinsBtn" style="margin-top: 12px;">초기화</button>
 								<button class="btn btn-primary" type="button" id="searchinsBtn" style="margin-top: 12px; margin-right: 5px;">검색</button>
 							</div>
 						</form>
@@ -163,8 +165,8 @@
 										<div class="col mb-3">
 											<div class="input-group">
 												<span class="input-group-text col-2" id="basic-addon14">담당자</span>
-												<input type="text" class="form-control" id="chargeofins"
-													aria-describedby="basic-addon14">
+												<input type="text" class="form-control" id="chargeofins" value=""
+													aria-describedby="basic-addon14" readonly>
 											</div>
 										</div>
 									</div>
@@ -211,7 +213,9 @@
 						점검 등록</button>
 						</div>
 			<script>
-	
+			let memId = document.querySelector(".memName").innerText;
+			chargeofins.value = memId;
+			console.log(memId);
 	//테이블 생성 
 	var insptable = new Tabulator("#inspListTable", {
 	    //layout:"fitColumns",
@@ -225,12 +229,12 @@
 	    //resizableColumnFit:true,
 	   
 	    columns:[
-	        {title:"점검 코드", field:"insCd", width:160, hozAlign:"center"},
-	        {title:"설비 명", field:"fcName", width:195, hozAlign:"center" ,frozen:true}, 
-	        {title:"점검일", field:"insDt", width:150, hozAlign:"center"},
+	        {title:"점검 코드", field:"insCd", width:100, hozAlign:"center"},
+	        {title:"설비 명", field:"fcName", width:195, hozAlign:"left" ,frozen:true}, 
+	        {title:"점검일", field:"insDt", width:200, hozAlign:"center"},
 	        {title:"점검 구분", field:"insCat", width:150, hozAlign:"center"},
-	        {title:"점검 내용", field:"insCont", width:160, hozAlign:"center"},
-	        {title:"판정", field:"cc", width:150, hozAlign:"center"}, 
+	        {title:"점검 내용", field:"insCont", width:310, hozAlign:"left"},
+	        {title:"판정", field:"cc", width:160, hozAlign:"center"}, 
 	        {title:"담당자", field:"chg", width:180, hozAlign:"center"}
 	    ],rowFormatter: function(row) {
 	        var data = row.getData();
@@ -243,50 +247,55 @@
 	    }
 	});
 	
+	let searchNameins = "";
+	let searchDate = "";
+	let searchDate2 = "";
+	let searchCcValins = "";
+	
+	let paramins = {searchNameins,searchDate,searchDate2,searchCcValins};
+	getinspData(paramins);
+	
+	function getinspData(paramins){
+		fetch("/fclt/getinspection",{
+			method:"post",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body:JSON.stringify(paramins)
+		})
+		.then(res => res.json())
+		.then(res =>{
+			console.log(paramins)
+			console.log(res)
+			insptable.setData(res);
+	})
+	.catch(err=>{
+		console.log(err);
+	})
+	}
+	
 	// 점검 목록 데이터
 	
 	searchinsBtn.addEventListener("click",function(){
-				const searchNameins= frmSearchins.searchNameins.value;
+				searchNameins= frmSearchins.searchNameins.value;
 				console.log(searchNameins);
-				const searchDate = frmSearchins.searchDate.value;
-				const searchDate2 = frmSearchins.searchDate2.value;
+				searchDate = frmSearchins.searchDate.value;
+				searchDate2 = frmSearchins.searchDate2.value;
 				console.log(searchDate,searchDate2);
-				const searchCcins = document.querySelector('input[name="searchinsCc"]:checked');
-				const searchCcValins = searchCcins.value;
+				searchCcValins =document.querySelector('input[name="searchinsCc"]:checked').value;
 				console.log(searchCcValins);
-				let paramins = {
+				paramins = {
 						fcName: searchNameins,
 						insDt: searchDate ? searchDate : '',
 						insDt2: searchDate2 ? searchDate2 : '',
 				        // 값이 없으면 undefined
 				        cc: searchCcValins ? searchCcValins : ''
 				};
+				getinspData(paramins);
 				
-				fetch("/fclt/getinspection",{
-					method:"post",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body:JSON.stringify(paramins)
-				})
-				.then(res => res.json())
-				.then(res =>{
-					console.log(paramins)
-					console.log(res)
-					insptable.setData(res);
-			})
-			.catch(err=>{
-				console.log(err);
-			});
 			});
 	
-	//초기화 버튼 값 비워주기 
-	resetinsBtn.addEventListener("click",function(){
-				searchNameins.value= '';
-				searchDate1.value ='';
-				searchDate2.value ='';
-				searchCcValins = '';
-			});
+	
 	
 	
 	//클릭 시 단건 데이터 요청
@@ -311,6 +320,7 @@
 			getInfo(res);
 		})
 	});
+	
 	
 	// 목록 value 불러오기 및 수정 등록
 	function getInfo(obj){
@@ -427,6 +437,15 @@
 	function modRes(res) {
 		alert("수정이 완료되었습니다!");
 		location.href= "/fclt/inspectionlist"
+	}
+	
+	selectNav();
+	
+	function selectNav() {
+		mainPage.classList.remove('active');
+		fclt.classList.add('active');
+		fclt.classList.add('open');
+		fclt_inspectionlist.classList.add('active');
 	}
 	</script>
 		</div>

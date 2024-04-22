@@ -4,7 +4,7 @@
 	layout:decorate="~{layout/index}">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>생산지시등록</title>
 </head>
 <body>
 	<div layout:fragment="content">
@@ -75,6 +75,7 @@
 			basicPlanListReq()
 			instListReq()
 			addRows()
+			nonopFcList()
 		})
 		let planCds = document.querySelector('.plans');
 		let daySale = document.querySelector('.daySale');
@@ -89,9 +90,12 @@
 		let pdNames = []
 		let unitQts = []
 		let instLists =[] 
+		let nonopFcLists =[] 
+		//이름
+		let memId = document.querySelector(".memName").innerText
 		
 		resistBtn.addEventListener("click", e=> {
-			let params1 = {pdtPlanCd : planCds.value, pdtInstDt : planDay2.value}
+			let params1 = {pdtPlanCd : planCds.value, pdtInstDt : planDay2.value, pdtChg : memId}
 			let params2 = InstDetailData();
 			let param = {instVO : params1, 
 					instDetailVO : params2
@@ -109,14 +113,17 @@
 				.then(res => res.json())
 				.then(res => {
 					if(res.response == 'ok'){
-						alert('등록이 완료되었습니다.')
+						Swal.fire("등록이 완료되었습니다.");
+						//alert('등록이 완료되었습니다.')
 						location.href='/production/prdtInst'
 					}else{
-						alert('등록에 실패하였습니다.')
+						Swal.fire("등록에 실패하였습니다.");
+						//alert('등록에 실패하였습니다.')
 					}
 				})
 			}else{
-				alert('지시일 등록후 다시 등록해주세요.')
+				Swal.fire("지시일 등록후 다시 등록해주세요.");
+				//alert('지시일 등록후 다시 등록해주세요.')
 			}
 			
 			
@@ -212,9 +219,9 @@
 			height:"100%",
 			layout:"fitDataFill",
 		    columns:[
-		        {title:"상품명", field:"pdName", hozAlign:"center", width:440},
-		        {title:"총 예상 생산 수량(kg)", field:"qt", hozAlign:"center", width:430},
-		        {title:"납기 일자", field:"dueDt", hozAlign:"center", width:440},
+		        {title:"상품명", field:"pdName", hozAlign:"left", width:440, headerHozAlign: "center"},
+		        {title:"총 예상 생산 수량(kg)", field:"qt", hozAlign:"center", width:430, headerHozAlign: "center"},
+		        {title:"납기 일자", field:"dueDt", hozAlign:"center", width:440, headerHozAlign: "center"},
 		    ],
 		});
 		
@@ -232,6 +239,15 @@
 				})
 			}
 			
+		}
+		// 비가동 설비예약 리스트
+		function nonopFcList() {
+				fetch("/ajax/nonopFcList")
+				.then(res => res.json())
+				.then(res => {
+					console.log(res)
+					nonopFcLists = res
+				})
 		}
 		
 		//코드 정보들
@@ -294,8 +310,8 @@
 			layout:"fitDataFill",
 			index:"rownum",
 		    columns:[
-		    	{field:"rownum", width:50, hozAlign:"center", formatter:"rownum", resizable:false, frozen:true, headerSort:false},
-		    	{title:"제품코드", field:"pdCd", hozAlign:"center", width:200, editor:"list", 
+		    	{field:"rownum", width:50, hozAlign:"center", formatter:"rownum", resizable:false, frozen:true, headerSort:false, headerHozAlign: "center"},
+		    	{title:"제품코드", field:"pdCd", hozAlign:"center", width:200, editor:"list", headerHozAlign: "center",
 		    		editorParams:{values: pdCds, freetext:false},
 		    		cellEdited: function(cell) {
 		    			console.log(cell._cell.row.data)
@@ -307,8 +323,8 @@
 		    			}
 					},
 				},
-		        {title:"상품명", field:"pdName", width:300, hozAlign:"center"},
-		        {title:"수량", field:"qt", hozAlign:"center", validator:["min:0", "numeric"], width:100, 
+		        {title:"상품명", field:"pdName", width:300, hozAlign:"left", headerHozAlign: "center"},
+		        {title:"수량", field:"qt", hozAlign:"center", validator:["min:0", "numeric"], width:100, headerHozAlign: "center",
 		        	/*editor:dateEditor5,
 		        	cellEdited: function(cell) {
 		    			let tables = table2.getData();
@@ -333,7 +349,7 @@
 		    			console.log(tables)
 		    			table2.updateData(tables)
 					},*/},
-		        {title:"생산시작시간", field:"pdtSttTime", hozAlign:"center", width:240, editor:"time", editorParams:{
+		        {title:"생산시작시간", field:"pdtSttTime", hozAlign:"center", width:240, editor:"time", headerHozAlign: "center", editorParams:{
 		            format:"HH:mm:ss",
 		            verticalNavigation:"table",
 		            elementAttributes:{
@@ -341,34 +357,103 @@
 		            },
 		        },
 		        cellEdited: function(cell) {
-	    			//console.log(cell._cell.row.data.pdtSttTime)
 	    			let tables = table2.getData();
-	    			for(let i of tables){
-	    				if(cell._cell.row.data.rownum == i.rownum && cell._cell.row.data.pdtSttTime != ""){
-	    					let date1 = new Date(2020, 6, 1, cell._cell.row.data.pdtSttTime.substring(0,2), cell._cell.row.data.pdtSttTime.substring(3,5), cell._cell.row.data.pdtSttTime.substring(6,8));
-	    					let date2 = new Date(2020, 6, 2, 0, 0, 0)
-	    					if(cell._cell.row.data.qt == null){
-	    						cell._cell.row.data.qt = 0
-	    					}
-	    					let addMit = (cell._cell.row.data.qt/24) * 30
-	    					date1.setMinutes(date1.getMinutes() + addMit)
-	    					if(date2 < date1){
-	    						i.pdtSttTime = null;
-	    						i.pdtexptFnTime = null;
-	    						alert('해당 날짜를 초과하는 시간입니다.')
-	    					}else{
-	    						//console.log(getDateStr2(date1).substring(11,20))
-	    						i.pdtexptFnTime = getDateStr2(date1).substring(11,20)
-	    					}
+	    			let count = 0;
+	    			let count2 = 0;
+	    			//console.log(new Date(planDay2.value + " " + cell._cell.row.data.pdtSttTime))
+	    			//console.log(cell._cell.row.data.pdtSttTime)
+	    			console.log(nonopFcLists)
+	    			if(nonopFcLists.length > 0){
+	    				let nonLength = nonopFcLists[0].totFc;
+	    				let thatDays = new Date(planDay2.value + " " + cell._cell.row.data.pdtSttTime)
+	    				for(let j of nonopFcLists){
+	    					
+		    				if(new Date(j.nonopFnTime) >= thatDays && new Date(j.nonopSttTime) <= thatDays.setMinutes(thatDays.getMinutes() + 30)){
+		    					count++;
+		    				}
+		    			}
+	    				
+		    			//console.log(count) // 못도는 기계숫자
+		    			
+		    			
+		    			let thatDays2 = new Date(planDay2.value + " " + cell._cell.row.data.pdtSttTime)
+		    			let thatDays3 = new Date(planDay2.value + " " + cell._cell.row.data.pdtSttTime)
+		    			thatDays3.setMinutes(thatDays3.getMinutes() + 30)
+	    				for(let i of tables){
+		    					let t2 = new Date(planDay2.value + " " + i.pdtSttTime) //전체선택의 시작시점
+		    					let t3 = new Date(planDay2.value + " " + i.pdtSttTime) //전체선택의 종료시점
+		    					t3.setMinutes(t3.getMinutes() + 30);
+	    				//console.log(t2)
+	    				//console.log(t3)
+	    				//console.log(thatDays2)
+	    					if(t3 >= thatDays2 && thatDays3 <= t2 || thatDays2 <= t2 && thatDays3 >= t2 || thatDays2 <= t2 && thatDays3 <= t3 && thatDays3 >= t2 || thatDays2 >= t2 && thatDays3 >= t3 && thatDays2 <= t3){
+		    					count2++;
+		    				}
+	    				}
+	    				let tfs = true;
+	    				//console.log(count2) // 못도는 시간대
+	    				//console.log(nonLength)
+	    				if(count2 > (nonLength-count)){
+	    					//alert('점검예약으로 인해 해당 시간에 더이상 지시등록이 불가능합니다.')
+	    					Swal.fire("점검예약으로 인해 해당 시간에 더이상 지시등록이 불가능합니다.");
+	    					for(let i of tables){
+	    	    				if(cell._cell.row.data.rownum == i.rownum && cell._cell.row.data.pdtSttTime != ""){
+	    	    						i.pdtSttTime = null;
+	    	    						i.pdtexptFnTime = null;
+	    	    						tfs = false;
+	    		    			}
+	    	    			}
+	    				}
+	    				for(let i of tables){
+		    				if(cell._cell.row.data.rownum == i.rownum && cell._cell.row.data.pdtSttTime != ""){
+		    					let date1 = new Date(2020, 6, 1, cell._cell.row.data.pdtSttTime.substring(0,2), cell._cell.row.data.pdtSttTime.substring(3,5), cell._cell.row.data.pdtSttTime.substring(6,8));
+		    					let date2 = new Date(2020, 6, 2, 0, 0, 0)
+		    					if(cell._cell.row.data.qt == null){
+		    						cell._cell.row.data.qt = 0
+		    					}
+		    					let addMit = (cell._cell.row.data.qt/24) * 30
+		    					date1.setMinutes(date1.getMinutes() + addMit)
+		    					if(date2 < date1){
+		    						i.pdtSttTime = null;
+		    						i.pdtexptFnTime = null;
+		    						//alert('해당 날짜를 초과하는 시간입니다.')
+		    						Swal.fire("해당 날짜를 초과하는 시간입니다.");
+		    					}else if(tfs){
+		    						//console.log(getDateStr2(date1).substring(11,20))
+		    						i.pdtexptFnTime = getDateStr2(date1).substring(11,20)
+		    					}
+			    			}
+		    			}
+	    			}else{
+	    				for(let i of tables){
+		    				if(cell._cell.row.data.rownum == i.rownum && cell._cell.row.data.pdtSttTime != ""){
+		    					let date1 = new Date(2020, 6, 1, cell._cell.row.data.pdtSttTime.substring(0,2), cell._cell.row.data.pdtSttTime.substring(3,5), cell._cell.row.data.pdtSttTime.substring(6,8));
+		    					let date2 = new Date(2020, 6, 2, 0, 0, 0)
+		    					if(cell._cell.row.data.qt == null){
+		    						cell._cell.row.data.qt = 0
+		    					}
+		    					let addMit = (cell._cell.row.data.qt/24) * 30
+		    					date1.setMinutes(date1.getMinutes() + addMit)
+		    					if(date2 < date1){
+		    						i.pdtSttTime = null;
+		    						i.pdtexptFnTime = null;
+		    						//alert('해당 날짜를 초과하는 시간입니다.')
+		    						Swal.fire("해당 날짜를 초과하는 시간입니다.");
+		    					}else{
+		    						//console.log(getDateStr2(date1).substring(11,20))
+		    						i.pdtexptFnTime = getDateStr2(date1).substring(11,20)
+		    					}
+			    			}
 		    			}
 	    			}
+	    			
 	    			console.log(tables)
 	    			table2.updateData(tables)
 				},
 		        },
-		        {title:"생산예상종료시간", field:"pdtexptFnTime", width:240, hozAlign:"center"},
-		        {title:"수정가능여부", field:"compSt", hozAlign:"center", width:150},
-		        {title:"삭제", formatter:"buttonCross", width:80, hozAlign:"center", cellClick:function(e, cell){
+		        {title:"생산예상종료시간", field:"pdtexptFnTime", width:240, hozAlign:"center", headerHozAlign: "center"},
+		        {title:"수정가능여부", field:"compSt", hozAlign:"center", width:150, headerHozAlign: "center"},
+		        {title:"삭제", formatter:"buttonCross", width:80, hozAlign:"center", headerHozAlign: "center", cellClick:function(e, cell){
 		    			if(table2.getDataCount() != 0){
 		    				//console.log(table2.getDataCount())
 		    				//console.log(cell._cell.row.data.rownum)
@@ -468,6 +553,14 @@
 			  return newArr1;
 		}
 		
+		selectNav();
+		
+		function selectNav() {
+			mainPage.classList.remove('active');
+			prdt.classList.add('active');
+			prdt.classList.add('open');
+			prdt_prdtInst.classList.add('active');
+		}
 		</script>
 	</div>
 </body>
