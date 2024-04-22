@@ -211,10 +211,10 @@
 									주문금액</label>
 								<div class="col-md-10">
 									<input type="text" class="form-control" id="defaultFormControlInput" placeholder="0"
-										aria-describedby="defaultFormControlHelp" v-model="total" name="totalPrice"
-										onKeyup="this.value=this.value.replace(/[^0-9]/g,'');" />
+										aria-describedby="defaultFormControlHelp" v-model="totalScale" name="totalInput"
+										 />
 								</div>
-							</div>
+							</div>							
 						</div>
 						<div class="card-body">
 							<div class="row justify-content-end">
@@ -229,7 +229,17 @@
 
 					</div>
 
-
+					<div style="visibility:hidden">
+					<div class="mb-3 row">
+						<label for="html5-tel-input" class="col-md-2 col-form-label">총
+							주문금액</label>
+						<div class="col-md-10">
+							<input type="text" class="form-control" id="defaultFormControlInput" placeholder="0"
+								aria-describedby="defaultFormControlHelp" v-model="total" name="totalInput"
+								 />
+						</div>
+					</div>
+					</div>
 
 				</div>
 				<!-- card card mb-4 끝-->
@@ -337,7 +347,9 @@
 						pct: 0,
 
 						orderVO: {},
-						insertOrderDetailList : []					
+						insertOrderDetailList : [],	
+						
+						totalScale : ''
 					}
 				},
 				created() {
@@ -364,6 +376,9 @@
 						} else {
 							tot = preTotal;
 						}
+						this.totalScale = Number(tot).toLocaleString();
+
+						console.log('토탈스케일은',this.totalScale);
 						return tot;
 					}
 				},
@@ -474,7 +489,7 @@
 
 						let data = { orderVO: this.orderVO, orderDetailVO: this.insertOrderDetailList }
 
-						//console.log('data', data);
+						console.log('data', data);
 						let result = await axios.post("/sales/ajax/insertOrder", data)
 							.catch(err => console.log(err));
 						console.log(result);
