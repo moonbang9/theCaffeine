@@ -51,7 +51,7 @@
                 <div class="mb-3 row">
                   <label for="mtrl_order_req" class="col-md-2 col-form-label">발주 요청자</label>
                   <div class="col-md-10">
-                    <input class="form-control" type="text" value="청길동 과장" id="mtrl_order_req" readonly>
+                    <input class="form-control" type="text" value="관리자" id="mtrl_order_req" readonly>
                   </div>
                 </div>
               </div>
@@ -90,6 +90,8 @@
 
 
 	<script>
+		let memId = document.querySelector(".memName").innerText;
+	
 		//삭제버튼
 		var editorIcon = function(cell, formatterParams, onRendered) {
 	  		return "<button class='btn btn-danger btn-sm'>삭제</button>";
@@ -133,7 +135,7 @@
 		function modReq(selectOrder) {
 			for(order of selectOrder) {
 				const placeodSt= order.placeodSt;
-				const placeodChg = order.placeodChg;
+				const placeodChg = memId;
 				const mtPlaceodCd = order.mtPlaceodCd;
 				const placeodQt = order.placeodQt;
 				const leadtm = order.leadtm;
@@ -154,7 +156,7 @@
 		// 발주처리 응답
 		function modRes() {
 			alert("발주가 완료되었습니다!");
-			location.href= "/material/order"
+			location.href= "/material/orderlist"
 		}
 		
 		// 자재 재고 목록

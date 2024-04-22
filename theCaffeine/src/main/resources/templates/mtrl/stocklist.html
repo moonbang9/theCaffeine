@@ -93,6 +93,7 @@
      // 자재 재고 목록
 		var table = new Tabulator("#mtStockList", {
 		    height:"100%",
+		    selectableRows:true,
 		    pagination:"local",
 		    paginationSize:6,
 		    paginationSizeSelector:[3, 6, 8, 10],
@@ -143,6 +144,8 @@
 		
 		table.on("rowClick", function(e, row){
 			let mtCd = row.getData().mtCd;
+			table.deselectRow();
+			table.selectRow(row);
 			fetch("/ajax/lotStockList/" + mtCd)
 			.then(res => res.json())
 			.then(res => table2.setData(res))
