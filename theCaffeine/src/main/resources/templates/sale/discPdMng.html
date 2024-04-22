@@ -284,8 +284,8 @@
 
         //여기부터
 
-        data.addColumn('string', 'reason');
-        data.addColumn('number', 'sumQt');
+        data.addColumn('string', '사유');
+        data.addColumn('number', '수량');
 
 
         let param = condition;
@@ -312,7 +312,7 @@
                        'height':600};
 
         // Instantiate and draw our chart, passing in some options.
-        var chart = new google.visualization.PieChart(document.getElementById('discardChart'));
+        var chart = new google.visualization.ColumnChart(document.getElementById('discardChart'));
         chart.draw(data, options);
       }
 
