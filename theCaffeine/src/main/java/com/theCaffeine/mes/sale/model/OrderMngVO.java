@@ -69,4 +69,6 @@ public class OrderMngVO {
 	private int qt;
 	private int sendOdSt;
 	private String sendStName;
+	
+	private int dueColor;
 }

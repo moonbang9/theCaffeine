@@ -181,7 +181,7 @@
          	// 
             pdStockTable.on("rowClick", function (e, row) {
             	pdStockTable.deselectRow();
-            	pdStockTable.selectRow(1);
+            	pdStockTable.selectRow(row);
             	
                 let pdCd = row.getData().pdCd;
                 console.log(pdCd);
