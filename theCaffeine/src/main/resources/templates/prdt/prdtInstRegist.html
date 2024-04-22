@@ -76,6 +76,7 @@
 			instListReq()
 			addRows()
 			nonopFcList()
+			totFcList()
 		})
 		let planCds = document.querySelector('.plans');
 		let daySale = document.querySelector('.daySale');
@@ -91,6 +92,7 @@
 		let unitQts = []
 		let instLists =[] 
 		let nonopFcLists =[] 
+		let nonopFcLists2 = null 
 		//이름
 		let memId = document.querySelector(".memName").innerText
 		
@@ -247,6 +249,16 @@
 				.then(res => {
 					console.log(res)
 					nonopFcLists = res
+				})
+		}
+		
+		// 설비전체수 파악
+		function totFcList() {
+				fetch("/ajax/totFcList")
+				.then(res => res.json())
+				.then(res => {
+					console.log(res)
+					nonopFcLists2 = res.totFc
 				})
 		}
 		
@@ -425,6 +437,32 @@
 			    			}
 		    			}
 	    			}else{
+	    				let nonLength = nonopFcLists2;
+	    				let thatDays = new Date(planDay2.value + " " + cell._cell.row.data.pdtSttTime)
+	    				let thatDays2 = new Date(planDay2.value + " " + cell._cell.row.data.pdtSttTime)
+	    				let thatDays3 = new Date(planDay2.value + " " + cell._cell.row.data.pdtSttTime)
+	    				thatDays3.setMinutes(thatDays3.getMinutes() + 30)
+	    				
+	    				for(let i of tables){
+							let t2 = new Date(planDay2.value + " " + i.pdtSttTime) //전체선택의 시작시점
+							let t3 = new Date(planDay2.value + " " + i.pdtSttTime) //전체선택의 종료시점
+							t3.setMinutes(t3.getMinutes() + 30);
+							if(t3 >= thatDays2 && thatDays3 <= t2 || thatDays2 <= t2 && thatDays3 >= t2 || thatDays2 <= t2 && thatDays3 <= t3 && thatDays3 >= t2 || thatDays2 >= t2 && thatDays3 >= t3 && thatDays2 <= t3){
+								count2++;
+							}
+						}
+	    				let tfs = true;
+	    				if(count2 > nonLength){
+	    					Swal.fire("설비 부족으로 인해 해당 시간대에 더이상 지시등록이 불가능합니다.");
+	    					for(let i of tables){
+	    						if(cell._cell.row.data.rownum == i.rownum && cell._cell.row.data.pdtSttTime != ""){
+	    								i.pdtSttTime = null;
+	    								i.pdtexptFnTime = null;
+	    								tfs = false;
+	    						}
+	    					}
+	    				}
+	    				
 	    				for(let i of tables){
 		    				if(cell._cell.row.data.rownum == i.rownum && cell._cell.row.data.pdtSttTime != ""){
 		    					let date1 = new Date(2020, 6, 1, cell._cell.row.data.pdtSttTime.substring(0,2), cell._cell.row.data.pdtSttTime.substring(3,5), cell._cell.row.data.pdtSttTime.substring(6,8));
@@ -437,10 +475,8 @@
 		    					if(date2 < date1){
 		    						i.pdtSttTime = null;
 		    						i.pdtexptFnTime = null;
-		    						//alert('해당 날짜를 초과하는 시간입니다.')
 		    						Swal.fire("해당 날짜를 초과하는 시간입니다.");
-		    					}else{
-		    						//console.log(getDateStr2(date1).substring(11,20))
+		    					}else if(tfs){
 		    						i.pdtexptFnTime = getDateStr2(date1).substring(11,20)
 		    					}
 			    			}
