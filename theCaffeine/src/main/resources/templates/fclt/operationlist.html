@@ -52,7 +52,7 @@
 								</div>
 							</div>
 							<div class="d-grid gap-2 d-md-flex justify-content-md-center">
-								<button class="btn btn-secondary" type="button" id="resetopBtn" style="margin-top: 12px;">초기화</button>
+								<button class="btn btn-secondary" type="reset" id="resetopBtn" style="margin-top: 12px;">초기화</button>
 								<button class="btn btn-primary" type="button" id="searchopBtn" style="margin-top: 12px; margin-right: 5px;">검색</button>
 							</div>
 						</form>
@@ -102,9 +102,9 @@
 									<div class="row">
 										<div class="col mb-3">
 											<div class="input-group">
-												<span class="input-group-text col-2" id="basic-addon14">담당자</span>
-												<input type="text" class="form-control" id="nonopCharge"
-													aria-describedby="basic-addon14">
+												<span class="input-group-text col-2" id="basic-addon14" >담당자</span>
+												<input type="text" class="form-control" id="nonopCharge" value=""
+													aria-describedby="basic-addon14" readonly>
 											</div>
 										</div>
 									</div>
@@ -166,6 +166,9 @@
 				</div>
 			</div>
 			<script>
+			let memId = document.querySelector(".memName").innerTexts;
+			nonopCharge.value = memId;
+			console.log(memId);
 				
 				//수정버튼
 				var editorIcon = function(cell, formatterParams, onRendered) {
@@ -263,22 +266,14 @@
 		fcCd = obj.fcCd;
 	}
 	
-	// 검색 조건 기준 원자재 목록 데이터
-	searchopBtn.addEventListener("click",function(){
-		const searchNameop= frmSearchop.searchNameop.value;
-		console.log(searchNameop);
-		const searchMfop = frmSearchop.searchMfop.value;
-		console.log(searchMfop);
-		const searchStatusop = document.querySelector('input[name="searchStop"]:checked').value;
-		//const searchStopVal = searchStatusop.value;
-		console.log(searchStatusop);
-		let paramop = {
-				fcName: searchNameop,
-		        // 값이 없으면 undefined
-		        insMf: searchMfop ? searchMfop : '',
-		        st: searchStatusop ? searchStatusop : ''
-		};
-		
+	let searchNameop = "";
+	let searchMfop = "";
+	let searchStatusop = "";
+	
+	let paramop = {searchNameop,searchMfop,searchStatusop};
+	getopList(paramop);
+	
+	function getopList(paramop){
 		fetch("/fclt/getoperation",{
 			method:"post",
 			headers: {
@@ -293,15 +288,30 @@
 	})
 	.catch(err=>{
 		console.log(err);
-	});
+	})
+	}
+	
+	// 검색 조건 기준 원자재 목록 데이터
+	searchopBtn.addEventListener("click",function(){
+		searchNameop= frmSearchop.searchNameop.value;
+		console.log(searchNameop);
+		searchMfop = frmSearchop.searchMfop.value;
+		console.log(searchMfop);
+		searchStatusop = document.querySelector('input[name="searchStop"]:checked').value;
+		//const searchStopVal = searchStatusop.value;
+		console.log(searchStatusop);
+		let paramop = {
+				fcName: searchNameop,
+		        // 값이 없으면 undefined
+		        insMf: searchMfop ? searchMfop : '',
+		        st: searchStatusop ? searchStatusop : ''
+		};
+		
+		getopList(paramop);
+		
 	});
 	
-	//초기화 버튼 값 비워주기 
-	
-	resetopBtn.addEventListener("click",function(){
-		searchNameop.value= '';
-		searchMfop.value ='';
-	});
+
 	
 	//listReq();
 	

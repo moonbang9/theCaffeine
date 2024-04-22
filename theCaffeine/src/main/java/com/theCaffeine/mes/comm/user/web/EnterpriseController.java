@@ -29,11 +29,8 @@ public class EnterpriseController {
 
 	// 로그인 페이지이동
 			@GetMapping("/memb/login")
-			public ModelAndView login(@RequestParam(name = "error", required = false) String error) { 
+			public ModelAndView login() { 
 		        ModelAndView mv = new ModelAndView("memb/login");
-		        if (error != null) {
-		            mv.addObject("error", "해당 사용자가 존재하지 않습니다.");
-		        }
 		        return mv;
 		    }
 			
