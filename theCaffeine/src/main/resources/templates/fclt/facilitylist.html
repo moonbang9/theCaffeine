@@ -51,7 +51,7 @@
 								</div>
 							</div>
 							<div class="d-grid gap-2 d-md-flex justify-content-md-center">
-								<button class="btn btn-secondary" type="button" id="resetBtn" style="margin-top: 12px;">초기화</button>
+								<button class="btn btn-secondary" type="reset" id="resetBtn" style="margin-top: 12px;">초기화</button>
 								<button class="btn btn-primary" type="button" id="searchBtn" style="margin-top: 12px; margin-right: 5px;">검색</button>
 							</div>
 						</form>
@@ -180,8 +180,7 @@
 				</div>
 			</div>
 			<script>
-			
-			
+		
 			var fclttable = new Tabulator("#fcltListTable", {
 			    //layout:"fitColumns",
 			    pagination:"local",
@@ -260,23 +259,13 @@
 				updateBtn.style.display="block";
 			}
 			
+			let searchName = "";
+			let searchMf = "";
+			let searchStatus = "";
 			
-			// 검색 조건 기준 원자재 목록 데이터
-			searchBtn.addEventListener("click",function(){
-				const searchName= frmSearch.searchName.value;
-				console.log(searchName);
-				const searchMf = frmSearch.searchMf.value;
-				console.log(searchMf);
-				const searchStatus = document.querySelector('input[name="searchSt"]:checked').value;
-				//const searchStVal = searchStatus.value;
-				console.log(searchStatus);
-				let param = {
-						fcName: searchName,
-				        // 값이 없으면 undefined
-				        insMf: searchMf ? searchMf : '',
-				        st: searchStatus ? searchStatus : ''
-				};
-				
+			let param = {searchName,searchMf,searchStatus};
+			getData(param);
+			function getData(param){
 				fetch("/fclt/getfacility",{
 					method:"post",
 					headers: {
@@ -291,16 +280,28 @@
 			})
 			.catch(err=>{
 				console.log(err);
-			});
+			})
+			}
+			// 검색 조건 기준 원자재 목록 데이터
+			searchBtn.addEventListener("click",function(){
+				searchName= frmSearch.searchName.value;
+				console.log(searchName);
+				searchMf = frmSearch.searchMf.value;
+				console.log(searchMf);
+				searchStatus = document.querySelector('input[name="searchSt"]:checked').value;
+				//const searchStVal = searchStatus.value;
+				console.log(searchStatus);
+				param = {
+						fcName: searchName,
+				        // 값이 없으면 undefined
+				        insMf: searchMf ? searchMf : '',
+				        st: searchStatus ? searchStatus : ''
+				};
+				getData(param);
+			
 			});
 			
-			//초기화 버튼 값 비워주기 
-			
-			resetBtn.addEventListener("click",function(){
-				searchName.value= '';
-				searchMf.value ='';
-			});
-			
+
 			
 			
 			

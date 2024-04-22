@@ -55,7 +55,7 @@
 								</div>
 							</div>
 							<div class="d-grid gap-2 d-md-flex justify-content-md-center">
-								<button class="btn btn-secondary" type="button" id="resetinsBtn" style="margin-top: 12px;">초기화</button>
+								<button class="btn btn-secondary" type="reset" id="resetinsBtn" style="margin-top: 12px;">초기화</button>
 								<button class="btn btn-primary" type="button" id="searchinsBtn" style="margin-top: 12px; margin-right: 5px;">검색</button>
 							</div>
 						</form>
@@ -166,7 +166,7 @@
 											<div class="input-group">
 												<span class="input-group-text col-2" id="basic-addon14">담당자</span>
 												<input type="text" class="form-control" id="chargeofins"
-													aria-describedby="basic-addon14">
+													aria-describedby="basic-addon14" readonly>
 											</div>
 										</div>
 									</div>
@@ -213,7 +213,9 @@
 						점검 등록</button>
 						</div>
 			<script>
-	
+			let memId = document.querySelector(".memName").innerTexts;
+			chargeofins.value = memId;
+			console.log(memId);
 	//테이블 생성 
 	var insptable = new Tabulator("#inspListTable", {
 	    //layout:"fitColumns",
@@ -245,50 +247,55 @@
 	    }
 	});
 	
+	let searchNameins = "";
+	let searchDate = "";
+	let searchDate2 = "";
+	let searchCcValins = "";
+	
+	let paramins = {searchNameins,searchDate,searchDate2,searchCcValins};
+	getinspData(paramins);
+	
+	function getinspData(paramins){
+		fetch("/fclt/getinspection",{
+			method:"post",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body:JSON.stringify(paramins)
+		})
+		.then(res => res.json())
+		.then(res =>{
+			console.log(paramins)
+			console.log(res)
+			insptable.setData(res);
+	})
+	.catch(err=>{
+		console.log(err);
+	})
+	}
+	
 	// 점검 목록 데이터
 	
 	searchinsBtn.addEventListener("click",function(){
-				const searchNameins= frmSearchins.searchNameins.value;
+				searchNameins= frmSearchins.searchNameins.value;
 				console.log(searchNameins);
-				const searchDate = frmSearchins.searchDate.value;
-				const searchDate2 = frmSearchins.searchDate2.value;
+				searchDate = frmSearchins.searchDate.value;
+				searchDate2 = frmSearchins.searchDate2.value;
 				console.log(searchDate,searchDate2);
-				const searchCcins = document.querySelector('input[name="searchinsCc"]:checked');
-				const searchCcValins = searchCcins.value;
+				searchCcValins =document.querySelector('input[name="searchinsCc"]:checked').value;
 				console.log(searchCcValins);
-				let paramins = {
+				paramins = {
 						fcName: searchNameins,
 						insDt: searchDate ? searchDate : '',
 						insDt2: searchDate2 ? searchDate2 : '',
 				        // 값이 없으면 undefined
 				        cc: searchCcValins ? searchCcValins : ''
 				};
+				getinspData(paramins);
 				
-				fetch("/fclt/getinspection",{
-					method:"post",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body:JSON.stringify(paramins)
-				})
-				.then(res => res.json())
-				.then(res =>{
-					console.log(paramins)
-					console.log(res)
-					insptable.setData(res);
-			})
-			.catch(err=>{
-				console.log(err);
-			});
 			});
 	
-	//초기화 버튼 값 비워주기 
-	resetinsBtn.addEventListener("click",function(){
-				searchNameins.value= '';
-				searchDate1.value ='';
-				searchDate2.value ='';
-				searchCcValins = '';
-			});
+	
 	
 	
 	//클릭 시 단건 데이터 요청
@@ -313,6 +320,7 @@
 			getInfo(res);
 		})
 	});
+	
 	
 	// 목록 value 불러오기 및 수정 등록
 	function getInfo(obj){

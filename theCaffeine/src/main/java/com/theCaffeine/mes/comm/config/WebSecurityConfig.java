@@ -42,10 +42,11 @@ public class WebSecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
 			.authorizeHttpRequests((requests) -> requests
-				.antMatchers("/","/memb/register" ,"/memb/login","/memb/changepw","/memb/changeid","/memb/findid","/memb/findpw","/assets/**","/fonts/**","/js/**","/scss/**").permitAll()
+				.antMatchers("/","/main","/memb/register" ,"/memb/login","/memb/changepw","/memb/changeid","/memb/findid","/memb/findpw","/assets/**","/fonts/**","/js/**","/scss/**").permitAll()
 //				.antMatchers("/login").permitAll()
+                .antMatchers("/**").hasRole("ADMIN")
 				.antMatchers("/fclt/**").hasRole("FCLT")
-                .antMatchers("/**/**").hasAnyRole("ADMIN")
+
 				.anyRequest().authenticated()
 			)
 			// 람다식
