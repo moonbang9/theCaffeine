@@ -78,6 +78,7 @@
 		        ,c.cli_name
 		        ,mp.placeod_qt
 		        ,m.unit
+		        ,mp.mt_placeod_cd
 		FROM    mt_placeod mp
 		JOIN    mt m
 		ON      m.mt_cd = mp.mt_cd
@@ -108,7 +109,6 @@
 					(mt_placeod_cd,
 					placeod_qt,
 					placeod_compdt,
-					placeod_requester,
 					placeod_chg,
 					mt_cd,
 					cli_cd)
@@ -116,7 +116,6 @@
 		    		SEQ_MT_PLACEOD.nextval
 		    		,#{placeodQt}
 		    		,#{placeodCompdt}
-		    		,#{placeodRequester}
 		    		,#{placeodChg}
 		    		,#{mtCd}
 		    		,#{cliCd}
@@ -132,8 +131,8 @@
 		UPDATE  mt_placeod
 		SET     placeod_st = 2,
 		        placeod_compdt = sysdate,
-		        placeod_chg = '박민수 대리',
-		        placeod_qt = #{placeodQt}
+		        placeod_qt = #{placeodQt},
+		        placeod_chg = #{placeodChg}
 		WHERE   mt_placeod_cd = #{mtPlaceodCd}
 	</update>
 	
