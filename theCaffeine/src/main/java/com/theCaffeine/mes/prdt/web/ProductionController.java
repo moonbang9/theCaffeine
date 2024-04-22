@@ -255,6 +255,12 @@ public class ProductionController {
 		return prdtService.getNonopFc();
 	}
 	
+	//설비 전체수 파악
+	@GetMapping("/ajax/totFcList")
+	public NonopFcVO getTotFc() {
+		return prdtService.getTotFc();
+	}
+	
 	//실적값 리스트
 	@GetMapping("/ajax/totalsList")
 	public TotalVO totalsList() {

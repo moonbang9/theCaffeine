@@ -138,7 +138,8 @@
 		console.log(selectOrder)
 		let planCds = 'K' + dayNameing.value.substring(2, 4) + dayNameing.value.substring(5, 7) + dayNameing.value.substring(8, 10);
 		if(planCds == 'K'){
-			alert('주간계획일자를 입력후 다시 이용해주세요.');
+			//alert('주간계획일자를 입력후 다시 이용해주세요.');
+			Swal.fire("주간계획일자를 입력후 다시 이용해주세요.");
 		}else{
 		console.log('K'+dayNameing.value.substring(2, 4) + dayNameing.value.substring(5, 7) + dayNameing.value.substring(8, 10))
 		
@@ -151,7 +152,8 @@
 					//planOrderDetailVO : params3
 					};
 			if(params2[0].qt == 0 && params2[1].qt == 0 && params2[2].qt == 0 && params2[3].qt == 0 && params2[4].qt == 0){
-				alert('계획수량 입력후 다시 이용해주세요.');
+				//alert('계획수량 입력후 다시 이용해주세요.');
+				Swal.fire("계획수량 입력후 다시 이용해주세요.");
 			}else{
 				fetch("/ajax/planResist",{
 					method : "post",
@@ -163,10 +165,12 @@
 				.then(res => {
 					console.log(res)
 					if(res.ok==true){
-						alert('등록이 완료되었습니다.')
+						//alert('등록이 완료되었습니다.')
+						Swal.fire("등록이 완료되었습니다.");
 						location.href='/production/plan'
 					}else{
-						alert('등록에 실패하였습니다.')
+						//alert('등록에 실패하였습니다.')
+						Swal.fire("등록에 실패하였습니다.");
 					}
 				})
 			}
@@ -198,10 +202,12 @@
 		.then(res => {
 			console.log(res)
 			if(res.ok==true){
-				alert('수정이 완료되었습니다.')
+				//alert('수정이 완료되었습니다.')
+				Swal.fire("수정이 완료되었습니다.");
 				location.href='/production/plan'
 			}else{
-				alert('수정에 실패하였습니다.')
+				//alert('수정에 실패하였습니다.')
+				Swal.fire("수정에 실패하였습니다.");
 			}
 		})
 	})

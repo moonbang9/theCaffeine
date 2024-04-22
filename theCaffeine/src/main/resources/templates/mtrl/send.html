@@ -23,7 +23,7 @@
 
 
 	<script>
-	
+		let memId = document.querySelector(".memName").innerText;
 		let selectSend = "";
 		
 		mtrlSendBtn.addEventListener("click", e=> {
@@ -40,7 +40,7 @@
 			for(send of selectSend) {
 				const mtCd = send.mtCd;
 				const mtQt = send.mtQt;
-				const sendChg = '최지훈 차장'  // send.sendChg;
+				const sendChg = memId;
 				let param = {mtCd, mtQt, sendChg};
 				fetch("/ajax/mtrlMainSend",{
 					method : "post",
