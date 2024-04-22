@@ -239,5 +239,11 @@ public class PrdtServiceImpl implements PrdtService{
 		// TODO Auto-generated method stub
 		return prdtMapper.getMonths();
 	}
+
+	@Override
+	public NonopFcVO getTotFc() {
+		// TODO Auto-generated method stub
+		return prdtMapper.getTotFc();
+	}
 	
 }

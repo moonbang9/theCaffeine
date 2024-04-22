@@ -40,7 +40,8 @@
 	</div>
 
 	<script>
-	
+		let memId = document.querySelector(".memName").innerText;
+
 		passListReq();
 		failListReq();
 		subListReq();
@@ -153,7 +154,6 @@
 			if(selectPassMtrl == "") {
 				alert("선택된 자재가 없습니다.")
 			} else {
-				console.log(selectPassMtrl);
 				passModReq(selectPassMtrl);
 			}
 		})
@@ -161,7 +161,7 @@
 		function passModReq(selectPassMtrl) {
 			for(order of selectPassMtrl) {
 				const strQt= order.placeodQt;
-				const strChg = "최민수 사원"; // 로그인 정보있을 시 order.strChg 로 변경
+				const strChg = memId;
 				const mtPlaceodCd = order.mtPlaceodCd;
 				const mtCd = order.mtCd;
 				const expDt = order.expDt;
@@ -198,7 +198,6 @@
 			if(selectFailMtrl == "") {
 				alert("선택된 자재가 없습니다.")
 			} else {
-				console.log(selectFailMtrl);
 				failModReq(selectFailMtrl);
 			}
 		})
@@ -206,7 +205,7 @@
 		function failModReq(selectFailMtrl) {
 			for(order of selectFailMtrl) {
 				const rtnQt= order.placeodQt;
-				const rtnChg = "이지훈 과장"; // 로그인한 입고관리 담당자 이름 들어감.
+				const rtnChg = memId;
 				const mtPlaceodCd = order.mtPlaceodCd;
 				const mtCd = order.mtCd;
 				let param = {mtCd, rtnQt, rtnChg, mtPlaceodCd};
@@ -242,7 +241,6 @@
 			if(selectSubMtrl == "") {
 				alert("선택된 자재가 없습니다.")
 			} else {
-				console.log(selectSubMtrl);
 				subModReq(selectSubMtrl);
 			}
 		})
@@ -250,7 +248,7 @@
 		function subModReq(selectSubMtrl) {
 			for(order of selectSubMtrl) {
 				const strQt= order.placeodQt;
-				const strChg = "최민수 사원"; // 로그인 정보있을 시 order.strChg 로 변경
+				const strChg = memId;
 				const mtPlaceodCd = order.mtPlaceodCd;
 				const mtCd = order.mtCd;
 				const expDt = order.expDt;

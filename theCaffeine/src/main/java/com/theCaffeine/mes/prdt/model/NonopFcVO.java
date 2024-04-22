@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class NonopFcVO {
 	private String fcCd; //설비코드
-	private String nonopCd; //비가동코드
+	private String insCd; //점검코드
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
 	private Date nonopSttTime; //비가동 시작시간

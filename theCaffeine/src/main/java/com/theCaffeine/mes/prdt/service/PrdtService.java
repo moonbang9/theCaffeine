@@ -42,6 +42,7 @@ public interface PrdtService {
 	List<HistVO> getTodayProduct(HistVO vo); //금일 생산지시 목표량
 	List<MfProcessVO> getInstDetailProcess(InstVO vo); // 공정과정
 	List<NonopFcVO> getNonopFc(); //비가동 설비 판단
+	NonopFcVO getTotFc(); //설비 전체수판단
 	TotalVO getTot(); //실적값들
 	List<HistVO> getSuccessTot(); //성공실적값
 	List<HistVO> getFailTot(); //실패실적값

@@ -50,7 +50,7 @@
 		WHERE d.send_od_st = 1    
 				<include refid="condition"></include>     
 		ORDER BY d.due_dt ASC
-				, d.od_detailno DESC
+				, p.pd_cd
 	</select>
 	
 	<select id="sentList" resultType="OrderMngVO">
@@ -75,6 +75,7 @@
 		   OR d.send_od_st = 3  
 		   <include refid="condition"></include> 
 		ORDER BY d.due_dt DESC
+				, p.pd_cd
 				, d.od_detailno ASC
 	</select>
 	<insert id="sendOrder" statementType="CALLABLE" parameterType="OrderDetailVO">

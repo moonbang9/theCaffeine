@@ -24,6 +24,7 @@ AND (ins_dt BETWEEN #{insDt} AND #{insDt2})
 	SELECT   FINS.INS_CD,
                 F.FC_NAME,
                 FINS.INS_DT,
+                FINS.INS_EXPDT,
                 CASE WHEN  FINS.INS_CAT = 0 THEN '정기'
                               WHEN  FINS.INS_CAT = 1 THEN '수기'
                                             ELSE '기타'
@@ -46,6 +47,7 @@ AND (ins_dt BETWEEN #{insDt} AND #{insDt2})
 	SELECT   FINS.INS_CD,
                 F.FC_NAME,
                 FINS.INS_DT,
+                FINS.INS_EXPDT,
                 FINS.INS_CAT,
                FINS.INS_CONT,
                 FINS.CC,
@@ -67,7 +69,8 @@ AND (ins_dt BETWEEN #{insDt} AND #{insDt2})
 					INS_CONT,
 					CC,
 					CHG,
-					FC_CD
+					FC_CD,
+					INS_EXPDT
 
 					)
 		    VALUES  (
@@ -78,6 +81,7 @@ AND (ins_dt BETWEEN #{insDt} AND #{insDt2})
 		    		,#{cc}
 		    		,#{chg}
 		    		,#{fcCd}
+		    		,#{insExpdt}
 		    		)
 	</insert>
 

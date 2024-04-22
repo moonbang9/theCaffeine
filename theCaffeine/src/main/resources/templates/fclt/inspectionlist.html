@@ -128,9 +128,19 @@
 									<div class="row">
 										<div class="col mb-3">
 											<div class="input-group">
-												<span class="input-group-text" id="basic-addon14">점검일자</span>
+												<span class="input-group-text" id="basic-addon14">점검시작</span>
 												
 						                          <input class="form-control" type="datetime-local"  id="inspectionDt">
+						                 
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col mb-3">
+											<div class="input-group">
+												<span class="input-group-text" id="basic-addon14">점검종료</span>
+												
+						                          <input class="form-control" type="datetime-local"  id="inspfnDt">
 						                 
 											</div>
 										</div>
@@ -165,7 +175,7 @@
 										<div class="col mb-3">
 											<div class="input-group">
 												<span class="input-group-text col-2" id="basic-addon14">담당자</span>
-												<input type="text" class="form-control" id="chargeofins" value=""
+												<input type="text" class="form-control" id="chargeofins" value="관리자"
 													aria-describedby="basic-addon14" readonly>
 											</div>
 										</div>
@@ -213,6 +223,7 @@
 						점검 등록</button>
 						</div>
 			<script>
+			
 			let memId = document.querySelector(".memName").innerText;
 			chargeofins.value = memId;
 			console.log(memId);
@@ -231,7 +242,8 @@
 	    columns:[
 	        {title:"점검 코드", field:"insCd", width:100, hozAlign:"center"},
 	        {title:"설비 명", field:"fcName", width:195, hozAlign:"left" ,frozen:true}, 
-	        {title:"점검일", field:"insDt", width:200, hozAlign:"center"},
+	        {title:"점검시작", field:"insDt", width:200, hozAlign:"center"},
+	        {title:"점검종료", field:"insExpdt", width:200, hozAlign:"center"},
 	        {title:"점검 구분", field:"insCat", width:150, hozAlign:"center"},
 	        {title:"점검 내용", field:"insCont", width:310, hozAlign:"left"},
 	        {title:"판정", field:"cc", width:160, hozAlign:"center"}, 
@@ -328,6 +340,7 @@
 		facilName.value=obj.fcCd;
 		facilityCd.value= obj.fcCd;
 		inspectionDt.value = obj.insDt;
+		inspfnDt.value = obj.insExpdt;
 		chargeofins.value = obj.chg;
 		insCatSelected.value = obj.insCat;
 		conclusion.value = obj.cc;
@@ -339,6 +352,7 @@
 		insCatHide.style.display="block";
 		insCatShow.style.display="none";
 		document.getElementById('inspectionDt').readOnly = true;
+		document.getElementById('inspfnDt').readOnly = true;
 		document.getElementById('inspectionCat').readOnly = true;
 		
 	}
@@ -356,11 +370,13 @@
 		insCatHide.style.display="none";
 		insCatShow.style.display="block";
 		document.getElementById('inspectionDt').readOnly = false;
+		document.getElementById('inspfnDt').readOnly = false;
 		facilityCd.value = "";
 		inspectionCd.value = "";
 		facilName.value="";
 		inspectionDt.value ="";
-		chargeofins.value ="";
+		inspfnDt.value ="";
+		chargeofins.value =document.querySelector(".memName").innerText;
 		inspectionCat.value ="";
 		conclusion.value ="";
 		inspectionContent.value ="";
@@ -382,13 +398,13 @@
 
 		const fcCd = nonopFacility.value
 		const insDt= inspectionDt.value.replace('T',' ');
-
+		const insExpdt = inspfnDt.value.replace('T',' ');
 		const insCat= inspectionCat.value;
 		const insCont= inspectionContent.value;
 		const cc= conclusion.value;
-		const chg= chargeofins.value;
+		const chg= memId.value;
 		
-		let param = { insDt,insCat,insCont,cc,chg, fcCd};
+		let param = { insDt, insExpdt, insCat,insCont,cc,chg, fcCd};
 		console.log(param);
 		fetch("/fclt/insertinsp",{
 			method : "post",
