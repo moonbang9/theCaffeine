@@ -51,7 +51,7 @@
                 <div class="mb-3 row">
                   <label for="mtrl_order_req" class="col-md-2 col-form-label">발주 요청자</label>
                   <div class="col-md-10">
-                    <input class="form-control" type="text" value="관리자" id="mtrl_order_req" readonly>
+                    <input class="form-control" type="text" value="" id="mtrl_order_req" readonly>
                   </div>
                 </div>
               </div>
@@ -91,7 +91,7 @@
 
 	<script>
 		let memId = document.querySelector(".memName").innerText;
-	
+		mtrl_order_req.value = memId;
 		//삭제버튼
 		var editorIcon = function(cell, formatterParams, onRendered) {
 	  		return "<button class='btn btn-danger btn-sm'>삭제</button>";
