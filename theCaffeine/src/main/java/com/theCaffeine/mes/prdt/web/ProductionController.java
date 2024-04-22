@@ -179,10 +179,16 @@ public class ProductionController {
 		return mv;
 	}
 	
-	//지시목록 데이터
+	//금주지시목록 데이터
 	@GetMapping("/ajax/instList")
 	public List<InstVO> instList() {
 		return prdtService.getInstList();
+	}
+	
+	//전체지시목록 데이터
+	@GetMapping("/ajax/instList2")
+	public List<InstVO> instList2() {
+		return prdtService.getInstList2();
 	}
 	
 	//상세지시목록 데이터

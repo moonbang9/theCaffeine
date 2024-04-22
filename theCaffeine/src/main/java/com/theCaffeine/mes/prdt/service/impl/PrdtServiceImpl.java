@@ -141,6 +141,12 @@ public class PrdtServiceImpl implements PrdtService{
 		// TODO Auto-generated method stub
 		return prdtMapper.getInstList();
 	}
+	
+	@Override
+	public List<InstVO> getInstList2() {
+		// TODO Auto-generated method stub
+		return prdtMapper.getInstList2();
+	}
 
 	@Override
 	public List<InstVO> getInstDetailList(Integer pdtInstNo) {

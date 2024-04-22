@@ -113,14 +113,17 @@
 				.then(res => res.json())
 				.then(res => {
 					if(res.response == 'ok'){
-						alert('등록이 완료되었습니다.')
+						Swal.fire("등록이 완료되었습니다.");
+						//alert('등록이 완료되었습니다.')
 						location.href='/production/prdtInst'
 					}else{
-						alert('등록에 실패하였습니다.')
+						Swal.fire("등록에 실패하였습니다.");
+						//alert('등록에 실패하였습니다.')
 					}
 				})
 			}else{
-				alert('지시일 등록후 다시 등록해주세요.')
+				Swal.fire("지시일 등록후 다시 등록해주세요.");
+				//alert('지시일 등록후 다시 등록해주세요.')
 			}
 			
 			
@@ -359,7 +362,8 @@
 	    			let count2 = 0;
 	    			//console.log(new Date(planDay2.value + " " + cell._cell.row.data.pdtSttTime))
 	    			//console.log(cell._cell.row.data.pdtSttTime)
-	    			if(nonopFcLists != []){
+	    			console.log(nonopFcLists)
+	    			if(nonopFcLists.length > 0){
 	    				let nonLength = nonopFcLists[0].totFc;
 	    				let thatDays = new Date(planDay2.value + " " + cell._cell.row.data.pdtSttTime)
 	    				for(let j of nonopFcLists){
@@ -390,7 +394,8 @@
 	    				//console.log(count2) // 못도는 시간대
 	    				//console.log(nonLength)
 	    				if(count2 > (nonLength-count)){
-	    					alert('점검예약으로 인해 해당 시간에 더이상 지시등록이 불가능합니다.')
+	    					//alert('점검예약으로 인해 해당 시간에 더이상 지시등록이 불가능합니다.')
+	    					Swal.fire("점검예약으로 인해 해당 시간에 더이상 지시등록이 불가능합니다.");
 	    					for(let i of tables){
 	    	    				if(cell._cell.row.data.rownum == i.rownum && cell._cell.row.data.pdtSttTime != ""){
 	    	    						i.pdtSttTime = null;
@@ -411,7 +416,8 @@
 		    					if(date2 < date1){
 		    						i.pdtSttTime = null;
 		    						i.pdtexptFnTime = null;
-		    						alert('해당 날짜를 초과하는 시간입니다.')
+		    						//alert('해당 날짜를 초과하는 시간입니다.')
+		    						Swal.fire("해당 날짜를 초과하는 시간입니다.");
 		    					}else if(tfs){
 		    						//console.log(getDateStr2(date1).substring(11,20))
 		    						i.pdtexptFnTime = getDateStr2(date1).substring(11,20)
@@ -431,7 +437,8 @@
 		    					if(date2 < date1){
 		    						i.pdtSttTime = null;
 		    						i.pdtexptFnTime = null;
-		    						alert('해당 날짜를 초과하는 시간입니다.')
+		    						//alert('해당 날짜를 초과하는 시간입니다.')
+		    						Swal.fire("해당 날짜를 초과하는 시간입니다.");
 		    					}else{
 		    						//console.log(getDateStr2(date1).substring(11,20))
 		    						i.pdtexptFnTime = getDateStr2(date1).substring(11,20)

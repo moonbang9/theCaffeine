@@ -237,6 +237,35 @@
 		group by w.pdt_inst_no)q 
 	left outer join PDT_INST t 
 	on q.pdt_inst_no = t.pdt_inst_no
+	<![CDATA[ where t.pdt_inst_dt in (select pdt_inst_dt from PDT_INST where pdt_plan_cd = (select max(pdt_plan_cd) from PDTPLAN where wk_plan_stt_dt <= sysdate))]]>
+	order by t.pdt_inst_dt
+	</select>
+	
+	<select id="getInstList2" resultType="InstVO">
+	select q.msum, q.isum, q.pdt_inst_no,q.insttot,t.pdt_inst_dt 
+		from(select 	sum(w.m)/60 msum,
+				sum(w.isum) isum,
+				w.pdt_inst_no,
+				case when count(w.pdt_inst_dt)-1 = '0' 
+				then min(pd.pd_name)
+                else min(pd.pd_name) || ' 외 ' || (count(w.pdt_inst_dt)-1) || '개'
+                end as insttot 
+		from (select d.pd_cd, sum(d.qt) isum, p.pdt_inst_dt, round(sum(pdtexpt_fn_time-pdt_stt_time)*24*60,2) m,p.pdt_inst_no
+				from PDT_INST_DETAIL d left outer 
+				join PDT_INST p 
+				on p.pdt_inst_no=d.pdt_inst_no
+				group by d.pd_cd, p.pdt_inst_dt,p.pdt_inst_no
+				order by p.pdt_inst_dt) w 
+		right outer join 	(select DISTINCT p.pdt_inst_no 
+							from PDT_INST p 
+							join PDT_INST_DETAIL pd 
+							on p.pdt_inst_no=pd.pdt_inst_no) e 
+		on w.pdt_inst_no = e.pdt_inst_no
+		join pd pd 
+		on pd.pd_cd=d.w.pd_cd
+		group by w.pdt_inst_no)q 
+	left outer join PDT_INST t 
+	on q.pdt_inst_no = t.pdt_inst_no
 	order by t.pdt_inst_dt
 	</select>
 	
