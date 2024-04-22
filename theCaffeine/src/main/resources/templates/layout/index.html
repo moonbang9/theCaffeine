@@ -344,6 +344,7 @@
                           
                           
                             <span class="fw-semibold d-block memId" sec:authentication="name">아이디</span>
+                            <span class="text-muted memName" sec:authorize="isAuthenticated()" sec:authentication="principal.enterVO.name"></span>
                             <small class="text-muted memAuth" sec:authentication="authorities">권한레벨</small>
                           </div>
                         </div>

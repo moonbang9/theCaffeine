@@ -34,7 +34,15 @@
 	<!-- 단건 조회 -->
 	<select id="getEnterInfo" parameterType="string"
 		resultType="EnterpriseVO">
-		SELECT * FROM COMBINED_VIEW
+		SELECT 	mem_type,
+				id, 
+				pw, 
+				name, 
+				tel, 
+				dpt, 
+				auth_no, 
+				auth_name 
+		FROM COMBINED_VIEW
 		WHERE
 		ID =#{ID}
 	</select>

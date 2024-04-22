@@ -1,8 +1,16 @@
 package com.theCaffeine.mes.comm.user.model;
 
+import java.util.List;
+
+import com.theCaffeine.mes.prdt.model.InstVO;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class EnterpriseVO {
 		String enterCd;
 		String id;
