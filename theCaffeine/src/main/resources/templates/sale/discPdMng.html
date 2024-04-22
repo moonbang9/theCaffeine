@@ -79,7 +79,7 @@
                 <label for="html5-search-input" class="col-md-2 col-form-label"></label>
                 <div class="col-md-10">
                     <div class="form-check form-check-inline mt-3">
-                        <input class="form-check-input" type="checkbox" id="discGraph" name="odSt">
+                        <input class="form-check-input" type="checkbox" id="discChart" name="odSt">
                         <label class="form-check-label" for="inlineCheckbox1">그래프로 보기</label>
                     </div>
                 </div>
@@ -109,7 +109,7 @@
           <!-- 폐기 목록 그래프 -->
 
           <!--Div that will hold the pie chart-->
-          <div id="discardGraph" style="display: none;">
+          <div id="discardChart" style="display: none;">
             그래프
           </div>
 
@@ -128,7 +128,7 @@
       let condition = {};
       let period = '';
 
-      const graphData = [];
+      const chartData = [];
       //const chartRes = '';
 
       // 1금일 2금주 3전주 4금월 5전월 6직접설정
@@ -163,29 +163,25 @@
         period = 5;
       })
 
-      // 미처리된 출고목록 조건검색
+      // 폐기 제품 목록or차트 조건검색
       discPdCondition.onsubmit = async (e) => {
         e.preventDefault();
 
         pdCdSelect = document.getElementById('pdCdSelect');
-        pdCd = pdCdSelect.options[pdCdSelect.selectedIndex].value;
-
-        //const period = nSendSearch.nOdChg.value;
+        pdCd = pdCdSelect.options[pdCdSelect.selectedIndex].value;        
         //const minDiscDt = nSendSearch.nMinOdDt.value;
         //const minDiscDt = nSendSearch.nMaxOdDt.value;        
 
         let condition = { pdCd, period };
-
-        let showGraph = document.getElementById('discGraph').checked;
-        console.log('showGraph', showGraph);
-        if (showGraph) {
-          document.getElementById("discardGraph").style.display = 'block';
+        let showChart = document.getElementById('discChart').checked;
+        
+        if (showChart) {
+          document.getElementById("discardChart").style.display = 'block';
           document.getElementById("discardTable").style.display = 'none';
     
-          getDiscPdChart(condition);
-          drawChart() 
+          
         } else {
-          document.getElementById("discardGraph").style.display = 'none';
+          document.getElementById("discardChart").style.display = 'none';
           document.getElementById("discardTable").style.display = 'block';
           getDiscPdList(condition);
         }
@@ -237,9 +233,20 @@
           { title: "사유", field: "reason", headerHozAlign: "center", hozAlign: "left" }
         ],
       });
-
-
-
+      
+      
+      selectNav();
+      
+      function selectNav() {
+        mainPage.classList.remove('active');
+        sale.classList.add('active');
+        sale.classList.add('open');
+        sale_discardProduct.classList.add('active');
+      }
+      
+      
+      </script>
+      <script type="text/javascript">
 
 
       async function getDiscPdChart(condition) {
@@ -247,105 +254,69 @@
         await axios.post("/sales/ajax/discPdChart", param)
           .then(res => {
             console.log('차트결과', res);
-            //graphData= res.data;
+            //chartData= res.data;
             res.data.forEach(e => {
               let insideArr = [];
               insideArr.push(e.reason);
               insideArr.push(e.sumQt);
               console.log(insideArr)
 
-              graphData.push(insideArr);
+              chartData.push(insideArr);
             })
-            console.log('graphData', graphData);
+            console.log('chartData', chartData);
 
             //chartRes = res.data;
           })
       }
 
 
-        // Load the Visualization API and the corechart package.
-        google.charts.load('current', { 'packages': ['corechart'] });
-
-        // Set a callback to run when the Google Visualization API is loaded.
-        google.charts.setOnLoadCallback(drawChart);
 
 
-      // Callback that creates and populates a data table,
-      // instantiates the pie chart, passes in the data and
-      // draws it.
-      async function drawChart() {
 
+
+      async function getChart(){
+        getDiscPdChart(condition);
+        
         
 
-        // Create the data table.
 
-        // var data = new google.visualization.DataTable();
-
-        // chartRes.forEach(e=>{
-        //   data.addColumn('string', e.reason);
-        //   data.addColumn('date', e.sumQt);
-        //   data.setCell(0, 0, 'Mike');
-        // })
-
-
-        // data.addColumn('string', 'Employee Name');
-        // data.addColumn('date', 'Start Date');
-        // data.addRows(6);
-        // data.setCell(0, 0, 'Mike');
-        // data.setCell(0, 1, new Date(2008, 1, 28));
-        // data.setCell(1, 0, 'Bob');
-        // data.setCell(1, 1, new Date(2007, 5, 1));
-        // data.setCell(2, 0, 'Alice');
-        // data.setCell(2, 1, new Date(2006, 7, 16));
-        // data.setCell(3, 0, 'Frank');
-        // data.setCell(3, 1, new Date(2007, 11, 28));
-        // data.setCell(4, 0, 'Floyd');
-        // data.setCell(4, 1, new Date(2005, 3, 13));
-        // data.setCell(5, 0, 'Fritz');
-        // data.setCell(5, 1, new Date(2007, 9, 2));
-
-
-
-
-
-        // const arrData = [];
-        // arrData.push(['Country','Popularity']);
-        // <c:forEach items="${nationList}" var="_nation" varStatus="_status">
-        //     arrData.push(['${_nation.nation}',${_nation.cnt}]);
-        // </c:forEach>
-
-
-        var data = google.visualization.arrayToDataTable(graphData, false);
-        //var data = google.visualization.DataTable(graphData);
-
-
-
-
-
-        //   var data = google.visualization.arrayToDataTable(graphData ,
-        // false); // 'false' means that the first row contains labels, not data.
-
-
-        // Set chart options
-        var options = {
-          'title': 'How Much Pizza I Ate Last Night',
-          'width': 500,
-          'height': 300
-        };
-
-        // Instantiate and draw our chart, passing in some options.
-        var chart = new google.visualization.ColumnChart(document.getElementById('discardGraph'));
-        chart.draw(data, options);
       }
+
+                  // Load the Visualization API and the corechart package.
+                google.charts.load('current', {'packages':['corechart']});
+
+          // Set a callback to run when the Google Visualization API is loaded.
+          google.charts.setOnLoadCallback(drawChart);
+
+          // Callback that creates and populates a data table,
+          // instantiates the pie chart, passes in the data and
+          // draws it.
+          function drawChart() {
+
+            // Create the data table.
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Topping');
+            data.addColumn('number', 'Slices');
+            data.addRows([
+              ['Mushrooms', 3],
+              ['Onions', 1],
+              ['Olives', 1],
+              ['Zucchini', 1],
+              ['Pepperoni', 2]
+            ]);
+
+            // Set chart options
+            var options = {'title':'How Much Pizza I Ate Last Night',
+                          'width':400,
+                          'height':300};
+
+            // Instantiate and draw our chart, passing in some options.
+            var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
+            chart.draw(data, options);
+          }
+                
       
-	selectNav();
 	
-	function selectNav() {
-		mainPage.classList.remove('active');
-		sale.classList.add('active');
-		sale.classList.add('open');
-		sale_discardProduct.classList.add('active');
-	}
     </script>
 
   </div>

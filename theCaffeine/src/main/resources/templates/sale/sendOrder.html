@@ -388,7 +388,7 @@
       }else if(results.every( e => e==2)){
         console.log('모든결과가2 ', results.every( e => e==2))
         sendCheck = '모든 주문이 재고 부족으로 출고되지 못했습니다.';
-        notSendTable.alert(sendCheck, "error");
+        notSendTable.alert(sendCheck, "error");        
       // }else if(results.every(e => e==3)){
       //   console.log('모든결과가3 ', results.every( e => e==3));
       //   sendCheck = '서버 오류로 출고되지 못했습니다.';
@@ -418,17 +418,12 @@
       //   }                    
       // }
       //alert(sendCheck);
-      
-      
+      setTimeout(() => {
+              notSendTable.clearAlert();
+      }, "2000");
+
       getNotSendList(nSendCondition);
     }
-
-     
-      notSendTable.on("click", function (e, row) {
-    	  notSendTable.clearAlert();
-    });
-      
-      
 
 	selectNav();
 	
