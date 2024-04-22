@@ -166,7 +166,7 @@
 													<th>
 														<select id="smallSelect" class="form-select form-select-sm"
 															v-model="selected" @change="selectPd(selected)">
-															<option value="" disabled>상품을
+															<option value="" disabled>제품을
 																선택해주세요
 															</option>
 															
@@ -400,6 +400,9 @@
 					},
 					//거래처 검색 모달 열기
 					openModal() {
+						this.keyword = '';
+						this.clientList= '';
+						
 						const modalToggle = document.getElementById('modalCenter');
 						//console.log(this.myModal);
 						this.myModal.show(modalToggle);
