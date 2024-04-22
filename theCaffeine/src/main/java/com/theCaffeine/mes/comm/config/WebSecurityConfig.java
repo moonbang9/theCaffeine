@@ -42,10 +42,10 @@ public class WebSecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
 			.authorizeHttpRequests((requests) -> requests
-				.antMatchers("/","/main","/memb/register" ,"/memb/login","/memb/changepw","/memb/changeid","/memb/findid","/memb/findpw","/assets/**","/fonts/**","/js/**","/scss/**").permitAll()
+				.antMatchers("/","/main","/memb/register" ,"/memb/login","/memb/changepw","/memb/changeid","/memb/findid","/memb/findpw","/assets/**","/fonts/**","/js/**","/scss/**", "/accessError").permitAll()
 //				.antMatchers("/login").permitAll()
-                .antMatchers("/**").hasRole("ADMIN")
-				.antMatchers("/fclt/**").hasRole("FCLT")
+				.antMatchers("/fclt/**").hasAnyRole("FCLT","ADMIN")
+                //.antMatchers("/**").hasRole("ADMIN")
 
 				.anyRequest().authenticated()
 			)
