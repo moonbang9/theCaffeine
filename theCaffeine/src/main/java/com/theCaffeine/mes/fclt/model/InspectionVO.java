@@ -18,7 +18,7 @@ public class InspectionVO {
 	Date insDt;
 	@DateTimeFormat(pattern = "yyyy-mm-dd HH:mm")
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm")
-	Date lastInsDt;
+	Date insExpdt;
 	String insCat;
 	String insCont;
 	String cc;
