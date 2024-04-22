@@ -39,8 +39,8 @@
 		
 	})
 	
-	//아이디
-	let memId = document.querySelector(".memId").innerText
+	//이름
+	let memId = document.querySelector(".memName").innerText
 	//권한
 	let memAuth = document.querySelector(".memAuth").innerText
 	
@@ -60,6 +60,7 @@
     pagination:"local",
     paginationSize:8,
     paginationCounter:"rows",
+    selectableRows:true,
     columns:[
         {title:"계획일자", field:"pdtInstDt", hozAlign:"center", width:220, headerHozAlign: "center"},
         {title:"상품명", field:"insttot", hozAlign:"left", width:400, headerHozAlign: "center"},
@@ -135,6 +136,8 @@
 		let pdtDt = row.getData().pdtInstDt;
 		let param = {"pdtDt" : pdtDt}
 		let param1 = {"pdtInstDt" : pdtDt}
+		table.deselectRow();
+		table.selectRow(row);
 		
 		fetch("/ajax/todayProductList",{
 					method : "post",

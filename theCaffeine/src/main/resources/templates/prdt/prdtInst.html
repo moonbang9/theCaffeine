@@ -94,6 +94,7 @@
     pagination:"local",
     paginationSize:8,
     paginationCounter:"rows",
+    selectableRows:true,
     columns:[
         {title:"계획일자", field:"pdtInstDt", hozAlign:"center", width:200, headerHozAlign: "center"},
         {title:"상품명", field:"insttot", hozAlign:"left", width:400, headerHozAlign: "center"},
@@ -168,6 +169,8 @@
 	// 주간 생산계획 버튼 이벤트
 	table.on("rowClick", function(e, row){
 		let pdtInstNo = row.getData().pdtInstNo;
+		table.deselectRow();
+		table.selectRow(row);
 		
 		fetch("/ajax/instDetailList/"+ pdtInstNo)
 		.then(res => res.json())

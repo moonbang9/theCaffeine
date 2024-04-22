@@ -150,24 +150,26 @@
 					planDetailVO : params2
 					//planOrderDetailVO : params3
 					};
-		
-		
-		fetch("/ajax/planResist",{
-			method : "post",
-			headers: {
-			      "Content-Type": "application/json",
-			    },
-			body : JSON.stringify(param)
-		})
-		.then(res => {
-			console.log(res)
-			if(res.ok==true){
-				alert('등록이 완료되었습니다.')
-				location.href='/production/plan'
+			if(params2[0].qt == 0 && params2[1].qt == 0 && params2[2].qt == 0 && params2[3].qt == 0 && params2[4].qt == 0){
+				alert('계획수량 입력후 다시 이용해주세요.');
 			}else{
-				alert('등록에 실패하였습니다.')
+				fetch("/ajax/planResist",{
+					method : "post",
+					headers: {
+				      	"Content-Type": "application/json",
+				    	},
+					body : JSON.stringify(param)
+				})
+				.then(res => {
+					console.log(res)
+					if(res.ok==true){
+						alert('등록이 완료되었습니다.')
+						location.href='/production/plan'
+					}else{
+						alert('등록에 실패하였습니다.')
+					}
+				})
 			}
-		})
 		}
 	})
 	
