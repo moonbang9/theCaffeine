@@ -71,6 +71,21 @@
 		ORDER BY qt_difference
  	</select>
  	
+ 	<select id="getMtrlOrderList" resultType="MtrlOrderVO"> 
+ 		SELECT  m.mt_div
+		        ,m.mt_cd
+		        ,m.mt_name
+		        ,c.cli_name
+		        ,mp.placeod_qt
+		        ,m.unit
+		FROM    mt_placeod mp
+		JOIN    mt m
+		ON      m.mt_cd = mp.mt_cd
+		JOIN    cli c
+		ON      m.cli_cd = c.cli_cd
+		WHERE   mp.placeod_st = 1
+ 	</select>
+ 	
  	<select id="getMtrlCliList" resultType="MtrlOrderVO"> 
 		SELECT  cli_cd,
 		        cli_name
