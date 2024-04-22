@@ -130,6 +130,7 @@
 				mtrl_management_clicd.innerHTML += makeOption(obj);
 			}
 		})
+		return true;
 	}
 	
 	// option생성
@@ -256,6 +257,8 @@
 	});
 	
 	function getInfo(obj){
+		console.log(obj);
+		getCliName();
 		mtrl_management_clicd.value = obj.cliCd;
 		mtrl_management_cd.value = obj.mtCd;
 		mtrl_management_div.value = obj.mtDiv;

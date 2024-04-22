@@ -343,6 +343,15 @@ var discardTable = new Tabulator("#discardTable", {
         var chart = new google.visualization.ColumnChart(document.getElementById('discardGraph'));
         chart.draw(data, options);
       }
+      
+	selectNav();
+	
+	function selectNav() {
+		mainPage.classList.remove('active');
+		sale.classList.add('active');
+		sale.classList.add('open');
+		sale_discardProduct.classList.add('active');
+	}
     </script>
 
   </div>
