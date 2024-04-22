@@ -125,7 +125,7 @@
 	
 	// 주간 생산계획조회 데이터
 	function listReq() {
-		fetch("/ajax/instList")
+		fetch("/ajax/instList2")
 		.then(res => res.json())
 		.then(res => table.setData(res))
 	}
