@@ -1108,3 +1108,75 @@ select case
 		WHERE d.send_od_st = 1;
         
 select * from od;
+
+
+
+select DISTINCT d.pd_cd
+									, p.pd_name
+									, p.unit
+									, st.total_stk as "curStk"
+									, dn.total_not_send as "totalNotSend"
+									, tl.tw_prdt as "twoWPrdt"
+									, wn.tw_not_send as "twoWNotSend"
+									, TRUNC((wn.tw_not_send/(st.total_stk + tl.tw_prdt)*100),1) as "possStats"
+									, TRUNC(((st.total_stk + tl.tw_prdt)-wn.tw_not_send), 0) as "possTwoSend"
+					from pd p JOIN od_detail d
+				            	ON p.pd_cd = d.pd_cd
+				              JOIN ( select sum(qt)/12 as total_stk
+				              				, pd_cd
+				                       from pd_stk
+				                      where ADD_MONTHS(sysdate, 6) <= exp_dt
+				                      group by pd_cd) st
+				            	ON d.pd_cd = st.pd_cd
+				              JOIN ( select sum(qt) as total_not_send
+				              				, pd_cd
+				                       from od_detail
+				                      where send_od_st = 1
+				                      group by pd_cd) dn
+				            	ON d.pd_cd = dn.pd_cd
+				              JOIN ( select sum(lan.qt/12) as tw_prdt
+				            				, lan.pd_cd 
+				                      from pdt_plan_detail lan JOIN ( select pdt_plan_cd
+				                     										, wk_plan_stt_dt
+							                                           from pdtplan
+							                                          where wk_plan_stt_dt > sysdate
+							                                                AND wk_plan_stt_dt < TO_DATE(NEXT_DAY(sysdate+ 14 , '월')) ) lnn
+				              									ON lan.pdt_plan_cd = lnn.pdt_plan_cd
+				                  group by lan.pd_cd) tl
+				            	ON d.pd_cd = tl.pd_cd
+				             JOIN (select sum(nsn.qt) as tw_not_send
+				             			, nsn.pd_cd
+				                     from od_detail nsn JOIN (select od_detailno
+				                     								, pd_cd
+								                                from od_detail
+								                               where send_od_st = 1
+								                                    and (due_dt -sysdate) <= 14) nsq
+				                    					  ON nsn.od_detailno = nsq.od_detailno
+				                    group by nsn.pd_cd) wn
+				              ON d.pd_cd = wn.pd_cd
+				order by d.pd_cd;
+                
+                
+-- 총재고 총미출고 2주예상생산 2주미출고 2주예상출고가능량 
+select * from pd_stk;
+select sum(qt), pd_cd
+from pd_stk
+group by pd_cd;
+
+select * from od_detail;
+select o.pd_cd, t.total
+from od_detail o JOIN (
+
+select sum(qt) as total, pd_cd
+from od_detail
+where send_od_st =1
+group by pd_cd) t
+ON o.pd_cd = t.pd_cd
+;
+
+SELECT NVL((select sum(qt), pd_cd
+from od_detail
+where send_od_st =1
+group by pd_cd ) , 0) as qt  
+    FROM od_detail;
+
