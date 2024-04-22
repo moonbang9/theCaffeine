@@ -109,9 +109,9 @@
           </div>
         </div>
 
-        <div class="row">
-          <div class="col-xl">
-
+        
+          
+		<div>
             
             <!-- 폐기 목록 그리드 -->
             <div id="discardTable" class="mb-3">
@@ -124,10 +124,7 @@
               그래프
             </div>
 
-
-          </div>
-
-        </div>
+       	</div>
 
 
       </div>
@@ -221,34 +218,35 @@ google.charts.setOnLoadCallback(drawChart);
 
 
 var discardTable = new Tabulator("#discardTable", {
-        layout: "fitColumns",
-        height: "100%",
-        selectableRows:true,
-        //responsiveLayout: "hide",
-        resizableColumnFit: true,
-        pagination:"local",
-		    paginationSize:30,
-		    paginationSizeSelector:[10, 20, 30],
-		    movableColumns:true,
-		    paginationCounter:"rows",
-        rowHeader:{
-            width:70,
-            headerSort:false, 
-						resizable: true, 
-						frozen:true, 
-						headerHozAlign:"center", 
-						hozAlign:"center", 
-						formatter:"rowSelection", 
-						titleFormatter:"rowSelection", 
-						cellClick:function(e, cell){ cell.getRow().toggleSelect(); }
-          },
+		height:"100%",
+	    layout:"fitColumns",
+	    pagination:"local",
+	    paginationSize:20,
+	    paginationSizeSelector:[10,20,30],
+	    movableColumns:true,
+	    paginationCounter:"rows",
+	    rowHeader:{formatter:"rownum",
+	    			headerSort:false, width:50, 
+	    			hozAlign:"center", 
+	    			resizable:false, 
+	    			frozen:true, 
+	    			vertAlign:"middle"},
+	    resizableRowGuide:true,        
+	    resizableColumnFit: true,
         columns: [ //disc_no |qt |cost   |disc_dt               |rsn |reason  |disc_chg |pd_lot            |pd_cd |
-          { title: "폐기일", field: "discDt", width: 150, hozAlign: "center" },
-          { title: "LOT", field: "pdLot", width: 100, hozAlign: "center" },
-          { title: "제품명", field: "pdName", width: 110, hozAlign: "left" },
-          { title: "수량", field: "qt", width: 160, hozAlign: "right" },
-          { title: "단가", field: "cost", width: 400, hozAlign: "center", formatter:"money" },
-          { title: "사유", field: "reason", width: 70, hozAlign: "left" }         
+          { title: "폐기일", field: "discDt", headerHozAlign:"center", width: 180, hozAlign: "center" },
+          { title: "LOT", field: "pdLot", headerHozAlign:"center", hozAlign: "center" },
+          { title: "제품명", field: "pdName", headerHozAlign:"center", width: 400, hozAlign: "left" },
+          { title: "수량", field: "qt", headerHozAlign:"center", width: 70, hozAlign: "right" },
+          { title: "단가", field: "cost", headerHozAlign:"center", width: 150, hozAlign: "center", formatter:"money", formatterParams:{
+              // decimal:",",
+              // thousand:".",
+              //symbol:"",
+              //symbolAfter:"p",
+              negativeSign:true,
+              precision:false,
+          } },
+          { title: "사유", field: "reason", headerHozAlign:"center", hozAlign: "left" }         
         ],
       });
 
@@ -323,7 +321,10 @@ var discardTable = new Tabulator("#discardTable", {
             // <c:forEach items="${nationList}" var="_nation" varStatus="_status">
             //     arrData.push(['${_nation.nation}',${_nation.cnt}]);
             // </c:forEach>
-              var data = google.visualization.arrayToDataTable(graphData, false);
+              
+            
+            //var data = google.visualization.arrayToDataTable(graphData, false);
+              var data = google.visualization.DataTable(graphData);
             
            
 
