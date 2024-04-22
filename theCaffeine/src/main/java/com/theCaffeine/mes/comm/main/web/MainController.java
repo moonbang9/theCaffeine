@@ -24,6 +24,13 @@ public class MainController {
 		return mv;
 	}
 	
+	// 에러 페이지이동
+		@GetMapping("/accessError")
+		public ModelAndView error() { 
+			ModelAndView mv = new ModelAndView("comm/accessError");
+			return mv;
+		}
+	
 	// 메인 페이지이동
 		@GetMapping("/main")
 		public ModelAndView mainpage() { 
