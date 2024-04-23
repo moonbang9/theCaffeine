@@ -283,7 +283,7 @@
 
 
 			<p class="mb-0" style="text-align: right;">
-				<small>클릭하면 주문 상세 내용을 볼 수 있습니다.</small>
+				<small>클릭하면 주문 상세 정보를 볼 수 있습니다.</small>
 			</p>
         <!-- 주문목록 그리드 -->
         <div id="orderListTable" class="mb-3">
@@ -390,10 +390,10 @@
         columns: [ //주문일, 거래처, 제품명, 주문금액(부분합), 납기일, 상태, 인쇄
           { title: "주문번호", field: "odNo", headerHozAlign:"center",hozAlign: "center" , width:"86"},
           { title: "주문일", field: "odDt", headerHozAlign:"center", hozAlign: "center" },
-          { title: "거래처", field: "cliName", headerHozAlign:"center", hozAlign: "left"},
+          { title: "거래처", field: "cliName", headerHozAlign:"center", hozAlign: "left", width:"190"},
           { title: "제품", field: "pd", headerHozAlign:"center",hozAlign: "left", widthGrow:3},
           { title: "할인율", field: "dcPercent", headerHozAlign:"center", hozAlign: "right" , width:"73" },
-          { title: "총 금액", field: "totalPrice", headerHozAlign:"center", hozAlign: "right", formatter:"money", formatterParams:{
+          { title: "총 금액", field: "totalPrice", headerHozAlign:"center", hozAlign: "right", width:"100", formatter:"money", formatterParams:{
                                                                                                           // decimal:",",
                                                                                                           // thousand:".",
                                                                                                           //symbol:"",
