@@ -18,7 +18,7 @@ public class PackagingController {
 	PackagingService packagingService;
 
 	// 포장검사 페이지이동
-	@GetMapping("/quality/packaging")
+	@GetMapping("/qlty/packaging")
 	public ModelAndView packaging() {
 		ModelAndView mv = new ModelAndView("qlty/packaging");
 		return mv;

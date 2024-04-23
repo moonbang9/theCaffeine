@@ -19,7 +19,7 @@ public class QltyController {
 	QltyService qltyService;
 
 	// 자재검사 페이지이동
-	@GetMapping("/quality/material")
+	@GetMapping("/qlty/material")
 	public ModelAndView material() {
 		ModelAndView mv = new ModelAndView("qlty/material");
 		return mv;

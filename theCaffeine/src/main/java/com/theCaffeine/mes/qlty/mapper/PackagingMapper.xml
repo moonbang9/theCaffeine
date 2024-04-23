@@ -90,7 +90,7 @@
 	
 	<insert id="insertPdSTK" parameterType="PackagingVO">
 		INSERT INTO pd_stk (PD_LOT, UNIT, QT, PDT_DT, EXP_DT, PD_CD, PDT_INST_DETAIL_NO)
-    	VALUES (#{pdLot}, 'box', 2, SYSDATE, ADD_MONTHS(SYSDATE, 1), #{pdName}, #{pdtInstDetailNo})
+    	VALUES (#{pdLot}, 'box', 2, SYSDATE, ADD_MONTHS(SYSDATE, 12), #{pdName}, #{pdtInstDetailNo})
 	</insert>
 	<update id="updateCkProcess" parameterType="PackagingVO">
 		update PDT_HIST

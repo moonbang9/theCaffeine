@@ -18,7 +18,7 @@ public class ProcessController {
 	ProcessService processService;
 
 	// 공정검사 페이지이동
-	@GetMapping("/quality/process")
+	@GetMapping("/qlty/process")
 	public ModelAndView process() {
 		ModelAndView mv = new ModelAndView("qlty/process");
 		return mv;
