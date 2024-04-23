@@ -398,7 +398,7 @@
 	    				//console.log(t2)
 	    				//console.log(t3)
 	    				//console.log(thatDays2)
-	    					if(t3 >= thatDays2 && thatDays3 <= t2 || thatDays2 <= t2 && thatDays3 >= t2 || thatDays2 <= t2 && thatDays3 <= t3 && thatDays3 >= t2 || thatDays2 >= t2 && thatDays3 >= t3 && thatDays2 <= t3){
+	    					if((t2 <= thatDays2 && t2 <= thatDays3 && t2 >= thatDays2 && t3 <= thatDays3) || (t2 <= thatDays3 && t2 >= thatDays2 && t3 >= thatDays2 && t3 >= thatDays3)){
 		    					count2++;
 		    				}
 	    				}
@@ -447,7 +447,7 @@
 							let t2 = new Date(planDay2.value + " " + i.pdtSttTime) //전체선택의 시작시점
 							let t3 = new Date(planDay2.value + " " + i.pdtSttTime) //전체선택의 종료시점
 							t3.setMinutes(t3.getMinutes() + 30);
-							if(t3 >= thatDays2 && thatDays3 <= t2 || thatDays2 <= t2 && thatDays3 >= t2 || thatDays2 <= t2 && thatDays3 <= t3 && thatDays3 >= t2 || thatDays2 >= t2 && thatDays3 >= t3 && thatDays2 <= t3){
+							if((t2 <= thatDays2 && t2 <= thatDays3 && t2 >= thatDays2 && t3 <= thatDays3) || (t2 <= thatDays3 && t2 >= thatDays2 && t3 >= thatDays2 && t3 >= thatDays3)){
 								count2++;
 							}
 						}

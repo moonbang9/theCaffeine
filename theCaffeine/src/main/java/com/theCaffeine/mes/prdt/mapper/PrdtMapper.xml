@@ -266,7 +266,8 @@
 		group by w.pdt_inst_no)q 
 	left outer join PDT_INST t 
 	on q.pdt_inst_no = t.pdt_inst_no
-	order by t.pdt_inst_dt
+	<![CDATA[where t.pdt_inst_dt <= sysdate]]>
+	order by t.pdt_inst_dt desc
 	</select>
 	
 	<select id="getInstDetailList" resultType="InstVO">
@@ -469,6 +470,7 @@
 		join PDT_INST_DETAIL pid 
 		on h.pdt_inst_detail_no = pid.pdt_inst_detail_no 
 		where pid.comp_st=6
+		order by h.pdt_stt_time desc
 	</select>
 	
 	<select id="getMonths" resultType="YearTotalVO">
