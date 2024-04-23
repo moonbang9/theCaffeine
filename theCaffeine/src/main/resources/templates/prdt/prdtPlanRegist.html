@@ -173,7 +173,7 @@
 					if(res.ok==true){
 						//alert('등록이 완료되었습니다.')
 						Swal.fire("등록이 완료되었습니다.");
-						location.href='/production/plan'
+						location.href='/prdt/production/plan'
 					}else{
 						//alert('등록에 실패하였습니다.')
 						Swal.fire("등록에 실패하였습니다.");
@@ -197,7 +197,14 @@
 					//planOrderDetailVO : params3
 					};
 		
-		
+		Swal.fire({
+			title : "수정이 하시겠습니까?",
+			confirmButtonText: "네",
+			showCancelButton: true,
+			cancelButtonText: "아니오"
+		})
+		.then((result) => {
+			if (result.isConfirmed) {
 		fetch("/ajax/planUpdate",{
 			method : "post",
 			headers: {
@@ -209,12 +216,14 @@
 			console.log(res)
 			if(res.ok==true){
 				//alert('수정이 완료되었습니다.')
-				Swal.fire("수정이 완료되었습니다.");
-				location.href='/production/plan'
+				location.href='/prdt/production/plan'
 			}else{
 				//alert('수정에 실패하였습니다.')
 				Swal.fire("수정에 실패하였습니다.");
 			}
+		})
+		
+		}
 		})
 	})
 	
