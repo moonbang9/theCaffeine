@@ -36,8 +36,9 @@
 				, d.qt
 				, d.due_dt
 				, d.send_od_st
-				, CASE WHEN(d.due_dt - sysdate) <![CDATA[<]]> 7 THEN 2
-				       ELSE 1
+				, CASE WHEN(d.due_dt - sysdate) <![CDATA[<=]]> 3 THEN 100
+					   WHEN(d.due_dt - sysdate) <![CDATA[<=]]> 7 THEN 50
+				       ELSE 0
 				       END
 				  as due_color
 		FROM od o 
