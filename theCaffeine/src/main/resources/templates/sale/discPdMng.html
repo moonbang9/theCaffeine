@@ -7,6 +7,10 @@
   <title>제품 폐기</title>
   <!--Load the AJAX API-->
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<style>
+	.makePe .date_box{display:flex; justify-content:center; align-items:center;}
+	.makePe .date_box i{display:block; margin:0 5px;}
+</style>
 </head>
 
 <body>
@@ -20,7 +24,7 @@
         <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">영업/</span> 제품 폐기 관리</h4>
 
         <div class="card mb-4">
-          <h5 class="card-header">주문 검색</h5>
+          <h5 class="card-header">폐기 내역 검색</h5>
           <div class="card-body">
 
 
@@ -60,17 +64,11 @@
                 </div>
               </div>
 
-              <div class="row" style="display: none;" id="makePeriod">
-              <div class="mb-3 row col-md-6">
-                <label for="html5-date-input" class="col-md-3 col-form-label">주문일</label>
-                <div class="col-md-9">
-                  <input class="form-control" type="date" id="minOdDt" value="">
-                </div>
-              </div>
-              <div class="mb-3 row col-md-6">
-                <label for="html5-date-input" class="col-md-1 col-form-label">~</label>
-                <div class="col-md-9">
-                  <input class="form-control" type="date" id="maxOdDt">
+              <div class="makePe" style="display: none;" id="makePeriod">
+              <div class="mb-3 row">
+                <label for="html5-date-input" class="col-sm-2 col-form-label">주문일</label>
+                <div class="col-md-9 date_box">
+                  <input class="form-control" type="date" id="minOdDt" value=""> <i>~</i> <input class="form-control" type="date" id="maxOdDt">
                 </div>
               </div>
             </div>

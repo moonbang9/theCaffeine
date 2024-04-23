@@ -1070,7 +1070,8 @@ from disc_pd
 --where SUBSTR(pd_lot, 1, 5) LIKE '%PET01%'
 ) c
 ON d.disc_no = c.disc_no
-group by c.rsn;
+group by c.rsn
+order by c.rsn;
 
 
 select case 
@@ -1157,42 +1158,70 @@ select DISTINCT d.pd_cd
 				order by d.pd_cd;
                 
                 
--- 총재고 총미출고 2주예상생산 2주미출고 2주예상출고가능량 
+-- 총재고 총미출고 2주예상생산 2주미출고 2주예상출고가능량 2주미출고량/출고가능량
 --총재고
-select * from pd_stk;
 select sum(qt), pd_cd
 from pd_stk
 where ADD_MONTHS(sysdate, 6) <= exp_dt
 group by pd_cd;
 
 --총미출고
-select * from od_detail;
 select SUM( NVL(qt,0) ) as qt, pd_cd
 from od_detail
 where send_od_st = 1
 group by pd_cd;
 
 --2주예상생산
-select * from pdtplan;
-select * from pdt_plan_detail;
- JOIN ( select sum(lan.qt/12) as tw_prdt
-				            				, lan.pd_cd 
-				                      from pdt_plan_detail lan JOIN ( select pdt_plan_cd
-				                     										
-							                                           from pdtplan
-							                                          where wk_plan_stt_dt > sysdate
-							                                                AND wk_plan_stt_dt < TO_DATE(NEXT_DAY(sysdate+ 14 , '월')) ) lnn
-				              									ON lan.pdt_plan_cd = lnn.pdt_plan_cd
-				                  group by lan.pd_cd) tl
-				            	ON d.pd_cd = tl.pd_cd
-
-select pdt_plan_cd
+select sum(qt) as tw_prdt_qt, pd_cd
+from pdt_plan_detail
+where pdt_plan_cd IN (select pdt_plan_cd
 from pdtplan
 where wk_plan_stt_dt > sysdate
-AND wk_plan_stt_dt < TO_DATE(NEXT_DAY(sysdate+ 14 , '월'))
-
+AND wk_plan_stt_dt < TO_DATE(NEXT_DAY(sysdate+ 14 , '월')))
+group by pd_cd;
 
 --2주미출고
---2주예상출고가능량
+select sum(qt) as tw_not_send, pd_cd
+from od_detail
+where send_od_st = 1
+and (due_dt -sysdate) <= 14
+group by pd_cd;
 
+--제품코드, 제품명
+select * from pd;
+select pd_name, pd_cd
+from pd NATURAL JOIN pd_stk;
+
+
+-- 제품 재고 목록 관리 진짜 최종
+select p.pd_cd, p.pd_name, p.unit, ts.total_stk, ns.not_send, twp.tw_prdt_qt, twn.tw_not_send
+        , ((ts.total_stk+twp.tw_prdt_qt)-twn.tw_not_send) as tw_poss_stk
+        , TRUNC((twn.tw_not_send / (ts.total_stk+twp.tw_prdt_qt))*100,1) as tw_exp
+from pd p
+    JOIN (select sum(qt) as total_stk, pd_cd
+            from pd_stk
+            where ADD_MONTHS(sysdate, 6) <= exp_dt
+            group by pd_cd) ts
+    ON p.pd_cd = ts.pd_cd
+    JOIN (select SUM( NVL(qt,0) ) as not_send, pd_cd
+            from od_detail
+            where send_od_st = 1
+            group by pd_cd) ns
+    ON p.pd_cd = ns.pd_cd
+    JOIN (select sum(qt) as tw_prdt_qt, pd_cd
+            from pdt_plan_detail
+            where pdt_plan_cd IN (select pdt_plan_cd
+                                    from pdtplan
+                                    where wk_plan_stt_dt > sysdate
+                                    AND wk_plan_stt_dt < TO_DATE(NEXT_DAY(sysdate+ 14 , '월')))
+            group by pd_cd ) twp
+    ON p.pd_cd = twp.pd_cd
+    JOIN ( select sum(qt) as tw_not_send, pd_cd
+            from od_detail
+            where send_od_st = 1
+            and (due_dt -sysdate) <= 14
+            group by pd_cd ) twn
+    ON p.pd_cd = twn.pd_cd
+    
+;
 

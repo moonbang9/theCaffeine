@@ -91,5 +91,6 @@
 						  ) c
 					 ON d.disc_no = c.disc_no
 		  group by c.rsn
+		  order by c.rsn
 	</select>
 </mapper>
