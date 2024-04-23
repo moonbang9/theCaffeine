@@ -6,7 +6,7 @@
 	<sql id="condition">
 		<where>
 			<if test="zeroQt == false">
-				and l.qt > 0
+				and l.qt <![CDATA[>]]> 0
 			</if>
 			<if test="pdLot != null and pdLot != '' ">
 				and l.pd_lot LIKE '%' || #{pdLot} || '%'
@@ -18,13 +18,13 @@
 				and p.pd_name LIKE '%' || #{pdName} || '%'
 			</if>
 			<if test="minPdtDt != null">
- 		   		AND l.pdt_dt >= #{minPdtDt} 			
+ 		   		AND l.pdt_dt <![CDATA[>=]]> #{minPdtDt} 			
  			</if>
  			<if test="maxPdtDt != null">
  		   		AND l.pdt_dt <![CDATA[<=]]> #{maxPdtDt}			
  			</if>
  			<if test="minExpDt != null">
- 		   		AND l.exp_dt >= #{minExpDt}		
+ 		   		AND l.exp_dt <![CDATA[>=]]> #{minExpDt}		
  			</if>
  			<if test="maxExpDt != null ">
  		   		AND l.exp_dt <![CDATA[<=]]> #{maxExpDt}		
