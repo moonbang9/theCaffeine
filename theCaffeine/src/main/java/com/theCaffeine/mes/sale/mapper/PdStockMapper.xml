@@ -43,7 +43,7 @@
 						, twp.tw_prdt_qt
 						, twn.tw_not_send
         				, ((ts.total_stk+twp.tw_prdt_qt)-twn.tw_not_send) as tw_poss_stk
-        				, TRUNC((twn.tw_not_send / (ts.total_stk+twp.tw_prdt_qt))*100,1) as tw_exp
+        				, TO_NUMBER(TRUNC((twn.tw_not_send / (ts.total_stk+twp.tw_prdt_qt))*100,1)) as tw_exp
 					FROM pd p
 					    JOIN (select sum(qt) as total_stk
 					    			, pd_cd
