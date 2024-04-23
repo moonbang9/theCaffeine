@@ -19,7 +19,7 @@ public class MtrlStockListController {
 	@Autowired MtrlStoringService mtrlStoringService;
 	
 	// 자재재고조회 페이지이동
-	@GetMapping("/material/stocklist")
+	@GetMapping("/stocklist")
 	public ModelAndView moveStockList() { 
 		ModelAndView mv = new ModelAndView("mtrl/stocklist");
 		return mv;

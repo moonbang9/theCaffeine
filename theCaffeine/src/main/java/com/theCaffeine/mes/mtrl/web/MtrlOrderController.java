@@ -22,7 +22,7 @@ public class MtrlOrderController {
 	@Autowired MtrlOrderService mtrlOrderService;
 	
 	// 자재발주 페이지이동
-	@GetMapping("/material/order")
+	@GetMapping("/mtrl/order")
 	public ModelAndView moveOrder() { 
 		ModelAndView mv = new ModelAndView("mtrl/order");
 		return mv;
@@ -79,7 +79,7 @@ public class MtrlOrderController {
 	//자재 발주 조회 페이지//////////////////////////////////////////////////////////
 	
 	// 자재발주조회 페이지이동
-	@GetMapping("/material/orderlist")
+	@GetMapping("/orderlist")
 	public ModelAndView moveOrderList() { 
 		ModelAndView mv = new ModelAndView("mtrl/orderlist");
 		return mv;
