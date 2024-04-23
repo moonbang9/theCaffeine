@@ -18,7 +18,7 @@ public class MtrlSendController {
 	@Autowired MtrlSendService mtrlSendService;
 	
 	// 자재출고 페이지이동
-	@GetMapping("/material/send")
+	@GetMapping("/mtrl/send")
 	public ModelAndView moveSend() { 
 		ModelAndView mv = new ModelAndView("mtrl/send");
 		return mv;
