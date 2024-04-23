@@ -235,7 +235,10 @@
             function getPdStockList() {
                 fetch("/sales/pdStockList")
                     .then(res => res.json())
-                    .then(res => pdStockTable.setData(res))
+                    .then(res => {
+                        console.log(res);
+                        pdStockTable.setData(res);
+                    })
             }
             // LOT별 재고 목록
             function getLotStockList(param) {

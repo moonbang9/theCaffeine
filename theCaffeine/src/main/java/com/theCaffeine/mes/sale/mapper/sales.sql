@@ -1230,4 +1230,20 @@ select * from pd_stk order by exp_dt;
 
 select * from cli;
 delete cli CASCADE CONSTRAINT where cli_cd = 'PCLI001';
+
+select * from pd; --제품
+select * from cli; --거래처
+select * from pd_stk; --제품 재고
+select * from od; --주문
+select * from od_detail; --주문 상세
+select * from send; --제품 출고
+select * from rtn; --제품 반품
+select * from disc_pd; --제품 폐기
+select * from bom;
+
 delete od_detail;
+delete od;
+delete send;
+delete rtn;
+delete od;
+delete cli where cli_cd LIKE '%PCLI%';
