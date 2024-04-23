@@ -26,5 +26,6 @@ public interface PackagingMapper {
 	
 	//완제품 등록
 	int insertPdSTK(PackagingVO vo);
-
+	//공정 수정
+	int updateCkProcess(PackagingVO vo);
 }
