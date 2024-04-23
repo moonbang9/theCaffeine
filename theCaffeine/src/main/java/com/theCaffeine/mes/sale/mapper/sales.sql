@@ -156,7 +156,7 @@ group by pd_cd;
 
 
 
-
+delete * from 
 
 
 
@@ -1196,7 +1196,7 @@ from pd NATURAL JOIN pd_stk;
 -- 제품 재고 목록 관리 진짜 최종
 select p.pd_cd, p.pd_name, p.unit, ts.total_stk, ns.not_send, twp.tw_prdt_qt, twn.tw_not_send
         , ((ts.total_stk+twp.tw_prdt_qt)-twn.tw_not_send) as tw_poss_stk
-        , TRUNC((twn.tw_not_send / (ts.total_stk+twp.tw_prdt_qt))*100,1) as tw_exp
+        , ROUND((twn.tw_not_send / (ts.total_stk+twp.tw_prdt_qt))*100,1) as tw_exp
 from pd p
     JOIN (select sum(qt) as total_stk, pd_cd
             from pd_stk
@@ -1221,7 +1221,13 @@ from pd p
             where send_od_st = 1
             and (due_dt -sysdate) <= 14
             group by pd_cd ) twn
-    ON p.pd_cd = twn.pd_cd
-    
+    ON p.pd_cd = twn.pd_cd    
 ;
 
+select * from pdtplan;
+select * from pdt_plan_detail;
+select * from pd_stk order by exp_dt;
+
+select * from cli;
+delete cli CASCADE CONSTRAINT where cli_cd = 'PCLI001';
+delete od_detail;
