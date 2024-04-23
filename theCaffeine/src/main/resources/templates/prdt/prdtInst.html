@@ -49,7 +49,7 @@
 	})
 	
 	saveBtn1.addEventListener("click", e=> {
-		location.href='/production/prdtInstRegist'
+		location.href='/prdt/production/prdtInstRegist'
 	})
 	
 	deleteBtn1.addEventListener("click", e=> {
@@ -70,7 +70,7 @@
 						//alert('삭제가 완료되었습니다.')
 						Swal.fire("삭제가 완료되었습니다.");
 						//수정필요
-						location.href='/production/prdtInst'
+						location.href='/prdt/production/prdtInst'
 					}else{
 						//alert('삭제에 실패하였습니다.')
 						Swal.fire("삭제에 실패하였습니다.");
@@ -105,9 +105,9 @@
     selectableRows:true,
     columns:[
         {title:"계획일자", field:"pdtInstDt", hozAlign:"center", width:200, headerHozAlign: "center"},
-        {title:"상품명", field:"insttot", hozAlign:"left", width:400, headerHozAlign: "center"},
-        {title:"총 원두생산 수량(kg)", field:"isum", hozAlign:"center", width:200, headerHozAlign: "center"},
-        {title:"총 예상작업시간(시간)", field:"msum", hozAlign:"center", width:200, headerHozAlign: "center"},
+        {title:"상품명", field:"insttot", hozAlign:"left", width:520, headerHozAlign: "center"},
+        {title:"총 원두생산 수량(kg)", field:"isum", hozAlign:"center", width:280, headerHozAlign: "center"},
+        {title:"총 예상작업시간(시간)", field:"msum", hozAlign:"center", width:280, headerHozAlign: "center"},
         {title:"삭제", formatter:editorIcon2, width:90, hozAlign:"center", headerHozAlign: "center", cellClick:function(e, cell){
         	let pdtInstNo = cell._cell.row.data.pdtInstNo;
             			console.log(pdtInstNo)
@@ -120,7 +120,7 @@
             				//alert('삭제가 완료되었습니다.')
             				Swal.fire("삭제가 완료되었습니다.");
             				cell.getRow().delete();
-            				location.href='/production/prdtInst'
+            				location.href='/prdt/production/prdtInst'
             			}else{
             				//alert('삭제가 실패하였습니다.')
             				Swal.fire("삭제가 실패하였습니다.");

@@ -37,7 +37,7 @@ public class ProductionController {
 	@Autowired PrdtService prdtService;
 	
 	//생산 주간 계획 페이지이동
-	@GetMapping("/production/plan")
+	@GetMapping("/prdt/production/plan")
 	public ModelAndView planList() { 
 		ModelAndView mv = new ModelAndView("prdt/prdtPlan");
 		return mv;
@@ -62,7 +62,7 @@ public class ProductionController {
 	}
 	
 	//생산 주간 계획 등록 데이터 포함 이동 //수정
-	@GetMapping(value = "/production/planRegist")
+	@GetMapping(value = "/prdt/production/planRegist")
 	public ModelAndView planRegist(String pdtPlanCd) { 
 		ModelAndView mv = new ModelAndView("prdt/prdtPlanRegist");
 		if(pdtPlanCd != null) {
@@ -150,7 +150,7 @@ public class ProductionController {
 	}
 	
 	//생산 지시 관리 목록 페이지이동
-	@GetMapping("/production/prdtInst")
+	@GetMapping("/prdt/production/prdtInst")
 	public ModelAndView prdtInstList() { 
 		ModelAndView mv = new ModelAndView("prdt/prdtInst");
 		return mv;
@@ -159,7 +159,7 @@ public class ProductionController {
 	
 	
 	//생산 지시 관리 등록 페이지이동
-	@GetMapping("/production/prdtInstRegist")
+	@GetMapping("/prdt/production/prdtInstRegist")
 	public ModelAndView prdtInstRegist() { 
 		ModelAndView mv = new ModelAndView("prdt/prdtInstRegist");
 		return mv;
