@@ -20,7 +20,7 @@ public class MtrlManagementController {
 	@Autowired MtrlService mtrlService;
 	
 	// 자재관리 페이지이동
-	@GetMapping("/material/management")
+	@GetMapping("/mtrl/management")
 	public ModelAndView moveMtrl() { 
 		ModelAndView mv = new ModelAndView("mtrl/management");
 		return mv;

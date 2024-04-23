@@ -18,7 +18,7 @@ public class MtrlQualityController {
 	@Autowired MtrlOrderService mtrlOrderService;
 	
 	// 자재검사관리 페이지이동
-	@GetMapping("/material/quality")
+	@GetMapping("/mtrl/quality")
 	public ModelAndView moveQuality() { 
 		ModelAndView mv = new ModelAndView("mtrl/quality");
 		return mv;

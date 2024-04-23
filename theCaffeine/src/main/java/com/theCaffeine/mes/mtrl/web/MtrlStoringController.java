@@ -20,7 +20,7 @@ public class MtrlStoringController {
 	@Autowired MtrlStoringService mtrlStoringService;
 	
 	// 자재입고관리 페이지이동
-	@GetMapping("/material/storing")
+	@GetMapping("/mtrl/storing")
 	public ModelAndView moveStoring() { 
 		ModelAndView mv = new ModelAndView("mtrl/storing");
 		return mv;
