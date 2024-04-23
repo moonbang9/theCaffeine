@@ -42,7 +42,8 @@
 				const mtQt = send.mtQt;
 				const sendChg = memId;
 				let param = {mtCd, mtQt, sendChg};
-				fetch("/ajax/mtrlMainSend",{
+				console.log(param);
+				/*fetch("/ajax/mtrlMainSend",{
 					method : "post",
 					headers: {
 					      "Content-Type": "application/json",
@@ -50,9 +51,9 @@
 					body : JSON.stringify(param)
 				})
 				.then(res => res.json())
-				.then(res => console.log(res))
+				.then(res => console.log(res))*/
 			}
-			modRes();
+			//modRes();
 		}
 	
 		// 출고처리 응답

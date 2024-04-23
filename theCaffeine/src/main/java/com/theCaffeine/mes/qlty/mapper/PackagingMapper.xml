@@ -92,6 +92,10 @@
 		INSERT INTO pd_stk (PD_LOT, UNIT, QT, PDT_DT, EXP_DT, PD_CD, PDT_INST_DETAIL_NO)
     	VALUES (#{pdLot}, 'box', 2, SYSDATE, ADD_MONTHS(SYSDATE, 1), #{pdName}, #{pdtInstDetailNo})
 	</insert>
-
+	<update id="updateCkProcess" parameterType="PackagingVO">
+		update PDT_HIST
+		set MF_NO = (select mf_no from MF_PD_DUR_TIME where pdt_ps_cd = 'Stor003' and pdt_pd_cd= #{pdName})
+		where PDT_INST_DETAIL_NO = #{pdtInstDetailNo}
+	</update>
 
 </mapper>

@@ -16,7 +16,11 @@
             <div class="container-xxl flex-grow-1 container-p-y">
                 <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">영업 관리 /</span> 제품 재고</h4>
 
-
+			<p class="mb-0" style="text-align: right;">
+				<small>제품을 클릭하면 해당 제품의 LOT 목록을 볼 수 있습니다.</small>
+			</p>
+			
+			
                 <!-- 주문목록 그리드 -->
                 <div id="pdStockTable" class="mb-3">
 
@@ -160,16 +164,16 @@
                 		   // 2주미출고/(총재고+2주예상생산) * 100 : 출고가능예상통계
                 		   // (총재고+2주예상생산)-2주미출고 : 2주 출고가능량
                     { title: "제품코드", field: "pdCd", headerHozAlign:"center", width: 90, hozAlign: "center" },
-                    { title: "제품명", field: "pdName", headerHozAlign:"center", width: 90, width: 320, hozAlign: "left" },
+                    { title: "제품명", field: "pdName", headerHozAlign:"center", width: 350, hozAlign: "left" },
                     { title: "단위", field: "unit", headerHozAlign:"center", width: 60, hozAlign: "center" },
-                    { title: "총 재고", field: "curStk", headerHozAlign:"center", width: 78, hozAlign: "center" },
-                    { title: "총 미출고", field: "totalNotSend", headerHozAlign:"center", width: 90, hozAlign: "center" },
-                    { title: "2주 예상생산", field: "twoWPrdt", headerHozAlign:"center", width: 115, hozAlign: "center" },
-                    { title: "2주 미출고", field: "twoWNotSend", headerHozAlign:"center", width: 100, hozAlign: "center" },
+                    { title: "총 재고량", field: "totalStk", headerHozAlign:"center", width: 100, hozAlign: "center" },
+                    { title: "총 미출고 주문량", field: "notSend", headerHozAlign:"center", width: 90, hozAlign: "center" },
+                    { title: "2주 예상 생산량", field: "twPrdtQt", headerHozAlign:"center", width: 100, hozAlign: "center" },
+                    { title: "2주 미출고 주문량", field: "twNotSend", headerHozAlign:"center", width: 90, hozAlign: "center" },
                     //{ title: "2주 미출고량/출고가능량", field: "possStats", width: 150, hozAlign: "center" },
                     //{title:"2주 미출고량/출고가능량", field:"progress", formatter:"progress", formatterParams:{color:["#00dd00", "orange", "rgb(255,0,0)"]}, sorter:"number", width:100},
-                    { title: "2주 예상출고 가능량", field: "possTwoSend", headerHozAlign:"center", width: 160, hozAlign: "center" },
-                    {title:"2주 미출고량/출고가능량", field:"twoWNotSend", headerHozAlign:"center", formatter:"progress", formatterParams:{
+                    { title: "2주 예상 추가주문 가능량", field: "twPossStk", headerHozAlign:"center", width: 180, hozAlign: "center" },
+                    {title:"2주 재고대비 미출고 주문량", field:"twExp", headerHozAlign:"center", formatter:"progress", formatterParams:{
 					    min:0,
 					    max:10,
 					    color:["green", "orange", "red"],

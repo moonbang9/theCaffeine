@@ -49,10 +49,12 @@ public class PackagingServiceImpl implements PackagingService{
 	public int deletePackagingDoneList(PackagingVO vo) {
 		return packagingMapper.deletePackagingDoneList(vo.getPackCkNo());
 	}
-
+	
+	@Transactional
 	@Override
 	public int insertPdSTK(PackagingVO vo) {
 		// TODO Auto-generated method stub
+		packagingMapper.updateCkProcess(vo);
 		return packagingMapper.insertPdSTK(vo);
 	}
 
