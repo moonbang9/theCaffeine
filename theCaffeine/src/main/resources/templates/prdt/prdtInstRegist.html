@@ -413,7 +413,7 @@
 	    				//console.log(nonLength)
 	    				if(count2 > (nonLength-count)){
 	    					//alert('점검예약으로 인해 해당 시간에 더이상 지시등록이 불가능합니다.')
-	    					Swal.fire("점검예약으로 인해 해당 시간에 더이상 지시등록이 불가능합니다.");
+	    					Swal.fire("점검예약으로 인해 해당 시간에 \n더 이상 지시등록이 불가능합니다.");
 	    					for(let i of tables){
 	    	    				if(cell._cell.row.data.rownum == i.rownum && cell._cell.row.data.pdtSttTime != ""){
 	    	    						i.pdtSttTime = null;
@@ -459,7 +459,7 @@
 						}
 	    				let tfs = true;
 	    				if(count2 > nonLength){
-	    					Swal.fire("설비 부족으로 인해 해당 시간대에 더이상 지시등록이 불가능합니다.");
+	    					Swal.fire("설비 부족으로 인해 해당 시간대에 \n더 이상 지시등록이 불가능합니다.");
 	    					for(let i of tables){
 	    						if(cell._cell.row.data.rownum == i.rownum && cell._cell.row.data.pdtSttTime != ""){
 	    								i.pdtSttTime = null;

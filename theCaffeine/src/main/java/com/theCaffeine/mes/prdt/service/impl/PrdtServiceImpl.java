@@ -154,6 +154,7 @@ public class PrdtServiceImpl implements PrdtService{
 		return prdtMapper.getInstDetailList(pdtInstNo);
 	}
 	
+	//지시전체 삭제
 	@Transactional
 	@Override
 	public int instDelete(Integer pdtInstNo) {
