@@ -79,7 +79,7 @@ public class MtrlOrderController {
 	//자재 발주 조회 페이지//////////////////////////////////////////////////////////
 	
 	// 자재발주조회 페이지이동
-	@GetMapping("/orderlist")
+	@GetMapping("/mtrlOrderlist")
 	public ModelAndView moveOrderList() { 
 		ModelAndView mv = new ModelAndView("mtrl/orderlist");
 		return mv;
