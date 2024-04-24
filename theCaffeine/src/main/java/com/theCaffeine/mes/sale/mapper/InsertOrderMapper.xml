@@ -13,10 +13,11 @@
  				, cli_chg
  				, mail
 		FROM cli
-		WHERE cli_cd LIKE '%' || #{searchCli} || '%'
-    		OR cli_name LIKE '%' || #{searchCli} || '%'
-    		OR cli_chg LIKE '%' || #{searchCli} || '%'
-    		OR tel LIKE '%' || #{searchCli} || '%'		
+		WHERE cli_cd LIKE 'PCLI%'
+			AND ( cli_cd LIKE '%' || #{searchCli} || '%'
+		    		OR cli_name LIKE '%' || #{searchCli} || '%'
+		    		OR cli_chg LIKE '%' || #{searchCli} || '%'
+		    		OR tel LIKE '%' || #{searchCli} || '%' )	
  		 ORDER BY cli_cd
 	</select>
 	

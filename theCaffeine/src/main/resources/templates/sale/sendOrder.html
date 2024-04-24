@@ -302,11 +302,11 @@
           },
         columns: [ //주문일, 거래처, 제품명, 주문금액(부분합), 납기일, 상태, 인쇄
           { title: "주문번호", field: "no", headerHozAlign:"center", width: 150, hozAlign: "center" },          
-          { title: "주문일", field: "odDt", headerHozAlign:"center", width:130, hozAlign: "center" },
-          { title: "거래처", field: "cliName", headerHozAlign:"center", width: 200, hozAlign: "left" },
-          { title: "제품", field: "pdName", headerHozAlign:"center", width: 400, hozAlign: "left" },
-          { title: "수량", field: "qt", headerHozAlign:"center", width: 70, hozAlign: "center" },
           { title: "납기일", field: "dueDt", headerHozAlign:"center", hozAlign: "center" },
+          //{ title: "주문일", field: "odDt", headerHozAlign:"center", width:130, hozAlign: "center" },
+          { title: "거래처", field: "cliName", headerHozAlign:"center", width: 250, hozAlign: "left" },
+          { title: "제품", field: "pdName", headerHozAlign:"center", width: 450, hozAlign: "left" },
+          { title: "수량", field: "qt", headerHozAlign:"center", width: 70, hozAlign: "center" },
           {title: "", field:"dueColor", headerHozAlign:"center", hozAlign: "center", width:60, formatter:"traffic", formatterParams:{
                 min:0,
                 max:100,
