@@ -129,6 +129,7 @@
 		JOIN   mt_str mr
 		ON     mk.mt_str_no = mr.mt_str_no
 		WHERE  mk.mt_cd = #{mtCd}
+		AND	   mk.stk_qt > 0
 		ORDER BY str_compdt
 	</select>
 </mapper>

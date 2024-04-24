@@ -49,7 +49,7 @@
 	})
 	
 	saveBtn1.addEventListener("click", e=> {
-		location.href='/prdt/production/prdtInstRegist'
+		location.href='/prdt/prdtInstRegist'
 	})
 	
 	deleteBtn1.addEventListener("click", e=> {
@@ -70,7 +70,7 @@
 						//alert('삭제가 완료되었습니다.')
 						Swal.fire("삭제가 완료되었습니다.");
 						//수정필요
-						location.href='/prdt/production/prdtInst'
+						location.href='/prdt/prdtInst'
 					}else{
 						//alert('삭제에 실패하였습니다.')
 						Swal.fire("삭제에 실패하였습니다.");
@@ -120,7 +120,7 @@
             				//alert('삭제가 완료되었습니다.')
             				Swal.fire("삭제가 완료되었습니다.");
             				cell.getRow().delete();
-            				location.href='/prdt/production/prdtInst'
+            				location.href='/prdt/prdtInst'
             			}else{
             				//alert('삭제가 실패하였습니다.')
             				Swal.fire("삭제가 실패하였습니다.");

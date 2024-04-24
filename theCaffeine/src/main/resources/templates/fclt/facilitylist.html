@@ -74,7 +74,8 @@
 						<div class="modal-dialog modal-dialog-centered" role="document">
 							<div class="modal-content">
 								<div class="modal-header">
-									<h5 class="modal-title" id="modalCenterTitle">설비 등록</h5>
+									<h5 class="modal-title" id="addfcType" style="display: block">설비 등록</h5>
+									<h5 class="modal-title" id="updtfcType" style="display: none">설비 수정</h5>
 									<button type="button" class="btn-close" data-bs-dismiss="modal"
 										aria-label="Close"></button>
 								</div>
@@ -223,6 +224,8 @@
 			fclttable.on("rowClick", function(e, row){
 				saveBtn.style.display="none";
 				updateBtn.style.display="block";
+				addfcType.style.display="none";
+				updtfcType.style.display="block";
 				let fcCd = row.getData().fcCd;
 				console.log(fcCd);
 				fetch("/fclt/facilitylist/"+ fcCd)
@@ -241,6 +244,10 @@
 			//등록창 값 비워주기
 			
 			addFclt.addEventListener("click",function(){
+				addfcType.style.display="block";
+				updtfcType.style.display="none";
+				saveBtn.style.display="block";
+				updateBtn.style.display="none";
 				facilityCd.value="";
 				facilityName.value = "";
 				manufacturingCom.value = "";
