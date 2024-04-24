@@ -18,7 +18,7 @@ public class MtrlSituationController {
 	@Autowired MtrlSituationService mtrlSituationService;
 	
 	// 자재현황조회 페이지이동
-	@GetMapping("/situation")
+	@GetMapping("/mtrlSituation")
 	public ModelAndView moveStockList() { 
 		ModelAndView mv = new ModelAndView("mtrl/situation");
 		return mv;
