@@ -18,6 +18,9 @@ public class MfProcessVO {
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
 	private Date pdtSttTime; 			//생산 시작 시간
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+	private Date pdtFnTime; 			//생산 종료 시간
 	private String process1; 			//예열 및 대기
 	private String process2; 			//투입
 	private String process3; 			//1차크랙
