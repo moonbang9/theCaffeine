@@ -45,7 +45,7 @@
 		listReq();
 		
 	saveBtn1.addEventListener("click", e=> {
-		location.href='/production/planRegist'
+		location.href='/prdt/planRegist'
 	})
 	
 	//수정버튼
@@ -76,9 +76,9 @@
     selectableRows:true,
     columns:[
         {title:"계획코드", field:"pdtPlanCd", hozAlign:"center", width:240, headerHozAlign: "center"},
-        {title:"계획기간", field:"wkPlanSttDt", hozAlign:"center", width:310, headerHozAlign: "center"},
-        {title:"상품명", field:"plantot", hozAlign:"center", width:320, headerHozAlign: "center"},
-        {title:"총 예상 원두생산 수량(kg)", field:"psum", hozAlign:"center", width:320, headerHozAlign: "center"},
+        {title:"계획기간", field:"wkPlanSttDt", hozAlign:"center", width:280, headerHozAlign: "center"},
+        {title:"상품명", field:"plantot", hozAlign:"center", width:330, headerHozAlign: "center"},
+        {title:"총 예상 원두생산 수량(kg)", field:"psum", hozAlign:"center", width:280, headerHozAlign: "center"},
         {title:"수정", field:"updates",width:90,formatter: editorIcon, hozAlign:"center",resizable:false, headerSort:false, headerHozAlign: "center",
             cellClick:function(e, cell){
             	console.log(cell._cell.row.data.pdtPlanCd);
@@ -92,7 +92,7 @@
             		.then(res => {
             			console.log(res)
             		})*/
-        			location.href= "/production/planRegist?pdtPlanCd="+ pdtPlanCd;
+        			location.href= "/prdt/planRegist?pdtPlanCd="+ pdtPlanCd;
             	}
             }
         },

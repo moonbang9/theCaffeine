@@ -50,10 +50,11 @@ values (od_seq.nextval, '2024-04-01', '김주문', 0.05, 699200, 'PCLI001',1);
 /*  거래처 목록 조회   */
 select cli_cd, cli_name, bussno, tel, addr, cli_chg, mail
 from cli
-where cli_cd LIKE '%58%'
-    OR cli_name LIKE '%58%'
-    OR cli_chg LIKE '%58%'
-    OR tel LIKE '%58%';
+where cli_cd LIKE 'PCLI%' AND
+(cli_cd LIKE '%%'
+    OR cli_name LIKE '%%'
+    OR cli_chg LIKE '%%'
+    OR tel LIKE '%%');
     
 /*  상품 목록 조회    */
 select pd_cd, pd_name, unit, cost
@@ -1196,7 +1197,7 @@ from pd NATURAL JOIN pd_stk;
 -- 제품 재고 목록 관리 진짜 최종
 select p.pd_cd, p.pd_name, p.unit, ts.total_stk, ns.not_send, twp.tw_prdt_qt, twn.tw_not_send
         , ((ts.total_stk+twp.tw_prdt_qt)-twn.tw_not_send) as tw_poss_stk
-        , ROUND((twn.tw_not_send / (ts.total_stk+twp.tw_prdt_qt))*100,1) as tw_exp
+        , TO_NUMBER(ROUND((twn.tw_not_send / (ts.total_stk+twp.tw_prdt_qt))*100,1)) as tw_exp
 from pd p
     JOIN (select sum(qt) as total_stk, pd_cd
             from pd_stk
@@ -1239,11 +1240,12 @@ select * from od_detail; --주문 상세
 select * from send; --제품 출고
 select * from rtn; --제품 반품
 select * from disc_pd; --제품 폐기
-select * from bom;
 
-delete od_detail;
-delete od;
 delete send;
 delete rtn;
+delete disc_pd;
+delete od_detail;
 delete od;
 delete cli where cli_cd LIKE '%PCLI%';
+
+rollback;
