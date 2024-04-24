@@ -47,7 +47,7 @@
 				const sendChg = memId;
 				let param = {mtCd, mtQt, sendChg};
 				console.log(param);
-				/*fetch("/ajax/mtrlMainSend",{
+				fetch("/ajax/mtrlMainSend",{
 					method : "post",
 					headers: {
 					      "Content-Type": "application/json",
@@ -55,15 +55,15 @@
 					body : JSON.stringify(param)
 				})
 				.then(res => res.json())
-				.then(res => console.log(res))*/
+				.then(res => console.log(res))
 			}
-			//modRes();
+			modRes();
 		}
 	
 		// 출고처리 응답
 		function modRes() {
 			alert("출고가 완료되었습니다!");
-			location.href= "/material/send"
+			location.href= "/mtrl/material/send"
 		}
 		
 
