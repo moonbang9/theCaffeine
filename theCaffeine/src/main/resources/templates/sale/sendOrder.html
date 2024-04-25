@@ -386,11 +386,11 @@
 
       if(results.every( e => e==1)){
         console.log('모든결과가1 ', results.every( e => e==1));
-        sendCheck = '모두 출고 완료';
+        sendCheck = '출고 완료';
         notSendTable.alert(sendCheck); 
       }else if(results.every( e => e==2)){
         console.log('모든결과가2 ', results.every( e => e==2))
-        sendCheck = '재고 부족으로 출고되지 못했습니다.';
+        sendCheck = '재고 부족으로 출고 실패했습니다.';
         notSendTable.alert(sendCheck, "error");        
       // }else if(results.every(e => e==3)){
       //   console.log('모든결과가3 ', results.every( e => e==3));
@@ -421,9 +421,9 @@
       //   }                    
       // }
       //alert(sendCheck);
-      /* setTimeout(() => {
+      setTimeout(() => {
               notSendTable.clearAlert();
-      }, "2000"); */
+      }, "2000");
 
       getNotSendList(nSendCondition);
     }
