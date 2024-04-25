@@ -86,7 +86,7 @@
 		                  ON l.pd_cd = p.pd_cd
     	<include refid="condition"></include>
 		ORDER BY l.pd_lot DESC
-				, l.pd_cd
+				, l.exp_dt DESC
 	</select>
 
 </mapper>
