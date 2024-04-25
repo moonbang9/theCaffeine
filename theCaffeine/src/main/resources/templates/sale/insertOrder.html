@@ -140,14 +140,14 @@
 							<div class="mb-3 row">
 								<label for="html5-time-input" class="col-md-2 col-form-label">주문일</label>
 								<div class="col-md-10">
-									<input class="form-control" type="date" value="2024-04-29" id="odDt" />
+									<input class="form-control" type="date" value="2024-04-24" id="odDt" />
 								</div>
 							</div>
 
 							<div class="mb-3 row">
 								<label for="html5-color-input" class="col-md-2 col-form-label">납기일</label>
 								<div class="col-md-10">
-									<input class="form-control" type="date" value="2023-05-01" id="dueDt" />
+									<input class="form-control" type="date" value="2024-05-06" id="dueDt" />
 								</div>
 							</div>
 
@@ -399,7 +399,6 @@
 					insertCli(client) {
 						this.clientVO = client;
 						this.closeModal();
-
 					},
 					//거래처 검색 모달 열기
 					openModal() {
@@ -489,7 +488,6 @@
 
 							let detail = { qt, cost, detailPrice, pdCd, dueDt };
 							this.insertOrderDetailList.push(detail);
-							//console.log(detail);
 						})
 
 						let data = { orderVO: this.orderVO, orderDetailVO: this.insertOrderDetailList }
@@ -502,17 +500,11 @@
 						if (result.data == 'ok') {
 							alert('주문이 등록되었습니다.');
 							location.href = "/sales/orderMng";
-
 						}
-
-						
 					}
-
-
 				}
 			})
 			app.mount('#app')
-
 			
 			selectNav();
 			

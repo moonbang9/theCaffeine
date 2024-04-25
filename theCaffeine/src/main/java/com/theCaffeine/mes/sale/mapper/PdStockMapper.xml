@@ -33,7 +33,6 @@
 		
 	</sql>
 
-
 	<select id="pdStockList" resultType="PdStockVO">
 		<![CDATA[ SELECT p.pd_cd
 						, p.pd_name
@@ -48,7 +47,7 @@
 					    JOIN (select sum(qt) as total_stk
 					    			, pd_cd
 					            from pd_stk
-					           where ADD_MONTHS(sysdate, 6) <= exp_dt
+					           where TO_DATE(ADD_MONTHS(sysdate, 6)) <= TO_DATE(exp_dt)
 					           group by pd_cd) ts
 					      ON p.pd_cd = ts.pd_cd
 					    JOIN (select SUM( NVL(qt,0) ) as not_send
@@ -62,8 +61,8 @@
 					            from pdt_plan_detail
 					           where pdt_plan_cd IN (select pdt_plan_cd
 					                                   from pdtplan
-					                                  where wk_plan_stt_dt > sysdate
-					                                    	AND wk_plan_stt_dt < TO_DATE(NEXT_DAY(sysdate+ 14 , '월')))
+					                                  where TO_DATE(wk_plan_stt_dt) > TO_DATE(sysdate)
+					                                    	AND TO_DATE(wk_plan_stt_dt) < TO_DATE(NEXT_DAY(sysdate+ 14 , '월')))
 					            					  group by pd_cd ) twp
 					     ON p.pd_cd = twp.pd_cd
 					   JOIN ( select sum(qt) as tw_not_send

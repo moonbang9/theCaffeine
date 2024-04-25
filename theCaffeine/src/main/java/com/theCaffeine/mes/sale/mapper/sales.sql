@@ -962,7 +962,7 @@ SELECT DISTINCT NVL( (SELECT SUM(qt) as qt
     FROM pd_stk
     --WHERE rownum = 1
 /
-    
+select * from pd_stk;
 select * from pd;
 select * from mt;
 select * from bom;
@@ -1235,11 +1235,18 @@ delete cli CASCADE CONSTRAINT where cli_cd = 'PCLI001';
 select * from pd; --제품
 select * from cli; --거래처
 select * from pd_stk; --제품 재고
-select * from od; --주문
-select * from od_detail; --주문 상세
+select * from od order by od_no desc; --주문
+select * from od_detail order by od_detailno desc; --주문 상세
 select * from send; --제품 출고
 select * from rtn; --제품 반품
 select * from disc_pd; --제품 폐기
+select * from com_cd;
+select * from com_detail_cd;
+
+select o.od_no, d.od_detailno, o.od_st, d.send_od_st
+from od o JOIN od_detail d
+ON o.od_no = d.od_no
+order by od_detailno;
 
 delete send;
 delete rtn;
