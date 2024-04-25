@@ -33,8 +33,8 @@
 		
 	</sql>
 
-
 	<select id="pdStockList" resultType="PdStockVO">
+	--주석이당
 		<![CDATA[ SELECT p.pd_cd
 						, p.pd_name
 						, p.unit
