@@ -351,7 +351,7 @@
 	</select>
 	
 	<select id="getInstDetailProcess" resultType="MfProcessVO" parameterType="InstVO">
-		select pd_cd, pdt_stt_time, 
+		select pd_cd, pdt_stt_time, pdt_fn_time,
         	Decode(w,1,'O') as process1,
         	Decode(w,2,'O') as process2,
         	Decode(w,3,'O') as process3,
@@ -372,9 +372,10 @@
             WHEN mf_no in (select mf_no from MF_PD_DUR_TIME where pdt_ps_cd = 'Case001') THEN 8
             WHEN mf_no in (select mf_no from MF_PD_DUR_TIME where pdt_ps_cd = 'PChk002') THEN 9
             WHEN mf_no in (select mf_no from MF_PD_DUR_TIME where pdt_ps_cd = 'Stor003') THEN 10
-            END as w , pdt_stt_time, pd_cd
+            END as w , pdt_stt_time, pd_cd, pdt_fn_time
 			from PDT_HIST)
 		where trunc(pdt_stt_time,'dd') = #{pdtInstDt}
+		order by pdt_stt_time
 	</select>
 	
 	<select id="getNonopFc" resultType="NonopFcVO">

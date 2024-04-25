@@ -48,7 +48,7 @@ public class MtrlOrderServiceImpl implements MtrlOrderService{
         excutorService.schedule(() -> {
         	mtrlOrderMapper.updateMtrlOrder2(vo.getMtPlaceodCd());
             excutorService.shutdown();
-        }, vo.getLeadtm(), TimeUnit.MINUTES); // TimeUnit.DAYS 로 바꾸면 됨.   SECONDS    MINUTES
+        }, 5, TimeUnit.SECONDS); // vo.getLeadtm(), TimeUnit.DAYS 로 바꾸면 됨.   SECONDS    MINUTES
 		return mtrlOrderMapper.updateMtrlOrder(vo);
 	}
 

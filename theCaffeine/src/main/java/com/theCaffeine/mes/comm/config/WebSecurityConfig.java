@@ -42,11 +42,14 @@ public class WebSecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
 			.authorizeHttpRequests((requests) -> requests
-				.antMatchers("/","/main","/memb/register" ,"/memb/login","/memb/changepw","/memb/changeid","/memb/findid","/memb/findpw","/assets/**","/fonts/**","/js/**","/scss/**", "/accessError","/orderMng","/prdtHistList","prdtPerformanceList","/orderlist","/situation","/stocklist").permitAll()
+				.antMatchers("/","/main","/memb/register" ,"/memb/login","/memb/changepw",
+						"/memb/changeid","/memb/findid","/memb/findpw","/assets/**","/fonts/**",
+						"/js/**","/scss/**", "/accessError","/orderMng","/prdtHistList",
+						"/prdtPerformanceList","/orderlist","/situation","/stocklist").permitAll()
 //				.antMatchers("/login").permitAll()
 				.antMatchers("/fclt/**").hasAnyRole("FCLT","ADMIN","REGISTER")
 				.antMatchers("/sales/**").hasAnyRole("SALE","ADMIN","REGISTER")
-				.antMatchers("/prdt/**").hasAnyRole("PRDT","ADMIN","REGISTER")
+				.antMatchers("/prdt/**","/prdt/**/**").hasAnyRole("PRDT","ADMIN","REGISTER")
 				.antMatchers("/mtrl/**").hasAnyRole("MTRL","ADMIN","REGISTER")
 				.antMatchers("/qlty/**").hasAnyRole("QLTY","ADMIN","REGISTER")
                 //.antMatchers("/**").hasRole("ADMIN")
