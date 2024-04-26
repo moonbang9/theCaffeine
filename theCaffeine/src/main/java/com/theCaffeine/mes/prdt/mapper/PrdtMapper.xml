@@ -100,6 +100,9 @@
 		left outer join pd p 
 		on od.pd_cd = p.pd_cd 
 		<where>
+		<![CDATA[
+			od.due_dt >= sysdate
+			and od.send_od_st <3 ]]>
 			<if test="pdCd != null and pdCd != ''">
 				AND od.pd_cd = #{pdCd}
 			</if>
