@@ -274,7 +274,7 @@
 			.then(res => res.json())
 			.then(res => {
 				for(let i of res){
-					pdCds.push(i.pdCd)
+					pdCds.push(i.pdName)
 					pdNames.push({"pdCd" : i.pdCd,"pdName" : i.pdName})
 					unitQts.push({"pdCd" : i.pdCd,"unitQt" : i.unitQt})
 				}
@@ -329,7 +329,21 @@
 			index:"rownum",
 		    columns:[
 		    	{field:"rownum", width:50, hozAlign:"center", formatter:"rownum", resizable:false, frozen:true, headerSort:false, headerHozAlign: "center"},
-		    	{title:"제품코드", field:"pdCd", hozAlign:"center", width:200, editor:"list", headerHozAlign: "center",
+		        {title:"상품명", field:"pdName", width:320, hozAlign:"left", headerHozAlign: "center", editor:"list",
+					editorParams:{values: pdCds, freetext:false},
+		    		cellEdited: function(cell) {
+		    			console.log(cell._cell.row.data)
+		    			for(let i of pdNames){
+		    				if(i.pdName == cell._cell.row.data.pdName){
+		    					i.rownum = cell._cell.row.data.rownum
+		    					table2.updateData([i])
+		    				}
+		    			}
+					},
+		        },
+		    	{title:"제품코드", field:"pdCd", hozAlign:"center", width:190, headerHozAlign: "center",
+		    		/*
+		    		editor:"list",
 		    		editorParams:{values: pdCds, freetext:false},
 		    		cellEdited: function(cell) {
 		    			console.log(cell._cell.row.data)
@@ -339,9 +353,8 @@
 		    					table2.updateData([i])
 		    				}
 		    			}
-					},
+					},*/
 				},
-		        {title:"상품명", field:"pdName", width:300, hozAlign:"left", headerHozAlign: "center"},
 		        {title:"수량", field:"qt", hozAlign:"center", validator:["min:0", "numeric"], width:100, headerHozAlign: "center",
 		        	/*editor:dateEditor5,
 		        	cellEdited: function(cell) {
