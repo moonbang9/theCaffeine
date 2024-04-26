@@ -409,12 +409,13 @@
       resizable:"header",
     },
     columns:[
-        {title:"제품코드", field:"pdCd", hozAlign:"center", width:330, headerHozAlign: "center"},
-        {title:"단위(1 Box= 3 Bag)", field:"unit", hozAlign:"center", width:330, headerHozAlign: "center"},
-        {title:"수량(Box)", field:"qt", hozAlign:"center", width:330, headerHozAlign: "center"},
+        {title:"제품코드", field:"pdCd", hozAlign:"center", width:210, headerHozAlign: "center"},
+        {title:"제품명", field:"pdName", hozAlign:"left", width:430, headerHozAlign: "center"},
+        {title:"단위(1 Box= 3 Bag)", field:"unit", hozAlign:"center", width:230, headerHozAlign: "center"},
+        {title:"수량(Box)", field:"qt", hozAlign:"center", width:230, headerHozAlign: "center"},
         //{title:"생산중인 수량(Box)", field:"pdtQt", hozAlign:"center", width:200},
         //{title:"선택 수량(Box)", field:"prePdtQt", hozAlign:"center", width:200, editor:dateEditor},
-        {title:"납기 일", field:"dueDt", hozAlign:"center", width:330, headerHozAlign: "center"},
+        {title:"납기 일", field:"dueDt", hozAlign:"center", width:230, headerHozAlign: "center"},
     ],
 });
 	
@@ -429,12 +430,17 @@
 	var table3 = new Tabulator("#example-table3", {
 	height:"180px",
 	layout:"fitDataTable",
+	columnDefaults:{
+        headerSort:false,
+        resizable:"header",
+      },
     columns:[
-        {title:"제품코드", field:"pdCd", hozAlign:"center", width:120, headerHozAlign: "center"},
-        {title:"단위", field:"unit", hozAlign:"center", width:100, headerHozAlign: "center"},
-        {title:"현재 재고 수량", field:"nowStk", hozAlign:"center", width:160, headerHozAlign: "center"},
-        {title:"안전 재고 수량", field:"safeStk", hozAlign:"center", width:160, headerHozAlign: "center"},
-        {title:"재고 수량차", field:"msStk", hozAlign:"center", width:150, headerHozAlign: "center"},
+        {title:"제품코드", field:"pdCd", hozAlign:"center", width:90, headerHozAlign: "center"},
+        {title:"제품명", field:"pdName", hozAlign:"left", width:340, headerHozAlign: "center"},
+        {title:"단위", field:"unit", hozAlign:"center", width:70, headerHozAlign: "center"},
+        {title:"현재 재고 수량", field:"nowStk", hozAlign:"center", width:100, headerHozAlign: "center"},
+        {title:"안전 재고 수량", field:"safeStk", hozAlign:"center", width:100, headerHozAlign: "center"},
+        {title:"재고 수량차", field:"msStk", hozAlign:"center", width:100, headerHozAlign: "center"},
     	],
 	});
 	var table4 = new Tabulator("#example-table4", {
@@ -456,6 +462,7 @@
 	    index:"pdCd",
 	    columns:[
 	        {title:"제품코드", field:"pdCd", validator:"required", hozAlign:"center", headerHozAlign: "center"},
+	        {title:"제품명", field:"pdName", hozAlign:"left", headerHozAlign: "center", width:400},
 	        {title:"단위무게(kg)", field:"unitQt", hozAlign:"center", headerHozAlign: "center"},
 	        {title:"주문수량(kg)", field:"qt", hozAlign:"center", validator:["min:0", "numeric"], headerHozAlign: "center"},
 	        {title:"추가수량(kg)", field:"addQt", hozAlign:"center", editor:dateEditor5,  validator:["min:0", "numeric"], headerHozAlign: "center"},

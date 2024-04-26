@@ -18,6 +18,7 @@ public class PlanOrderDetailVO {
 	
 	private Integer odDetailno;			//상세제품번호
 	private String pdCd;			//제품코드
+	private String pdName;			//제품명
 	private String unit;			//단위
 	private Integer qt;             //수량(Box)
 	private Integer pdtQt;			//생산 수량
