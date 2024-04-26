@@ -94,7 +94,8 @@
 				od.due_dt,
                 0 as pre_pdt_qt,
                 od.od_detailno,
-                0 as tot_qt
+                0 as tot_qt,
+                p.pd_name
 		from od_detail od 
 		left outer join pd p 
 		on od.pd_cd = p.pd_cd 
@@ -114,7 +115,8 @@
 				e.unit, 
 				nvl(w.tat,0) now_stk, 
 				nvl(e.safe_stk_qt,0) safe_stk, 
-				nvl((nvl(w.tat,0) - nvl(e.safe_stk_qt,0)),0) ms_stk 
+				nvl((nvl(w.tat,0) - nvl(e.safe_stk_qt,0)),0) ms_stk,
+                e.pd_name 
 		from (select p.pd_name, ps.unit,sum(qt) tat, ps.pd_cd 
 				from PD_STK ps 	
 				join pd p 
@@ -165,7 +167,7 @@
 	</select>
 	
 	<select id="getBasicPlanList" resultType="PlanVO">
-		select pd_cd, 0 qt, null due_dt, pd_name, 0 add_qt, unit_qt, 0 as tot_qt from pd
+		select pd_cd, 0 qt, null due_dt, pd_name, 0 add_qt, unit_qt, 0 as tot_qt,pd_name from pd
 	</select>
 	
 	<select id="getPlanConsum" resultType="FailPlanVO">
